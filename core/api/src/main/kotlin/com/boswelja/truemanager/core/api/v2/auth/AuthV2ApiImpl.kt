@@ -17,7 +17,7 @@ internal class AuthV2ApiImpl(
 ) : AuthV2Api {
     override suspend fun checkPassword(username: String, password: String): Boolean {
         val response = client.post("/auth/check_password") {
-            setBody(UserCredentials(username, password))
+            setBody(UserCredentialsDto(username, password))
             basicAuth(username, password)
         }
         return response.status == HttpStatusCode.OK
@@ -25,7 +25,7 @@ internal class AuthV2ApiImpl(
 
     override suspend fun checkUser(username: String, password: String): Boolean {
         val response = client.post("/auth/check_user") {
-            setBody(UserCredentials(username, password))
+            setBody(UserCredentialsDto(username, password))
             basicAuth(username, password)
         }
         return response.status == HttpStatusCode.OK
@@ -39,7 +39,7 @@ internal class AuthV2ApiImpl(
         matchOrigin: Boolean
     ): String {
         val response = client.post("/auth/generate_token") {
-            setBody(SessionTokenRequest(timeToLive.inWholeSeconds, attrs, matchOrigin))
+            setBody(SessionTokenRequestDto(timeToLive.inWholeSeconds, attrs, matchOrigin))
             basicAuth(username, password)
         }
         return response.body()
@@ -59,7 +59,7 @@ internal class AuthV2ApiImpl(
 }
 
 @Serializable
-internal data class UserCredentials(
+internal data class UserCredentialsDto(
     @SerialName("username")
     val username: String,
     @SerialName("password")
@@ -67,7 +67,7 @@ internal data class UserCredentials(
 )
 
 @Serializable
-internal data class SessionTokenRequest(
+internal data class SessionTokenRequestDto(
     @SerialName("ttl")
     val timeToLive: Long,
     @SerialName("attrs")
