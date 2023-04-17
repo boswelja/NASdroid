@@ -1,0 +1,59 @@
+package com.boswelja.truemanager.core.api.v2.reporting
+
+import kotlinx.datetime.Instant
+
+interface ReportingV2Api {
+
+    suspend fun getReportingDatabaseSettings(): ReportingConfig
+
+    suspend fun setReportingDatabaseSettings(newConfig: ReportingConfig)
+
+    suspend fun clearReportingDatabase()
+
+    suspend fun getReportingGraphs(
+        limit: Int?,
+        offset: Int?,
+        sort: String?,
+    ): List<ReportingGraph>
+
+    suspend fun getGraphData(graphs: List<String>, unit: String, page: Int): List<ReportingGraphData>
+
+    suspend fun getGraphData(graphs: List<String>, start: Instant, end: Instant): List<ReportingGraphData>
+
+    suspend fun getGraphData(graphs: List<String>): List<ReportingGraphData>
+}
+
+data class ReportingConfig(
+    val id: Int,
+    val cpuInPercentage: Boolean,
+    val graphiteInstanceUrl: String,
+    val graphAge: Int,
+    val graphPoints: Int,
+    val graphiteSeparateInstances: Boolean,
+)
+
+data class ReportingGraph(
+    val name: String,
+    val title: String,
+    val verticalLabel: String,
+    val identifiers: List<String>,
+    val stacked: Boolean,
+    val stackedShowTotal: Boolean,
+)
+
+data class ReportingGraphData(
+    val name: String,
+    val identifier: String?,
+    val data: List<List<Double?>>,
+    val start: Instant,
+    val end: Instant,
+    val step: Int,
+    val legend: List<String>,
+    val aggregations: Aggregations?
+) {
+    data class Aggregations(
+        val min: List<Int>,
+        val max: List<Int>,
+        val mean: List<Int>,
+    )
+}

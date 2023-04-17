@@ -40,7 +40,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
     implementation("io.ktor:ktor-client-android:2.2.4")
     implementation("io.ktor:ktor-client-content-negotiation:2.2.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     implementation("io.insert-koin:koin-core:3.4.0")
-
 }
