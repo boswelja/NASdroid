@@ -81,7 +81,7 @@ fun AuthFields(
             value = serverAddress,
             onValueChange = { serverAddress = it },
             label = { Text(stringResource(R.string.server_label)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, autoCorrect = false),
             enabled = enabled,
             modifier = Modifier.fillMaxWidth()
         )
