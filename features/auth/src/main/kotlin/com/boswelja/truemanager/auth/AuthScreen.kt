@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -26,22 +27,26 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
+import org.koin.compose.rememberKoinInject
 
 @Composable
 fun AuthScreen(
+    onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: AuthViewModel = koinViewModel(),
 ) {
     // TODO Different layouts based on device type
-    AuthPhoneContent(modifier = modifier)
-}
-
-@Composable
-fun AuthPhoneContent(
-    modifier: Modifier = Modifier,
-    viewModel: AuthViewModel = koinViewModel()
-) {
     val isLoading by viewModel.isLoading.collectAsState()
+
+    // TODO Proper handling of auth success
+    val apiStateProvider: ApiStateProvider = rememberKoinInject()
+    LaunchedEffect(isLoading) {
+        if (!isLoading && apiStateProvider.sessionToken != null) onLoginSuccess()
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
