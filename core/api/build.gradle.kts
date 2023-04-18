@@ -37,7 +37,10 @@ android {
 }
 
 dependencies {
+    // Ktor
     implementation(libs.bundles.ktor.client.android)
+    debugImplementation(libs.ktor.logging)
+
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
 
