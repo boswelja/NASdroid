@@ -9,9 +9,9 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 import kotlin.time.Duration
 
 internal class AuthV2ApiImpl(
@@ -39,13 +39,15 @@ internal class AuthV2ApiImpl(
         username: String,
         password: String,
         timeToLive: Duration,
-        attrs: Map<String, Any>,
         matchOrigin: Boolean
     ): String {
         val response = client.post("auth/generate_token") {
             contentType(ContentType.Application.Json)
-            setBody(SessionTokenRequestDto(timeToLive.inWholeSeconds, attrs, matchOrigin))
+            setBody(SessionTokenRequestDto(timeToLive.inWholeSeconds, JsonObject(emptyMap()), matchOrigin))
             basicAuth(username, password)
+        }
+        if (response.status != HttpStatusCode.OK) {
+            error(response.body())
         }
         return response.body()
     }
@@ -77,7 +79,7 @@ internal data class SessionTokenRequestDto(
     @SerialName("ttl")
     val timeToLive: Long,
     @SerialName("attrs")
-    val attrs: Map<String, @Contextual Any>,
+    val attrs: JsonObject,
     @SerialName("match_origin")
     val matchOrigin: Boolean,
 )

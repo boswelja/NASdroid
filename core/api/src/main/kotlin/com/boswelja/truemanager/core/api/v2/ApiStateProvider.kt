@@ -20,4 +20,9 @@ internal class InMemoryApiStateProvider : ApiStateProvider {
         }
 
     override var sessionToken: String? = null
+        set(value) {
+            if (field != value) {
+                field = value?.removeSurrounding("\"")
+            }
+        }
 }

@@ -24,7 +24,7 @@ class AuthViewModel(
         viewModelScope.launch {
             val isValid = authV2Api.checkPassword(username, password)
             if (isValid) {
-                val token = authV2Api.generateToken(username, password, 600.seconds, emptyMap(), true)
+                val token = authV2Api.generateToken(username, password, 600.seconds, false)
                 apiStateProvider.sessionToken = token
                 Log.d("AuthViewModel", "Successfully authenticated")
             } else {
