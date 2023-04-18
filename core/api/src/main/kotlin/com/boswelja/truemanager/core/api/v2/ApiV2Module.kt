@@ -8,20 +8,26 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.bearerAuth
 import io.ktor.serialization.kotlinx.json.json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val apiV2Module = module {
+    // API state
+    singleOf(::InMemoryApiStateProvider) bind ApiStateProvider::class
+
     // Ktor client
     single {
+        val apiStateProvider: ApiStateProvider = get()
         HttpClient(Android) {
             install(ContentNegotiation) {
                 json()
             }
             defaultRequest {
-                url("http://truenas.local/api/v2.0") // TODO Don't hardcode this
+                apiStateProvider.sessionToken?.let { bearerAuth(it) }
+                url(apiStateProvider.serverAddress)
             }
         }
     }
