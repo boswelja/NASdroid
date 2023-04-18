@@ -31,7 +31,7 @@ val apiV2Module = module {
             }
             defaultRequest {
                 apiStateProvider.sessionToken?.let { bearerAuth(it) }
-                url(apiStateProvider.serverAddress)
+                apiStateProvider.serverAddress?.let { url(it) }
             }
         }
     }
