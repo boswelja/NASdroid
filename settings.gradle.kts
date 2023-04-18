@@ -16,5 +16,6 @@ dependencyResolutionManagement {
 rootProject.name = "TrueManager for TrueNAS SCALE"
 include(
     ":core:api",
+    ":features:auth",
     ":app"
 )
