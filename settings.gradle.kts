@@ -1,3 +1,5 @@
+import org.gradle.api.internal.FeaturePreviews
+
 pluginManagement {
     repositories {
         google()
@@ -13,7 +15,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TrueManager for TrueNAS SCALE"
+enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
+
+rootProject.name = "TrueManager"
 include(
     ":core:api",
     ":features:auth",

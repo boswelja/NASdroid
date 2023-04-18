@@ -46,8 +46,13 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.api)
+    implementation(projects.features.auth)
+
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
+
+    implementation(libs.koin.android)
 
     // Compose
     implementation(platform(libs.compose.bom))
