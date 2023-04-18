@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_label">Server Address</string>
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
+    <string name="log_in">Log In</string>
+</resources>

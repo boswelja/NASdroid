@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -79,7 +80,7 @@ fun AuthFields(
         TextField(
             value = serverAddress,
             onValueChange = { serverAddress = it },
-            label = { Text("Server Address") },
+            label = { Text(stringResource(R.string.server_label)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
             enabled = enabled,
             modifier = Modifier.fillMaxWidth()
@@ -87,7 +88,7 @@ fun AuthFields(
         TextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Username") },
+            label = { Text(stringResource(R.string.username_label)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 autoCorrect = false,
@@ -99,7 +100,7 @@ fun AuthFields(
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password_label)) },
             visualTransformation = remember { PasswordVisualTransformation() },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
@@ -113,7 +114,7 @@ fun AuthFields(
             enabled = loginEnabled,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Log In")
+            Text(stringResource(R.string.log_in))
         }
     }
 }
