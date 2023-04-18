@@ -7,6 +7,8 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -29,6 +31,7 @@ internal class ReportingV2ApiImpl(
 
     override suspend fun setReportingDatabaseSettings(newConfig: ReportingConfig) {
         client.put("/reporting") {
+            contentType(ContentType.Application.Json)
             setBody(
                 PutReportingConfigDto(
                     cpuInPercentage = newConfig.cpuInPercentage,
@@ -74,6 +77,7 @@ internal class ReportingV2ApiImpl(
         page: Int
     ): List<ReportingGraphData> {
         val response = client.post("/reporting/get_data") {
+            contentType(ContentType.Application.Json)
             setBody(
                 ReportingGraphDataRequestDto(
                     graphs = graphs.map { name ->
@@ -110,6 +114,7 @@ internal class ReportingV2ApiImpl(
         end: Instant
     ): List<ReportingGraphData> {
         val response = client.post("/reporting/get_data") {
+            contentType(ContentType.Application.Json)
             setBody(
                 ReportingGraphDataRequestDto(
                     graphs = graphs.map { name ->
@@ -142,6 +147,7 @@ internal class ReportingV2ApiImpl(
 
     override suspend fun getGraphData(graphs: List<String>): List<ReportingGraphData> {
         val response = client.post("/reporting/get_data") {
+            contentType(ContentType.Application.Json)
             setBody(
                 ReportingGraphDataRequestDto(
                     graphs = graphs.map { name ->

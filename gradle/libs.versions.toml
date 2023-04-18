@@ -43,6 +43,7 @@ accompanist-navigation = { group = "com.google.accompanist", name = "accompanist
 
 ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
 ktor-contentnegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-formats" }
@@ -76,5 +77,6 @@ compose-tooling = [
 ]
 ktor-client-android = [
     "ktor-client-android",
-    "ktor-contentnegotiation"
+    "ktor-contentnegotiation",
+    "ktor-serialization-json"
 ]

@@ -6,7 +6,9 @@ import io.ktor.client.request.basicAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -17,6 +19,7 @@ internal class AuthV2ApiImpl(
 ) : AuthV2Api {
     override suspend fun checkPassword(username: String, password: String): Boolean {
         val response = client.post("/auth/check_password") {
+            contentType(ContentType.Application.Json)
             setBody(UserCredentialsDto(username, password))
             basicAuth(username, password)
         }
@@ -25,6 +28,7 @@ internal class AuthV2ApiImpl(
 
     override suspend fun checkUser(username: String, password: String): Boolean {
         val response = client.post("/auth/check_user") {
+            contentType(ContentType.Application.Json)
             setBody(UserCredentialsDto(username, password))
             basicAuth(username, password)
         }
@@ -39,6 +43,7 @@ internal class AuthV2ApiImpl(
         matchOrigin: Boolean
     ): String {
         val response = client.post("/auth/generate_token") {
+            contentType(ContentType.Application.Json)
             setBody(SessionTokenRequestDto(timeToLive.inWholeSeconds, attrs, matchOrigin))
             basicAuth(username, password)
         }
@@ -47,6 +52,7 @@ internal class AuthV2ApiImpl(
 
     override suspend fun terminateSession(sessionId: String) {
         val response = client.post("/auth/generate_token") {
+            contentType(ContentType.Text.Plain)
             setBody(sessionId)
         }
         return response.body()
