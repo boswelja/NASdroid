@@ -15,7 +15,7 @@ internal class InMemoryApiStateProvider : ApiStateProvider {
                     return
                 }
 
-                field = "${value.removeSuffix("/")}/api/v2.0"
+                field = "${value.removeSuffix("/")}/api/v2.0/"
             }
         }
 
