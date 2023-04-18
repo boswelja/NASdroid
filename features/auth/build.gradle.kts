@@ -1,11 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.boswelja.truemanager.core.api"
+    namespace = "com.boswelja.truemanager.auth"
     compileSdk = 33
 
     defaultConfig {
@@ -26,6 +25,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildFeatures.compose = true
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.5"
+    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -37,12 +40,15 @@ android {
 }
 
 dependencies {
-    // Ktor
-    implementation(libs.bundles.ktor.client.android)
-    debugImplementation(libs.ktor.logging)
+    implementation(projects.core.api)
 
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.window)
 
-    implementation(libs.koin.core)
+    implementation(libs.accompanist.navigation)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+    debugImplementation(libs.bundles.compose.tooling)
+
+    implementation(libs.koin.android)
+    implementation(libs.koin.android.compose)
 }
