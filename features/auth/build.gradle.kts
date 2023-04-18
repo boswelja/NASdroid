@@ -44,6 +44,7 @@ dependencies {
 
     implementation(libs.androidx.window)
 
+    implementation(libs.accompanist.navigation)
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.tooling)
