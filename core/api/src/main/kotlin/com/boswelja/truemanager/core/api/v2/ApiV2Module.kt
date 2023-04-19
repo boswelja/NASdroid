@@ -11,12 +11,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.bearerAuth
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -30,9 +28,9 @@ val apiV2Module = module {
         val apiStateProvider: ApiStateProvider = get()
         HttpClient(Android) {
             // TODO if debug, BuildConfig appears to be missing
-            install(Logging) {
-                level = LogLevel.ALL
-                logger = object : Logger {
+            install(io.ktor.client.plugins.logging.Logging) {
+                level = io.ktor.client.plugins.logging.LogLevel.ALL
+                logger = object : io.ktor.client.plugins.logging.Logger {
                     override fun log(message: String) {
                         Log.i("Ktor", message)
                     }
@@ -40,7 +38,9 @@ val apiV2Module = module {
             }
 
             install(ContentNegotiation) {
-                json()
+                json(Json {
+                    explicitNulls = false
+                })
             }
             defaultRequest {
                 apiStateProvider.authorization?.let { authorization ->

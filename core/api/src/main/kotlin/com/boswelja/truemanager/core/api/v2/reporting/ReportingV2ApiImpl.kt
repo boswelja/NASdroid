@@ -72,7 +72,7 @@ internal class ReportingV2ApiImpl(
     }
 
     override suspend fun getGraphData(
-        graphs: List<String>,
+        graphs: List<RequestedGraph>,
         unit: String,
         page: Int
     ): List<ReportingGraphData> {
@@ -80,8 +80,8 @@ internal class ReportingV2ApiImpl(
             contentType(ContentType.Application.Json)
             setBody(
                 ReportingGraphDataRequestDto(
-                    graphs = graphs.map { name ->
-                        ReportingGraphDataRequestDto.GraphNameDto(name, null)
+                    graphs = graphs.map { requestedGraph ->
+                        ReportingGraphDataRequestDto.GraphNameDto(requestedGraph.name, requestedGraph.identifier)
                     },
                     reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(null, null, unit, page)
                 )
@@ -93,8 +93,8 @@ internal class ReportingV2ApiImpl(
                 name = data.name,
                 identifier = data.identifier,
                 data = data.data,
-                start = data.start,
-                end = data.end,
+                start = Instant.fromEpochSeconds(data.start),
+                end = Instant.fromEpochSeconds(data.end),
                 step = data.step,
                 legend = data.legend,
                 aggregations = data.aggregations?.let { aggregations ->
@@ -109,7 +109,7 @@ internal class ReportingV2ApiImpl(
     }
 
     override suspend fun getGraphData(
-        graphs: List<String>,
+        graphs: List<RequestedGraph>,
         start: Instant,
         end: Instant
     ): List<ReportingGraphData> {
@@ -117,8 +117,8 @@ internal class ReportingV2ApiImpl(
             contentType(ContentType.Application.Json)
             setBody(
                 ReportingGraphDataRequestDto(
-                    graphs = graphs.map { name ->
-                        ReportingGraphDataRequestDto.GraphNameDto(name, null)
+                    graphs = graphs.map { requestedGraph ->
+                        ReportingGraphDataRequestDto.GraphNameDto(requestedGraph.name, requestedGraph.identifier)
                     },
                     reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(start.epochSeconds, end.epochSeconds, null, null)
                 )
@@ -130,8 +130,8 @@ internal class ReportingV2ApiImpl(
                 name = data.name,
                 identifier = data.identifier,
                 data = data.data,
-                start = data.start,
-                end = data.end,
+                start = Instant.fromEpochSeconds(data.start),
+                end = Instant.fromEpochSeconds(data.end),
                 step = data.step,
                 legend = data.legend,
                 aggregations = data.aggregations?.let { aggregations ->
@@ -145,13 +145,13 @@ internal class ReportingV2ApiImpl(
         }
     }
 
-    override suspend fun getGraphData(graphs: List<String>): List<ReportingGraphData> {
+    override suspend fun getGraphData(graphs: List<RequestedGraph>): List<ReportingGraphData> {
         val response = client.post("reporting/get_data") {
             contentType(ContentType.Application.Json)
             setBody(
                 ReportingGraphDataRequestDto(
-                    graphs = graphs.map { name ->
-                        ReportingGraphDataRequestDto.GraphNameDto(name, null)
+                    graphs = graphs.map { requestedGraph ->
+                        ReportingGraphDataRequestDto.GraphNameDto(requestedGraph.name, requestedGraph.identifier)
                     },
                     reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(null, null, null, null)
                 )
@@ -163,8 +163,8 @@ internal class ReportingV2ApiImpl(
                 name = data.name,
                 identifier = data.identifier,
                 data = data.data,
-                start = data.start,
-                end = data.end,
+                start = Instant.fromEpochSeconds(data.start),
+                end = Instant.fromEpochSeconds(data.end),
                 step = data.step,
                 legend = data.legend,
                 aggregations = data.aggregations?.let { aggregations ->
@@ -262,9 +262,9 @@ internal data class ReportingGraphDataDto(
     @SerialName("data")
     val data: List<List<Double?>>,
     @SerialName("start")
-    val start: Instant,
+    val start: Long,
     @SerialName("end")
-    val end: Instant,
+    val end: Long,
     @SerialName("step")
     val step: Int,
     @SerialName("legend")
@@ -275,10 +275,10 @@ internal data class ReportingGraphDataDto(
     @Serializable
     internal data class AggregationsDto(
         @SerialName("min")
-        val min: List<Int>,
+        val min: List<Double>,
         @SerialName("max")
-        val max: List<Int>,
+        val max: List<Double>,
         @SerialName("mean")
-        val mean: List<Int>,
+        val mean: List<Double>,
     )
 }
