@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.auth
+package com.boswelja.truemanager.auth.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -43,6 +43,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.auth.R
 import org.koin.androidx.compose.koinViewModel
 
 

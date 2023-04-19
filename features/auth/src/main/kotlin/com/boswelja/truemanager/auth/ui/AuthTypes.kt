@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.auth
+package com.boswelja.truemanager.auth.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
@@ -9,6 +9,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.boswelja.truemanager.auth.R
 
 sealed class AuthType(
     @StringRes val labelRes: Int,

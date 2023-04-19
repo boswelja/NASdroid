@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.auth
+package com.boswelja.truemanager.auth.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
