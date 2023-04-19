@@ -35,11 +35,11 @@ class AuthenticatedServersStoreImpl(
     }
 
     override suspend fun delete(server: AuthenticatedServer) {
-        database.authenticatedServerDao().delete(server.token)
+        database.authenticatedServerDao().delete(AuthenticatedServerDto(server.serverAddress, server.token))
     }
 
     override suspend fun add(serverAddress: String, token: String) {
-        database.authenticatedServerDao().insertAll(AuthenticatedServer(serverAddress, token))
+        database.authenticatedServerDao().insertAll(AuthenticatedServerDto(serverAddress, token))
     }
 }
 
@@ -58,10 +58,10 @@ interface AuthenticatedServerDao {
     fun getAll(): Flow<List<AuthenticatedServerDto>>
 
     @Insert
-    suspend fun insertAll(vararg servers: AuthenticatedServer)
+    suspend fun insertAll(vararg servers: AuthenticatedServerDto)
 
     @Delete
-    suspend fun delete(token: String)
+    suspend fun delete(server: AuthenticatedServerDto)
 }
 
 @Database(entities = [AuthenticatedServerDto::class], version = 1)
