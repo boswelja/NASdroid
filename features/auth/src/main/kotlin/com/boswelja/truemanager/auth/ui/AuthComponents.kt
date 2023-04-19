@@ -264,7 +264,7 @@ fun ApiKeyFields(
         onValueChange = onApiKeyChange,
         label = { Text(stringResource(R.string.api_key_label)) },
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
+            keyboardType = KeyboardType.Password,
             autoCorrect = false,
             capitalization = KeyboardCapitalization.None,
             imeAction = ImeAction.Done
