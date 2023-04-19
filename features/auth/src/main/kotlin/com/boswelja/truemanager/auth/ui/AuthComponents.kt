@@ -7,19 +7,24 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
@@ -78,7 +83,7 @@ fun AuthComponents(
                 AuthType.ApiKeyAuth -> apiKey.isNotBlank()
                 AuthType.BasicAuth -> username.isNotBlank() && password.isNotBlank()
             }
-            serverAddress.isNotBlank() && authValid
+            !isLoading && serverAddress.isNotBlank() && authValid
         }
     }
 
@@ -147,6 +152,7 @@ fun AuthComponents(
             LoginButton(
                 onClick = logIn,
                 enabled = loginEnabled,
+                loading = isLoading,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -283,13 +289,18 @@ fun ApiKeyFields(
 fun LoginButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    loading: Boolean = false,
+    enabled: Boolean = true,
 ) {
     Button(
         onClick = onClick,
         enabled = enabled,
         modifier = modifier
     ) {
-        Text(stringResource(R.string.log_in))
+        if (loading) {
+            CircularProgressIndicator(Modifier.size(26.dp))
+        } else {
+            Text(stringResource(R.string.log_in))
+        }
     }
 }
