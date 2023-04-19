@@ -1,8 +1,8 @@
 package com.boswelja.truemanager.auth
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
@@ -17,7 +17,8 @@ fun NavGraphBuilder.authNavigation(route: String) {
     ) {
         composable("login") {
             AuthScreen(
-                Modifier.fillMaxSize().padding(32.dp)
+                Modifier.fillMaxSize(),
+                PaddingValues(32.dp)
             )
         }
     }
