@@ -28,7 +28,7 @@ internal class ApiKeyV2ApiImpl(
             ApiKey(
                 id = key.id,
                 name = key.name,
-                createdAt = key.createdAt.date,
+                createdAt = Instant.fromEpochMilliseconds(key.createdAt.date),
                 allowList = key.allowList.map { ApiKey.AllowRule(it.method, it.resource) }
             )
         }
@@ -53,7 +53,7 @@ internal class ApiKeyV2ApiImpl(
         return ApiKey(
             id = dto.id,
             name = dto.name,
-            createdAt = dto.createdAt.date,
+            createdAt = Instant.fromEpochMilliseconds(dto.createdAt.date),
             allowList = dto.allowList.map { ApiKey.AllowRule(it.method, it.resource) }
         )
     }
@@ -99,7 +99,7 @@ internal data class ApiKeyDto(
     @Serializable
     internal data class CreatedAtDto(
         @SerialName("\$date")
-        val date: Instant
+        val date: Long
     )
 }
 
