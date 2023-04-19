@@ -2,13 +2,10 @@ package com.boswelja.truemanager.auth
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -17,8 +14,8 @@ internal sealed class AuthType(
     @StringRes val labelRes: Int,
     val icon: ImageVector
 ) {
-    internal object BasicAuth : AuthType(R.string.username_label, Icons.Default.Password)
-    internal object ApiKeyAuth : AuthType(R.string.password_label, Icons.Default.Key)
+    internal object BasicAuth : AuthType(R.string.auth_type_basic, Icons.Default.Password)
+    internal object ApiKeyAuth : AuthType(R.string.auth_type_key, Icons.Default.Key)
 
 }
 

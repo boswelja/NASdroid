@@ -195,7 +195,7 @@ fun ApiKeyAuthFields(
         TextField(
             value = apiKey,
             onValueChange = { apiKey = it },
-            label = { Text(stringResource(R.string.username_label)) },
+            label = { Text(stringResource(R.string.api_key_label)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 autoCorrect = false,
