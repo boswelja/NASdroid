@@ -21,11 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.auth.R
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Composable
@@ -63,16 +65,17 @@ fun AuthHeader(
                 Column {
                     Text(
                         text = buildAnnotatedString {
-                            append("True")
+                            append(stringResource(R.string.auth_header_true))
                             withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) {
-                                append("Manager")
+                                append(stringResource(R.string.auth_header_manager))
                             }
                         },
                         style = MaterialTheme.typography.headlineLarge
                     )
                     Text(
-                        text = "for TrueNAS SCALE",
-                        style = MaterialTheme.typography.labelLarge
+                        text = stringResource(R.string.auth_header_label),
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(start = 4.dp)
                     )
                 }
             }
