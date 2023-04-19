@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
@@ -37,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -63,6 +65,12 @@ fun AuthComponents(
     var password by rememberSaveable { mutableStateOf("") }
     var apiKey by rememberSaveable { mutableStateOf("") }
 
+    val logIn = {
+        when (selectedAuthType) {
+            AuthType.ApiKeyAuth -> viewModel.tryLogIn(serverAddress, apiKey)
+            AuthType.BasicAuth -> viewModel.tryLogIn(serverAddress, username, password)
+        }
+    }
     val loginEnabled by remember {
         derivedStateOf {
             val authValid = when (selectedAuthType) {
@@ -116,6 +124,7 @@ fun AuthComponents(
                         ApiKeyFields(
                             apiKey = apiKey,
                             onApiKeyChange = { apiKey = it },
+                            onDone = logIn,
                             enabled = !isLoading,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -126,6 +135,7 @@ fun AuthComponents(
                             onUsernameChange = { username = it },
                             password = password,
                             onPasswordChange = { password = it },
+                            onDone = logIn,
                             enabled = !isLoading,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -134,12 +144,7 @@ fun AuthComponents(
             }
             Spacer(modifier = Modifier.height(16.dp))
             LoginButton(
-                onClick = {
-                    when (selectedAuthType) {
-                        AuthType.ApiKeyAuth -> viewModel.tryLogIn(serverAddress, apiKey)
-                        AuthType.BasicAuth -> viewModel.tryLogIn(serverAddress, username, password)
-                    }
-                },
+                onClick = logIn,
                 enabled = loginEnabled,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -160,7 +165,12 @@ fun ServerAddressField(
         onValueChange = onServerAddressChange,
         label = { Text(stringResource(R.string.server_label)) },
         leadingIcon = { Icon(Icons.Default.Dns, contentDescription = null) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, autoCorrect = false),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Uri,
+            autoCorrect = false,
+            imeAction = ImeAction.Next
+        ),
+        singleLine = true,
         enabled = enabled,
         modifier = modifier
     )
@@ -197,6 +207,7 @@ fun BasicAuthFields(
     onUsernameChange: (String) -> Unit,
     password: String,
     onPasswordChange: (String) -> Unit,
+    onDone: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
@@ -211,8 +222,10 @@ fun BasicAuthFields(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 autoCorrect = false,
-                capitalization = KeyboardCapitalization.None
+                capitalization = KeyboardCapitalization.None,
+                imeAction = ImeAction.Next
             ),
+            singleLine = true,
             enabled = enabled,
             modifier = Modifier.fillMaxWidth()
         )
@@ -222,8 +235,14 @@ fun BasicAuthFields(
             label = { Text(stringResource(R.string.password_label)) },
             visualTransformation = remember { PasswordVisualTransformation() },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
             ),
+            keyboardActions = KeyboardActions {
+                defaultKeyboardAction(ImeAction.Done)
+                onDone()
+            },
+            singleLine = true,
             enabled = enabled,
             modifier = Modifier.fillMaxWidth()
         )
@@ -235,6 +254,7 @@ fun BasicAuthFields(
 fun ApiKeyFields(
     apiKey: String,
     onApiKeyChange: (String) -> Unit,
+    onDone: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
@@ -245,8 +265,14 @@ fun ApiKeyFields(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
             autoCorrect = false,
-            capitalization = KeyboardCapitalization.None
+            capitalization = KeyboardCapitalization.None,
+            imeAction = ImeAction.Done
         ),
+        keyboardActions = KeyboardActions {
+            defaultKeyboardAction(ImeAction.Done)
+            onDone()
+        },
+        singleLine = true,
         enabled = enabled,
         modifier = modifier
     )
