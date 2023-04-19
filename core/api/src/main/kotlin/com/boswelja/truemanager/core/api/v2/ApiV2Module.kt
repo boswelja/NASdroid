@@ -1,5 +1,7 @@
 package com.boswelja.truemanager.core.api.v2
 
+import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
+import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2Api
@@ -36,6 +38,7 @@ val apiV2Module = module {
         }
     }
 
+    singleOf(::ApiKeyV2ApiImpl) bind ApiKeyV2Api::class
     singleOf(::AuthV2ApiImpl) bind AuthV2Api::class
     singleOf(::ReportingV2ApiImpl) bind ReportingV2Api::class
 }
