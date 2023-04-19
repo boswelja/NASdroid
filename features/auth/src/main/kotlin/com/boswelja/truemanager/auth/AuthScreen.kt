@@ -107,7 +107,8 @@ fun AuthComponents(
         AuthTypeSelector(
             currentType = selectedAuthType,
             onAuthTypeChange = { selectedAuthType = it },
-            modifier = Modifier.padding(vertical = 16.dp)
+            modifier = Modifier.padding(vertical = 16.dp),
+            enabled = !isLoading
         )
         Column(
             modifier = Modifier
@@ -183,7 +184,8 @@ fun ServerAddressField(
 fun AuthTypeSelector(
     currentType: AuthType,
     onAuthTypeChange: (AuthType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     // TODO Segmented Buttons
     TabRow(
@@ -195,7 +197,8 @@ fun AuthTypeSelector(
                 selected = currentType == authType,
                 onClick = { onAuthTypeChange(authType) },
                 text = { Text(stringResource(authType.labelRes)) },
-                icon = { Icon(imageVector = authType.icon, contentDescription = null) }
+                icon = { Icon(imageVector = authType.icon, contentDescription = null) },
+                enabled = enabled
             )
         }
     }
