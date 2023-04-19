@@ -41,7 +41,8 @@ class AuthViewModel(
         _isLoading.value = true
         apiStateProvider.serverAddress = serverAddress
         viewModelScope.launch {
-            authedServersStore.add(serverAddress, apiKey)
+            //authedServersStore.add(serverAddress, apiKey)
+            delay(500)
             apiStateProvider.authorization = Authorization.ApiKey(apiKey)
             // TODO validate API key
             _isLoading.value = false
