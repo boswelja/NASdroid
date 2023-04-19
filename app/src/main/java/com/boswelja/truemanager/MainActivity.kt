@@ -10,7 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.boswelja.truemanager.auth.authNavigation
+import com.boswelja.truemanager.auth.ui.authNavigation
 import com.boswelja.truemanager.ui.theme.TrueManagerTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController

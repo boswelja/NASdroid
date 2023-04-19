@@ -1,6 +1,7 @@
 [versions]
 android-gradle-plugin = "8.1.0-alpha11"
 kotlin = "1.8.20"
+ksp = "1.8.20-1.0.11"
 
 androidx-core = "1.10.0"
 androidx-lifecycle = "2.6.1"
@@ -9,6 +10,8 @@ androidx-window = "1.1.0-beta02"
 activity-compose = "1.7.0"
 compose-bom = "2023.04.00"
 accompanist = "0.30.1"
+
+room = "2.5.1"
 
 ktor = "2.2.4"
 
@@ -38,8 +41,13 @@ compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-icons = { group = "androidx.compose.material", name = "material-icons-extended"}
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-accompanist-navigation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist"}
+accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
+accompanist-navigation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist" }
+
+room-runtime = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
@@ -62,6 +70,7 @@ android-application = { id = "com.android.application", version.ref = "android-g
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 compose = [
@@ -70,6 +79,7 @@ compose = [
     "compose-ui",
     "compose-ui-graphics",
     "compose-ui-tooling-preview",
+    "compose-icons",
     "compose-material3"
 ]
 compose-tooling = [
