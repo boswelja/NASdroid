@@ -10,12 +10,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
 
-internal sealed class AuthType(
+sealed class AuthType(
     @StringRes val labelRes: Int,
     val icon: ImageVector
 ) {
-    internal object BasicAuth : AuthType(R.string.auth_type_basic, Icons.Default.Password)
-    internal object ApiKeyAuth : AuthType(R.string.auth_type_key, Icons.Default.Key)
+    object BasicAuth : AuthType(R.string.auth_type_basic, Icons.Default.Password)
+    object ApiKeyAuth : AuthType(R.string.auth_type_key, Icons.Default.Key)
 
 }
 
