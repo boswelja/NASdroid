@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,7 +40,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 
@@ -71,11 +72,26 @@ fun AuthComponents(
         mutableStateOf(AuthTypes.first())
     }
 
+    var username by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var apiKey by rememberSaveable { mutableStateOf("") }
+
+    val loginEnabled by remember {
+        derivedStateOf {
+            val authValid = when (selectedAuthType) {
+                AuthType.ApiKeyAuth -> apiKey.isNotBlank()
+                AuthType.BasicAuth -> username.isNotBlank() && password.isNotBlank()
+            }
+            serverAddress.isNotBlank() && authValid
+        }
+    }
+
     Column(modifier = modifier) {
         TextField(
             value = serverAddress,
             onValueChange = { serverAddress = it },
             label = { Text(stringResource(R.string.server_label)) },
+            leadingIcon = { Icon(Icons.Default.Dns, contentDescription = null) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, autoCorrect = false),
             enabled = !isLoading,
             modifier = Modifier
@@ -86,6 +102,7 @@ fun AuthComponents(
                     end = contentPadding.calculateEndPadding(layoutDirection)
                 )
         )
+        // TODO Segmented Buttons
         TabRow(
             selectedTabIndex = AuthTypes.indexOf(selectedAuthType),
             modifier = Modifier.padding(vertical = 16.dp)
@@ -111,8 +128,15 @@ fun AuthComponents(
         ) { authType ->
             when (authType) {
                 AuthType.ApiKeyAuth -> {
-                    ApiKeyAuthFields(
-                        onLogIn = { serverAddress, apiKey -> },
+                    TextField(
+                        value = apiKey,
+                        onValueChange = { apiKey = it },
+                        label = { Text(stringResource(R.string.api_key_label)) },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            autoCorrect = false,
+                            capitalization = KeyboardCapitalization.None
+                        ),
                         enabled = !isLoading,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -120,20 +144,48 @@ fun AuthComponents(
                     )
                 }
                 AuthType.BasicAuth -> {
-                    BasicAuthFields(
-                        onLogIn = { serverAddress, username, password ->  },
-                        enabled = !isLoading,
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .widthIn(max = 560.dp)
-                    )
+                            .widthIn(max = 560.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TextField(
+                            value = username,
+                            onValueChange = { username = it },
+                            label = { Text(stringResource(R.string.username_label)) },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                autoCorrect = false,
+                                capitalization = KeyboardCapitalization.None
+                            ),
+                            enabled = !isLoading,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        TextField(
+                            value = password,
+                            onValueChange = { password = it },
+                            label = { Text(stringResource(R.string.password_label)) },
+                            visualTransformation = remember { PasswordVisualTransformation() },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password
+                            ),
+                            enabled = !isLoading,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { },
-            enabled = false,
+            onClick = {
+                when (selectedAuthType) {
+                    AuthType.ApiKeyAuth -> viewModel.tryLogIn(serverAddress, apiKey)
+                    AuthType.BasicAuth -> viewModel.tryLogIn(serverAddress, username, password)
+                }
+            },
+            enabled = loginEnabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -145,81 +197,4 @@ fun AuthComponents(
             Text(stringResource(R.string.log_in))
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BasicAuthFields(
-    onLogIn: (serverAddress: String, username: String, password: String) -> Unit,
-    enabled: Boolean,
-    modifier: Modifier = Modifier
-) {
-    var username by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        TextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text(stringResource(R.string.username_label)) },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                autoCorrect = false,
-                capitalization = KeyboardCapitalization.None
-            ),
-            enabled = enabled,
-            modifier = Modifier.fillMaxWidth()
-        )
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(stringResource(R.string.password_label)) },
-            visualTransformation = remember { PasswordVisualTransformation() },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
-            ),
-            enabled = enabled,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ApiKeyAuthFields(
-    onLogIn: (serverAddress: String, apiKey: String) -> Unit,
-    enabled: Boolean,
-    modifier: Modifier = Modifier
-) {
-    var apiKey by rememberSaveable { mutableStateOf("") }
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        TextField(
-            value = apiKey,
-            onValueChange = { apiKey = it },
-            label = { Text(stringResource(R.string.api_key_label)) },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                autoCorrect = false,
-                capitalization = KeyboardCapitalization.None
-            ),
-            enabled = enabled,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-    }
-}
-
-@Preview
-@Composable
-fun AuthFieldsPreview() {
-    var enabled by remember { mutableStateOf(false) }
-    BasicAuthFields(
-        onLogIn = { _, _, _ -> enabled = true },
-        enabled = enabled
-    )
 }
