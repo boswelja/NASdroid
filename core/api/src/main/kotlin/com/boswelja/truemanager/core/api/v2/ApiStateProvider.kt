@@ -3,7 +3,12 @@ package com.boswelja.truemanager.core.api.v2
 interface ApiStateProvider {
     var serverAddress: String?
 
-    var sessionToken: String?
+    var authorization: Authorization?
+}
+
+sealed class Authorization {
+    data class Basic(val username: String, val password: String) : Authorization()
+    data class ApiKey(val apiKey: String) : Authorization()
 }
 
 internal class InMemoryApiStateProvider : ApiStateProvider {
@@ -19,10 +24,5 @@ internal class InMemoryApiStateProvider : ApiStateProvider {
             }
         }
 
-    override var sessionToken: String? = null
-        set(value) {
-            if (field != value) {
-                field = value?.removeSurrounding("\"")
-            }
-        }
+    override var authorization: Authorization? = null
 }

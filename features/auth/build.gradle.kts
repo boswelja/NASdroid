@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -21,16 +22,9 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
     buildFeatures.compose = true
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.5"
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
     packaging {
         resources {
@@ -39,12 +33,22 @@ android {
     }
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     implementation(projects.core.api)
 
     implementation(libs.androidx.window)
 
+    // Room
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+
+    // Compose
     implementation(libs.accompanist.navigation)
+    implementation(libs.accompanist.drawablepainter)
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.tooling)
