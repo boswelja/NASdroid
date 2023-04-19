@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -44,6 +45,11 @@ dependencies {
 
     implementation(libs.androidx.window)
 
+    // Room
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+
+    // Compose
     implementation(libs.accompanist.navigation)
     implementation(libs.accompanist.drawablepainter)
     implementation(platform(libs.compose.bom))

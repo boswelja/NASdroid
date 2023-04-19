@@ -1,8 +1,8 @@
 package com.boswelja.truemanager.auth.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.boswelja.truemanager.auth.serverstore.AuthenticatedServersStore
 import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import com.boswelja.truemanager.core.api.v2.Authorization
 import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
@@ -15,6 +15,7 @@ class AuthViewModel(
     private val apiStateProvider: ApiStateProvider,
     private val authV2Api: AuthV2Api,
     private val apiKeyV2Api: ApiKeyV2Api,
+    private val authedServersStore: AuthenticatedServersStore,
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -28,10 +29,8 @@ class AuthViewModel(
             if (isValid) {
                 apiStateProvider.authorization = Authorization.Basic(username, password)
                 val apiKey = apiKeyV2Api.create("TrueManager for TrueNAS")
+                authedServersStore.add(serverAddress, apiKey)
                 apiStateProvider.authorization = Authorization.ApiKey(apiKey)
-                Log.d("AuthViewModel", "Successfully authenticated")
-            } else {
-                Log.d("AuthViewModel", "Username, password or server address are invalid")
             }
             _isLoading.value = false
         }
@@ -41,6 +40,7 @@ class AuthViewModel(
         _isLoading.value = true
         apiStateProvider.serverAddress = serverAddress
         viewModelScope.launch {
+            authedServersStore.add(serverAddress, apiKey)
             apiStateProvider.authorization = Authorization.ApiKey(apiKey)
             // TODO validate API key
             _isLoading.value = false
