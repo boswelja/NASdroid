@@ -1,5 +1,6 @@
 package com.boswelja.truemanager.core.api.v2
 
+import android.util.Log
 import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
 import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
@@ -10,7 +11,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.basicAuth
 import io.ktor.client.request.bearerAuth
 import io.ktor.serialization.kotlinx.json.json
 import org.koin.core.module.dsl.singleOf
@@ -26,13 +30,25 @@ val apiV2Module = module {
         val apiStateProvider: ApiStateProvider = get()
         HttpClient(Android) {
             // TODO if debug, BuildConfig appears to be missing
-            install(Logging)
+            install(Logging) {
+                level = LogLevel.ALL
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        Log.i("Ktor", message)
+                    }
+                }
+            }
 
             install(ContentNegotiation) {
                 json()
             }
             defaultRequest {
-                apiStateProvider.sessionToken?.let { bearerAuth(it) }
+                apiStateProvider.authorization?.let { authorization ->
+                    when (authorization) {
+                        is Authorization.ApiKey -> bearerAuth(authorization.apiKey)
+                        is Authorization.Basic -> basicAuth(authorization.username, authorization.password)
+                    }
+                }
                 apiStateProvider.serverAddress?.let { url(it) }
             }
         }
