@@ -32,6 +32,7 @@ import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Composable
 fun AuthScreen(
+    onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
@@ -46,7 +47,7 @@ fun AuthScreen(
                 .aspectRatio(16 / 9f)
                 .padding(contentPadding)
         )
-        AuthComponents(Modifier.fillMaxSize(), contentPadding)
+        AuthComponents(onLoginSuccess, Modifier.fillMaxSize(), contentPadding)
     }
 }
 
