@@ -52,7 +52,7 @@ fun AuthScreen(
 fun AuthHeader(
     modifier: Modifier = Modifier
 ) {
-    Surface {
+    Surface(color = MaterialTheme.colorScheme.primaryContainer) {
         Box(
             modifier = modifier,
             contentAlignment = Alignment.Center
