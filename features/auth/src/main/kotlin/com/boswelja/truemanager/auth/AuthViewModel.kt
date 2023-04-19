@@ -9,7 +9,6 @@ import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.seconds
 
 class AuthViewModel(
     private val apiStateProvider: ApiStateProvider,

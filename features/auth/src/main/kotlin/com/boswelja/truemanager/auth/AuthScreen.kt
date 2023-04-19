@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -57,7 +58,7 @@ fun AuthScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AuthComponents(
     modifier: Modifier = Modifier,
@@ -86,13 +87,13 @@ fun AuthComponents(
         }
     }
 
-    Column(modifier = modifier) {
-        TextField(
-            value = serverAddress,
-            onValueChange = { serverAddress = it },
-            label = { Text(stringResource(R.string.server_label)) },
-            leadingIcon = { Icon(Icons.Default.Dns, contentDescription = null) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, autoCorrect = false),
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ServerAddressField(
+            serverAddress = serverAddress,
+            onServerAddressChange = { serverAddress = it },
             enabled = !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
@@ -101,100 +102,178 @@ fun AuthComponents(
                     start = contentPadding.calculateStartPadding(layoutDirection),
                     end = contentPadding.calculateEndPadding(layoutDirection)
                 )
+                .widthIn(max = 560.dp)
         )
-        // TODO Segmented Buttons
-        TabRow(
-            selectedTabIndex = AuthTypes.indexOf(selectedAuthType),
+        AuthTypeSelector(
+            currentType = selectedAuthType,
+            onAuthTypeChange = { selectedAuthType = it },
             modifier = Modifier.padding(vertical = 16.dp)
-        ) {
-            AuthTypes.forEach {
-                Tab(
-                    selected = selectedAuthType == it,
-                    onClick = { selectedAuthType = it },
-                    text = { Text(stringResource(it.labelRes)) },
-                    icon = { Icon(imageVector = it.icon, contentDescription = null) }
-                )
-            }
-        }
-        AnimatedContent(
-            targetState = selectedAuthType,
-            label = "Login method content",
-            transitionSpec = { fadeIn() with fadeOut() },
-            modifier = Modifier
-                .padding(
-                    start = contentPadding.calculateStartPadding(layoutDirection),
-                    end = contentPadding.calculateEndPadding(layoutDirection)
-                )
-        ) { authType ->
-            when (authType) {
-                AuthType.ApiKeyAuth -> {
-                    TextField(
-                        value = apiKey,
-                        onValueChange = { apiKey = it },
-                        label = { Text(stringResource(R.string.api_key_label)) },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            autoCorrect = false,
-                            capitalization = KeyboardCapitalization.None
-                        ),
-                        enabled = !isLoading,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .widthIn(max = 560.dp)
-                    )
-                }
-                AuthType.BasicAuth -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .widthIn(max = 560.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        TextField(
-                            value = username,
-                            onValueChange = { username = it },
-                            label = { Text(stringResource(R.string.username_label)) },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text,
-                                autoCorrect = false,
-                                capitalization = KeyboardCapitalization.None
-                            ),
-                            enabled = !isLoading,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        TextField(
-                            value = password,
-                            onValueChange = { password = it },
-                            label = { Text(stringResource(R.string.password_label)) },
-                            visualTransformation = remember { PasswordVisualTransformation() },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Password
-                            ),
-                            enabled = !isLoading,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-                when (selectedAuthType) {
-                    AuthType.ApiKeyAuth -> viewModel.tryLogIn(serverAddress, apiKey)
-                    AuthType.BasicAuth -> viewModel.tryLogIn(serverAddress, username, password)
-                }
-            },
-            enabled = loginEnabled,
+        )
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .widthIn(max = 560.dp)
                 .padding(
                     start = contentPadding.calculateStartPadding(layoutDirection),
                     end = contentPadding.calculateEndPadding(layoutDirection),
                     bottom = contentPadding.calculateBottomPadding()
                 )
         ) {
-            Text(stringResource(R.string.log_in))
+            AnimatedContent(
+                targetState = selectedAuthType,
+                label = "Login method content",
+                transitionSpec = { fadeIn() with fadeOut() },
+            ) { authType ->
+                when (authType) {
+                    AuthType.ApiKeyAuth -> {
+                        ApiKeyFields(
+                            apiKey = apiKey,
+                            onApiKeyChange = { apiKey = it },
+                            enabled = !isLoading,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                    AuthType.BasicAuth -> {
+                        BasicAuthFields(
+                            username = username,
+                            onUsernameChange = { username = it },
+                            password = password,
+                            onPasswordChange = { password = it },
+                            enabled = !isLoading,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            LoginButton(
+                onClick = {
+                    when (selectedAuthType) {
+                        AuthType.ApiKeyAuth -> viewModel.tryLogIn(serverAddress, apiKey)
+                        AuthType.BasicAuth -> viewModel.tryLogIn(serverAddress, username, password)
+                    }
+                },
+                enabled = loginEnabled,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ServerAddressField(
+    serverAddress: String,
+    onServerAddressChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    TextField(
+        value = serverAddress,
+        onValueChange = onServerAddressChange,
+        label = { Text(stringResource(R.string.server_label)) },
+        leadingIcon = { Icon(Icons.Default.Dns, contentDescription = null) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, autoCorrect = false),
+        enabled = enabled,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun AuthTypeSelector(
+    currentType: AuthType,
+    onAuthTypeChange: (AuthType) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // TODO Segmented Buttons
+    TabRow(
+        selectedTabIndex = AuthTypes.indexOf(currentType),
+        modifier = modifier
+    ) {
+        AuthTypes.forEach { authType ->
+            Tab(
+                selected = currentType == authType,
+                onClick = { onAuthTypeChange(authType) },
+                text = { Text(stringResource(authType.labelRes)) },
+                icon = { Icon(imageVector = authType.icon, contentDescription = null) }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BasicAuthFields(
+    username: String,
+    onUsernameChange: (String) -> Unit,
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        TextField(
+            value = username,
+            onValueChange = onUsernameChange,
+            label = { Text(stringResource(R.string.username_label)) },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                autoCorrect = false,
+                capitalization = KeyboardCapitalization.None
+            ),
+            enabled = enabled,
+            modifier = Modifier.fillMaxWidth()
+        )
+        TextField(
+            value = password,
+            onValueChange = onPasswordChange,
+            label = { Text(stringResource(R.string.password_label)) },
+            visualTransformation = remember { PasswordVisualTransformation() },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            enabled = enabled,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ApiKeyFields(
+    apiKey: String,
+    onApiKeyChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    TextField(
+        value = apiKey,
+        onValueChange = onApiKeyChange,
+        label = { Text(stringResource(R.string.api_key_label)) },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            autoCorrect = false,
+            capitalization = KeyboardCapitalization.None
+        ),
+        enabled = enabled,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun LoginButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier
+    ) {
+        Text(stringResource(R.string.log_in))
     }
 }
