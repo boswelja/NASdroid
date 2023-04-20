@@ -52,9 +52,9 @@ data class ReportingGraphData(
     val aggregations: Aggregations?
 ) {
     data class Aggregations(
-        val min: List<Double>,
-        val max: List<Double>,
-        val mean: List<Double>,
+        val min: List<Double?>,
+        val max: List<Double?>,
+        val mean: List<Double?>,
     )
 }
 

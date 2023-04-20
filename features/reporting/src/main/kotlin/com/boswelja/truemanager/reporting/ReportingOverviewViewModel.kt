@@ -1,111 +1,158 @@
 package com.boswelja.truemanager.reporting
 
-import android.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.truemanager.core.api.v2.reporting.ReportingGraph
 import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2Api
 import com.boswelja.truemanager.core.api.v2.reporting.RequestedGraph
-import com.patrykandpatrick.vico.core.entry.ChartEntryModel
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.entriesOf
-import com.patrykandpatrick.vico.core.entry.entryModelOf
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.hours
 
 class ReportingOverviewViewModel(
     private val reportingV2Api: ReportingV2Api
 ) : ViewModel() {
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
+    private val clock = Clock.System
 
-    private val reportingGraphs = MutableStateFlow<List<ReportingGraph>>(emptyList())
+    private val availableGraphsByType = MutableStateFlow<Map<GraphType?, List<Graph>>>(emptyMap())
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val graphs = reportingGraphs
-        .mapLatest { reportingGraphs ->
-            reportingGraphs.flatMap { reportingGraph ->
-                reportingGraph.toListOfGraphs()
+    private val _selectedType = MutableStateFlow(GraphType.CPU)
+    val selectedType: StateFlow<GraphType> = _selectedType
+
+    val displayedGraphs: StateFlow<List<GraphWithData>> =
+        combine(availableGraphsByType, selectedType) { first, second ->
+            first[second] ?: emptyList()
+        }.map { graphsForType ->
+            if (graphsForType.isEmpty()) return@map emptyList()
+            val requestedGraphs = graphsForType.map { RequestedGraph(it.id, it.identifier) }
+            val nowTime = clock.now()
+            val graphData = reportingV2Api.getGraphData(requestedGraphs, start = nowTime.minus(1.hours), end = nowTime)
+            graphsForType.mapIndexed { index, requestedGraph ->
+                val data = graphData[index]
+                // Sometimes there's segments of missing data. We need to filter those
+                val cleanedData = data.data
+                    .filter { slice -> slice.none { it == null } }
+                    .transpose()
+                GraphWithData(
+                    id = requestedGraph.id,
+                    title = requestedGraph.title,
+                    identifier = requestedGraph.identifier,
+                    data = cleanedData,
+                    start = data.start,
+                    end = data.end,
+                    legend = data.legend,
+                )
             }
-        }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            emptyList()
+        )
 
     init {
         refresh()
     }
 
     fun refresh() {
-        _isLoading.value = true
         viewModelScope.launch {
-            val reportingGraphs = reportingV2Api.getReportingGraphs(null, null, null)
-            this@ReportingOverviewViewModel.reportingGraphs.value = reportingGraphs
-            _isLoading.value = false
+            val allGraphs = reportingV2Api.getReportingGraphs(null, null, null)
+            val mappedGraphs = allGraphs
+                .filter { graph ->
+                    // Filter out known invalid data
+                    !graph.title.contains(IdentifierMarker) || graph.identifiers.isNotEmpty()
+                }
+                .flatMap { graph ->
+                    if (graph.identifiers.isNotEmpty()) {
+                        graph.identifiers.map { identifier ->
+                            Graph(
+                                id = graph.name,
+                                title = graph.title.replace(IdentifierMarker, identifier),
+                                identifier = identifier,
+                            )
+                        }
+                    } else {
+                        listOf(
+                            Graph(
+                                id = graph.name,
+                                title = graph.title,
+                                identifier = null,
+                            )
+                        )
+                    }
+                }
+                .groupBy { KnownGraphTypes[it.id] }
+            availableGraphsByType.emit(mappedGraphs)
         }
     }
 
-    private suspend fun ReportingGraph.toListOfGraphs(): List<GraphWithData> {
-        return if (identifiers.isEmpty()) {
-            val now = Clock.System.now()
-            try {
-                val graphData = reportingV2Api
-                    .getGraphData(
-                        graphs = listOf(RequestedGraph(name = name, identifier = null)),
-                        start = now.minus(1.hours),
-                        end = now
-                    )
-                    .first()
-                listOf(
-                    GraphWithData(
-                        title = title,
-                        entryModel = entryModelOf(
-                            *graphData.data.map {
-                                entriesOf(*it.map { it ?: 0.0 }.toTypedArray())
-                            }.toTypedArray()
-                        ),
-                        verticalAxisLabel = verticalLabel,
-                        legend = mapOf()
-                    )
-                )
-            } catch (e: Exception) {
-                emptyList()
-            }
-        } else {
-            val now = Clock.System.now()
-            val graphData = reportingV2Api.getGraphData(
-                graphs = identifiers.map { RequestedGraph(name, it) },
-                start = now.minus(1.hours),
-                end = now
-            )
-            graphData.map { data ->
-                GraphWithData(
-                    title = title.replace("{identifier}", data.identifier!!),
-                    entryModel = entryModelOf(
-                        *data.data.map {
-                            entriesOf(*it.map { it ?: 0.0 }.toTypedArray())
-                        }.toTypedArray()
-                    ),
-                    verticalAxisLabel = verticalLabel,
-                    legend = mapOf()
-                )
+    fun setSelectedType(selectedType: GraphType) {
+        _selectedType.value = selectedType
+    }
+
+    private fun <T> List<List<T>>.transpose(): List<List<T>> {
+        val cols = get(0).size
+        val rows = size
+        return List(cols) { j ->
+            List(rows) { i ->
+                get(i)[j]
             }
         }
+    }
+
+    companion object {
+        private val KnownGraphTypes = mapOf(
+            "cpu" to GraphType.CPU,
+            "cputemp" to GraphType.CPU,
+            "load" to GraphType.CPU,
+            "disk" to GraphType.DISK,
+            "disktemp" to GraphType.DISK,
+            "memory" to GraphType.MEMORY,
+            "swap" to GraphType.MEMORY,
+            "interface" to GraphType.NETWORK,
+            "nfsstat" to GraphType.NFS,
+            "nfsstatbytes" to GraphType.NFS,
+            "df" to GraphType.PARTITION,
+            "processes" to GraphType.SYSTEM,
+            "uptime" to GraphType.SYSTEM,
+            "arcsize" to GraphType.ZFS,
+            "arcratio" to GraphType.ZFS,
+            "arcresult" to GraphType.ZFS
+        )
+
+        private const val IdentifierMarker = "{identifier}"
     }
 }
 
-data class GraphWithData(
+data class Graph(
+    val id: String,
     val title: String,
-    val entryModel: ChartEntryModel,
-    val verticalAxisLabel: String,
-    val legend: Map<String, Int>
+    val identifier: String?
 )
+
+data class GraphWithData(
+    val id: String,
+    val title: String,
+    val identifier: String?,
+    val data: List<List<Double?>>,
+    val start: Instant,
+    val end: Instant,
+    val legend: List<String>,
+)
+
+enum class GraphType {
+    CPU,
+    DISK,
+    MEMORY,
+    NETWORK,
+    NFS,
+    PARTITION,
+    SYSTEM,
+    ZFS
+}

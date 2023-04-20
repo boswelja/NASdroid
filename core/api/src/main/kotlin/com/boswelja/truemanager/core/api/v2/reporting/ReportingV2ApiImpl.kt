@@ -300,10 +300,10 @@ internal data class ReportingGraphDataDto(
     @Serializable
     internal data class AggregationsDto(
         @SerialName("min")
-        val min: List<Double>,
+        val min: List<Double?>,
         @SerialName("max")
-        val max: List<Double>,
+        val max: List<Double?>,
         @SerialName("mean")
-        val mean: List<Double>,
+        val mean: List<Double?>,
     )
 }
