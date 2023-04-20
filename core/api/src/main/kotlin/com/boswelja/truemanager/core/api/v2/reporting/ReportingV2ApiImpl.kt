@@ -23,7 +23,7 @@ internal class ReportingV2ApiImpl(
             id = dto.id,
             cpuInPercentage = dto.cpuInPercentage,
             graphiteInstanceUrl = dto.graphiteInstanceUrl,
-            graphAge = dto.graphAge,
+            graphMaxAgeMonths = dto.graphAge,
             graphPoints = dto.graphPoints,
             graphiteSeparateInstances = dto.graphiteSeparateInstances
         )
@@ -36,7 +36,7 @@ internal class ReportingV2ApiImpl(
                 PutReportingConfigDto(
                     cpuInPercentage = newConfig.cpuInPercentage,
                     graphiteInstanceUrl = newConfig.graphiteInstanceUrl,
-                    graphAge = newConfig.graphAge,
+                    graphAge = newConfig.graphMaxAgeMonths,
                     graphPoints = newConfig.graphPoints,
                     graphiteSeparateInstances = newConfig.graphiteSeparateInstances
                 )
@@ -73,7 +73,7 @@ internal class ReportingV2ApiImpl(
 
     override suspend fun getGraphData(
         graphs: List<RequestedGraph>,
-        unit: String,
+        unit: Units,
         page: Int
     ): List<ReportingGraphData> {
         val response = client.post("reporting/get_data") {
@@ -83,7 +83,18 @@ internal class ReportingV2ApiImpl(
                     graphs = graphs.map { requestedGraph ->
                         ReportingGraphDataRequestDto.GraphNameDto(requestedGraph.name, requestedGraph.identifier)
                     },
-                    reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(null, null, unit, page)
+                    reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(
+                        null,
+                        null,
+                        when (unit) {
+                            Units.HOUR -> ReportingGraphDataRequestDto.ReportingQuery.Units.HOUR
+                            Units.DAY -> ReportingGraphDataRequestDto.ReportingQuery.Units.DAY
+                            Units.WEEK -> ReportingGraphDataRequestDto.ReportingQuery.Units.WEEK
+                            Units.MONTH -> ReportingGraphDataRequestDto.ReportingQuery.Units.MONTH
+                            Units.YEAR -> ReportingGraphDataRequestDto.ReportingQuery.Units.YEAR
+                        },
+                        page
+                    )
                 )
             )
         }
@@ -247,10 +258,24 @@ internal data class ReportingGraphDataRequestDto(
         @SerialName("end")
         val end: Long?,
         @SerialName("unit")
-        val unit: String?,
+        val unit: Units?,
         @SerialName("page")
         val page: Int?,
-    )
+    ) {
+        @Serializable
+        enum class Units {
+            @SerialName("HOUR")
+            HOUR,
+            @SerialName("DAY")
+            DAY,
+            @SerialName("WEEK")
+            WEEK,
+            @SerialName("MONTH")
+            MONTH,
+            @SerialName("YEAR")
+            YEAR
+        }
+    }
 }
 
 @Serializable
