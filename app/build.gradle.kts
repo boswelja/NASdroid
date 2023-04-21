@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -40,6 +42,12 @@ android {
 
 kotlin {
     jvmToolchain(17)
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    config = files("$rootDir/config/detekt.yml")
+    baseline = file("$projectDir/detekt-baseline.xml")
 }
 
 dependencies {
