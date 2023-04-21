@@ -27,8 +27,8 @@ jobs:
       - name: Move reports
         run: |
           mkdir results/
-          cp -v -r */build/reports/detekt/detekt.sarif results/
-          cp -v -r */*/build/reports/detekt/detekt.sarif results/
+          cp -v -r --backup=t */build/reports/detekt/detekt.sarif results/
+          cp -v -r --backup=t */*/build/reports/detekt/detekt.sarif results/
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
         with:
