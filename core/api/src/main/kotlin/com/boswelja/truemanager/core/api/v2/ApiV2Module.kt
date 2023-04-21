@@ -14,11 +14,13 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.bearerAuth
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+@OptIn(ExperimentalSerializationApi::class)
 val apiV2Module = module {
     // API state
     singleOf(::InMemoryApiStateProvider) bind ApiStateProvider::class
