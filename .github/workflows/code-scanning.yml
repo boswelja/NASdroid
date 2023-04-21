@@ -10,6 +10,9 @@ on:
 
 jobs:
   detekt:
+    permissions:
+      # required for all workflows
+      security-events: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,6 +33,9 @@ jobs:
           sarif_file: ./
           category: detekt
   lint:
+    permissions:
+      # required for all workflows
+      security-events: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
