@@ -21,7 +21,6 @@ interface AuthV2Api {
         username: String,
         password: String,
         timeToLive: Duration,
-        attrs: Map<String, Any>,
         matchOrigin: Boolean
     ): String
 

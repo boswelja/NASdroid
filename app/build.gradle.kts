@@ -45,6 +45,7 @@ kotlin {
 dependencies {
     implementation(projects.core.api)
     implementation(projects.features.auth)
+    implementation(projects.features.reporting)
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)

@@ -36,9 +36,9 @@ kotlin {
 dependencies {
     // Ktor
     implementation(libs.bundles.ktor.client.android)
-    debugImplementation(libs.ktor.logging)
+    implementation(libs.ktor.logging)
 
-    implementation(libs.kotlinx.datetime)
+    api(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.koin.core)

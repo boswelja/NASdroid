@@ -23,7 +23,7 @@ internal class ReportingV2ApiImpl(
             id = dto.id,
             cpuInPercentage = dto.cpuInPercentage,
             graphiteInstanceUrl = dto.graphiteInstanceUrl,
-            graphAge = dto.graphAge,
+            graphMaxAgeMonths = dto.graphAge,
             graphPoints = dto.graphPoints,
             graphiteSeparateInstances = dto.graphiteSeparateInstances
         )
@@ -36,7 +36,7 @@ internal class ReportingV2ApiImpl(
                 PutReportingConfigDto(
                     cpuInPercentage = newConfig.cpuInPercentage,
                     graphiteInstanceUrl = newConfig.graphiteInstanceUrl,
-                    graphAge = newConfig.graphAge,
+                    graphAge = newConfig.graphMaxAgeMonths,
                     graphPoints = newConfig.graphPoints,
                     graphiteSeparateInstances = newConfig.graphiteSeparateInstances
                 )
@@ -72,18 +72,29 @@ internal class ReportingV2ApiImpl(
     }
 
     override suspend fun getGraphData(
-        graphs: List<String>,
-        unit: String,
+        graphs: List<RequestedGraph>,
+        unit: Units,
         page: Int
     ): List<ReportingGraphData> {
         val response = client.post("reporting/get_data") {
             contentType(ContentType.Application.Json)
             setBody(
                 ReportingGraphDataRequestDto(
-                    graphs = graphs.map { name ->
-                        ReportingGraphDataRequestDto.GraphNameDto(name, null)
+                    graphs = graphs.map { requestedGraph ->
+                        ReportingGraphDataRequestDto.GraphNameDto(requestedGraph.name, requestedGraph.identifier)
                     },
-                    reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(null, null, unit, page)
+                    reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(
+                        null,
+                        null,
+                        when (unit) {
+                            Units.HOUR -> ReportingGraphDataRequestDto.ReportingQuery.Units.HOUR
+                            Units.DAY -> ReportingGraphDataRequestDto.ReportingQuery.Units.DAY
+                            Units.WEEK -> ReportingGraphDataRequestDto.ReportingQuery.Units.WEEK
+                            Units.MONTH -> ReportingGraphDataRequestDto.ReportingQuery.Units.MONTH
+                            Units.YEAR -> ReportingGraphDataRequestDto.ReportingQuery.Units.YEAR
+                        },
+                        page
+                    )
                 )
             )
         }
@@ -93,8 +104,8 @@ internal class ReportingV2ApiImpl(
                 name = data.name,
                 identifier = data.identifier,
                 data = data.data,
-                start = data.start,
-                end = data.end,
+                start = Instant.fromEpochSeconds(data.start),
+                end = Instant.fromEpochSeconds(data.end),
                 step = data.step,
                 legend = data.legend,
                 aggregations = data.aggregations?.let { aggregations ->
@@ -109,7 +120,7 @@ internal class ReportingV2ApiImpl(
     }
 
     override suspend fun getGraphData(
-        graphs: List<String>,
+        graphs: List<RequestedGraph>,
         start: Instant,
         end: Instant
     ): List<ReportingGraphData> {
@@ -117,8 +128,8 @@ internal class ReportingV2ApiImpl(
             contentType(ContentType.Application.Json)
             setBody(
                 ReportingGraphDataRequestDto(
-                    graphs = graphs.map { name ->
-                        ReportingGraphDataRequestDto.GraphNameDto(name, null)
+                    graphs = graphs.map { requestedGraph ->
+                        ReportingGraphDataRequestDto.GraphNameDto(requestedGraph.name, requestedGraph.identifier)
                     },
                     reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(start.epochSeconds, end.epochSeconds, null, null)
                 )
@@ -130,8 +141,8 @@ internal class ReportingV2ApiImpl(
                 name = data.name,
                 identifier = data.identifier,
                 data = data.data,
-                start = data.start,
-                end = data.end,
+                start = Instant.fromEpochSeconds(data.start),
+                end = Instant.fromEpochSeconds(data.end),
                 step = data.step,
                 legend = data.legend,
                 aggregations = data.aggregations?.let { aggregations ->
@@ -145,13 +156,13 @@ internal class ReportingV2ApiImpl(
         }
     }
 
-    override suspend fun getGraphData(graphs: List<String>): List<ReportingGraphData> {
+    override suspend fun getGraphData(graphs: List<RequestedGraph>): List<ReportingGraphData> {
         val response = client.post("reporting/get_data") {
             contentType(ContentType.Application.Json)
             setBody(
                 ReportingGraphDataRequestDto(
-                    graphs = graphs.map { name ->
-                        ReportingGraphDataRequestDto.GraphNameDto(name, null)
+                    graphs = graphs.map { requestedGraph ->
+                        ReportingGraphDataRequestDto.GraphNameDto(requestedGraph.name, requestedGraph.identifier)
                     },
                     reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(null, null, null, null)
                 )
@@ -163,8 +174,8 @@ internal class ReportingV2ApiImpl(
                 name = data.name,
                 identifier = data.identifier,
                 data = data.data,
-                start = data.start,
-                end = data.end,
+                start = Instant.fromEpochSeconds(data.start),
+                end = Instant.fromEpochSeconds(data.end),
                 step = data.step,
                 legend = data.legend,
                 aggregations = data.aggregations?.let { aggregations ->
@@ -247,10 +258,24 @@ internal data class ReportingGraphDataRequestDto(
         @SerialName("end")
         val end: Long?,
         @SerialName("unit")
-        val unit: String?,
+        val unit: Units?,
         @SerialName("page")
         val page: Int?,
-    )
+    ) {
+        @Serializable
+        enum class Units {
+            @SerialName("HOUR")
+            HOUR,
+            @SerialName("DAY")
+            DAY,
+            @SerialName("WEEK")
+            WEEK,
+            @SerialName("MONTH")
+            MONTH,
+            @SerialName("YEAR")
+            YEAR
+        }
+    }
 }
 
 @Serializable
@@ -262,9 +287,9 @@ internal data class ReportingGraphDataDto(
     @SerialName("data")
     val data: List<List<Double?>>,
     @SerialName("start")
-    val start: Instant,
+    val start: Long,
     @SerialName("end")
-    val end: Instant,
+    val end: Long,
     @SerialName("step")
     val step: Int,
     @SerialName("legend")
@@ -275,10 +300,10 @@ internal data class ReportingGraphDataDto(
     @Serializable
     internal data class AggregationsDto(
         @SerialName("min")
-        val min: List<Int>,
+        val min: List<Double?>,
         @SerialName("max")
-        val max: List<Int>,
+        val max: List<Double?>,
         @SerialName("mean")
-        val mean: List<Int>,
+        val mean: List<Double?>,
     )
 }

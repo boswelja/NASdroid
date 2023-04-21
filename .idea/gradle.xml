@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/core/api" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/auth" />
+            <option value="$PROJECT_DIR$/features/reporting" />
           </set>
         </option>
       </GradleProjectSettings>

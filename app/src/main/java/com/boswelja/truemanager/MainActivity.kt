@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.boswelja.truemanager.auth.ui.authNavigation
+import com.boswelja.truemanager.reporting.reportingGraph
 import com.boswelja.truemanager.ui.theme.TrueManagerTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -36,7 +37,17 @@ fun MainScreen() {
             startDestination = "auth",
             modifier = Modifier.fillMaxSize().padding(it)
         ) {
-            authNavigation("auth")
+            authNavigation(
+                "auth",
+                onLoginSuccess = {
+                    navController.navigate("reporting") {
+                        popUpTo("auth") {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+            reportingGraph("reporting")
         }
     }
 }

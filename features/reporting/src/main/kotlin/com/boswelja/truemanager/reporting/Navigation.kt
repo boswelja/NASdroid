@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.auth.ui
+package com.boswelja.truemanager.reporting
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,19 +10,12 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
 
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.authNavigation(
-    route: String,
-    onLoginSuccess: () -> Unit
-) {
-    navigation(
-        startDestination = "login",
-        route = route
-    ) {
-        composable("login") {
-            AuthScreen(
-                onLoginSuccess,
-                Modifier.fillMaxSize(),
-                PaddingValues(32.dp)
+fun NavGraphBuilder.reportingGraph(route: String) {
+    navigation(startDestination = "overview", route = route) {
+        composable("overview") {
+            ReportingOverviewScreen(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(32.dp)
             )
         }
     }

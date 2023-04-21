@@ -32,6 +32,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -49,12 +50,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.auth.R
+import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.rememberKoinInject
 
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AuthComponents(
+    onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: AuthViewModel = koinViewModel()
@@ -84,6 +88,14 @@ fun AuthComponents(
                 AuthType.BasicAuth -> username.isNotBlank() && password.isNotBlank()
             }
             !isLoading && serverAddress.isNotBlank() && authValid
+        }
+    }
+
+    // TODO handle login properly
+    val apiStateProvider: ApiStateProvider = rememberKoinInject()
+    LaunchedEffect(isLoading) {
+        if (!isLoading && apiStateProvider.authorization != null) {
+            onLoginSuccess()
         }
     }
 

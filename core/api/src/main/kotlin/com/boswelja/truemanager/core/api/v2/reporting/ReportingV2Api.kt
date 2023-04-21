@@ -16,18 +16,18 @@ interface ReportingV2Api {
         sort: String?,
     ): List<ReportingGraph>
 
-    suspend fun getGraphData(graphs: List<String>, unit: String, page: Int): List<ReportingGraphData>
+    suspend fun getGraphData(graphs: List<RequestedGraph>, unit: Units, page: Int): List<ReportingGraphData>
 
-    suspend fun getGraphData(graphs: List<String>, start: Instant, end: Instant): List<ReportingGraphData>
+    suspend fun getGraphData(graphs: List<RequestedGraph>, start: Instant, end: Instant): List<ReportingGraphData>
 
-    suspend fun getGraphData(graphs: List<String>): List<ReportingGraphData>
+    suspend fun getGraphData(graphs: List<RequestedGraph>): List<ReportingGraphData>
 }
 
 data class ReportingConfig(
     val id: Int,
     val cpuInPercentage: Boolean,
     val graphiteInstanceUrl: String,
-    val graphAge: Int,
+    val graphMaxAgeMonths: Int,
     val graphPoints: Int,
     val graphiteSeparateInstances: Boolean,
 )
@@ -52,8 +52,21 @@ data class ReportingGraphData(
     val aggregations: Aggregations?
 ) {
     data class Aggregations(
-        val min: List<Int>,
-        val max: List<Int>,
-        val mean: List<Int>,
+        val min: List<Double?>,
+        val max: List<Double?>,
+        val mean: List<Double?>,
     )
+}
+
+data class RequestedGraph(
+    val name: String,
+    val identifier: String?,
+)
+
+enum class Units {
+    HOUR,
+    DAY,
+    WEEK,
+    MONTH,
+    YEAR
 }

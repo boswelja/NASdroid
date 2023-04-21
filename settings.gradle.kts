@@ -21,5 +21,6 @@ rootProject.name = "TrueManager"
 include(
     ":core:api",
     ":features:auth",
+    ":features:reporting",
     ":app"
 )
