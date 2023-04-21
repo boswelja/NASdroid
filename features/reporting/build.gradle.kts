@@ -42,6 +42,7 @@ detekt {
     buildUponDefaultConfig = true
     config = files("$rootDir/config/detekt.yml")
     baseline = file("$projectDir/detekt-baseline.xml")
+    basePath = rootDir.absolutePath
 }
 
 dependencies {
