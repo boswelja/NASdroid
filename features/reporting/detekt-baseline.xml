@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>NewLineAtEndOfFile:DI.kt$com.boswelja.truemanager.reporting.DI.kt</ID>
+    <ID>SpreadOperator:ReportingOverviewScreen.kt$( *graph.data.map { entriesOf(*it.filterNotNull().toTypedArray()) }.toTypedArray() )</ID>
+    <ID>SpreadOperator:ReportingOverviewScreen.kt$(*it.filterNotNull().toTypedArray())</ID>
+    <ID>TopLevelPropertyNaming:DI.kt$val reportingModule = module { viewModelOf(::ReportingOverviewViewModel) }</ID>
+    <ID>UndocumentedPublicClass:ReportingOverviewViewModel.kt$Graph</ID>
+    <ID>UndocumentedPublicClass:ReportingOverviewViewModel.kt$GraphType</ID>
+    <ID>UndocumentedPublicClass:ReportingOverviewViewModel.kt$GraphWithData</ID>
+    <ID>UndocumentedPublicClass:ReportingOverviewViewModel.kt$ReportingOverviewViewModel : ViewModel</ID>
+    <ID>UndocumentedPublicFunction:Navigation.kt$@OptIn(ExperimentalAnimationApi::class) fun NavGraphBuilder.reportingGraph(route: String)</ID>
+    <ID>UndocumentedPublicFunction:ReportingOverviewScreen.kt$@OptIn( ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class ) @Composable fun ReportingOverviewScreen( modifier: Modifier = Modifier, contentPadding: PaddingValues = PaddingValues(), viewModel: ReportingOverviewViewModel = koinViewModel() )</ID>
+    <ID>UndocumentedPublicFunction:ReportingOverviewScreen.kt$@OptIn(ExperimentalLayoutApi::class) @Composable fun GraphCard( graph: GraphWithData, modifier: Modifier = Modifier, style: ChartStyle = m3ChartStyle(), )</ID>
+    <ID>UndocumentedPublicFunction:ReportingOverviewViewModel.kt$ReportingOverviewViewModel$fun refresh()</ID>
+    <ID>UndocumentedPublicFunction:ReportingOverviewViewModel.kt$ReportingOverviewViewModel$fun setSelectedType(selectedType: GraphType)</ID>
+    <ID>UndocumentedPublicProperty:DI.kt$val reportingModule = module { viewModelOf(::ReportingOverviewViewModel) }</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$Graph$val id: String</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$Graph$val identifier: String?</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$Graph$val title: String</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$GraphWithData$val data: List&lt;List&lt;Double?&gt;&gt;</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$GraphWithData$val end: Instant</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$GraphWithData$val id: String</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$GraphWithData$val identifier: String?</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$GraphWithData$val legend: List&lt;String&gt;</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$GraphWithData$val start: Instant</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$GraphWithData$val title: String</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$ReportingOverviewViewModel$val displayedGraphs: StateFlow&lt;List&lt;GraphWithData&gt;&gt; = combine(availableGraphsByType, selectedType) { first, second -&gt; first[second] ?: emptyList() }.map { graphsForType -&gt; if (graphsForType.isEmpty()) return@map emptyList() val requestedGraphs = graphsForType.map { RequestedGraph(it.id, it.identifier) } val nowTime = clock.now() val graphData = reportingV2Api.getGraphData(requestedGraphs, start = nowTime.minus(1.hours), end = nowTime) graphsForType.mapIndexed { index, requestedGraph -&gt; val data = graphData[index] // Sometimes there's segments of missing data. We need to filter those val cleanedData = data.data .filter { slice -&gt; slice.none { it == null } } .transpose() GraphWithData( id = requestedGraph.id, title = requestedGraph.title, identifier = requestedGraph.identifier, data = cleanedData, start = data.start, end = data.end, legend = data.legend, ) } }.stateIn( viewModelScope, SharingStarted.Eagerly, emptyList() )</ID>
+    <ID>UndocumentedPublicProperty:ReportingOverviewViewModel.kt$ReportingOverviewViewModel$val selectedType: StateFlow&lt;GraphType&gt; = _selectedType</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import androidx.compose.runtime.CompositionLocalProvider</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import androidx.compose.ui.unit.LayoutDirection</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.compose.axis.vertical.startAxis</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.compose.chart.line.lineSpec</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.compose.component.shapeComponent</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.compose.legend.verticalLegend</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.compose.legend.verticalLegendItem</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.compose.style.LocalChartStyle</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.core.chart.copy</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.core.chart.line.LineChart</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.core.component.shape.ShapeComponent</ID>
+    <ID>UnusedImports:ReportingOverviewScreen.kt$import com.patrykandpatrick.vico.core.scroll.InitialScroll</ID>
+  </CurrentIssues>
+</SmellBaseline>
