@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
+
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -31,10 +33,20 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    lint {
+        sarifReport = true
+        htmlReport = false
+    }
 }
 
 kotlin {
     jvmToolchain(17)
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    config = files("$rootDir/config/detekt.yml")
+    basePath = rootDir.absolutePath
 }
 
 dependencies {
