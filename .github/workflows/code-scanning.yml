@@ -5,6 +5,8 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  schedule:
+    - cron: '33 19 * * *'
 
 jobs:
   detekt:
@@ -20,6 +22,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Run Detekt
+        continue-on-error: true
         run: ./gradlew detekt
       - name: Move reports
         run: |
