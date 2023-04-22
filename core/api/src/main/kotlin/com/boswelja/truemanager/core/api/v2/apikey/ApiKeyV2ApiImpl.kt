@@ -37,7 +37,7 @@ internal class ApiKeyV2ApiImpl(
     override suspend fun create(name: String): String {
         val response = client.post("api_key") {
             contentType(ContentType.Application.Json)
-            setBody(CreateApiKeyBody(name))
+            setBody(CreateApiKeyBody(name, listOf(CreateApiKeyBody.ApiKeyAllowItem("*", "*"))))
         }
         val dto: ApiKeyDto = response.body()
         return requireNotNull(dto.key)
@@ -106,8 +106,18 @@ internal data class ApiKeyDto(
 @Serializable
 internal data class CreateApiKeyBody(
     @SerialName("name")
-    val name: String
-)
+    val name: String,
+    @SerialName("allowlist")
+    val allowList: List<ApiKeyAllowItem>
+) {
+    @Serializable
+    internal data class ApiKeyAllowItem(
+        @SerialName("method")
+        val method: String,
+        @SerialName("resource")
+        val resource: String,
+    )
+}
 
 @Serializable
 internal data class UpdateApiKeyBody(
