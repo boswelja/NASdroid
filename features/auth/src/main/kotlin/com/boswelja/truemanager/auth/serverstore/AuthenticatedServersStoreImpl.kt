@@ -23,33 +23,56 @@ internal class AuthenticatedServersStoreImpl(
         context,
         AuthenticatedServerDatabase::class.java,
         "authenticated-servers"
-    ).build()
+    ).fallbackToDestructiveMigration().build() // TODO disable destructive migration
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAll(): Flow<List<AuthenticatedServer>> {
         return database.authenticatedServerDao().getAll().mapLatest { servers ->
             servers.map { server ->
-                AuthenticatedServer(server.serverAddress, server.token)
+                AuthenticatedServer(
+                    server.hostId,
+                    server.serverAddress,
+                    server.token,
+                    server.name,
+                )
             }
         }
     }
 
     override suspend fun delete(server: AuthenticatedServer) {
-        database.authenticatedServerDao().delete(AuthenticatedServerDto(server.serverAddress, server.token))
+        database.authenticatedServerDao().delete(
+            AuthenticatedServerDto(
+                server.uid,
+                server.serverAddress,
+                server.token,
+                server.name,
+            )
+        )
     }
 
-    override suspend fun add(serverAddress: String, token: String) {
-        database.authenticatedServerDao().insertAll(AuthenticatedServerDto(serverAddress, token))
+    override suspend fun add(server: AuthenticatedServer) {
+        database.authenticatedServerDao().insertAll(
+            AuthenticatedServerDto(
+                server.uid,
+                server.serverAddress,
+                server.token,
+                server.name,
+            )
+        )
     }
 }
 
 @Entity(tableName = "authenticated_servers")
 internal data class AuthenticatedServerDto(
+    @PrimaryKey
+    @ColumnInfo("host_id")
+    val hostId: String,
     @ColumnInfo(name = "server_address")
     val serverAddress: String,
-    @PrimaryKey
     @ColumnInfo(name = "token")
     val token: String,
+    @ColumnInfo("name")
+    val name: String,
 )
 
 @Dao
@@ -64,7 +87,7 @@ internal interface AuthenticatedServerDao {
     suspend fun delete(server: AuthenticatedServerDto)
 }
 
-@Database(entities = [AuthenticatedServerDto::class], version = 1)
+@Database(entities = [AuthenticatedServerDto::class], version = 2)
 internal abstract class AuthenticatedServerDatabase : RoomDatabase() {
     abstract fun authenticatedServerDao(): AuthenticatedServerDao
 }

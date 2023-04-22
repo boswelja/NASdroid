@@ -30,7 +30,8 @@ class AddServerViewModel(
             if (isValid) {
                 apiStateProvider.authorization = Authorization.Basic(username, password)
                 val apiKey = apiKeyV2Api.create("TrueManager for TrueNAS")
-                authedServersStore.add(serverAddress, apiKey)
+                // TODO
+                // authedServersStore.add(serverAddress, apiKey)
                 apiStateProvider.authorization = Authorization.ApiKey(apiKey)
             }
             _isLoading.value = false

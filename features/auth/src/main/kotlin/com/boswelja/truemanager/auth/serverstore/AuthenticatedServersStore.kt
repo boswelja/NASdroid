@@ -22,15 +22,19 @@ interface AuthenticatedServersStore {
     /**
      * Add a new server to the authentication store.
      */
-    suspend fun add(serverAddress: String, token: String)
+    suspend fun add(server: AuthenticatedServer)
 }
 
 /**
  * Details for a server that has been previously authenticated.
+ * @property uid A unique identifier for this server.
  * @property serverAddress The URL of the server. Note this is different from the URL for the API.
  * @property token The bearer token used to access the server. This may or may not still be valid.
+ * @property name A friendly name for the server.
  */
 data class AuthenticatedServer(
+    val uid: String,
     val serverAddress: String,
     val token: String,
+    val name: String,
 )
