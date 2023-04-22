@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.auth.ui
+package com.boswelja.truemanager.auth.ui.addserver
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

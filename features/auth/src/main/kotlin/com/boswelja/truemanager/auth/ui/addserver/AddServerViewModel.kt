@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.auth.ui
+package com.boswelja.truemanager.auth.ui.addserver
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel(
+class AddServerViewModel(
     private val apiStateProvider: ApiStateProvider,
     private val authV2Api: AuthV2Api,
     private val apiKeyV2Api: ApiKeyV2Api,

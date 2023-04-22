@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.auth.ui
+package com.boswelja.truemanager.auth.ui.addserver
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

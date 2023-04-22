@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
+import com.boswelja.truemanager.auth.ui.addserver.AuthScreen
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.navigation
 
@@ -24,6 +25,9 @@ fun NavGraphBuilder.authNavigation(
                 Modifier.fillMaxSize(),
                 PaddingValues(32.dp)
             )
+        }
+        composable("picker") {
+
         }
     }
 }
