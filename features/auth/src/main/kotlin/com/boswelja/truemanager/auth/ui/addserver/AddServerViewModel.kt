@@ -9,7 +9,10 @@ import com.boswelja.truemanager.core.api.v2.Authorization
 import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -23,6 +26,16 @@ class AddServerViewModel(
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _events = MutableSharedFlow<Event?>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val events: SharedFlow<Event?> = _events
+
+    fun clearPendingEvent() {
+        _events.tryEmit(null)
+    }
 
     fun tryLogIn(
         serverName: String,
@@ -40,6 +53,7 @@ class AddServerViewModel(
                 loginWithApiKey(serverName, serverAddress, apiKey)
             } else {
                 apiStateProvider.authorization = null
+                _events.emit(Event.LoginFailedUsernameOrPasswordInvalid)
             }
             _isLoading.value = false
         }
@@ -78,5 +92,13 @@ class AddServerViewModel(
             )
         )
         apiStateProvider.authorization = Authorization.ApiKey(apiKey)
+        _events.emit(Event.LoginSuccess)
+    }
+
+    enum class Event {
+        LoginSuccess,
+        LoginFailedKeyInvalid,
+        LoginFailedUsernameOrPasswordInvalid,
+        LoginFailedServerNotFound
     }
 }

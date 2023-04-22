@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.auth.R
 import com.boswelja.truemanager.core.api.v2.ApiStateProvider
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.rememberKoinInject
 
@@ -87,10 +88,16 @@ fun AuthComponents(
     }
 
     // TODO handle login properly
-    val apiStateProvider: ApiStateProvider = rememberKoinInject()
-    LaunchedEffect(isLoading) {
-        if (!isLoading && apiStateProvider.authorization != null) {
-            onLoginSuccess()
+    LaunchedEffect(viewModel) {
+        viewModel.events.collectLatest {
+            when (it) {
+                AddServerViewModel.Event.LoginSuccess -> onLoginSuccess()
+                AddServerViewModel.Event.LoginFailedServerNotFound -> TODO()
+                AddServerViewModel.Event.LoginFailedKeyInvalid -> TODO()
+                AddServerViewModel.Event.LoginFailedUsernameOrPasswordInvalid -> TODO()
+                null -> return@collectLatest
+            }
+            viewModel.clearPendingEvent()
         }
     }
 
