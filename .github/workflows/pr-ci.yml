@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         variant: [Debug, Release]
-    runs-on: actionsrunner
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v3
