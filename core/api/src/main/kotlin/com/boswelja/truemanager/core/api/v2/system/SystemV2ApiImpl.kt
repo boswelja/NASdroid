@@ -1,14 +1,17 @@
 package com.boswelja.truemanager.core.api.v2.system
 
+import com.boswelja.truemanager.core.api.v2.HttpsNotOkException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.HttpStatusCode
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
 internal class SystemV2ApiImpl(
@@ -42,6 +45,9 @@ internal class SystemV2ApiImpl(
 
     override suspend fun getSystemInfo(): SystemInfo {
         val response = httpClient.get("system/info")
+        if (response.status != HttpStatusCode.OK) {
+            throw HttpsNotOkException(response.status.value, response.status.description)
+        }
         val infoDto: SystemInfoDto = response.body()
         return SystemInfo(
             version = infoDto.version,

@@ -1,11 +1,13 @@
 package com.boswelja.truemanager.auth.ui.addserver
 
+import android.os.strictmode.CleartextNetworkViolation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.auth.serverstore.AuthenticatedServer
 import com.boswelja.truemanager.auth.serverstore.AuthenticatedServersStore
 import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import com.boswelja.truemanager.core.api.v2.Authorization
+import com.boswelja.truemanager.core.api.v2.HttpsNotOkException
 import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
@@ -15,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class AddServerViewModel(
     private val apiStateProvider: ApiStateProvider,
@@ -47,13 +50,19 @@ class AddServerViewModel(
         apiStateProvider.serverAddress = serverAddress
         viewModelScope.launch {
             apiStateProvider.authorization = Authorization.Basic(username, password)
-            val isValid = authV2Api.checkPassword(username, password)
-            if (isValid) {
-                val apiKey = apiKeyV2Api.create("TrueManager for TrueNAS")
-                loginWithApiKey(serverName, serverAddress, apiKey)
-            } else {
+
+            try {
+                val isValid = authV2Api.checkPassword(username, password)
+                if (isValid) {
+                    val apiKey = apiKeyV2Api.create("TrueManager for TrueNAS")
+                    loginWithApiKey(serverName, serverAddress, apiKey)
+                } else {
+                    apiStateProvider.authorization = null
+                    _events.emit(Event.LoginFailedUsernameOrPasswordInvalid)
+                }
+            } catch (_: IOException) {
+                _events.emit(Event.LoginFailedServerNotFound)
                 apiStateProvider.authorization = null
-                _events.emit(Event.LoginFailedUsernameOrPasswordInvalid)
             }
             _isLoading.value = false
         }
@@ -77,28 +86,38 @@ class AddServerViewModel(
         serverAddress: String,
         apiKey: String
     ) {
-        val uid = systemV2Api.getHostId()
-
-        val actualName = serverName.ifBlank {
-            val systemInfo = systemV2Api.getSystemInfo()
-            systemInfo.hostInfo.product
-        }
-        authedServersStore.add(
-            AuthenticatedServer(
-                uid = uid,
-                serverAddress = serverAddress,
-                token = apiKey,
-                name = actualName
-            )
-        )
         apiStateProvider.authorization = Authorization.ApiKey(apiKey)
-        _events.emit(Event.LoginSuccess)
+
+        try {
+            val uid = systemV2Api.getHostId()
+
+            val actualName = serverName.ifBlank {
+                val systemInfo = systemV2Api.getSystemInfo()
+                systemInfo.hostInfo.product
+            }
+            authedServersStore.add(
+                AuthenticatedServer(
+                    uid = uid,
+                    serverAddress = serverAddress,
+                    token = apiKey,
+                    name = actualName
+                )
+            )
+            _events.emit(Event.LoginSuccess)
+        } catch (_: HttpsNotOkException) {
+            _events.emit(Event.LoginFailedKeyInvalid)
+            apiStateProvider.authorization = null
+        } catch (_: IOException) {
+            _events.emit(Event.LoginFailedServerNotFound)
+            apiStateProvider.authorization = null
+        }
     }
 
     enum class Event {
         LoginSuccess,
         LoginFailedKeyInvalid,
         LoginFailedUsernameOrPasswordInvalid,
-        LoginFailedServerNotFound
+        LoginFailedServerNotFound,
+        LoginFailedNotHttps
     }
 }
