@@ -15,6 +15,10 @@ dependencyResolutionManagement {
     }
 }
 
+plugins {
+    id("com.gradle.enterprise") version("3.13")
+}
+
 enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
 
 rootProject.name = "TrueManager"
@@ -24,3 +28,13 @@ include(
     ":features:reporting",
     ":app"
 )
+
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = "https://gradle.com/terms-of-service"
+        if (System.getenv("CI") == "true") {
+            termsOfServiceAgree = "yes"
+            isUploadInBackground = false
+        }
+    }
+}
