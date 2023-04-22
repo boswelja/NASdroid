@@ -9,7 +9,6 @@ import com.boswelja.truemanager.core.api.v2.Authorization
 import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -34,21 +33,13 @@ class AddServerViewModel(
         _isLoading.value = true
         apiStateProvider.serverAddress = serverAddress
         viewModelScope.launch {
+            apiStateProvider.authorization = Authorization.Basic(username, password)
             val isValid = authV2Api.checkPassword(username, password)
             if (isValid) {
-                apiStateProvider.authorization = Authorization.Basic(username, password)
                 val apiKey = apiKeyV2Api.create("TrueManager for TrueNAS")
-
-                val uid = systemV2Api.getHostId()
-                authedServersStore.add(
-                    AuthenticatedServer(
-                        uid = uid,
-                        serverAddress = serverAddress,
-                        token = apiKey,
-                        name = serverName
-                    )
-                )
-                apiStateProvider.authorization = Authorization.ApiKey(apiKey)
+                loginWithApiKey(serverName, serverAddress, apiKey)
+            } else {
+                apiStateProvider.authorization = null
             }
             _isLoading.value = false
         }
@@ -62,19 +53,30 @@ class AddServerViewModel(
         _isLoading.value = true
         apiStateProvider.serverAddress = serverAddress
         viewModelScope.launch {
-            //authedServersStore.add(serverAddress, apiKey)
-            delay(500)
-            apiStateProvider.authorization = Authorization.ApiKey(apiKey)
-            // TODO validate API key
-            authedServersStore.add(
-                AuthenticatedServer(
-                    uid = "TODO",
-                    serverAddress = serverAddress,
-                    token = apiKey,
-                    name = serverName
-                )
-            )
+            loginWithApiKey(serverName, serverAddress, apiKey)
             _isLoading.value = false
         }
+    }
+
+    private suspend fun loginWithApiKey(
+        serverName: String,
+        serverAddress: String,
+        apiKey: String
+    ) {
+        val uid = systemV2Api.getHostId()
+
+        val actualName = serverName.ifBlank {
+            val systemInfo = systemV2Api.getSystemInfo()
+            systemInfo.hostInfo.product
+        }
+        authedServersStore.add(
+            AuthenticatedServer(
+                uid = uid,
+                serverAddress = serverAddress,
+                token = apiKey,
+                name = actualName
+            )
+        )
+        apiStateProvider.authorization = Authorization.ApiKey(apiKey)
     }
 }
