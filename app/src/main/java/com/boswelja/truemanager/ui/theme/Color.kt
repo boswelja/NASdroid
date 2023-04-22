@@ -1,3 +1,4 @@
+@file:Suppress("UndocumentedPublicProperty", "MagicNumber")
 package com.boswelja.truemanager.ui.theme
 
 import androidx.compose.ui.graphics.Color

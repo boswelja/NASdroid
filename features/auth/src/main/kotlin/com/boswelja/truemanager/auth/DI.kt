@@ -9,7 +9,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val authModule = module {
+val AuthModule = module {
     singleOf(::AuthenticatedServersStoreImpl) bind AuthenticatedServersStore::class
 
     viewModelOf(::AddServerViewModel)

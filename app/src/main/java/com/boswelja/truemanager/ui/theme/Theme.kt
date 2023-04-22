@@ -64,7 +64,6 @@ fun TrueManagerTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
         content = content
     )
 }

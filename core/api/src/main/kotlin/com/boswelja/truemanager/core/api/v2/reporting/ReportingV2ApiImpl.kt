@@ -131,7 +131,12 @@ internal class ReportingV2ApiImpl(
                     graphs = graphs.map { requestedGraph ->
                         ReportingGraphDataRequestDto.GraphNameDto(requestedGraph.name, requestedGraph.identifier)
                     },
-                    reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(start.epochSeconds, end.epochSeconds, null, null)
+                    reportingQuery = ReportingGraphDataRequestDto.ReportingQuery(
+                        start.epochSeconds,
+                        end.epochSeconds,
+                        null,
+                        null
+                    )
                 )
             )
         }
