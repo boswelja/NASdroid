@@ -19,9 +19,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
+import androidx.compose.material.icons.filled.Label
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -50,7 +50,6 @@ import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.rememberKoinInject
 
-
 @Composable
 fun AuthComponents(
     onLoginSuccess: () -> Unit,
@@ -61,6 +60,7 @@ fun AuthComponents(
     val layoutDirection = LocalLayoutDirection.current
     val isLoading by viewModel.isLoading.collectAsState()
 
+    var serverName by rememberSaveable { mutableStateOf("") }
     var serverAddress by rememberSaveable { mutableStateOf("") }
     var selectedAuthType by rememberSaveable(saver = rememberAuthTypeSaver()) {
         mutableStateOf(AuthTypes.first())
@@ -72,8 +72,8 @@ fun AuthComponents(
 
     val logIn = {
         when (selectedAuthType) {
-            AuthType.ApiKeyAuth -> viewModel.tryLogIn(serverAddress, apiKey)
-            AuthType.BasicAuth -> viewModel.tryLogIn(serverAddress, username, password)
+            AuthType.ApiKeyAuth -> viewModel.tryLogIn(serverName, serverAddress, apiKey)
+            AuthType.BasicAuth -> viewModel.tryLogIn(serverName, serverAddress, username, password)
         }
     }
     val loginEnabled by remember {
@@ -98,6 +98,20 @@ fun AuthComponents(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        ServerNameField(
+            serverName = serverName,
+            onServerNameChange = { serverName = it },
+            enabled = !isLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = contentPadding.calculateTopPadding(),
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection)
+                )
+                .widthIn(max = 560.dp)
+        )
+        Spacer(Modifier.height(8.dp))
         ServerAddressField(
             serverAddress = serverAddress,
             onServerAddressChange = { serverAddress = it },
@@ -105,7 +119,6 @@ fun AuthComponents(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    top = contentPadding.calculateTopPadding(),
                     start = contentPadding.calculateStartPadding(layoutDirection),
                     end = contentPadding.calculateEndPadding(layoutDirection)
                 )
@@ -164,6 +177,28 @@ fun AuthComponents(
             )
         }
     }
+}
+
+@Composable
+fun ServerNameField(
+    serverName: String,
+    onServerNameChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean
+) {
+    TextField(
+        value = serverName,
+        onValueChange = onServerNameChange,
+        label = { Text("Server Name (Optional)") },
+        leadingIcon = { Icon(Icons.Default.Label, contentDescription = null) },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
+        ),
+        singleLine = true,
+        enabled = enabled,
+        modifier = modifier
+    )
 }
 
 @Composable
