@@ -7,6 +7,8 @@ import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2Api
 import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2ApiImpl
+import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
+import com.boswelja.truemanager.core.api.v2.system.SystemV2ApiImpl
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -20,8 +22,11 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+/**
+ * A Koin module to inject the auth dependency graph. This depends on the API module.
+ */
 @OptIn(ExperimentalSerializationApi::class)
-val apiV2Module = module {
+val ApiV2Module = module {
     // API state
     singleOf(::InMemoryApiStateProvider) bind ApiStateProvider::class
 
@@ -45,13 +50,12 @@ val apiV2Module = module {
                 })
             }
             defaultRequest {
-                apiStateProvider.authorization?.let { authorization ->
-                    when (authorization) {
-                        is Authorization.ApiKey -> bearerAuth(authorization.apiKey)
-                        is Authorization.Basic -> basicAuth(authorization.username, authorization.password)
-                    }
+                when (val authorization = requireNotNull(apiStateProvider.authorization)) {
+                    is Authorization.ApiKey -> bearerAuth(authorization.apiKey)
+                    is Authorization.Basic -> basicAuth(authorization.username, authorization.password)
                 }
-                apiStateProvider.serverAddress?.let { url(it) }
+                val baseUrl = requireNotNull(apiStateProvider.serverAddress)
+                url(baseUrl)
             }
         }
     }
@@ -59,4 +63,5 @@ val apiV2Module = module {
     singleOf(::ApiKeyV2ApiImpl) bind ApiKeyV2Api::class
     singleOf(::AuthV2ApiImpl) bind AuthV2Api::class
     singleOf(::ReportingV2ApiImpl) bind ReportingV2Api::class
+    singleOf(::SystemV2ApiImpl) bind SystemV2Api::class
 }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
 
-class AuthenticatedServersStoreImpl(
+internal class AuthenticatedServersStoreImpl(
     context: Context
 ) : AuthenticatedServersStore {
 
@@ -23,37 +23,60 @@ class AuthenticatedServersStoreImpl(
         context,
         AuthenticatedServerDatabase::class.java,
         "authenticated-servers"
-    ).build()
+    ).fallbackToDestructiveMigration().build() // TODO disable destructive migration
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAll(): Flow<List<AuthenticatedServer>> {
         return database.authenticatedServerDao().getAll().mapLatest { servers ->
             servers.map { server ->
-                AuthenticatedServer(server.serverAddress, server.token)
+                AuthenticatedServer(
+                    server.hostId,
+                    server.serverAddress,
+                    server.token,
+                    server.name,
+                )
             }
         }
     }
 
     override suspend fun delete(server: AuthenticatedServer) {
-        database.authenticatedServerDao().delete(AuthenticatedServerDto(server.serverAddress, server.token))
+        database.authenticatedServerDao().delete(
+            AuthenticatedServerDto(
+                server.uid,
+                server.serverAddress,
+                server.token,
+                server.name,
+            )
+        )
     }
 
-    override suspend fun add(serverAddress: String, token: String) {
-        database.authenticatedServerDao().insertAll(AuthenticatedServerDto(serverAddress, token))
+    override suspend fun add(server: AuthenticatedServer) {
+        database.authenticatedServerDao().insertAll(
+            AuthenticatedServerDto(
+                server.uid,
+                server.serverAddress,
+                server.token,
+                server.name,
+            )
+        )
     }
 }
 
 @Entity(tableName = "authenticated_servers")
-data class AuthenticatedServerDto(
+internal data class AuthenticatedServerDto(
+    @PrimaryKey
+    @ColumnInfo("host_id")
+    val hostId: String,
     @ColumnInfo(name = "server_address")
     val serverAddress: String,
-    @PrimaryKey
     @ColumnInfo(name = "token")
     val token: String,
+    @ColumnInfo("name")
+    val name: String,
 )
 
 @Dao
-interface AuthenticatedServerDao {
+internal interface AuthenticatedServerDao {
     @Query("SELECT * FROM authenticated_servers")
     fun getAll(): Flow<List<AuthenticatedServerDto>>
 
@@ -64,7 +87,7 @@ interface AuthenticatedServerDao {
     suspend fun delete(server: AuthenticatedServerDto)
 }
 
-@Database(entities = [AuthenticatedServerDto::class], version = 1)
-abstract class AuthenticatedServerDatabase : RoomDatabase() {
+@Database(entities = [AuthenticatedServerDto::class], version = 2)
+internal abstract class AuthenticatedServerDatabase : RoomDatabase() {
     abstract fun authenticatedServerDao(): AuthenticatedServerDao
 }

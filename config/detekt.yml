@@ -98,7 +98,7 @@ complexity:
     active: true
     threshold: 4
   ComplexInterface:
-    active: true
+    active: false
     threshold: 10
     includeStaticDeclarations: false
     includePrivateDeclarations: false

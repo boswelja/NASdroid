@@ -55,8 +55,7 @@ dependencies {
 
     implementation(libs.vico)
 
-    implementation(libs.accompanist.navigation)
-    implementation(platform(libs.compose.bom))
+    implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.tooling)
 

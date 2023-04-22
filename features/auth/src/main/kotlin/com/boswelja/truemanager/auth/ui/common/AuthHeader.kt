@@ -1,15 +1,10 @@
-package com.boswelja.truemanager.auth.ui
+package com.boswelja.truemanager.auth.ui.common
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -30,26 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.auth.R
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
-@Composable
-fun AuthScreen(
-    onLoginSuccess: () -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
-) {
-    // TODO Different layouts based on device type
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center
-    ) {
-        AuthHeader(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(16 / 9f)
-                .padding(contentPadding)
-        )
-        AuthComponents(onLoginSuccess, Modifier.fillMaxSize(), contentPadding)
-    }
-}
 
 @Composable
 fun AuthHeader(

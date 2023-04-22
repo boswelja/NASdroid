@@ -2,6 +2,10 @@ package com.boswelja.truemanager.core.api.v2.auth
 
 import kotlin.time.Duration
 
+/**
+ * Describes the TrueNAS API V2 "Auth" group. Note these mappings may not be 1:1, as we will
+ * rearrange data to be more accessible in Kotlin.
+ */
 interface AuthV2Api {
 
     /**
@@ -32,5 +36,5 @@ interface AuthV2Api {
     /**
      * Checks whether two-factor-authentication is required to connect to the server.
      */
-    suspend fun twoFactorAuth(): Boolean
+    suspend fun isTwoFactorEnabled(): Boolean
 }

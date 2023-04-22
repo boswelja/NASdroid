@@ -1,37 +1,41 @@
-package com.boswelja.truemanager.auth.ui
+package com.boswelja.truemanager.auth.ui.addserver
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Label
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -50,22 +54,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.auth.R
-import com.boswelja.truemanager.core.api.v2.ApiStateProvider
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.rememberKoinInject
 
-
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AuthComponents(
     onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    viewModel: AuthViewModel = koinViewModel()
+    viewModel: AddServerViewModel = koinViewModel()
 ) {
     val layoutDirection = LocalLayoutDirection.current
     val isLoading by viewModel.isLoading.collectAsState()
 
+    var serverName by rememberSaveable { mutableStateOf("") }
     var serverAddress by rememberSaveable { mutableStateOf("") }
     var selectedAuthType by rememberSaveable(saver = rememberAuthTypeSaver()) {
         mutableStateOf(AuthTypes.first())
@@ -74,28 +76,48 @@ fun AuthComponents(
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var apiKey by rememberSaveable { mutableStateOf("") }
+    var isServerAddressInvalid by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var isUsernameOrPasswordInvalid by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var isApiKeyInvalid by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     val logIn = {
         when (selectedAuthType) {
-            AuthType.ApiKeyAuth -> viewModel.tryLogIn(serverAddress, apiKey)
-            AuthType.BasicAuth -> viewModel.tryLogIn(serverAddress, username, password)
+            AuthType.ApiKeyAuth -> viewModel.tryLogIn(serverName, serverAddress, apiKey)
+            AuthType.BasicAuth -> viewModel.tryLogIn(serverName, serverAddress, username, password)
         }
     }
     val loginEnabled by remember {
         derivedStateOf {
             val authValid = when (selectedAuthType) {
-                AuthType.ApiKeyAuth -> apiKey.isNotBlank()
-                AuthType.BasicAuth -> username.isNotBlank() && password.isNotBlank()
+                AuthType.ApiKeyAuth -> apiKey.isNotBlank() && !isApiKeyInvalid
+                AuthType.BasicAuth -> username.isNotBlank() && password.isNotBlank() && !isUsernameOrPasswordInvalid
             }
-            !isLoading && serverAddress.isNotBlank() && authValid
+            !isLoading && serverAddress.isNotBlank() && authValid && !isServerAddressInvalid
         }
     }
 
     // TODO handle login properly
-    val apiStateProvider: ApiStateProvider = rememberKoinInject()
-    LaunchedEffect(isLoading) {
-        if (!isLoading && apiStateProvider.authorization != null) {
-            onLoginSuccess()
+    LaunchedEffect(viewModel) {
+        viewModel.events.collectLatest {
+            when (it) {
+                AddServerViewModel.Event.LoginSuccess -> onLoginSuccess()
+                AddServerViewModel.Event.LoginFailedNotHttps,
+                AddServerViewModel.Event.LoginFailedServerNotFound ->
+                    isServerAddressInvalid = true
+                AddServerViewModel.Event.LoginFailedKeyInvalid ->
+                    isApiKeyInvalid = true
+                AddServerViewModel.Event.LoginFailedUsernameOrPasswordInvalid ->
+                    isUsernameOrPasswordInvalid = true
+                AddServerViewModel.Event.LoginFailedKeyAlreadyExists -> TODO()
+                null -> return@collectLatest
+            }
+            viewModel.clearPendingEvent()
         }
     }
 
@@ -103,14 +125,31 @@ fun AuthComponents(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ServerAddressField(
-            serverAddress = serverAddress,
-            onServerAddressChange = { serverAddress = it },
+        ServerNameField(
+            serverName = serverName,
+            onServerNameChange = { serverName = it },
             enabled = !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
                     top = contentPadding.calculateTopPadding(),
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection)
+                )
+                .widthIn(max = 560.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+        ServerAddressField(
+            serverAddress = serverAddress,
+            onServerAddressChange = {
+                serverAddress = it
+                isServerAddressInvalid = false
+            },
+            enabled = !isLoading,
+            error = isServerAddressInvalid,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
                     start = contentPadding.calculateStartPadding(layoutDirection),
                     end = contentPadding.calculateEndPadding(layoutDirection)
                 )
@@ -135,26 +174,37 @@ fun AuthComponents(
             AnimatedContent(
                 targetState = selectedAuthType,
                 label = "Login method content",
-                transitionSpec = { fadeIn() with fadeOut() },
+                transitionSpec = { fadeIn() togetherWith fadeOut() },
             ) { authType ->
                 when (authType) {
                     AuthType.ApiKeyAuth -> {
                         ApiKeyFields(
                             apiKey = apiKey,
-                            onApiKeyChange = { apiKey = it },
+                            onApiKeyChange = {
+                                apiKey = it
+                                isApiKeyInvalid = false
+                            },
                             onDone = logIn,
                             enabled = !isLoading,
+                            error = isApiKeyInvalid,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
                     AuthType.BasicAuth -> {
                         BasicAuthFields(
                             username = username,
-                            onUsernameChange = { username = it },
+                            onUsernameChange = {
+                                username = it
+                                isUsernameOrPasswordInvalid = false
+                            },
                             password = password,
-                            onPasswordChange = { password = it },
+                            onPasswordChange = {
+                                password = it
+                                isUsernameOrPasswordInvalid = false
+                            },
                             onDone = logIn,
                             enabled = !isLoading,
+                            error = isUsernameOrPasswordInvalid,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -171,13 +221,35 @@ fun AuthComponents(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ServerNameField(
+    serverName: String,
+    onServerNameChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean
+) {
+    TextField(
+        value = serverName,
+        onValueChange = onServerNameChange,
+        label = { Text("Server Name (Optional)") },
+        leadingIcon = { Icon(Icons.Default.Label, contentDescription = null) },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
+        ),
+        singleLine = true,
+        enabled = enabled,
+        modifier = modifier
+    )
+}
+
 @Composable
 fun ServerAddressField(
     serverAddress: String,
     onServerAddressChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    error: Boolean = false
 ) {
     TextField(
         value = serverAddress,
@@ -191,6 +263,10 @@ fun ServerAddressField(
         ),
         singleLine = true,
         enabled = enabled,
+        isError = error,
+        supportingText = if (error) {{
+            Text(stringResource(R.string.invalid_server_address))
+        }} else null,
         modifier = modifier
     )
 }
@@ -219,7 +295,6 @@ fun AuthTypeSelector(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BasicAuthFields(
     username: String,
@@ -228,12 +303,30 @@ fun BasicAuthFields(
     onPasswordChange: (String) -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    error: Boolean = false,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Column(modifier) {
+        AnimatedVisibility(
+            visible = error,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.error) {
+                Row(
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.Error, contentDescription = null)
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = stringResource(R.string.invalid_basic_auth),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        }
         TextField(
             value = username,
             onValueChange = onUsernameChange,
@@ -248,6 +341,7 @@ fun BasicAuthFields(
             enabled = enabled,
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(Modifier.height(8.dp))
         TextField(
             value = password,
             onValueChange = onPasswordChange,
@@ -268,7 +362,6 @@ fun BasicAuthFields(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApiKeyFields(
     apiKey: String,
@@ -276,6 +369,7 @@ fun ApiKeyFields(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    error: Boolean = false
 ) {
     TextField(
         value = apiKey,
@@ -293,6 +387,10 @@ fun ApiKeyFields(
         },
         singleLine = true,
         enabled = enabled,
+        isError = error,
+        supportingText = if (error) {{
+            Text(stringResource(R.string.invalid_key_auth))
+        }} else null,
         modifier = modifier
     )
 }
