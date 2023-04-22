@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import com.boswelja.truemanager.auth.ui.common.AuthHeader
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectServerScreen(
     onLoginSuccess: () -> Unit,
@@ -44,11 +43,11 @@ fun SelectServerScreen(
             items = authenticatedServers,
             key = { it.token }
         ) { authenticatedServer ->
-            ListItem(headlineText = { Text(authenticatedServer.serverAddress) })
+            ListItem(headlineContent = { Text(authenticatedServer.serverAddress) })
         }
         item {
             ListItem(
-                headlineText = { Text("Add Server") },
+                headlineContent = { Text("Add Server") },
                 modifier = Modifier.clickable(onClick = onAddServer)
             )
         }

@@ -1,10 +1,9 @@
 package com.boswelja.truemanager.auth.ui.addserver
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -52,7 +51,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.rememberKoinInject
 
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AuthComponents(
     onLoginSuccess: () -> Unit,
@@ -132,7 +130,7 @@ fun AuthComponents(
             AnimatedContent(
                 targetState = selectedAuthType,
                 label = "Login method content",
-                transitionSpec = { fadeIn() with fadeOut() },
+                transitionSpec = { fadeIn() togetherWith fadeOut() },
             ) { authType ->
                 when (authType) {
                     AuthType.ApiKeyAuth -> {
@@ -168,7 +166,6 @@ fun AuthComponents(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServerAddressField(
     serverAddress: String,
@@ -216,7 +213,6 @@ fun AuthTypeSelector(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BasicAuthFields(
     username: String,
@@ -265,7 +261,6 @@ fun BasicAuthFields(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApiKeyFields(
     apiKey: String,

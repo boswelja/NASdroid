@@ -59,9 +59,8 @@ dependencies {
     ksp(libs.room.compiler)
 
     // Compose
-    implementation(libs.accompanist.navigation)
+    implementation(libs.androidx.navigation)
     implementation(libs.accompanist.drawablepainter)
-    implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.tooling)
 

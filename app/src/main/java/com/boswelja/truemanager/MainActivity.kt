@@ -10,11 +10,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.boswelja.truemanager.auth.ui.authNavigation
 import com.boswelja.truemanager.reporting.reportingGraph
 import com.boswelja.truemanager.ui.theme.TrueManagerTheme
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,9 +30,9 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun MainScreen() {
-    val navController = rememberAnimatedNavController()
+    val navController = rememberNavController()
     Scaffold {
-        AnimatedNavHost(
+        NavHost(
             navController = navController,
             startDestination = "auth",
             modifier = Modifier.fillMaxSize().padding(it)
