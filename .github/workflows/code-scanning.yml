@@ -9,9 +9,8 @@ on:
     - cron: '33 19 * * *'
 
 jobs:
-  detekt:
+  detekt-checks:
     permissions:
-      # required for all workflows
       security-events: write
     runs-on: ubuntu-latest
     steps:
@@ -32,9 +31,8 @@ jobs:
         with:
           sarif_file: ./
           category: detekt
-  lint:
+  lint-checks:
     permissions:
-      # required for all workflows
       security-events: write
     runs-on: ubuntu-latest
     steps:
