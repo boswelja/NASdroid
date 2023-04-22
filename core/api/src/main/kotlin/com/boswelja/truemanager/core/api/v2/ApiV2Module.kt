@@ -20,6 +20,9 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+/**
+ * A Koin module to inject the auth dependency graph. This depends on the API module.
+ */
 @OptIn(ExperimentalSerializationApi::class)
 val apiV2Module = module {
     // API state

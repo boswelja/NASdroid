@@ -21,7 +21,6 @@ internal class AuthV2ApiImpl(
         val response = client.post("auth/check_password") {
             contentType(ContentType.Application.Json)
             setBody(UserCredentialsDto(username, password))
-            basicAuth(username, password)
         }
         return response.status == HttpStatusCode.OK
     }
@@ -30,7 +29,6 @@ internal class AuthV2ApiImpl(
         val response = client.post("auth/check_user") {
             contentType(ContentType.Application.Json)
             setBody(UserCredentialsDto(username, password))
-            basicAuth(username, password)
         }
         return response.status == HttpStatusCode.OK
     }
@@ -44,7 +42,6 @@ internal class AuthV2ApiImpl(
         val response = client.post("auth/generate_token") {
             contentType(ContentType.Application.Json)
             setBody(SessionTokenRequestDto(timeToLive.inWholeSeconds, JsonObject(emptyMap()), matchOrigin))
-            basicAuth(username, password)
         }
         if (response.status != HttpStatusCode.OK) {
             error(response.body())
@@ -60,7 +57,7 @@ internal class AuthV2ApiImpl(
         return response.body()
     }
 
-    override suspend fun twoFactorAuth(): Boolean {
+    override suspend fun isTwoFactorEnabled(): Boolean {
         val response = client.get("auth/two_factor_auth")
         return response.body()
     }
