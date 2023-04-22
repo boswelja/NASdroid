@@ -15,7 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
 
-class AuthenticatedServersStoreImpl(
+internal class AuthenticatedServersStoreImpl(
     context: Context
 ) : AuthenticatedServersStore {
 
@@ -44,7 +44,7 @@ class AuthenticatedServersStoreImpl(
 }
 
 @Entity(tableName = "authenticated_servers")
-data class AuthenticatedServerDto(
+internal data class AuthenticatedServerDto(
     @ColumnInfo(name = "server_address")
     val serverAddress: String,
     @PrimaryKey
@@ -53,7 +53,7 @@ data class AuthenticatedServerDto(
 )
 
 @Dao
-interface AuthenticatedServerDao {
+internal interface AuthenticatedServerDao {
     @Query("SELECT * FROM authenticated_servers")
     fun getAll(): Flow<List<AuthenticatedServerDto>>
 
@@ -65,6 +65,6 @@ interface AuthenticatedServerDao {
 }
 
 @Database(entities = [AuthenticatedServerDto::class], version = 1)
-abstract class AuthenticatedServerDatabase : RoomDatabase() {
+internal abstract class AuthenticatedServerDatabase : RoomDatabase() {
     abstract fun authenticatedServerDao(): AuthenticatedServerDao
 }
