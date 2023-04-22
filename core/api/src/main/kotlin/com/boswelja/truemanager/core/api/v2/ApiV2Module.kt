@@ -45,13 +45,12 @@ val apiV2Module = module {
                 })
             }
             defaultRequest {
-                apiStateProvider.authorization?.let { authorization ->
-                    when (authorization) {
-                        is Authorization.ApiKey -> bearerAuth(authorization.apiKey)
-                        is Authorization.Basic -> basicAuth(authorization.username, authorization.password)
-                    }
+                when (val authorization = requireNotNull(apiStateProvider.authorization)) {
+                    is Authorization.ApiKey -> bearerAuth(authorization.apiKey)
+                    is Authorization.Basic -> basicAuth(authorization.username, authorization.password)
                 }
-                apiStateProvider.serverAddress?.let { url(it) }
+                val baseUrl = requireNotNull(apiStateProvider.serverAddress)
+                url(baseUrl)
             }
         }
     }
