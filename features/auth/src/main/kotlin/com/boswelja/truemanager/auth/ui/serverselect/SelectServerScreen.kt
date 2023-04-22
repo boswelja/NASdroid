@@ -1,5 +1,6 @@
 package com.boswelja.truemanager.auth.ui.serverselect
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,15 +17,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.auth.ui.common.AuthHeader
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -39,6 +43,18 @@ fun SelectServerScreen(
     val authenticatedServers by viewModel.authenticatedServers.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
+    LaunchedEffect(viewModel) {
+        viewModel.events.collectLatest {
+            when (it) {
+                SelectServerViewModel.Event.LoginSuccess -> onLoginSuccess()
+                SelectServerViewModel.Event.LoginFailedTokenInvalid -> TODO()
+                SelectServerViewModel.Event.LoginFailedServerNotFound -> TODO()
+                null -> return@collectLatest
+            }
+            viewModel.clearPendingEvent()
+        }
+    }
+
     Column(modifier) {
         AuthHeader(
             modifier = Modifier
@@ -46,6 +62,14 @@ fun SelectServerScreen(
                 .aspectRatio(16 / 9f)
                 .padding(contentPadding)
         )
+        AnimatedVisibility(visible = isLoading) {
+            LinearProgressIndicator(
+                modifier = Modifier.padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection)
+                )
+            )
+        }
         Spacer(Modifier.height(16.dp))
         LazyColumn(
             contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding())
