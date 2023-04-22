@@ -1,7 +1,6 @@
 package com.boswelja.truemanager.core.api.v2.system
 
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlin.time.Duration
 
