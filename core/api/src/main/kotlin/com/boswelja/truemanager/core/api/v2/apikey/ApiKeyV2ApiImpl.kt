@@ -1,5 +1,6 @@
 package com.boswelja.truemanager.core.api.v2.apikey
 
+import com.boswelja.truemanager.core.api.v2.HttpsNotOkException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -9,6 +10,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
@@ -38,6 +40,9 @@ internal class ApiKeyV2ApiImpl(
         val response = client.post("api_key") {
             contentType(ContentType.Application.Json)
             setBody(CreateApiKeyBody(name, listOf(CreateApiKeyBody.ApiKeyAllowItem("*", "*"))))
+        }
+        if (response.status != HttpStatusCode.OK) {
+            throw HttpsNotOkException(response.status.value, response.status.description)
         }
         val dto: ApiKeyDto = response.body()
         return requireNotNull(dto.key)

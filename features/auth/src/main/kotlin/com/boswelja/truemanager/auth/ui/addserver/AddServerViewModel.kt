@@ -1,6 +1,7 @@
 package com.boswelja.truemanager.auth.ui.addserver
 
 import android.os.strictmode.CleartextNetworkViolation
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.auth.serverstore.AuthenticatedServer
@@ -104,9 +105,13 @@ class AddServerViewModel(
                 )
             )
             _events.emit(Event.LoginSuccess)
-        } catch (_: HttpsNotOkException) {
-            _events.emit(Event.LoginFailedKeyInvalid)
+        } catch (e: HttpsNotOkException) {
             apiStateProvider.authorization = null
+            when (e.code) {
+                422 -> _events.emit(Event.LoginFailedKeyAlreadyExists)
+                401 -> _events.emit(Event.LoginFailedKeyInvalid)
+                else -> Log.e(::AddServerViewModel.name, "Unhandled exception $e")
+            }
         } catch (_: IOException) {
             _events.emit(Event.LoginFailedServerNotFound)
             apiStateProvider.authorization = null
@@ -116,6 +121,7 @@ class AddServerViewModel(
     enum class Event {
         LoginSuccess,
         LoginFailedKeyInvalid,
+        LoginFailedKeyAlreadyExists,
         LoginFailedUsernameOrPasswordInvalid,
         LoginFailedServerNotFound,
         LoginFailedNotHttps

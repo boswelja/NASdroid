@@ -114,6 +114,7 @@ fun AuthComponents(
                     isApiKeyInvalid = true
                 AddServerViewModel.Event.LoginFailedUsernameOrPasswordInvalid ->
                     isUsernameOrPasswordInvalid = true
+                AddServerViewModel.Event.LoginFailedKeyAlreadyExists -> TODO()
                 null -> return@collectLatest
             }
             viewModel.clearPendingEvent()

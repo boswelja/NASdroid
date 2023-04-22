@@ -4,9 +4,12 @@ import java.io.IOException
 
 /**
  * Thrown when an HTTP request returns a non-OK code.
+ *
+ * @property code The non-200 HTTP status code.
+ * @property description A human-readable description of the HTTP status.
  */
 class HttpsNotOkException(
-    code: Int,
-    description: String,
+    val code: Int,
+    val description: String,
     cause: Throwable? = null
 ) : IOException(description, cause)
