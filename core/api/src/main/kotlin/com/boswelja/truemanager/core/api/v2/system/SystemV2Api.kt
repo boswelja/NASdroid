@@ -150,7 +150,7 @@ data class SystemInfo(
     val uptime: Duration,
     val license: String?,
     val bootTime: Instant,
-    val birthday: LocalDate,
+    val birthday: Instant?,
     val timezone: TimeZone,
     val hasEccMemory: Boolean,
     val hostInfo: HostInfo
