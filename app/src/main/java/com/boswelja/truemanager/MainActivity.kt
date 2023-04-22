@@ -38,6 +38,7 @@ fun MainScreen() {
             modifier = Modifier.fillMaxSize().padding(it)
         ) {
             authNavigation(
+                navController,
                 "auth",
                 onLoginSuccess = {
                     navController.navigate("reporting") {
