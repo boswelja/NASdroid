@@ -15,79 +15,79 @@ interface SystemV2Api {
     /**
      * Get a unique identifier that will be reset on each system reboot.
      */
-    fun getBootId(): String
+    suspend fun getBootId(): String
 
     /**
      * Get the environment in which product is running.
      */
-    fun getEnvironment(): Environment
+    suspend fun getEnvironment(): Environment
 
     /**
      * Get whether the given feature is enabled.
      */
-    fun isFeatureEnabled(featureName: String): Boolean
+    suspend fun isFeatureEnabled(featureName: String): Boolean
 
     /**
      * Get a hex string that is generated based on the contents of the /etc/hostid file. This is a
      * permanent value that persists across reboots/upgrades and can be used as a unique identifier
      * for the machine.
      */
-    fun getHostId(): String
+    suspend fun getHostId(): String
 
     /**
      * Get basic system information.
      */
-    fun getSystemInfo(): SystemInfo
+    suspend fun getSystemInfo(): SystemInfo
 
     /**
      * Get whether the system is currently running a stable build.
      */
-    fun isStable(): Boolean
+    suspend fun isStable(): Boolean
 
     /**
      * Update license file.
      */
-    fun updateLicense(license: String)
+    suspend fun updateLicense(license: String)
 
     /**
      * Get the name of the product the system is using. FOr example, "TrueNAS".
      */
-    fun getProductName(): String
+    suspend fun getProductName(): String
 
     /**
      * Get the type of product the system is using. For example, "SCALE"
      */
-    fun getProductType(): String
+    suspend fun getProductType(): String
 
     /**
      * Get whether the system is booted and ready to use.
      */
-    fun isReady(): Boolean
+    suspend fun isReady(): Boolean
 
     /**
      * Reboot the system.
      */
-    fun reboot()
+    suspend fun reboot()
 
     /**
      * Shutdown the system.
      */
-    fun shutdown()
+    suspend fun shutdown()
 
     /**
      * Get the current system state.
      */
-    fun getState(): State
+    suspend fun getState(): State
 
     /**
      * Get the version of the product this system is using. For example, "TrueNAS-SCALE-22.12.2".
      */
-    fun getVersion(): String
+    suspend fun getVersion(): String
 
     /**
      * Get a shortened version of the product this system is using. For example, "22.12.2".
      */
-    fun getShortVersion(): String
+    suspend fun getShortVersion(): String
 }
 
 /**

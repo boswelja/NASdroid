@@ -8,6 +8,7 @@ import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import com.boswelja.truemanager.core.api.v2.Authorization
 import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
+import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,7 @@ class AddServerViewModel(
     private val apiStateProvider: ApiStateProvider,
     private val authV2Api: AuthV2Api,
     private val apiKeyV2Api: ApiKeyV2Api,
+    private val systemV2Api: SystemV2Api,
     private val authedServersStore: AuthenticatedServersStore,
 ) : ViewModel() {
 
@@ -36,9 +38,11 @@ class AddServerViewModel(
             if (isValid) {
                 apiStateProvider.authorization = Authorization.Basic(username, password)
                 val apiKey = apiKeyV2Api.create("TrueManager for TrueNAS")
+
+                val uid = systemV2Api.getHostId()
                 authedServersStore.add(
                     AuthenticatedServer(
-                        uid = "TODO",
+                        uid = uid,
                         serverAddress = serverAddress,
                         token = apiKey,
                         name = serverName

@@ -6,7 +6,6 @@ import com.boswelja.truemanager.auth.serverstore.AuthenticatedServer
 import com.boswelja.truemanager.auth.serverstore.AuthenticatedServersStore
 import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import com.boswelja.truemanager.core.api.v2.Authorization
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,8 +13,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SelectServerViewModel(
+    private val apiStateProvider: ApiStateProvider,
     authenticatedServersStore: AuthenticatedServersStore,
-    private val apiStateProvider: ApiStateProvider
 ) : ViewModel() {
     val authenticatedServers = authenticatedServersStore.getAll()
         .stateIn(
@@ -34,7 +33,6 @@ class SelectServerViewModel(
             apiStateProvider.serverAddress = server.serverAddress
             apiStateProvider.authorization = Authorization.ApiKey(server.token)
             // TODO validate token
-            delay(500)
             _isLoading.value = false
         }
     }
