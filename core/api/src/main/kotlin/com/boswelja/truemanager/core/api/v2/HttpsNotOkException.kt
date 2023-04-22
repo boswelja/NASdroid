@@ -7,6 +7,8 @@ import java.io.IOException
  *
  * @property code The non-200 HTTP status code.
  * @property description A human-readable description of the HTTP status.
+ * @param cause The cause (which is saved for later retrieval by the getCause() method). (A null
+ * value is permitted, and indicates that the cause is nonexistent or unknown.)
  */
 class HttpsNotOkException(
     val code: Int,

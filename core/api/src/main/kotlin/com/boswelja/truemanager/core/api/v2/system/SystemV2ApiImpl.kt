@@ -11,7 +11,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
 internal class SystemV2ApiImpl(
