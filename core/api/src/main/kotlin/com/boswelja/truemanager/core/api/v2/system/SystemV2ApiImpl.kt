@@ -149,7 +149,7 @@ internal data class SystemInfoDto(
     @SerialName("physical_cores")
     val physicalCores: Int,
     @SerialName("loadavg")
-    val loadAvg: List<Int>,
+    val loadAvg: List<Double>,
     @SerialName("uptime")
     val uptime: String,
     @SerialName("uptime_seconds")
