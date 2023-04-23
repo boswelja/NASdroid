@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 
-fun NavGraphBuilder.reportingGraph(route: String) {
+fun NavGraphBuilder.reportingGraph(route: String, modifier: Modifier = Modifier) {
     navigation(startDestination = "overview", route = route) {
         composable("overview") {
             ReportingOverviewScreen(

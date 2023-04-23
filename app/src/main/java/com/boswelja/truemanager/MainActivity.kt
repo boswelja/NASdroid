@@ -13,6 +13,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -73,39 +75,55 @@ fun MainScreen(
         canNavigateBack = navController.previousBackStackEntry != null,
         navigateBack = navController::navigateUp
     ) {
-        NavHost(
+        MainNavHost(
             navController = navController,
-            startDestination = "auth",
+            destinations = destinations,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-        ) {
-            authNavigation(
-                navController,
-                "auth",
-                onLoginSuccess = {
-                    navController.navigate(TopLevelDestination.Reporting.route) {
-                        popUpTo("auth") {
-                            inclusive = true
-                        }
+                .padding(horizontal = 32.dp, vertical = 16.dp)
+        )
+    }
+}
+
+/**
+ * Shows a [NavHost] with routes for all given [destinations].
+ */
+@Composable
+fun MainNavHost(
+    navController: NavHostController,
+    destinations: List<TopLevelDestination>,
+    modifier: Modifier = Modifier,
+) {
+    NavHost(
+        navController = navController,
+        startDestination = "auth"
+    ) {
+        authNavigation(
+            navController,
+            "auth",
+            onLoginSuccess = {
+                navController.navigate(TopLevelDestination.Reporting.route) {
+                    popUpTo("auth") {
+                        inclusive = true
                     }
                 }
-            )
+            }
+        )
 
-            destinations.forEach { destination ->
-                when (destination) {
-                    TopLevelDestination.Dashboard -> {}
-                    TopLevelDestination.Storage -> {}
-                    TopLevelDestination.Datasets -> {}
-                    TopLevelDestination.Shares -> {}
-                    TopLevelDestination.DataProtection -> {}
-                    TopLevelDestination.Network -> {}
-                    TopLevelDestination.Credentials -> {}
-                    TopLevelDestination.Virtualization -> {}
-                    TopLevelDestination.Apps -> {}
-                    TopLevelDestination.Reporting -> reportingGraph(destination.route)
-                    TopLevelDestination.SystemSettings -> {}
-                }
+        destinations.forEach { destination ->
+            when (destination) {
+                TopLevelDestination.Dashboard -> {}
+                TopLevelDestination.Storage -> {}
+                TopLevelDestination.Datasets -> {}
+                TopLevelDestination.Shares -> {}
+                TopLevelDestination.DataProtection -> {}
+                TopLevelDestination.Network -> {}
+                TopLevelDestination.Credentials -> {}
+                TopLevelDestination.Virtualization -> {}
+                TopLevelDestination.Apps -> {}
+                TopLevelDestination.Reporting -> reportingGraph(destination.route, modifier)
+                TopLevelDestination.SystemSettings -> {}
             }
         }
     }
