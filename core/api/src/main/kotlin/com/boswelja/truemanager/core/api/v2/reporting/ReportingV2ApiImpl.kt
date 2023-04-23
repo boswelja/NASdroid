@@ -218,7 +218,7 @@ internal data class ReportingConfigDto(
     @SerialName("cpu_in_percentage")
     val cpuInPercentage: Boolean,
     @SerialName("graphite")
-    val graphiteInstanceUrl: String,
+    val graphiteInstanceUrl: String?,
     @SerialName("graph_age")
     val graphAge: Int,
     @SerialName("graph_points")
@@ -232,7 +232,7 @@ internal data class PutReportingConfigDto(
     @SerialName("cpu_in_percentage")
     val cpuInPercentage: Boolean,
     @SerialName("graphite")
-    val graphiteInstanceUrl: String,
+    val graphiteInstanceUrl: String?,
     @SerialName("graph_age")
     val graphAge: Int,
     @SerialName("graph_points")
