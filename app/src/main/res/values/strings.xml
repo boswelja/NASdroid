@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">TrueManager</string>
+
+    <string name="feature_dashboard">Dashboard</string>
+    <string name="feature_storage">Storage</string>
+    <string name="feature_datasets">Datasets</string>
+    <string name="feature_shares">Shares</string>
+    <string name="feature_data_protection">Data Protection</string>
+    <string name="feature_network">Network</string>
+    <string name="feature_credentials">Credentials</string>
+    <string name="feature_virtualization">Virtualization</string>
+    <string name="feature_apps">Apps</string>
+    <string name="feature_reporting">Reporting</string>
+    <string name="feature_system_settings">System Settings</string>
 </resources>
