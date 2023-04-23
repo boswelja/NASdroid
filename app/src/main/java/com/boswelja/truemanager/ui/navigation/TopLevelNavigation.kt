@@ -3,6 +3,8 @@ package com.boswelja.truemanager.ui.navigation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
@@ -41,16 +44,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
+/**
+ * Orchestrates all top-level navigation components. The navigation components displayed depend on
+ * [windowSizeClass].
+ */
 @Composable
 fun TopLevelNavigation(
     windowSizeClass: WindowSizeClass,
     selectedDestination: TopLevelDestination?,
     destinations: List<TopLevelDestination>,
     navigateTo: (TopLevelDestination) -> Unit,
-    navigationVisible: Boolean,
-    canNavigateBack: Boolean,
-    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    navigationVisible: Boolean = true,
+    canNavigateBack: Boolean = false,
+    navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
     when (windowSizeClass.widthSizeClass) {
@@ -93,16 +100,31 @@ fun TopLevelNavigation(
     }
 }
 
+/**
+ * A Modal navigation drawer with a top app bar to control its state and display the current
+ * destination.
+ *
+ * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
+ * selected.
+ * @param destinations A list of [TopLevelDestination]s that should be displayed.
+ * @param navigateTo Called when the user navigates to a new destination.
+ * @param modifier [Modifier].
+ * @param navigationVisible Whether the user can open the modal navigation drawer.
+ * @param canNavigateBack Whether the back button should be displayed. When this is true, the user
+ * cannot access the navigation drawer.
+ * @param navigateBack Called when the user navigates back.
+ * @param content The screen content. The provided PaddingValues come from [Scaffold].
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModalNavigationDrawer(
     selectedDestination: TopLevelDestination?,
     destinations: List<TopLevelDestination>,
     navigateTo: (TopLevelDestination) -> Unit,
-    navigationVisible: Boolean,
-    canNavigateBack: Boolean,
-    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    navigationVisible: Boolean = true,
+    canNavigateBack: Boolean = false,
+    navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -155,16 +177,29 @@ fun ModalNavigationDrawer(
     }
 }
 
+/**
+ * A Navigation Rail with a top app bar to allow navigating back.
+ *
+ * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
+ * selected.
+ * @param destinations A list of [TopLevelDestination]s that should be displayed.
+ * @param navigateTo Called when the user navigates to a new destination.
+ * @param modifier [Modifier].
+ * @param navigationVisible Whether the user can see the navigation rail.
+ * @param canNavigateBack Whether the back button should be displayed.
+ * @param navigateBack Called when the user navigates back.
+ * @param content The screen content. The provided PaddingValues come from [Scaffold].
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationRail(
     selectedDestination: TopLevelDestination?,
     destinations: List<TopLevelDestination>,
     navigateTo: (TopLevelDestination) -> Unit,
-    navigationVisible: Boolean,
-    canNavigateBack: Boolean,
-    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    navigationVisible: Boolean = true,
+    canNavigateBack: Boolean = false,
+    navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
     Row(modifier) {
@@ -203,16 +238,29 @@ fun NavigationRail(
     }
 }
 
+/**
+ * A Permanent Navigation Drawer with a top app bar to allow navigating back.
+ *
+ * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
+ * selected.
+ * @param destinations A list of [TopLevelDestination]s that should be displayed.
+ * @param navigateTo Called when the user navigates to a new destination.
+ * @param modifier [Modifier].
+ * @param navigationVisible Whether the user can see the navigation drawer.
+ * @param canNavigateBack Whether the back button should be displayed.
+ * @param navigateBack Called when the user navigates back.
+ * @param content The screen content. The provided PaddingValues come from [Scaffold].
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermanentNavigationDrawer(
     selectedDestination: TopLevelDestination?,
     destinations: List<TopLevelDestination>,
     navigateTo: (TopLevelDestination) -> Unit,
-    navigationVisible: Boolean,
-    canNavigateBack: Boolean,
-    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    navigationVisible: Boolean = true,
+    canNavigateBack: Boolean = false,
+    navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
     Row(modifier) {
@@ -271,10 +319,12 @@ fun ModalNavigationDrawerPreview() {
         canNavigateBack = false,
         navigateBack = {}
     ) {
-        Text("Hello, world!",
+        Box(
             Modifier
                 .padding(it)
-                .fillMaxSize())
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        )
     }
 }
 
@@ -297,10 +347,12 @@ fun NavigationRailPreview() {
         canNavigateBack = true,
         navigateBack = {}
     ) {
-        Text("Hello, world!",
+        Box(
             Modifier
                 .padding(it)
-                .fillMaxSize())
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        )
     }
 }
 
@@ -323,9 +375,11 @@ fun PermanentNavigationDrawerPreview() {
         canNavigateBack = true,
         navigateBack = {}
     ) {
-        Text("Hello, world!",
+        Box(
             Modifier
                 .padding(it)
-                .fillMaxSize())
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        )
     }
 }
