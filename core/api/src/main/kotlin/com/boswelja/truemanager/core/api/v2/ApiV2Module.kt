@@ -23,7 +23,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 /**
- * A Koin module to inject the auth dependency graph. This depends on the API module.
+ * A Koin module to inject the TrueNAS API V2 dependency graph.
  */
 @OptIn(ExperimentalSerializationApi::class)
 val ApiV2Module = module {

@@ -37,6 +37,9 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+/**
+ * The base application theme. TODO This should have base colors that reflect TrueNAS colors.
+ */
 @Composable
 fun TrueManagerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -64,7 +67,6 @@ fun TrueManagerTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
         content = content
     )
 }
