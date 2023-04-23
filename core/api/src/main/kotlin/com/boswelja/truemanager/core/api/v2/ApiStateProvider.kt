@@ -1,13 +1,40 @@
 package com.boswelja.truemanager.core.api.v2
 
+/**
+ * Provides various common states needed for the API to function.
+ */
 interface ApiStateProvider {
+
+    /**
+     * The base address of the server, for example 'http://truenas.local'. This cannot be null when
+     * making API calls.
+     */
     var serverAddress: String?
 
+    /**
+     * An [Authorization] to use for each request. This cannot be null when making API calls.
+     */
     var authorization: Authorization?
 }
 
+/**
+ * Describes possible API authorization types.
+ */
 sealed class Authorization {
+
+    /**
+     * Basic (username and password) authorization.
+     *
+     * @property username The username for auth.
+     * @property password The password for auth.
+     */
     data class Basic(val username: String, val password: String) : Authorization()
+
+    /**
+     * Authorization via API key.
+     *
+     * @property apiKey The API key to use for authorization
+     */
     data class ApiKey(val apiKey: String) : Authorization()
 }
 

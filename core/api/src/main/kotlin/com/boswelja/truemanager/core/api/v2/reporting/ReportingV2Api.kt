@@ -2,6 +2,10 @@ package com.boswelja.truemanager.core.api.v2.reporting
 
 import kotlinx.datetime.Instant
 
+/**
+ * Describes the TrueNAS API V2 "Reporting" group. Note these mappings may not be 1:1, as we will
+ * rearrange data to be more accessible in Kotlin.
+ */
 interface ReportingV2Api {
 
     suspend fun getReportingDatabaseSettings(): ReportingConfig
