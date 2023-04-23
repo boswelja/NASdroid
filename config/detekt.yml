@@ -325,6 +325,7 @@ naming:
   FunctionMaxLength:
     active: true
     maximumFunctionNameLength: 30
+    ignoreAnnotated: ['Preview']
   FunctionMinLength:
     active: true
     minimumFunctionNameLength: 3
