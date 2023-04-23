@@ -9,6 +9,9 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+/**
+ * A Koin module to inject the auth dependency graph. This depends on the API module.
+ */
 val AuthModule = module {
     singleOf(::AuthenticatedServersStoreImpl) bind AuthenticatedServersStore::class
 
