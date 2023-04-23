@@ -7,6 +7,9 @@ import com.boswelja.truemanager.reporting.ReportingModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
+/**
+ * An implementation of [Application] that initializes Koin for the app.
+ */
 class MainApplication : Application() {
 
     override fun onCreate() {
