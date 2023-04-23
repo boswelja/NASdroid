@@ -3,6 +3,7 @@ package com.boswelja.truemanager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -80,8 +81,8 @@ fun MainScreen(
             destinations = destinations,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
-                .padding(horizontal = 32.dp, vertical = 16.dp)
+                .padding(it),
+            contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
         )
     }
 }
@@ -94,6 +95,7 @@ fun MainNavHost(
     navController: NavHostController,
     destinations: List<TopLevelDestination>,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     NavHost(
         navController = navController,
@@ -108,7 +110,9 @@ fun MainNavHost(
                         inclusive = true
                     }
                 }
-            }
+            },
+            modifier = modifier,
+            contentPadding = contentPadding
         )
 
         destinations.forEach { destination ->
@@ -122,7 +126,7 @@ fun MainNavHost(
                 TopLevelDestination.Credentials -> {}
                 TopLevelDestination.Virtualization -> {}
                 TopLevelDestination.Apps -> {}
-                TopLevelDestination.Reporting -> reportingGraph(destination.route, modifier)
+                TopLevelDestination.Reporting -> reportingGraph(destination.route, modifier, contentPadding)
                 TopLevelDestination.SystemSettings -> {}
             }
         }
