@@ -84,6 +84,7 @@ comments:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
     searchProtectedFunction: false
+    ignoreAnnotated: ['Preview']
   UndocumentedPublicProperty:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
@@ -324,6 +325,7 @@ naming:
   FunctionMaxLength:
     active: true
     maximumFunctionNameLength: 30
+    ignoreAnnotated: ['Preview']
   FunctionMinLength:
     active: true
     minimumFunctionNameLength: 3
