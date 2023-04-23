@@ -1,5 +1,8 @@
 package com.boswelja.truemanager.ui.navigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -7,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -20,7 +24,6 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.PermanentDrawerSheet
-import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -45,9 +48,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun TopLevelNavigation(
     windowSizeClass: WindowSizeClass,
-    selectedDestination: TopLevelDestination,
+    selectedDestination: TopLevelDestination?,
     destinations: List<TopLevelDestination>,
     navigateTo: (TopLevelDestination) -> Unit,
+    navigationVisible: Boolean,
+    canNavigateBack: Boolean,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -59,22 +65,29 @@ fun TopLevelNavigation(
                 selectedDestination = selectedDestination,
                 destinations = destinations,
                 navigateTo = navigateTo,
+                gesturesEnabled = navigationVisible,
                 drawerState = drawerState,
                 modifier = modifier
             ) {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text(stringResource(selectedDestination.labelRes)) },
+                            title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
                             navigationIcon = {
-                                IconButton(
-                                    onClick = {
-                                        coroutineScope.launch {
-                                            drawerState.open()
-                                        }
+                                if (canNavigateBack) {
+                                    IconButton(onClick = navigateBack) {
+                                        Icon(Icons.Default.ArrowBack, contentDescription = "Navigation back")
                                     }
-                                ) {
-                                    Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
+                                } else if (navigationVisible) {
+                                    IconButton(
+                                        onClick = {
+                                            coroutineScope.launch {
+                                                drawerState.open()
+                                            }
+                                        }
+                                    ) {
+                                        Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
+                                    }
                                 }
                             }
                         )
@@ -84,8 +97,12 @@ fun TopLevelNavigation(
             }
         }
         WindowWidthSizeClass.Medium -> {
-            Scaffold(modifier) {
-                Row {
+            Row(modifier) {
+                AnimatedVisibility(
+                    visible = navigationVisible,
+                    enter = slideInHorizontally(),
+                    exit = slideOutHorizontally { -it/2 }
+                ) {
                     NavigationRail {
                         destinations.forEach { destination ->
                             val label = stringResource(destination.labelRes)
@@ -97,13 +114,32 @@ fun TopLevelNavigation(
                             )
                         }
                     }
-                    content(it)
                 }
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { },
+                            navigationIcon = {
+                                if (canNavigateBack) {
+                                    IconButton(onClick = navigateBack) {
+                                        Icon(Icons.Default.ArrowBack, contentDescription = "Navigation back")
+                                    }
+                                }
+                            }
+                        )
+                    },
+                    content = content
+                )
             }
+
         }
         WindowWidthSizeClass.Expanded -> {
-            PermanentNavigationDrawer(
-                drawerContent = {
+            Row(modifier) {
+                AnimatedVisibility(
+                    visible = navigationVisible,
+                    enter = slideInHorizontally(),
+                    exit = slideOutHorizontally { -it/2 }
+                ) {
                     PermanentDrawerSheet {
                         Spacer(Modifier.height(12.dp))
                         destinations.forEach { destination ->
@@ -116,10 +152,22 @@ fun TopLevelNavigation(
                             )
                         }
                     }
-                },
-                modifier = modifier
-            ) {
-                Scaffold(content = content)
+                }
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { },
+                            navigationIcon = {
+                                if (canNavigateBack) {
+                                    IconButton(onClick = navigateBack) {
+                                        Icon(Icons.Default.ArrowBack, contentDescription = "Navigation back")
+                                    }
+                                }
+                            }
+                        )
+                    },
+                    content = content
+                )
             }
         }
     }
@@ -127,10 +175,11 @@ fun TopLevelNavigation(
 
 @Composable
 fun ModalNavigationDrawer(
-    selectedDestination: TopLevelDestination,
+    selectedDestination: TopLevelDestination?,
     destinations: List<TopLevelDestination>,
     navigateTo: (TopLevelDestination) -> Unit,
     drawerState: DrawerState,
+    gesturesEnabled: Boolean,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -150,6 +199,7 @@ fun ModalNavigationDrawer(
             }
         },
         drawerState = drawerState,
+        gesturesEnabled = gesturesEnabled,
         content = content,
         modifier = modifier
     )
@@ -171,7 +221,10 @@ fun PhoneTopLevelNavigationPreview() {
         destinations = destinations,
         navigateTo = {
             selectedDestination = it
-        }
+        },
+        navigationVisible = true,
+        canNavigateBack = false,
+        navigateBack = {}
     ) {
         Text("Hello, world!",
             Modifier
@@ -196,7 +249,10 @@ fun TabletTopLevelNavigationPreview() {
         destinations = destinations,
         navigateTo = {
             selectedDestination = it
-        }
+        },
+        navigationVisible = true,
+        canNavigateBack = false,
+        navigateBack = {}
     ) {
         Text("Hello, world!",
             Modifier
@@ -221,7 +277,10 @@ fun FoldableTopLevelNavigationPreview() {
         destinations = destinations,
         navigateTo = {
             selectedDestination = it
-        }
+        },
+        navigationVisible = true,
+        canNavigateBack = false,
+        navigateBack = {}
     ) {
         Text("Hello, world!",
             Modifier
@@ -246,7 +305,10 @@ fun DesktopTopLevelNavigationPreview() {
         destinations = destinations,
         navigateTo = {
             selectedDestination = it
-        }
+        },
+        navigationVisible = true,
+        canNavigateBack = false,
+        navigateBack = {}
     ) {
         Text("Hello, world!",
             Modifier
