@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/auth" />
             <option value="$PROJECT_DIR$/features/reporting" />
+            <option value="$PROJECT_DIR$/features/storage" />
           </set>
         </option>
       </GradleProjectSettings>
