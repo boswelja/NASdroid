@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -14,7 +13,10 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.core.os.bundleOf
+import androidx.navigation.NavDestination
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.boswelja.truemanager.auth.ui.authNavigation
 import com.boswelja.truemanager.reporting.reportingGraph
@@ -47,21 +49,20 @@ fun MainScreen(
     windowSizeClass: WindowSizeClass
 ) {
     val navController = rememberNavController()
+    val currentBackstackEntry by navController.currentBackStackEntryAsState()
     val destinations = remember {
         TopLevelDestination.values().toList()
     }
     val selectedDestination by remember {
         derivedStateOf {
-            val currentRoute = navController.currentDestination?.route
+            val currentRoute = currentBackstackEntry?.destination?.parent?.route
             destinations.firstOrNull { it.route == currentRoute }
         }
     }
     val isNavigationVisible by remember {
         derivedStateOf {
-            val currentRoute = navController.currentDestination?.route.orEmpty()
-            destinations.any { destination ->
-                currentRoute.contains(destination.route)
-            }
+            val currentRoute = currentBackstackEntry?.destination?.parent?.route
+            destinations.any { it.route == currentRoute }
         }
     }
 
@@ -85,7 +86,7 @@ fun MainScreen(
                 navController,
                 "auth",
                 onLoginSuccess = {
-                    navController.navigate("reporting") {
+                    navController.navigate(TopLevelDestination.Reporting.route) {
                         popUpTo("auth") {
                             inclusive = true
                         }
