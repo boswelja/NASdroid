@@ -55,6 +55,7 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose-ui" }
 compose-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-icons" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
+compose-material3-windowsizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "compose-material3" }
 accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
 
 room-runtime = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -96,7 +97,8 @@ compose = [
     "compose-ui-graphics",
     "compose-ui-tooling-preview",
     "compose-icons",
-    "compose-material3"
+    "compose-material3",
+    "compose-material3-windowsizeclass"
 ]
 compose-tooling = [
     "compose-ui-test-manifest",
