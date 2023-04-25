@@ -7,7 +7,9 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -96,7 +98,9 @@ fun PoolCard(
             ) {
                 Topology(
                     topology = pool.topology,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp, vertical = 16.dp)
                 )
             }
             TextButton(
@@ -119,6 +123,7 @@ fun PoolOverview(
             text = pool.name,
             style = MaterialTheme.typography.titleLarge,
         )
+        Spacer(modifier = Modifier.height(8.dp))
         StorageUseSummary(
             usedBytes = pool.capacity.allocatedBytes,
             totalBytes = pool.capacity.sizeBytes,
@@ -141,44 +146,32 @@ fun Topology(
             style = MaterialTheme.typography.titleMedium
         )
         TopologySection(
-            title = {
-                Text("Data")
-            },
+            title = { Text("Data") },
             vdevs = topology.data,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = {
-                Text("Cache")
-            },
+            title = { Text("Cache") },
             vdevs = topology.cache,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = {
-                Text("De-duplication")
-            },
+            title = { Text("De-duplication") },
             vdevs = topology.dedup,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = {
-                Text("Log")
-            },
+            title = { Text("Log") },
             vdevs = topology.log,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = {
-                Text("Spare")
-            },
+            title = { Text("Spare") },
             vdevs = topology.spare,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = {
-                Text("Metadata")
-            },
+            title = { Text("Metadata") },
             vdevs = topology.special,
             modifier = Modifier.fillMaxWidth()
         )
