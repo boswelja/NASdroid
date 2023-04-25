@@ -196,7 +196,7 @@ data class Stats(
     val physicalAshift: Int,
     val readErrors: Int,
     val selfHealed: Int,
-    val size: Int,
+    val size: Long,
     val timestamp: Instant,
     val writeErrors: Int
 )

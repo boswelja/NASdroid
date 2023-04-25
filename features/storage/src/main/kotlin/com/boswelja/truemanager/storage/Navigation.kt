@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.boswelja.truemanager.storage.overview.StorageOverviewScreen
 
 fun NavGraphBuilder.storageGraph(
     route: String,
@@ -13,7 +14,10 @@ fun NavGraphBuilder.storageGraph(
 ) {
     navigation(startDestination = "overview", route = route) {
         composable("overview") {
-
+            StorageOverviewScreen(
+                modifier = modifier,
+                contentPadding = contentPadding,
+            )
         }
     }
 }

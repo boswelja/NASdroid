@@ -72,7 +72,11 @@ fun MainScreen(
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
         destinations = destinations,
-        navigateTo = { navController.navigate(it.route) },
+        navigateTo = {
+            navController.navigate(it.route) {
+                // launchSingleTop = true TODO This throws NoSuchElementException
+            }
+        },
         navigationVisible = isNavigationVisible,
         canNavigateBack = navController.previousBackStackEntry != null,
         navigateBack = navController::navigateUp
