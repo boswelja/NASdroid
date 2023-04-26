@@ -11,9 +11,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.ProvideTextStyle
@@ -26,11 +31,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.core.api.v2.pool.Pool
+import com.boswelja.truemanager.core.api.v2.pool.Scan
 import com.boswelja.truemanager.core.api.v2.pool.Topology
 import com.boswelja.truemanager.core.api.v2.pool.VDev
+import kotlinx.datetime.Clock
 import org.koin.androidx.compose.koinViewModel
+import kotlin.time.Duration
 
 @Composable
 fun StorageOverviewScreen(
@@ -79,12 +88,12 @@ fun PoolCard(
     var expanded by rememberSaveable {
         mutableStateOf(false)
     }
-    val dividerPadding by animateDpAsState(targetValue = if (expanded) 32.dp else 0.dp, label = "Card divider padding")
+    val dividerPadding by animateDpAsState(targetValue = if (expanded) 24.dp else 0.dp, label = "Card divider padding")
     OutlinedCard(modifier) {
         Column {
             PoolOverview(
                 pool = pool,
-                modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp)
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
             )
             Divider(
                 Modifier
@@ -100,13 +109,16 @@ fun PoolCard(
                     topology = pool.topology,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 16.dp)
+                        .padding(horizontal = 24.dp)
+                        .padding(top = 16.dp)
                 )
             }
             TextButton(
                 onClick = { expanded = !expanded },
-                modifier = Modifier.padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+                modifier = Modifier.padding(8.dp)
             ) {
+                Icon(if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
                 Text(if (expanded) "Collapse" else "Expand")
             }
         }
@@ -200,4 +212,56 @@ fun TopologySection(
             Text("• VDEVs not assigned")
         }
     }
+}
+
+@Preview
+@Composable
+fun PoolCardPreview() {
+    PoolCard(
+        pool = Pool(
+            autotrim = Pool.Autotrim(true, "LOCAL", true),
+            fragmentation = 4,
+            freeing = 0,
+            guid = "guid",
+            healthy = true,
+            id = 1,
+            isDecrypted = true,
+            name = "My Pool",
+            path = "/mnt/my-pool",
+            scan = Scan(
+                bytesIssued = 0,
+                bytesProcessed = 1,
+                bytesToProcess = 1,
+                endTime = Clock.System.now(),
+                errors = 0,
+                function = "",
+                pause = null,
+                percentage = 100.0,
+                startTime = Clock.System.now(),
+                state = "COMPLETED",
+                remainingTime = Duration.ZERO
+            ),
+            status = "ONLINE",
+            statusDetail = null,
+            topology = Topology(
+                cache = listOf(),
+                data = listOf(),
+                dedup = listOf(),
+                log = listOf(),
+                spare = listOf(),
+                special = listOf()
+            ),
+            warning = false,
+            capacity = Pool.Capacity(
+                allocatedBytes = 1000,
+                freeBytes = 1000,
+                sizeBytes = 2000,
+            ),
+            encryption = Pool.Encryption(
+                encrypt = 0,
+                encryptkey = "",
+                encryptkeyPath = null
+            )
+        )
+    )
 }
