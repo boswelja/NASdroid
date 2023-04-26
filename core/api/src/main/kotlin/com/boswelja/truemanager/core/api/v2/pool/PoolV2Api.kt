@@ -94,7 +94,7 @@ data class Pool(
 }
 
 /**
- * Describes a scan that occurred on a pool.
+ * Describes a scan that occurred on the ZFS pool.
  *
  * @property bytesIssued The number of bytes with issues.
  * @property bytesProcessed The number of bytes processed in the scan.
@@ -112,7 +112,7 @@ data class Scan(
     val bytesIssued: Long,
     val bytesProcessed: Long,
     val bytesToProcess: Long,
-    val endTime: Instant,
+    val endTime: Instant?,
     val errors: Int,
     val function: String,
     val pause: String?,
