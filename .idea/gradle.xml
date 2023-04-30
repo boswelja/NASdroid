@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/api" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/apps" />
             <option value="$PROJECT_DIR$/features/auth" />
             <option value="$PROJECT_DIR$/features/dashboard" />
             <option value="$PROJECT_DIR$/features/reporting" />

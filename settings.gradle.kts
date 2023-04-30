@@ -24,6 +24,7 @@ enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
 rootProject.name = "TrueManager"
 include(
     ":core:api",
+    ":features:apps",
     ":features:auth",
     ":features:dashboard",
     ":features:reporting",
