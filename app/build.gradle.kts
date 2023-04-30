@@ -42,6 +42,10 @@ android {
         sarifReport = true
         htmlReport = false
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 }
 
 kotlin {
@@ -58,6 +62,7 @@ dependencies {
     implementation(projects.core.api)
     implementation(projects.features.auth)
     implementation(projects.features.reporting)
+    implementation(projects.features.storage)
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)

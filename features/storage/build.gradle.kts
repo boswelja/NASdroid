@@ -1,13 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.ksp)
 
     alias(libs.plugins.detekt)
 }
 
 android {
-    namespace = "com.boswelja.truemanager.auth"
+    namespace = "com.boswelja.truemanager.storage"
     compileSdk = 33
 
     defaultConfig {
@@ -56,15 +55,7 @@ detekt {
 dependencies {
     implementation(projects.core.api)
 
-    implementation(libs.androidx.window)
-
-    // Room
-    implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
-
-    // Compose
     implementation(libs.androidx.navigation)
-    implementation(libs.accompanist.drawablepainter)
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.tooling)
 

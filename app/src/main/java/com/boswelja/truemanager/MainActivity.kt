@@ -21,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.boswelja.truemanager.auth.ui.authNavigation
 import com.boswelja.truemanager.reporting.reportingGraph
+import com.boswelja.truemanager.storage.ui.storageGraph
 import com.boswelja.truemanager.ui.navigation.TopLevelDestination
 import com.boswelja.truemanager.ui.navigation.TopLevelNavigation
 import com.boswelja.truemanager.ui.theme.TrueManagerTheme
@@ -71,7 +72,11 @@ fun MainScreen(
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
         destinations = destinations,
-        navigateTo = { navController.navigate(it.route) },
+        navigateTo = {
+            navController.navigate(it.route) {
+                // launchSingleTop = true TODO This throws NoSuchElementException
+            }
+        },
         navigationVisible = isNavigationVisible,
         canNavigateBack = navController.previousBackStackEntry != null,
         navigateBack = navController::navigateUp
@@ -118,7 +123,7 @@ fun MainNavHost(
         destinations.forEach { destination ->
             when (destination) {
                 TopLevelDestination.Dashboard -> {}
-                TopLevelDestination.Storage -> {}
+                TopLevelDestination.Storage -> storageGraph(destination.route, modifier, contentPadding)
                 TopLevelDestination.Datasets -> {}
                 TopLevelDestination.Shares -> {}
                 TopLevelDestination.DataProtection -> {}

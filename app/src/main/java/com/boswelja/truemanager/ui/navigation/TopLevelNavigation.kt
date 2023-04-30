@@ -139,7 +139,12 @@ fun ModalNavigationDrawer(
                         icon = { Icon(destination.icon, contentDescription = null) },
                         label = { Text(stringResource(destination.labelRes)) },
                         selected = destination == selectedDestination,
-                        onClick = { navigateTo(destination) },
+                        onClick = {
+                            navigateTo(destination)
+                            coroutineScope.launch {
+                                drawerState.close()
+                            }
+                        },
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
                 }

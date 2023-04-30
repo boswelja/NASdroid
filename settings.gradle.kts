@@ -26,6 +26,7 @@ include(
     ":core:api",
     ":features:auth",
     ":features:reporting",
+    ":features:storage",
     ":app"
 )
 
