@@ -25,11 +25,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.core.api.v2.pool.Pool
 import com.boswelja.truemanager.core.api.v2.pool.Scan
 import com.boswelja.truemanager.core.api.v2.pool.Topology
+import com.boswelja.truemanager.storage.R
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -78,7 +80,7 @@ fun PoolCard(
             ) {
                 Icon(if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
                 Spacer(Modifier.width(8.dp))
-                Text(if (expanded) "Collapse" else "Expand")
+                Text(if (expanded) stringResource(R.string.button_show_less) else stringResource(R.string.button_show_more))
             }
         }
     }

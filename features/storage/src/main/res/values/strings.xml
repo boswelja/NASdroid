@@ -19,4 +19,7 @@
     <string name="scan_errors_found">%d errors found</string>
     <string name="scan_time_remaining">%s remaining</string>
     <string name="scan_progress_percent">%.2f%%</string>
+
+    <string name="button_show_more">Expand</string>
+    <string name="button_show_less">Collapse</string>
 </resources>
