@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.storage.overview
+package com.boswelja.truemanager.storage.ui.overview
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -37,6 +37,12 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 
+/**
+ * Displays information about a given [Pool].
+ *
+ * @param pool The pool to display information for.
+ * @param modifier [Modifier].
+ */
 @Composable
 fun PoolCard(
     pool: Pool,
@@ -49,7 +55,8 @@ fun PoolCard(
     OutlinedCard(modifier) {
         Column {
             PoolOverview(
-                pool = pool,
+                name = pool.name,
+                capacity = pool.capacity,
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp)
             )
             ScanDetails(
@@ -66,7 +73,7 @@ fun PoolCard(
                 enter = expandVertically(),
                 exit = shrinkVertically()
             ) {
-                Topology(
+                TopologyDetails(
                     topology = pool.topology,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -80,26 +87,40 @@ fun PoolCard(
             ) {
                 Icon(if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
                 Spacer(Modifier.width(8.dp))
-                Text(if (expanded) stringResource(R.string.button_show_less) else stringResource(R.string.button_show_more))
+                Text(
+                    if (expanded) {
+                        stringResource(R.string.button_show_less)
+                    } else {
+                        stringResource(R.string.button_show_more)
+                    }
+                )
             }
         }
     }
 }
 
+/**
+ * Displays basic details about a pool, such as the pool name & storage usage.
+ *
+ * @param name The human-readable name of the pool.
+ * @param capacity Capacity information for the pool.
+ * @param modifier [Modifier].
+ */
 @Composable
 fun PoolOverview(
-    pool: Pool,
+    name: String,
+    capacity: Pool.Capacity,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
         Text(
-            text = pool.name,
+            text = name,
             style = MaterialTheme.typography.titleLarge,
         )
         Spacer(modifier = Modifier.height(8.dp))
         StorageUseSummary(
-            usedBytes = pool.capacity.allocatedBytes,
-            totalBytes = pool.capacity.sizeBytes,
+            usedBytes = capacity.allocatedBytes,
+            totalBytes = capacity.sizeBytes,
             modifier = Modifier.fillMaxWidth()
         )
     }

@@ -9,6 +9,9 @@ import androidx.navigation.navigation
 import com.boswelja.truemanager.auth.ui.addserver.AuthScreen
 import com.boswelja.truemanager.auth.ui.serverselect.SelectServerScreen
 
+/**
+ * Registers a nested navigation graph for the Auth feature.
+ */
 fun NavGraphBuilder.authNavigation(
     navController: NavHostController,
     route: String,

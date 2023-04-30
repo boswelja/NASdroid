@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.storage.overview
+package com.boswelja.truemanager.storage.ui.overview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,12 +13,16 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.core.api.v2.pool.Pool
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * Displays an overview of all storage pools on the server.
+ */
 @Composable
 fun StorageOverviewScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: StorageOverviewViewModel = koinViewModel(),
 ) {
+    // TODO handle loading
     val isLoading by viewModel.isLoading.collectAsState()
     val pools by viewModel.pools.collectAsState()
 
@@ -29,6 +33,9 @@ fun StorageOverviewScreen(
     )
 }
 
+/**
+ * Displays a list of [Pool]s.
+ */
 @Composable
 fun PoolsList(
     pools: List<Pool>,

@@ -21,7 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.boswelja.truemanager.auth.ui.authNavigation
 import com.boswelja.truemanager.reporting.reportingGraph
-import com.boswelja.truemanager.storage.storageGraph
+import com.boswelja.truemanager.storage.ui.storageGraph
 import com.boswelja.truemanager.ui.navigation.TopLevelDestination
 import com.boswelja.truemanager.ui.navigation.TopLevelNavigation
 import com.boswelja.truemanager.ui.theme.TrueManagerTheme

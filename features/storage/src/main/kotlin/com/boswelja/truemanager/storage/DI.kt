@@ -1,6 +1,6 @@
 package com.boswelja.truemanager.storage
 
-import com.boswelja.truemanager.storage.overview.StorageOverviewViewModel
+import com.boswelja.truemanager.storage.ui.overview.StorageOverviewViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 

@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.storage.overview
+package com.boswelja.truemanager.storage.ui.overview
 
 import android.text.format.Formatter.formatFileSize
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +20,13 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
+/**
+ * Displays a labelled progress bar communicating an overview of storage capacity.
+ *
+ * @param usedBytes The number of bytes currently allocated to the storage.
+ * @param totalBytes The total available bytes in the storage.
+ * @param modifier [Modifier].
+ */
 @Composable
 fun StorageUseSummary(
     usedBytes: Long,
@@ -57,6 +64,9 @@ fun StorageUseSummary(
     }
 }
 
+/**
+ * Converts the given bytes into a human-readable size string.
+ */
 @Composable
 fun fileSizeString(bytes: Long): String {
     val context = LocalContext.current

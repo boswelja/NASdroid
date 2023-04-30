@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.storage.overview
+package com.boswelja.truemanager.storage.ui.overview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,8 +14,11 @@ import com.boswelja.truemanager.core.api.v2.pool.Topology
 import com.boswelja.truemanager.core.api.v2.pool.VDev
 import com.boswelja.truemanager.storage.R
 
+/**
+ * Displays information about a given [Topology].
+ */
 @Composable
-fun Topology(
+fun TopologyDetails(
     topology: Topology,
     modifier: Modifier = Modifier
 ) {
@@ -60,6 +63,9 @@ fun Topology(
     }
 }
 
+/**
+ * Displays a list of VDEVs for a topology category.
+ */
 @Composable
 fun TopologySection(
     title: @Composable () -> Unit,

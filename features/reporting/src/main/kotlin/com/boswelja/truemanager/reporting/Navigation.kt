@@ -6,6 +6,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 
+/**
+ * Registers a nested navigation graph for the Reporting feature.
+ */
 fun NavGraphBuilder.reportingGraph(
     route: String,
     modifier: Modifier = Modifier,

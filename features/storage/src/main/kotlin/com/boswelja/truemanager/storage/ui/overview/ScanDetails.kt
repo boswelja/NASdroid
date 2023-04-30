@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.storage.overview
+package com.boswelja.truemanager.storage.ui.overview
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -32,6 +32,9 @@ import kotlinx.datetime.toJavaLocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
+/**
+ * Displays information about the given [Scan].
+ */
 @Composable
 fun ScanDetails(
     scan: Scan,
@@ -87,6 +90,10 @@ fun ScanDetails(
     }
 }
 
+/**
+ * A Material list item with 3 lines of text. This implementation applies no horizontal/vertical
+ * padding by default, and thus is more flexible than the default ListItem.
+ */
 @Composable
 fun ThreeLineListItem(
     leadingContent: @Composable BoxScope.() -> Unit,
@@ -125,6 +132,11 @@ fun ThreeLineListItem(
     }
 }
 
+/**
+ * Formats this [LocalDateTime] to be displayed in a human-readable way.
+ *
+ * @return The formatted string.
+ */
 @Composable
 fun LocalDateTime.format(): String {
     val formatter = remember { DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM) }
