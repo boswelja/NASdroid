@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.boswelja.truemanager.auth.ui.authNavigation
+import com.boswelja.truemanager.dashboard.ui.dashboardGraph
 import com.boswelja.truemanager.reporting.reportingGraph
 import com.boswelja.truemanager.storage.ui.storageGraph
 import com.boswelja.truemanager.ui.navigation.TopLevelDestination
@@ -110,7 +111,7 @@ fun MainNavHost(
             navController,
             "auth",
             onLoginSuccess = {
-                navController.navigate(TopLevelDestination.Reporting.route) {
+                navController.navigate(TopLevelDestination.Dashboard.route) {
                     popUpTo("auth") {
                         inclusive = true
                     }
@@ -122,7 +123,7 @@ fun MainNavHost(
 
         destinations.forEach { destination ->
             when (destination) {
-                TopLevelDestination.Dashboard -> {}
+                TopLevelDestination.Dashboard -> dashboardGraph(destination.route, modifier, contentPadding)
                 TopLevelDestination.Storage -> storageGraph(destination.route, modifier, contentPadding)
                 TopLevelDestination.Datasets -> {}
                 TopLevelDestination.Shares -> {}
