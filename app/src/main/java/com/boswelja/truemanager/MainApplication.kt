@@ -3,6 +3,7 @@ package com.boswelja.truemanager
 import android.app.Application
 import com.boswelja.truemanager.auth.AuthModule
 import com.boswelja.truemanager.core.api.v2.ApiV2Module
+import com.boswelja.truemanager.dashboard.DashboardModule
 import com.boswelja.truemanager.reporting.ReportingModule
 import com.boswelja.truemanager.storage.StorageModule
 import org.koin.android.ext.koin.androidContext
@@ -22,6 +23,7 @@ class MainApplication : Application() {
 
             modules(
                 AuthModule,
+                DashboardModule,
                 ReportingModule,
                 StorageModule,
             )

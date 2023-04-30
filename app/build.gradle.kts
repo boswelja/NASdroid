@@ -61,6 +61,7 @@ detekt {
 dependencies {
     implementation(projects.core.api)
     implementation(projects.features.auth)
+    implementation(projects.features.dashboard)
     implementation(projects.features.reporting)
     implementation(projects.features.storage)
 
