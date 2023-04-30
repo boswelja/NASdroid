@@ -75,7 +75,10 @@ fun MainScreen(
         destinations = destinations,
         navigateTo = {
             navController.navigate(it.route) {
-                // launchSingleTop = true TODO This throws NoSuchElementException
+                val currentRoute = requireNotNull(currentBackstackEntry?.destination?.route)
+                popUpTo(currentRoute) {
+                    inclusive = true
+                }
             }
         },
         navigationVisible = isNavigationVisible,
