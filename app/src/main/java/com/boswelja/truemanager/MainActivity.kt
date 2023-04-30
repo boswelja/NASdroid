@@ -19,6 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.boswelja.truemanager.apps.ui.appsGraph
 import com.boswelja.truemanager.auth.ui.authNavigation
 import com.boswelja.truemanager.dashboard.ui.dashboardGraph
 import com.boswelja.truemanager.reporting.reportingGraph
@@ -131,7 +132,7 @@ fun MainNavHost(
                 TopLevelDestination.Network -> {}
                 TopLevelDestination.Credentials -> {}
                 TopLevelDestination.Virtualization -> {}
-                TopLevelDestination.Apps -> {}
+                TopLevelDestination.Apps -> appsGraph(destination.route, modifier, contentPadding)
                 TopLevelDestination.Reporting -> reportingGraph(destination.route, modifier, contentPadding)
                 TopLevelDestination.SystemSettings -> {}
             }
