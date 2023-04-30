@@ -15,10 +15,10 @@ fun NavGraphBuilder.dashboardGraph(
     contentPadding: PaddingValues = PaddingValues()
 ) {
     navigation(
-        startDestination = "dashboard",
+        startDestination = "overview",
         route = route
     ) {
-        composable("dashboard") {
+        composable("overview") {
 
         }
     }
