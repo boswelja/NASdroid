@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +17,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.core.api.v2.pool.Pool
 import com.boswelja.truemanager.core.api.v2.pool.Scan
 import com.boswelja.truemanager.core.api.v2.pool.Topology
-import com.boswelja.truemanager.core.api.v2.pool.VDev
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -103,76 +100,6 @@ fun PoolOverview(
             totalBytes = pool.capacity.sizeBytes,
             modifier = Modifier.fillMaxWidth()
         )
-    }
-}
-
-@Composable
-fun Topology(
-    topology: Topology,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            text = "Topology",
-            style = MaterialTheme.typography.titleMedium
-        )
-        TopologySection(
-            title = { Text("Data") },
-            vdevs = topology.data,
-            modifier = Modifier.fillMaxWidth()
-        )
-        TopologySection(
-            title = { Text("Cache") },
-            vdevs = topology.cache,
-            modifier = Modifier.fillMaxWidth()
-        )
-        TopologySection(
-            title = { Text("De-duplication") },
-            vdevs = topology.dedup,
-            modifier = Modifier.fillMaxWidth()
-        )
-        TopologySection(
-            title = { Text("Log") },
-            vdevs = topology.log,
-            modifier = Modifier.fillMaxWidth()
-        )
-        TopologySection(
-            title = { Text("Spare") },
-            vdevs = topology.spare,
-            modifier = Modifier.fillMaxWidth()
-        )
-        TopologySection(
-            title = { Text("Metadata") },
-            vdevs = topology.special,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-@Composable
-fun TopologySection(
-    title: @Composable () -> Unit,
-    vdevs: List<VDev>,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier) {
-        ProvideTextStyle(MaterialTheme.typography.labelLarge) {
-            title()
-        }
-        if (vdevs.isNotEmpty()) {
-            vdevs.forEach { vdev ->
-                if (vdev.children.isNotEmpty()) {
-                    Text("• ${vdev.type} | ${vdev.children.count()} wide")
-                } else {
-                    Text("• ${vdev.type} | No redundancy")
-                }
-            }
-        } else {
-            Text("• VDEVs not assigned")
-        }
     }
 }
 
