@@ -1,5 +1,5 @@
 [versions]
-android-gradle-plugin = "8.2.0-alpha01"
+android-gradle-plugin = "8.0.0"
 detekt = "1.22.0"
 kotlin = "1.8.20"
 ksp = "1.8.20-1.0.11"
