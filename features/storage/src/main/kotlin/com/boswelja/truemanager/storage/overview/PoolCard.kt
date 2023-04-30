@@ -6,37 +6,27 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.core.api.v2.pool.Pool
@@ -44,6 +34,8 @@ import com.boswelja.truemanager.core.api.v2.pool.Scan
 import com.boswelja.truemanager.core.api.v2.pool.Topology
 import com.boswelja.truemanager.core.api.v2.pool.VDev
 import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 
 @Composable
@@ -111,79 +103,6 @@ fun PoolOverview(
             totalBytes = pool.capacity.sizeBytes,
             modifier = Modifier.fillMaxWidth()
         )
-    }
-}
-
-@Composable
-fun ScanDetails(
-    scan: Scan,
-    modifier: Modifier = Modifier
-) {
-    if (scan.endTime == null) {
-        val scanProgress by remember {
-            derivedStateOf {
-                scan.bytesProcessed / scan.bytesToProcess.toFloat()
-            }
-        }
-        // In progress
-        Row(
-            modifier = Modifier
-                .semantics(mergeDescendants = true) {}
-                .then(modifier)
-        ) {
-            CircularProgressIndicator(
-                progress = scanProgress,
-                modifier = Modifier
-                    .padding(end = 16.dp, top = 2.dp)
-                    .size(24.dp),
-                trackColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-            Column {
-                Text(
-                    text = "Started on ${scan.startTime}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = "${scan.function} in progress",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = "${scan.remainingTime} remaining",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    } else {
-        // Completed scan
-        Row(
-            modifier = Modifier
-                .semantics(mergeDescendants = true) {}
-                .then(modifier)
-        ) {
-            if (scan.errors > 0) {
-                Icon(Icons.Default.Error, contentDescription = "Errors found")
-            } else {
-                Icon(Icons.Default.CheckCircle, contentDescription = "No errors found")
-            }
-            Column {
-                Text(
-                    text = "Completed on ${scan.endTime}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = "${scan.function} finished",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = "${scan.errors} errors found",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
     }
 }
 
@@ -280,7 +199,7 @@ fun PoolCardPreview() {
                 function = "SCRUB",
                 pause = null,
                 percentage = 100.0,
-                startTime = Clock.System.now(),
+                startTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                 state = "COMPLETED",
                 remainingTime = Duration.ZERO
             ),

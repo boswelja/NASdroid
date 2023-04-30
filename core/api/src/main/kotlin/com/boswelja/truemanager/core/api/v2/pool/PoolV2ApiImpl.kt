@@ -4,6 +4,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 import kotlin.time.Duration
@@ -149,12 +151,12 @@ internal data class ScanDto(
             bytesIssued = bytesIssued,
             bytesProcessed = bytesProcessed,
             bytesToProcess = bytesToProcess,
-            endTime = Instant.fromEpochMilliseconds(endTime.date),
+            endTime = Instant.fromEpochMilliseconds(endTime.date).toLocalDateTime(TimeZone.currentSystemDefault()),
             errors = errors,
             function = function,
             pause = pause,
             percentage = percentage,
-            startTime = Instant.fromEpochMilliseconds(startTime.date),
+            startTime = Instant.fromEpochMilliseconds(startTime.date).toLocalDateTime(TimeZone.currentSystemDefault()),
             state = state,
             remainingTime = totalSecsLeft?.seconds ?: Duration.ZERO,
         )

@@ -1,6 +1,7 @@
 package com.boswelja.truemanager.core.api.v2.pool
 
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 import kotlin.time.Duration
 
 /**
@@ -112,12 +113,12 @@ data class Scan(
     val bytesIssued: Long,
     val bytesProcessed: Long,
     val bytesToProcess: Long,
-    val endTime: Instant?,
+    val endTime: LocalDateTime?,
     val errors: Int,
     val function: String,
     val pause: String?,
     val percentage: Double,
-    val startTime: Instant,
+    val startTime: LocalDateTime,
     val state: String,
     val remainingTime: Duration
 )
