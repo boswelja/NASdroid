@@ -11,4 +11,12 @@
     <string name="topology_entry_raidz">• %s | %s wide</string>
     <string name="topology_entry_jbod">• %s | No redundancy</string>
     <string name="topology_entry_empty">• VDEVs not assigned</string>
+
+    <string name="scan_started_on">Started on %s</string>
+    <string name="scan_finished_on">Finished on %s</string>
+    <string name="scan_in_progress">%s in progress</string>
+    <string name="scan_finished">%s finished</string>
+    <string name="scan_errors_found">%d errors found</string>
+    <string name="scan_time_remaining">%s remaining</string>
+    <string name="scan_progress_percent">%.2f%%</string>
 </resources>

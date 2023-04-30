@@ -21,9 +21,12 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.core.api.v2.pool.Scan
+import com.boswelja.truemanager.storage.R
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import java.time.format.DateTimeFormatter
@@ -43,19 +46,21 @@ fun ScanDetails(
         }
         ThreeLineListItem(
             leadingContent = {
+                val contentDescription = stringResource(R.string.scan_progress_percent, scanProgress)
                 CircularProgressIndicator(
                     progress = scanProgress,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    modifier = Modifier.semantics { this.contentDescription = contentDescription }
                 )
             },
             overlineText = {
-                Text("Started on ${scan.startTime.format()}")
+                Text(stringResource(R.string.scan_started_on, scan.startTime.format()))
             },
             headlineText = {
-                Text("${scan.function} in progress")
+                Text(stringResource(R.string.scan_in_progress, scan.function))
             },
             supportingText = {
-                Text("${scan.remainingTime} remaining")
+                Text(stringResource(R.string.scan_time_remaining, scan.remainingTime))
             },
             modifier = modifier
         )
@@ -63,19 +68,19 @@ fun ScanDetails(
         ThreeLineListItem(
             leadingContent = {
                 if (scan.errors > 0) {
-                    Icon(Icons.Default.Error, contentDescription = "Errors found")
+                    Icon(Icons.Default.Error, contentDescription = null)
                 } else {
-                    Icon(Icons.Default.CheckCircle, contentDescription = "No errors found")
+                    Icon(Icons.Default.CheckCircle, contentDescription = null)
                 }
             },
             overlineText = {
-                Text("Completed on ${scan.endTime!!.format()}")
+                Text(stringResource(R.string.scan_finished_on, scan.endTime!!.format()))
             },
             headlineText = {
-                Text("${scan.function} finished")
+                Text(stringResource(R.string.scan_finished, scan.function))
             },
             supportingText = {
-                Text("${scan.errors} errors found")
+                Text(stringResource(R.string.scan_errors_found, scan.errors))
             },
             modifier = modifier
         )
