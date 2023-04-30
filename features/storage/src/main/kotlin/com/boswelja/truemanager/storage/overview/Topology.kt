@@ -8,9 +8,11 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.core.api.v2.pool.Topology
 import com.boswelja.truemanager.core.api.v2.pool.VDev
+import com.boswelja.truemanager.storage.R
 
 @Composable
 fun Topology(
@@ -22,36 +24,36 @@ fun Topology(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Topology",
+            text = stringResource(R.string.topology_title),
             style = MaterialTheme.typography.titleMedium
         )
         TopologySection(
-            title = { Text("Data") },
+            title = { Text(stringResource(R.string.topology_section_data)) },
             vdevs = topology.data,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = { Text("Cache") },
+            title = { Text(stringResource(R.string.topology_section_cache)) },
             vdevs = topology.cache,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = { Text("De-duplication") },
+            title = { Text(stringResource(R.string.topology_section_dedup)) },
             vdevs = topology.dedup,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = { Text("Log") },
+            title = { Text(stringResource(R.string.topology_section_log)) },
             vdevs = topology.log,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = { Text("Spare") },
+            title = { Text(stringResource(R.string.topology_section_spare)) },
             vdevs = topology.spare,
             modifier = Modifier.fillMaxWidth()
         )
         TopologySection(
-            title = { Text("Metadata") },
+            title = { Text(stringResource(R.string.topology_section_meta)) },
             vdevs = topology.special,
             modifier = Modifier.fillMaxWidth()
         )
@@ -71,13 +73,13 @@ fun TopologySection(
         if (vdevs.isNotEmpty()) {
             vdevs.forEach { vdev ->
                 if (vdev.children.isNotEmpty()) {
-                    Text("• ${vdev.type} | ${vdev.children.count()} wide")
+                    Text(stringResource(R.string.topology_entry_raidz, vdev.type, vdev.children.count()))
                 } else {
-                    Text("• ${vdev.type} | No redundancy")
+                    Text(stringResource(R.string.topology_entry_jbod, vdev.type))
                 }
             }
         } else {
-            Text("• VDEVs not assigned")
+            Text(stringResource(R.string.topology_entry_empty))
         }
     }
 }

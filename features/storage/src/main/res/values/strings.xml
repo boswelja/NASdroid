@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="topology_title">Topology</string>
+    <string name="topology_section_data">Data</string>
+    <string name="topology_section_cache">Cache</string>
+    <string name="topology_section_dedup">De-duplication</string>
+    <string name="topology_section_log">Log</string>
+    <string name="topology_section_spare">Spare</string>
+    <string name="topology_section_meta">Metadata</string>
+
+    <string name="topology_entry_raidz">• %s | %s wide</string>
+    <string name="topology_entry_jbod">• %s | No redundancy</string>
+    <string name="topology_entry_empty">• VDEVs not assigned</string>
+</resources>
