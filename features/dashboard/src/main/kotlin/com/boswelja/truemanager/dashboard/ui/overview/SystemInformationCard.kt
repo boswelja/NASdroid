@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Card
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,6 +33,10 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
+/**
+ * A Card displaying the given system information. Relevant text in the card is selectable, and last
+ * boot time is translated into a live-updating uptime.
+ */
 @Composable
 fun SystemInformationCard(
     systemInformation: SystemInformation,
@@ -70,6 +73,9 @@ fun SystemInformationCard(
     }
 }
 
+/**
+ * An item in the System Information card. This simply displays some labelled content, usually text.
+ */
 @Composable
 fun SystemInformationItem(
     labelContent: @Composable () -> Unit,
@@ -79,19 +85,23 @@ fun SystemInformationItem(
     Column(modifier) {
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.labelLarge,
-            LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
             content = labelContent
         )
         SelectionContainer {
             CompositionLocalProvider(
                 LocalTextStyle provides MaterialTheme.typography.bodyLarge,
-                LocalContentColor provides MaterialTheme.colorScheme.onSurface,
                 content = content
             )
         }
     }
 }
 
+/**
+ * Remembers a [State] that holds a human-readable string representation of the amount of time
+ * elapsed since this [LocalDateTime]. For example, if this LocalDateTime points to 1 hour 30
+ * minutes ago, the State will be "1h 30m". This State will update every second to keep the counter
+ * rolling.
+ */
 @Composable
 fun LocalDateTime.collectElapsedSinceAsState(
     clock: Clock = Clock.System,
@@ -121,6 +131,14 @@ private suspend fun repeatIndefinitely(interval: Duration, block: () -> Unit) {
     }
 }
 
+/**
+ * Contains basic information about a TrueNAS system.
+ *
+ * @property platform The platform on which the system is running.
+ * @property version The full version the system is running.
+ * @property hostname The system hostname. This helps identify the system on the network.
+ * @property lastBootTime The time the system was last started. This is used to calculate uptime.
+ */
 data class SystemInformation(
     val platform: String,
     val version: String,
@@ -141,4 +159,3 @@ fun SystemInformationCardPreview() {
         modifier = Modifier.fillMaxWidth()
     )
 }
-
