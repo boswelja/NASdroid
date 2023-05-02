@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cpu_card_title">CPU</string>
+    <string name="cpu_name_label">Name</string>
+    <string name="cpu_cores_threads_label">Core count</string>
+    <string name="cpu_temp_label">Temperature</string>
+    <string name="cpu_temperature_celsius">%d°C</string>
+    <string name="cpu_cores_threads_count">%1d cores, %2d threads</string>
+</resources>
