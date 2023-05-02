@@ -6,4 +6,10 @@
     <string name="cpu_temp_label">Temperature</string>
     <string name="cpu_temperature_celsius">%d°C</string>
     <string name="cpu_cores_threads_count">%1d cores, %2d threads</string>
+
+    <string name="system_info_card_title">System Information</string>
+    <string name="system_info_platform_label">Platform</string>
+    <string name="system_info_hostname_label">Hostname</string>
+    <string name="system_info_version_label">Version</string>
+    <string name="system_info_uptime_label">Uptime</string>
 </resources>

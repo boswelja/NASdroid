@@ -19,8 +19,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.dashboard.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
@@ -49,24 +51,24 @@ fun SystemInformationCard(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "System Information",
+                text = stringResource(R.string.system_info_card_title),
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(Modifier.height(4.dp))
             SystemInformationItem(
-                labelContent = { Text("Platform") },
+                labelContent = { Text(stringResource(R.string.system_info_platform_label)) },
                 content = { Text(systemInformation.platform) }
             )
             SystemInformationItem(
-                labelContent = { Text("Version") },
+                labelContent = { Text(stringResource(R.string.system_info_version_label)) },
                 content = { Text(systemInformation.version) }
             )
             SystemInformationItem(
-                labelContent = { Text("Hostname") },
+                labelContent = { Text(stringResource(R.string.system_info_hostname_label)) },
                 content = { Text(systemInformation.hostname) }
             )
             SystemInformationItem(
-                labelContent = { Text("Uptime") },
+                labelContent = { Text(stringResource(R.string.system_info_uptime_label)) },
                 content = { Text(uptime) }
             )
         }
