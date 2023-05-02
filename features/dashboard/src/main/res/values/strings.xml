@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="system_info_card_title">System Information</string>
+    <string name="system_info_platform_label">Platform</string>
+    <string name="system_info_hostname_label">Hostname</string>
+    <string name="system_info_version_label">Version</string>
+    <string name="system_info_uptime_label">Uptime</string>
+</resources>
