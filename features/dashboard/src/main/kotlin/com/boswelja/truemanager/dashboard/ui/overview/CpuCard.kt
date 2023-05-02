@@ -14,13 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.R
+import com.boswelja.truemanager.dashboard.ui.overview.common.CardListItem
 import java.text.NumberFormat
 
 /**
@@ -69,15 +67,15 @@ fun CpuCard(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    CpuItem(
+                    CardListItem(
                         labelContent = { Text(stringResource(R.string.cpu_name_label)) },
                         content = { Text(info.name) }
                     )
-                    CpuItem(
+                    CardListItem(
                         labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
                         content = { Text(stringResource(R.string.cpu_cores_threads_count, info.cores, info.threads)) }
                     )
-                    CpuItem(
+                    CardListItem(
                         labelContent = { Text(stringResource(R.string.cpu_temp_label)) },
                         content = { Text(stringResource(R.string.cpu_temperature_celsius, usage.tempCelsius)) }
                     )
@@ -116,29 +114,6 @@ fun CpuUsageBar(
                     )
                 )
         )
-    }
-}
-
-/**
- * An item in the CPU card. This simply displays some labelled content, usually text.
- */
-@Composable
-fun CpuItem(
-    labelContent: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Column(modifier) {
-        CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.labelLarge,
-            content = labelContent
-        )
-        SelectionContainer {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.bodyLarge,
-                content = content
-            )
-        }
     }
 }
 

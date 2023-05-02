@@ -6,13 +6,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Card
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -23,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.R
+import com.boswelja.truemanager.dashboard.ui.overview.common.CardListItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
@@ -55,44 +53,21 @@ fun SystemInformationCard(
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(Modifier.height(4.dp))
-            SystemInformationItem(
+            CardListItem(
                 labelContent = { Text(stringResource(R.string.system_info_platform_label)) },
                 content = { Text(systemInformation.platform) }
             )
-            SystemInformationItem(
+            CardListItem(
                 labelContent = { Text(stringResource(R.string.system_info_version_label)) },
                 content = { Text(systemInformation.version) }
             )
-            SystemInformationItem(
+            CardListItem(
                 labelContent = { Text(stringResource(R.string.system_info_hostname_label)) },
                 content = { Text(systemInformation.hostname) }
             )
-            SystemInformationItem(
+            CardListItem(
                 labelContent = { Text(stringResource(R.string.system_info_uptime_label)) },
                 content = { Text(uptime) }
-            )
-        }
-    }
-}
-
-/**
- * An item in the System Information card. This simply displays some labelled content, usually text.
- */
-@Composable
-fun SystemInformationItem(
-    labelContent: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Column(modifier) {
-        CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.labelLarge,
-            content = labelContent
-        )
-        SelectionContainer {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.bodyLarge,
-                content = content
             )
         }
     }
