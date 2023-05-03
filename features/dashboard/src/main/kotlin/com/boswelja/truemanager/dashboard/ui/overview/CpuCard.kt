@@ -11,16 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.R
+import com.boswelja.truemanager.dashboard.ui.overview.common.CardListItem
+import com.boswelja.truemanager.dashboard.ui.overview.common.DashboardCard
 import java.text.NumberFormat
 
 /**
@@ -41,47 +38,41 @@ fun CpuCard(
     usage: CpuUsage,
     modifier: Modifier = Modifier
 ) {
-    OutlinedCard(modifier) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+    DashboardCard(
+        title = { Text(stringResource(R.string.cpu_card_title)) },
+        modifier = modifier,
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.height(IntrinsicSize.Min)
         ) {
-            Text(
-                text = stringResource(R.string.cpu_card_title),
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(Modifier.height(12.dp))
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.height(IntrinsicSize.Min)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CpuUsageBar(
-                        usage = usage.avgUsage,
-                        modifier = Modifier
-                            .width(48.dp)
-                            .weight(1f)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(usage.avgUsage.formattedPercent())
-                }
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    CpuItem(
-                        labelContent = { Text(stringResource(R.string.cpu_name_label)) },
-                        content = { Text(info.name) }
-                    )
-                    CpuItem(
-                        labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
-                        content = { Text(stringResource(R.string.cpu_cores_threads_count, info.cores, info.threads)) }
-                    )
-                    CpuItem(
-                        labelContent = { Text(stringResource(R.string.cpu_temp_label)) },
-                        content = { Text(stringResource(R.string.cpu_temperature_celsius, usage.tempCelsius)) }
-                    )
-                }
+                CpuUsageBar(
+                    usage = usage.avgUsage,
+                    modifier = Modifier
+                        .width(48.dp)
+                        .weight(1f)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(usage.avgUsage.formattedPercent())
+            }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                CardListItem(
+                    labelContent = { Text(stringResource(R.string.cpu_name_label)) },
+                    content = { Text(info.name) }
+                )
+                CardListItem(
+                    labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
+                    content = { Text(stringResource(R.string.cpu_cores_threads_count, info.cores, info.threads)) }
+                )
+                CardListItem(
+                    labelContent = { Text(stringResource(R.string.cpu_temp_label)) },
+                    content = { Text(stringResource(R.string.cpu_temperature_celsius, usage.tempCelsius)) }
+                )
             }
         }
     }
@@ -116,29 +107,6 @@ fun CpuUsageBar(
                     )
                 )
         )
-    }
-}
-
-/**
- * An item in the CPU card. This simply displays some labelled content, usually text.
- */
-@Composable
-fun CpuItem(
-    labelContent: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Column(modifier) {
-        CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.labelLarge,
-            content = labelContent
-        )
-        SelectionContainer {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.bodyLarge,
-                content = content
-            )
-        }
     }
 }
 
