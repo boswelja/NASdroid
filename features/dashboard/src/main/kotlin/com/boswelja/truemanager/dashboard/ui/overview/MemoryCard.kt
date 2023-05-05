@@ -24,10 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.dashboard.R
 import com.boswelja.truemanager.dashboard.ui.overview.common.CardListItem
 import com.boswelja.truemanager.dashboard.ui.overview.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.common.LinearMultiProgressIndicator
 
 /**
  * A Card displaying the given system memory information.
@@ -39,14 +43,16 @@ fun MemoryCard(
     modifier: Modifier = Modifier
 ) {
     DashboardCard(
-        title = { Text("Memory") },
+        title = { Text(stringResource(R.string.memory_card_title)) },
         modifier = modifier
     ) {
         CardListItem(
             labelContent = {
-                Text(
-                    text = if (memoryInfo.isEcc) "Total available (ECC)" else "Total available"
-                )
+                if (memoryInfo.isEcc) {
+                    Text(stringResource(R.string.memory_total_ecc_label))
+                } else {
+                    Text(stringResource(R.string.memory_total_label))
+                }
             }
         ) {
             Text(fileSizeString(bytes = memoryInfo.totalCapacityBytes))
@@ -93,21 +99,24 @@ fun MemoryUsageSummary(
         Row(Modifier.fillMaxWidth()) {
             Spacer(Modifier.weight(servicesUsage))
             MemoryUtilisationLabel(
-                name = "Services",
-                usage = fileSizeString(bytes = usage.servicesBytes)
+                name = stringResource(R.string.memory_usage_services),
+                usage = fileSizeString(usage.servicesBytes)
             )
             Spacer(Modifier.weight(zfsCacheUsage))
             MemoryUtilisationLabel(
-                name = "ZFS",
-                usage = fileSizeString(bytes = usage.zfsCacheBytes)
+                name = stringResource(R.string.memory_usage_zfs_cache),
+                usage = fileSizeString(usage.zfsCacheBytes)
             )
             Spacer(Modifier.weight(freeUsage))
             MemoryUtilisationLabel(
-                name = "Free",
-                usage = fileSizeString(bytes = freeSpace)
+                name = stringResource(R.string.memory_usage_free),
+                usage = fileSizeString(freeSpace)
             )
         }
         Spacer(Modifier.height(4.dp))
+        LinearMultiProgressIndicator(
+            progresses = listOf(servicesUsage, zfsCacheUsage)
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -152,7 +161,12 @@ fun MemoryUtilisationLabel(
     usage: String,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .semantics(mergeDescendants = true) {}
+            .then(modifier),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = name,
             style = MaterialTheme.typography.labelMedium
