@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.tooling)
 
+    implementation(libs.vico)
+
     implementation(libs.koin.android)
     implementation(libs.koin.android.compose)
 }
