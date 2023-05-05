@@ -117,33 +117,6 @@ fun MemoryUsageSummary(
         LinearMultiProgressIndicator(
             progresses = listOf(servicesUsage, zfsCacheUsage)
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(24.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-        ) {
-            Box(
-                modifier = Modifier
-                    .weight(servicesUsage)
-                    .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.primary)
-            )
-            Box(
-                modifier = Modifier
-                    .weight(zfsCacheUsage)
-                    .fillMaxHeight()
-                    .background(
-                        color = MaterialTheme.colorScheme.secondary,
-                        shape = MaterialTheme.shapes.medium.copy(
-                            topStart = ZeroCornerSize,
-                            bottomStart = ZeroCornerSize,
-                        )
-                    )
-            )
-            Spacer(Modifier.weight(freeUsage))
-        }
     }
 }
 
