@@ -19,4 +19,9 @@
     <string name="memory_usage_services">Services</string>
     <string name="memory_usage_zfs_cache">ZFS</string>
     <string name="memory_usage_free">Free</string>
+
+    <string name="network_card_title">Network</string>
+    <string name="network_incoming_label">Incoming</string>
+    <string name="network_outgoing_label">Outgoing</string>
+    <string name="network_adapter_simple">%1s \u2022 %2s</string>
 </resources>
