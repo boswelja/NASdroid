@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.ksp)
 
     alias(libs.plugins.detekt)
 }
@@ -46,6 +47,11 @@ kotlin {
     jvmToolchain(17)
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+}
+
 detekt {
     buildUponDefaultConfig = true
     config = files("$rootDir/config/detekt.yml")
@@ -63,4 +69,7 @@ dependencies {
 
     implementation(libs.koin.android)
     implementation(libs.koin.android.compose)
+
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
 }
