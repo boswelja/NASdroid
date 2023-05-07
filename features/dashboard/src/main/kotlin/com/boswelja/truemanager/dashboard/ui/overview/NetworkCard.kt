@@ -44,10 +44,10 @@ import kotlinx.datetime.LocalDateTime
 import kotlin.random.Random
 
 /**
- * A Card displaying the given system network information.
+ * A Card displaying an overview of the system network status..
  *
  * @param trafficData The incoming and outgoing traffic data for all adapters combined.
- * @param adaptersInfo Details about network adapters.
+ * @param adaptersInfo Details about network adapters that are currently connected.
  * @param modifier [Modifier].
  */
 @Composable
@@ -71,6 +71,29 @@ fun NetworkCard(
                 }
             }
         }
+    }
+}
+
+/**
+ * A Card displaying information about a single network adapter.
+ *
+ * @param trafficData The incoming and outgoing traffic data for this adapter.
+ * @param adapterInfo Details about the network adapter.
+ * @param modifier [Modifier].
+ */
+@Composable
+fun NetworkAdapterCard(
+    trafficData: NetworkTrafficData,
+    adapterInfo: AdapterInfo,
+    modifier: Modifier = Modifier
+) {
+    DashboardCard(
+        title = {
+            Text(stringResource(R.string.network_adapter_simple, adapterInfo.name, adapterInfo.address))
+        },
+        modifier = modifier,
+    ) {
+        TrafficDataChart(trafficData = trafficData)
     }
 }
 
@@ -198,6 +221,39 @@ fun NetworkCardPreview() {
                 name = "eno2",
                 address = "192.168.1.3"
             )
+        )
+    )
+}
+
+@Preview
+@Composable
+fun NetworkAdapterCardPreview() {
+    val data = remember {
+        val incomingRand = Random(25)
+        val outgoingRandom = Random(11)
+        NetworkTrafficData(
+            incomingBytes = List(100) { incomingRand.nextLong(0, 5000) },
+            outgoingBytes = List(100) { outgoingRandom.nextLong(0, 5000) },
+            period = LocalDateTime(
+                year = 2023,
+                monthNumber = 5,
+                dayOfMonth = 5,
+                hour = 21,
+                minute = 0
+            )..LocalDateTime(
+                year = 2023,
+                monthNumber = 5,
+                dayOfMonth = 5,
+                hour = 22,
+                minute = 0
+            )
+        )
+    }
+    NetworkAdapterCard(
+        trafficData = data,
+        adapterInfo = AdapterInfo(
+            name = "eno2",
+            address = "192.168.1.3"
         )
     )
 }
