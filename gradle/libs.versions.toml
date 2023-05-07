@@ -19,7 +19,7 @@ compose-runtime = "1.5.0-alpha03"
 compose-ui = "1.5.0-alpha03"
 accompanist = "0.31.1-alpha"
 
-room = "2.5.1"
+room = "2.6.0-alpha01"
 
 ktor = "2.3.0"
 
