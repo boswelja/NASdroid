@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SettingsEthernet
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.dashboard.ui.overview.common.CardListItem
 import com.boswelja.truemanager.dashboard.ui.overview.common.DashboardCard
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
@@ -38,6 +44,7 @@ import kotlin.random.Random
 @Composable
 fun NetworkCard(
     trafficData: NetworkTrafficData,
+    adaptersInfo: List<AdapterInfo>,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -93,6 +100,16 @@ fun NetworkCard(
                 Text(text = "Incoming", style = MaterialTheme.typography.labelLarge)
             }
         }
+        if (adaptersInfo.isNotEmpty()) {
+            Divider(Modifier.padding(vertical = 8.dp))
+            adaptersInfo.forEach {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.SettingsEthernet, contentDescription = null)
+                    Spacer(Modifier.width(16.dp))
+                    Text("${it.name} \u2022 ${it.address}")
+                }
+            }
+        }
     }
 }
 
@@ -109,6 +126,11 @@ data class NetworkTrafficData(
     val incomingBytes: List<Long>,
     val outgoingBytes: List<Long>,
     val period: ClosedRange<LocalDateTime>
+)
+
+data class AdapterInfo(
+    val name: String,
+    val address: String
 )
 
 @Preview
@@ -136,6 +158,16 @@ fun NetworkCardPreview() {
         )
     }
     NetworkCard(
-        trafficData = data
+        trafficData = data,
+        adaptersInfo = listOf(
+            AdapterInfo(
+                name = "eno1",
+                address = "192.168.1.2"
+            ),
+            AdapterInfo(
+                name = "eno2",
+                address = "192.168.1.3"
+            )
+        )
     )
 }
