@@ -14,6 +14,7 @@ interface DashboardConfiguration {
 
 data class DashboardEntry(
     val id: String,
+    val serverId: String,
     val isVisible: Boolean,
     val priority: Int
 )

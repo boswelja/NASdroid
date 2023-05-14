@@ -19,7 +19,7 @@ internal interface DashboardEntryDao {
     @Update
     suspend fun update(entries: List<DashboardEntryEntity>)
 
-    @Query("UPDATE dashboard_entry SET is_visible = 1 WHERE id = :entryId")
+    @Query("UPDATE dashboard_entry SET is_visible = :isVisible WHERE id = :entryId")
     suspend fun update(entryId: String, isVisible: Boolean)
 
     @Query("SELECT * FROM dashboard_entry WHERE priority >= :maxPriority")

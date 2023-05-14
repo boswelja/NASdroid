@@ -26,7 +26,7 @@ class DashboardConfigurationDatabaseImpl(
         .getVisible()
         .mapLatest {
             it.map { entity ->
-                DashboardEntry(entity.id, entity.isVisible, entity.priority)
+                DashboardEntry(entity.id, entity.serverId, entity.isVisible, entity.priority)
             }
         }
 
@@ -50,7 +50,7 @@ class DashboardConfigurationDatabaseImpl(
     override suspend fun insertEntries(entries: List<DashboardEntry>) {
         database.getDashboardEntryDao().add(
             entries.map {
-                DashboardEntryEntity(it.id, it.isVisible, it.priority)
+                DashboardEntryEntity(it.id, it.serverId, it.isVisible, it.priority)
             }
         )
     }
