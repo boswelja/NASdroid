@@ -22,19 +22,19 @@ class DashboardConfigurationDatabaseImpl(
     ).build()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getVisibleEntries(): Flow<List<DashboardEntry>> = database.getDashboardEntryDao()
-        .getVisible()
+    override fun getVisibleEntries(serverId: String): Flow<List<DashboardEntry>> = database.getDashboardEntryDao()
+        .getVisible(serverId)
         .mapLatest {
             it.map { entity ->
                 DashboardEntry(entity.id, entity.serverId, entity.isVisible, entity.priority)
             }
         }
 
-    override suspend fun reorderEntry(entryId: String, newPriority: Int) {
+    override suspend fun reorderEntry(serverId: String, entryId: String, newPriority: Int) {
         val dao = database.getDashboardEntryDao()
         database.withTransaction {
-            val operatingItem = dao.get(entryId)
-            val itemsToReorder = dao.getLowerPriority(operatingItem.priority)
+            val operatingItem = dao.get(serverId, entryId)
+            val itemsToReorder = dao.getLowerPriority(serverId, operatingItem.priority)
             // If the new priority is greater than the old priority, the item is moving *down* in
             // priority. Thus, everything "below" it needs to move "up".
             val increasePriorityForItems = operatingItem.priority < newPriority
@@ -55,8 +55,8 @@ class DashboardConfigurationDatabaseImpl(
         )
     }
 
-    override suspend fun setEntryVisible(entryId: String, isVisible: Boolean) {
-        database.getDashboardEntryDao().update(entryId, isVisible)
+    override suspend fun setEntryVisible(serverId: String, entryId: String, isVisible: Boolean) {
+        database.getDashboardEntryDao().update(serverId, entryId, isVisible)
     }
 
 }
