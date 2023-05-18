@@ -47,6 +47,12 @@ kotlin {
     jvmToolchain(17)
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+    arg("room.generateKotlin", "true")
+}
+
 detekt {
     buildUponDefaultConfig = true
     config = files("$rootDir/config/detekt.yml")
