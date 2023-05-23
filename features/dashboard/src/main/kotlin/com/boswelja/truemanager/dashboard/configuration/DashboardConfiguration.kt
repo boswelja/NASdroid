@@ -13,9 +13,14 @@ interface DashboardConfiguration {
     fun getVisibleEntries(serverId: String): Flow<List<DashboardEntry>>
 
     /**
+     * Get whether the server with the given ID has any entries associated at all.
+     */
+    suspend fun hasAnyEntries(serverId: String): Boolean
+
+    /**
      * Moves the entry with the given ID for the specified server up or down in the priority list.
      */
-    suspend fun reorderEntry(serverId: String, entryId: String, newPriority: Int)
+    suspend fun reorderEntry(serverId: String, entryType: DashboardEntry.Type, newPriority: Int)
 
     /**
      * Adds new [DashboardEntry]s to the store.
@@ -25,20 +30,27 @@ interface DashboardConfiguration {
     /**
      * Sets whether the specified entry is visible.
      */
-    suspend fun setEntryVisible(serverId: String, entryId: String, isVisible: Boolean)
+    suspend fun setEntryVisible(serverId: String, entryType: DashboardEntry.Type, isVisible: Boolean)
 }
 
 /**
  * Describes an entry on the dashboard.
  *
- * @property id The ID of the entry, unique to this server.
+ * @property type The ID of dashboard card.
  * @property serverId The unique ID of the server this entry belongs to.
  * @property isVisible Whether this entry is visible on the dashboard.
  * @property priority THe priority of this entry. A lower number is displayed higher in the list.
  */
 data class DashboardEntry(
-    val id: String,
+    val type: Type,
     val serverId: String,
     val isVisible: Boolean,
     val priority: Int
-)
+) {
+    enum class Type {
+        SYSTEM_INFORMATION,
+        CPU,
+        MEMORY,
+        NETWORK,
+    }
+}

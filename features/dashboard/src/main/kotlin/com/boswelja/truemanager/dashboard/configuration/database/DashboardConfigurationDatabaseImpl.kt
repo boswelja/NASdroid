@@ -7,6 +7,7 @@ import com.boswelja.truemanager.dashboard.configuration.DashboardConfiguration
 import com.boswelja.truemanager.dashboard.configuration.DashboardEntry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 
 /**
@@ -26,14 +27,14 @@ class DashboardConfigurationDatabaseImpl(
         .getVisible(serverId)
         .mapLatest {
             it.map { entity ->
-                DashboardEntry(entity.id, entity.serverId, entity.isVisible, entity.priority)
+                DashboardEntry(DashboardEntry.Type.valueOf(entity.type), entity.serverId, entity.isVisible, entity.priority)
             }
         }
 
-    override suspend fun reorderEntry(serverId: String, entryId: String, newPriority: Int) {
+    override suspend fun reorderEntry(serverId: String, entryType: DashboardEntry.Type, newPriority: Int) {
         val dao = database.getDashboardEntryDao()
         database.withTransaction {
-            val operatingItem = dao.get(serverId, entryId)
+            val operatingItem = dao.get(serverId, entryType.name)
             val itemsToReorder = dao.getLowerPriority(serverId, operatingItem.priority)
             // If the new priority is greater than the old priority, the item is moving *down* in
             // priority. Thus, everything "below" it needs to move "up".
@@ -50,13 +51,16 @@ class DashboardConfigurationDatabaseImpl(
     override suspend fun insertEntries(entries: List<DashboardEntry>) {
         database.getDashboardEntryDao().add(
             entries.map {
-                DashboardEntryEntity(it.id, it.serverId, it.isVisible, it.priority)
+                DashboardEntryEntity(it.type.name, it.serverId, it.isVisible, it.priority)
             }
         )
     }
 
-    override suspend fun setEntryVisible(serverId: String, entryId: String, isVisible: Boolean) {
-        database.getDashboardEntryDao().update(serverId, entryId, isVisible)
+    override suspend fun hasAnyEntries(serverId: String): Boolean {
+        return database.getDashboardEntryDao().getAll().first().isNotEmpty()
     }
 
+    override suspend fun setEntryVisible(serverId: String, entryType: DashboardEntry.Type, isVisible: Boolean) {
+        database.getDashboardEntryDao().update(serverId, entryType.name, isVisible)
+    }
 }
