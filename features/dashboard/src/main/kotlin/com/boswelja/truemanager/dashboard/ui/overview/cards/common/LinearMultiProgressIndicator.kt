@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.ui.overview.common
+package com.boswelja.truemanager.dashboard.ui.overview.cards.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.ui.overview
+package com.boswelja.truemanager.dashboard.ui.overview.cards
 
 import android.text.format.Formatter
 import androidx.compose.foundation.background
@@ -30,7 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.R
-import com.boswelja.truemanager.dashboard.ui.overview.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
 import com.patrykandpatrick.vico.compose.chart.Chart

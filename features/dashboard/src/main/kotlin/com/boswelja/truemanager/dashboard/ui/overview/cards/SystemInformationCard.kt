@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.ui.overview
+package com.boswelja.truemanager.dashboard.ui.overview.cards
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.boswelja.truemanager.dashboard.R
-import com.boswelja.truemanager.dashboard.ui.overview.common.CardListItem
-import com.boswelja.truemanager.dashboard.ui.overview.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
@@ -40,10 +40,6 @@ fun SystemInformationCard(
         title = { Text(stringResource(R.string.system_info_card_title)) },
         modifier = modifier,
     ) {
-        CardListItem(
-            labelContent = { Text(stringResource(R.string.system_info_platform_label)) },
-            content = { Text(systemInformation.platform) }
-        )
         CardListItem(
             labelContent = { Text(stringResource(R.string.system_info_version_label)) },
             content = { Text(systemInformation.version) }
@@ -103,7 +99,6 @@ private suspend fun repeatIndefinitely(interval: Duration, block: () -> Unit) {
  * @property lastBootTime The time the system was last started. This is used to calculate uptime.
  */
 data class SystemInformation(
-    val platform: String,
     val version: String,
     val hostname: String,
     val lastBootTime: LocalDateTime
@@ -114,7 +109,6 @@ data class SystemInformation(
 fun SystemInformationCardPreview() {
     SystemInformationCard(
         systemInformation = SystemInformation(
-            platform = "Generic",
             version = "TrueNAS-SCALE-22.12.2",
             hostname = "truenas",
             lastBootTime = LocalDateTime(2023, 3, 1, 10, 33)

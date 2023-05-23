@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.ui.overview
+package com.boswelja.truemanager.dashboard.ui.overview.cards
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -25,8 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.R
-import com.boswelja.truemanager.dashboard.ui.overview.common.CardListItem
-import com.boswelja.truemanager.dashboard.ui.overview.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
 import java.text.NumberFormat
 
 /**
@@ -115,7 +115,7 @@ private fun Float.formattedPercent(): String {
     val formatter = remember {
         NumberFormat.getPercentInstance()
     }
-    return remember(formatter) {
+    return remember(this, formatter) {
         formatter.format(this)
     }
 }
