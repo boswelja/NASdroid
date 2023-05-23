@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.ui.overview
+package com.boswelja.truemanager.dashboard.ui.overview.cards
 
 import android.os.Build
 import android.text.format.Formatter
@@ -24,9 +24,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.R
-import com.boswelja.truemanager.dashboard.ui.overview.common.CardListItem
-import com.boswelja.truemanager.dashboard.ui.overview.common.DashboardCard
-import com.boswelja.truemanager.dashboard.ui.overview.common.LinearMultiProgressIndicator
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.LinearMultiProgressIndicator
 
 /**
  * A Card displaying the given system memory information.
