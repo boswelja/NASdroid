@@ -2,15 +2,15 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c0091bae3335793048797b2fb63cb177",
+    "identityHash": "f79007615c21ce49e6fc4828628bed61",
     "entities": [
       {
         "tableName": "dashboard_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `server_id` TEXT NOT NULL, `is_visible` INTEGER NOT NULL, `priority` INTEGER NOT NULL, PRIMARY KEY(`id`, `server_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`type` TEXT NOT NULL, `server_id` TEXT NOT NULL, `is_visible` INTEGER NOT NULL, `priority` INTEGER NOT NULL, PRIMARY KEY(`type`, `server_id`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -36,7 +36,7 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "id",
+            "type",
             "server_id"
           ]
         },
@@ -47,7 +47,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c0091bae3335793048797b2fb63cb177')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f79007615c21ce49e6fc4828628bed61')"
     ]
   }
 }
