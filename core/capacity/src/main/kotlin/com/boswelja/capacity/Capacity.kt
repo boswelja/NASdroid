@@ -2,6 +2,17 @@ package com.boswelja.capacity
 
 import kotlin.math.roundToLong
 
+/**
+ * Represents the amount of digital data something uses.
+ *
+ * Capacity can represent ±8 exbibytes with byte-level accuracy.
+ *
+ * To construct a Capacity, use the extension functions [kibibytes], [kilobytes], [mebibytes],
+ * [megabytes], and so on.
+ *
+ * To get the value of this Capacity expressed in a particular CapacityUnit, use the functions
+ * [toLong], [toDouble], and so on.
+ */
 @JvmInline
 value class Capacity internal constructor(private val rawValue: Long) : Comparable<Capacity> {
 
@@ -101,6 +112,56 @@ value class Capacity internal constructor(private val rawValue: Long) : Comparab
         val Double.pebibytes: Capacity get() = toCapacity(CapacityUnit.PEBIBYTE)
 
         val Double.exbibytes: Capacity get() = toCapacity(CapacityUnit.EXBIBYTE)
+        //endregion
+
+        // region decimal units
+        val Int.kilobytes: Capacity get() = toCapacity(CapacityUnit.KIBIBYTE)
+
+        val Int.megabytes: Capacity get() = toCapacity(CapacityUnit.MEBIBYTE)
+
+        val Int.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIBIBYTE)
+
+        val Int.terabytes: Capacity get() = toCapacity(CapacityUnit.TEBIBYTE)
+
+        val Int.petabytes: Capacity get() = toCapacity(CapacityUnit.PEBIBYTE)
+
+        val Int.exabytes: Capacity get() = toCapacity(CapacityUnit.EXBIBYTE)
+
+        val Long.kilobytes: Capacity get() = toCapacity(CapacityUnit.KIBIBYTE)
+
+        val Long.megabytes: Capacity get() = toCapacity(CapacityUnit.MEBIBYTE)
+
+        val Long.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIBIBYTE)
+
+        val Long.terabytes: Capacity get() = toCapacity(CapacityUnit.TEBIBYTE)
+
+        val Long.petabytes: Capacity get() = toCapacity(CapacityUnit.PEBIBYTE)
+
+        val Long.exabytes: Capacity get() = toCapacity(CapacityUnit.EXBIBYTE)
+
+        val Float.kilobytes: Capacity get() = toCapacity(CapacityUnit.KIBIBYTE)
+
+        val Float.megabytes: Capacity get() = toCapacity(CapacityUnit.MEBIBYTE)
+
+        val Float.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIBIBYTE)
+
+        val Float.terabytes: Capacity get() = toCapacity(CapacityUnit.TEBIBYTE)
+
+        val Float.petabytes: Capacity get() = toCapacity(CapacityUnit.PEBIBYTE)
+
+        val Float.exabytes: Capacity get() = toCapacity(CapacityUnit.EXBIBYTE)
+
+        val Double.kilobytes: Capacity get() = toCapacity(CapacityUnit.KIBIBYTE)
+
+        val Double.megabytes: Capacity get() = toCapacity(CapacityUnit.MEBIBYTE)
+
+        val Double.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIBIBYTE)
+
+        val Double.terabytes: Capacity get() = toCapacity(CapacityUnit.TEBIBYTE)
+
+        val Double.petabytes: Capacity get() = toCapacity(CapacityUnit.PEBIBYTE)
+
+        val Double.exabytes: Capacity get() = toCapacity(CapacityUnit.EXBIBYTE)
         //endregion
     }
 }
