@@ -28,10 +28,6 @@ value class Capacity internal constructor(private val rawValue: Long) : Comparab
         return Capacity(rawValue - other.rawValue)
     }
 
-    fun inWholeUnits(unit: CapacityUnit): Long {
-        return rawValue / unit.byteFactor
-    }
-
     fun toDouble(unit: CapacityUnit): Double {
         return rawValue.toDouble() / unit.byteFactor
     }
