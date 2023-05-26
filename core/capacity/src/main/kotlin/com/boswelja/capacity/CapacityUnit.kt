@@ -1,5 +1,8 @@
 package com.boswelja.capacity
 
+/**
+ * Defines various units supported by [Capacity]. We can convert to/from any of these.
+ */
 enum class CapacityUnit(internal val byteFactor: Long) {
     BYTE(1),
 

@@ -20,18 +20,31 @@ value class Capacity internal constructor(private val rawValue: Long) : Comparab
         return rawValue.compareTo(other.rawValue)
     }
 
+    /**
+     * Adds [other] to this Capacity. This currently does **not** handle integer overflow.
+     */
     operator fun plus(other: Capacity): Capacity {
         return Capacity(rawValue + other.rawValue)
     }
 
+    /**
+     * Subtracts [other] from this Capacity. This currently does **not** handle integer overflow.
+     */
     operator fun minus(other: Capacity): Capacity {
         return Capacity(rawValue - other.rawValue)
     }
 
+    /**
+     * Converts this Capacity to the given [CapacityUnit], returning a Double representing the
+     * precise value.
+     */
     fun toDouble(unit: CapacityUnit): Double {
         return rawValue.toDouble() / unit.byteFactor
     }
 
+    /**
+     * Converts this Capacity to the given [CapacityUnit], rounding to the nearest whole number.
+     */
     fun toLong(unit: CapacityUnit): Long {
         return toDouble(unit).roundToLong()
     }
