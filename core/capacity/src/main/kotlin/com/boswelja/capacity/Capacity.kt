@@ -111,53 +111,53 @@ value class Capacity internal constructor(private val rawValue: Long) : Comparab
         //endregion
 
         // region decimal units
-        val Int.kilobytes: Capacity get() = toCapacity(CapacityUnit.KIBIBYTE)
+        val Int.kilobytes: Capacity get() = toCapacity(CapacityUnit.KILOBYTE)
 
-        val Int.megabytes: Capacity get() = toCapacity(CapacityUnit.MEBIBYTE)
+        val Int.megabytes: Capacity get() = toCapacity(CapacityUnit.MEGABYTE)
 
-        val Int.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIBIBYTE)
+        val Int.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIGABYTE)
 
-        val Int.terabytes: Capacity get() = toCapacity(CapacityUnit.TEBIBYTE)
+        val Int.terabytes: Capacity get() = toCapacity(CapacityUnit.TERABYTE)
 
-        val Int.petabytes: Capacity get() = toCapacity(CapacityUnit.PEBIBYTE)
+        val Int.petabytes: Capacity get() = toCapacity(CapacityUnit.PETABYTE)
 
-        val Int.exabytes: Capacity get() = toCapacity(CapacityUnit.EXBIBYTE)
+        val Int.exabytes: Capacity get() = toCapacity(CapacityUnit.EXABYTE)
 
-        val Long.kilobytes: Capacity get() = toCapacity(CapacityUnit.KIBIBYTE)
+        val Long.kilobytes: Capacity get() = toCapacity(CapacityUnit.KILOBYTE)
 
-        val Long.megabytes: Capacity get() = toCapacity(CapacityUnit.MEBIBYTE)
+        val Long.megabytes: Capacity get() = toCapacity(CapacityUnit.MEGABYTE)
 
-        val Long.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIBIBYTE)
+        val Long.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIGABYTE)
 
-        val Long.terabytes: Capacity get() = toCapacity(CapacityUnit.TEBIBYTE)
+        val Long.terabytes: Capacity get() = toCapacity(CapacityUnit.TERABYTE)
 
-        val Long.petabytes: Capacity get() = toCapacity(CapacityUnit.PEBIBYTE)
+        val Long.petabytes: Capacity get() = toCapacity(CapacityUnit.PETABYTE)
 
-        val Long.exabytes: Capacity get() = toCapacity(CapacityUnit.EXBIBYTE)
+        val Long.exabytes: Capacity get() = toCapacity(CapacityUnit.EXABYTE)
 
-        val Float.kilobytes: Capacity get() = toCapacity(CapacityUnit.KIBIBYTE)
+        val Float.kilobytes: Capacity get() = toCapacity(CapacityUnit.KILOBYTE)
 
-        val Float.megabytes: Capacity get() = toCapacity(CapacityUnit.MEBIBYTE)
+        val Float.megabytes: Capacity get() = toCapacity(CapacityUnit.MEGABYTE)
 
-        val Float.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIBIBYTE)
+        val Float.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIGABYTE)
 
-        val Float.terabytes: Capacity get() = toCapacity(CapacityUnit.TEBIBYTE)
+        val Float.terabytes: Capacity get() = toCapacity(CapacityUnit.TERABYTE)
 
-        val Float.petabytes: Capacity get() = toCapacity(CapacityUnit.PEBIBYTE)
+        val Float.petabytes: Capacity get() = toCapacity(CapacityUnit.PETABYTE)
 
-        val Float.exabytes: Capacity get() = toCapacity(CapacityUnit.EXBIBYTE)
+        val Float.exabytes: Capacity get() = toCapacity(CapacityUnit.EXABYTE)
 
-        val Double.kilobytes: Capacity get() = toCapacity(CapacityUnit.KIBIBYTE)
+        val Double.kilobytes: Capacity get() = toCapacity(CapacityUnit.KILOBYTE)
 
-        val Double.megabytes: Capacity get() = toCapacity(CapacityUnit.MEBIBYTE)
+        val Double.megabytes: Capacity get() = toCapacity(CapacityUnit.MEGABYTE)
 
-        val Double.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIBIBYTE)
+        val Double.gigabytes: Capacity get() = toCapacity(CapacityUnit.GIGABYTE)
 
-        val Double.terabytes: Capacity get() = toCapacity(CapacityUnit.TEBIBYTE)
+        val Double.terabytes: Capacity get() = toCapacity(CapacityUnit.TERABYTE)
 
-        val Double.petabytes: Capacity get() = toCapacity(CapacityUnit.PEBIBYTE)
+        val Double.petabytes: Capacity get() = toCapacity(CapacityUnit.PETABYTE)
 
-        val Double.exabytes: Capacity get() = toCapacity(CapacityUnit.EXBIBYTE)
+        val Double.exabytes: Capacity get() = toCapacity(CapacityUnit.EXABYTE)
         //endregion
     }
 }
