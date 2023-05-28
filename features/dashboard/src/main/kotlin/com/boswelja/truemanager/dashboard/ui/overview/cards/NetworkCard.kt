@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.capacity.Capacity.Companion.bytes
 import com.boswelja.capacity.CapacityUnit
 import com.boswelja.truemanager.dashboard.R
-import com.boswelja.truemanager.dashboard.ui.DashboardData
+import com.boswelja.truemanager.dashboard.ui.overview.DashboardData
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis

@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.ui
+package com.boswelja.truemanager.dashboard.ui.overview
 
 import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.CapacityUnit

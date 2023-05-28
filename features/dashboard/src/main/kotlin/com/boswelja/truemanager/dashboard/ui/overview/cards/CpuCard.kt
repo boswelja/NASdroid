@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.R
-import com.boswelja.truemanager.dashboard.ui.DashboardData
+import com.boswelja.truemanager.dashboard.ui.overview.DashboardData
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
 import java.text.NumberFormat
