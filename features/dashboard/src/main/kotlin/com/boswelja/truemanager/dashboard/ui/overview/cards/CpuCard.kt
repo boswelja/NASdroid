@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.R
-import com.boswelja.truemanager.dashboard.ui.DashboardData
+import com.boswelja.truemanager.dashboard.ui.overview.DashboardData
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
 import java.text.NumberFormat
@@ -50,13 +50,13 @@ fun CpuCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CpuUsageBar(
-                    usage = data.avgUsage,
+                    usage = data.utilisation,
                     modifier = Modifier
                         .width(48.dp)
                         .weight(1f)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(data.avgUsage.formattedPercent())
+                Text(data.utilisation.formattedPercent())
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -130,7 +130,7 @@ fun CpuCardPreview() {
                 cores = 28,
                 threads = 56,
                 tempCelsius = 31,
-                avgUsage = 0.43f
+                utilisation = 0.43f
             ),
             modifier = Modifier.fillMaxWidth()
         )
