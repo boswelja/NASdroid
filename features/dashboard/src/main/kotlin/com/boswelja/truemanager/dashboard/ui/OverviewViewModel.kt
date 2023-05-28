@@ -139,18 +139,20 @@ class OverviewViewModel(
                 }
                 DashboardEntry.Type.NETWORK -> {
                     val adapterGraphs = graphs.filter { it.name == "interface" }
-                    val adaptersInfo = adapterGraphs.map { graph ->
-                        val data = graph.data.filter { !it.contains(null) } as List<List<Double>>
-                        val start = graph.start.toLocalDateTime(TimeZone.currentSystemDefault())
-                        val end = graph.end.toLocalDateTime(TimeZone.currentSystemDefault())
-                        DashboardData.NetworkUsageData.AdapterData(
-                            name = graph.identifier!!,
-                            address = "TODO",
-                            receivedBytes = data.map { it[0] },
-                            sentBytes = data.map { it[1] },
-                            period = start..end
-                        )
-                    }
+                    val adaptersInfo = adapterGraphs
+                        .filter { it.data.any { it.any { it != null && it > 0 } } }
+                        .map { graph ->
+                            val data = graph.data.filter { !it.contains(null) } as List<List<Double>>
+                            val start = graph.start.toLocalDateTime(TimeZone.currentSystemDefault())
+                            val end = graph.end.toLocalDateTime(TimeZone.currentSystemDefault())
+                            DashboardData.NetworkUsageData.AdapterData(
+                                name = graph.identifier!!,
+                                address = "TODO",
+                                receivedBytes = data.map { it[0] },
+                                sentBytes = data.map { it[1] },
+                                period = start..end
+                            )
+                        }
                     DashboardData.NetworkUsageData(adaptersInfo)
                 }
             }
