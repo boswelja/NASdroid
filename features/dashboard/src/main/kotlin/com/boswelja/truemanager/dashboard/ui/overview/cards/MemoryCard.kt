@@ -117,8 +117,8 @@ fun MemoryUtilisationLabel(
 @Composable
 fun Capacity.formatToString(): String {
     return remember(this) {
-        val size = toDouble(CapacityUnit.GIGABYTE)
-        "$size GB"
+        val size = toDouble(CapacityUnit.GIBIBYTE)
+        "%.1f GiB".format(size)
     }
 }
 
@@ -130,7 +130,7 @@ fun MemoryCardPreview() {
         MemoryCard(
             data = DashboardData.MemoryData(
                 memoryUsed = 51.1.gigabytes,
-                memoryFree = 76.9.gigabytes,
+                memoryTotal = 128.gigabytes,
                 isEcc = true
             ),
             modifier = Modifier.fillMaxWidth()

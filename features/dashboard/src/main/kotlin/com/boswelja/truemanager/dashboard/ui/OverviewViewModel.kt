@@ -128,11 +128,12 @@ class OverviewViewModel(
                     )
                 }
                 DashboardEntry.Type.MEMORY -> {
+                    Long.MAX_VALUE
                     val memoryGraph = graphs.first { it.name == "memory" }
                     val memoryData = memoryGraph.data.last { !it.contains(null) } as List<Double>
                     DashboardData.MemoryData(
-                        memoryUsed = memoryData[0].toInt().bytes,
-                        memoryFree = memoryData[1].toInt().bytes,
+                        memoryUsed = memoryData[0].toLong().bytes,
+                        memoryTotal = systemInformation.physicalMemoryBytes.bytes,
                         isEcc = systemInformation.hasEccMemory
                     )
                 }

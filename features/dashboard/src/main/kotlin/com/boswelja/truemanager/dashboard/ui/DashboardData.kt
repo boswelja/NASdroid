@@ -33,11 +33,11 @@ sealed interface DashboardData {
      */
     data class MemoryData(
         val memoryUsed: Capacity,
-        val memoryFree: Capacity,
+        val memoryTotal: Capacity,
         val isEcc: Boolean
     ) : DashboardData {
-        val totalMemory = memoryFree + memoryUsed
-        val usedPercent = memoryUsed.toLong(CapacityUnit.BYTE) / totalMemory.toLong(CapacityUnit.BYTE).toFloat()
+        val memoryFree = memoryTotal - memoryUsed
+        val usedPercent = memoryUsed.toLong(CapacityUnit.BYTE) / memoryTotal.toLong(CapacityUnit.BYTE).toFloat()
     }
 
     data class NetworkUsageData(
