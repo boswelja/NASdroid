@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.R
+import com.boswelja.truemanager.dashboard.ui.DashboardData
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
 import java.text.NumberFormat
@@ -34,8 +35,7 @@ import java.text.NumberFormat
  */
 @Composable
 fun CpuCard(
-    info: CpuInfo,
-    usage: CpuUsage,
+    data: DashboardData.CpuData,
     modifier: Modifier = Modifier
 ) {
     DashboardCard(
@@ -50,28 +50,28 @@ fun CpuCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CpuUsageBar(
-                    usage = usage.avgUsage,
+                    usage = data.avgUsage,
                     modifier = Modifier
                         .width(48.dp)
                         .weight(1f)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(usage.avgUsage.formattedPercent())
+                Text(data.avgUsage.formattedPercent())
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 CardListItem(
                     labelContent = { Text(stringResource(R.string.cpu_name_label)) },
-                    content = { Text(info.name) }
+                    content = { Text(data.name) }
                 )
                 CardListItem(
                     labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
-                    content = { Text(stringResource(R.string.cpu_cores_threads_count, info.cores, info.threads)) }
+                    content = { Text(stringResource(R.string.cpu_cores_threads_count, data.cores, data.threads)) }
                 )
                 CardListItem(
                     labelContent = { Text(stringResource(R.string.cpu_temp_label)) },
-                    content = { Text(stringResource(R.string.cpu_temperature_celsius, usage.tempCelsius)) }
+                    content = { Text(stringResource(R.string.cpu_temperature_celsius, data.tempCelsius)) }
                 )
             }
         }
@@ -120,42 +120,15 @@ private fun Float.formattedPercent(): String {
     }
 }
 
-/**
- * Describes the CPU in the system.
- *
- * @property name The name of the CPU. E.g. "Intel(R) Xeon(R) CPU E5-2680".
- * @property cores The total number of cores the CPU has.
- * @property threads The total number of threads the CPU has.
- */
-data class CpuInfo(
-    val name: String,
-    val cores: Int,
-    val threads: Int,
-)
-
-/**
- * Describes current CPU utilisation.
- *
- * @property tempCelsius The CPU temperature, in celsius. This is usually measured by the hottest
- * core.
- * @property avgUsage The average CPU utilisation. The value will always be between 0 and 1.
- */
-data class CpuUsage(
-    val tempCelsius: Int,
-    val avgUsage: Float
-)
-
 @Preview
 @Composable
 fun CpuCardPreview() {
     MaterialTheme {
         CpuCard(
-            info = CpuInfo(
+            data = DashboardData.CpuData(
                 name = "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
                 cores = 28,
-                threads = 56
-            ),
-            usage = CpuUsage(
+                threads = 56,
                 tempCelsius = 31,
                 avgUsage = 0.43f
             ),

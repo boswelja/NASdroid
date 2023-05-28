@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.boswelja.truemanager.dashboard.R
+import com.boswelja.truemanager.dashboard.ui.DashboardData
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
 import kotlinx.coroutines.delay
@@ -32,21 +33,21 @@ import kotlin.time.measureTime
  */
 @Composable
 fun SystemInformationCard(
-    systemInformation: SystemInformation,
+    data: DashboardData.SystemInformationData,
     modifier: Modifier = Modifier
 ) {
-    val uptime by systemInformation.lastBootTime.collectElapsedSinceAsState()
+    val uptime by data.lastBootTime.collectElapsedSinceAsState()
     DashboardCard(
         title = { Text(stringResource(R.string.system_info_card_title)) },
         modifier = modifier,
     ) {
         CardListItem(
             labelContent = { Text(stringResource(R.string.system_info_version_label)) },
-            content = { Text(systemInformation.version) }
+            content = { Text(data.version) }
         )
         CardListItem(
             labelContent = { Text(stringResource(R.string.system_info_hostname_label)) },
-            content = { Text(systemInformation.hostname) }
+            content = { Text(data.hostname) }
         )
         CardListItem(
             labelContent = { Text(stringResource(R.string.system_info_uptime_label)) },
@@ -90,25 +91,11 @@ private suspend fun repeatIndefinitely(interval: Duration, block: () -> Unit) {
     }
 }
 
-/**
- * Contains basic information about a TrueNAS system.
- *
- * @property platform The platform on which the system is running.
- * @property version The full version the system is running.
- * @property hostname The system hostname. This helps identify the system on the network.
- * @property lastBootTime The time the system was last started. This is used to calculate uptime.
- */
-data class SystemInformation(
-    val version: String,
-    val hostname: String,
-    val lastBootTime: LocalDateTime
-)
-
 @Preview
 @Composable
 fun SystemInformationCardPreview() {
     SystemInformationCard(
-        systemInformation = SystemInformation(
+        data = DashboardData.SystemInformationData(
             version = "TrueNAS-SCALE-22.12.2",
             hostname = "truenas",
             lastBootTime = LocalDateTime(2023, 3, 1, 10, 33)
