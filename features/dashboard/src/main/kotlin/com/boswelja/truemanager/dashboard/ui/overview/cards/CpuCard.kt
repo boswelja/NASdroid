@@ -50,13 +50,13 @@ fun CpuCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CpuUsageBar(
-                    usage = data.avgUsage,
+                    usage = data.utilisation,
                     modifier = Modifier
                         .width(48.dp)
                         .weight(1f)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(data.avgUsage.formattedPercent())
+                Text(data.utilisation.formattedPercent())
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -130,7 +130,7 @@ fun CpuCardPreview() {
                 cores = 28,
                 threads = 56,
                 tempCelsius = 31,
-                avgUsage = 0.43f
+                utilisation = 0.43f
             ),
             modifier = Modifier.fillMaxWidth()
         )

@@ -4,6 +4,9 @@ import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.CapacityUnit
 import kotlinx.datetime.LocalDateTime
 
+/**
+ * Describes some data that should be displayed in the dashboard.
+ */
 sealed interface DashboardData {
 
     /**
@@ -12,15 +15,15 @@ sealed interface DashboardData {
      * @property name The name of the CPU. E.g. "Intel(R) Xeon(R) CPU E5-2680".
      * @property cores The total number of cores the CPU has.
      * @property threads The total number of threads the CPU has.
+     * @property utilisation The current CPU utilisation. The value will always be between 0 and 1.
      * @property tempCelsius The CPU temperature, in celsius. This is usually measured by the hottest
      * core.
-     * @property avgUsage The average CPU utilisation. The value will always be between 0 and 1.
      */
     data class CpuData(
         val name: String,
         val cores: Int,
         val threads: Int,
-        val avgUsage: Float,
+        val utilisation: Float,
         val tempCelsius: Int,
     ) : DashboardData
 
@@ -36,10 +39,22 @@ sealed interface DashboardData {
         val memoryFree: Capacity,
         val isEcc: Boolean
     ) : DashboardData {
+        /**
+         * The total amount of memory installed in the system.
+         */
         val totalMemory = memoryFree + memoryUsed
+
+        /**
+         * The percentage value of used memory, between 0 and 1.
+         */
         val usedPercent = memoryUsed.toLong(CapacityUnit.BYTE) / totalMemory.toLong(CapacityUnit.BYTE).toFloat()
     }
 
+    /**
+     * Describes multiple network adapters, which should be grouped in the dashboard.
+     *
+     * @property adaptersData A list of [AdapterData] describing a single adapter.
+     */
     data class NetworkUsageData(
         val adaptersData: List<AdapterData>
     ) : DashboardData {
