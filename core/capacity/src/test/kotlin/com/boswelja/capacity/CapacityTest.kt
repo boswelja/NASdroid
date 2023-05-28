@@ -60,7 +60,7 @@ class CapacityTest {
     }
 
     @Test
-    fun compareTo_matchesForEquivalentSizes() {
+    fun compareTo_comparesSameSizes() {
         assertTrue(
             1.5.terabytes.compareTo(1500.gigabytes) == 0
         )
@@ -70,7 +70,7 @@ class CapacityTest {
     }
 
     @Test
-    fun compareTo_correctlyComparesDifferentSizes() {
+    fun compareTo_comparesDifferentSizes() {
         assertTrue(
             1.5.terabytes > 1.gigabytes
         )

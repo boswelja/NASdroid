@@ -326,6 +326,7 @@ naming:
     active: true
     maximumFunctionNameLength: 30
     ignoreAnnotated: ['Preview']
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
   FunctionMinLength:
     active: true
     minimumFunctionNameLength: 3
