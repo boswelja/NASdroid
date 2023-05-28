@@ -117,13 +117,13 @@ class OverviewViewModel(
                 DashboardEntry.Type.CPU -> {
                     val utilisationGraph = graphs.first { it.name == "cpu" }
                     val temperatureGraph = graphs.first { it.name == "cputemp" }
-                    val avgUsage = ((utilisationGraph.data.last { !it.contains(null) }.last() ?: 100.0) - 100.0).toFloat()
+                    val avgUsage = (100 - (utilisationGraph.data.last { !it.contains(null) }.last() ?: 100.0)) / 100.0
                     val temp = (temperatureGraph.data.last { !it.contains(null) } as List<Double>).max().roundToInt()
                     DashboardData.CpuData(
                         name = systemInformation.cpuInfo.model,
                         cores = systemInformation.cpuInfo.physicalCores,
                         threads = systemInformation.cpuInfo.totalCores,
-                        avgUsage = avgUsage,
+                        avgUsage = avgUsage.toFloat(),
                         tempCelsius = temp
                     )
                 }
