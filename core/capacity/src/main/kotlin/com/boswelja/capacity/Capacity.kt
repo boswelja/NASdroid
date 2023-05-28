@@ -49,6 +49,7 @@ value class Capacity internal constructor(private val rawValue: Long) : Comparab
         return toDouble(unit).roundToLong()
     }
 
+    @Suppress("unused")
     companion object {
 
         private fun Int.toCapacity(unit: CapacityUnit): Capacity = Capacity(this * unit.byteFactor)
