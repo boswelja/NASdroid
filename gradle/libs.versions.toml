@@ -21,7 +21,7 @@ accompanist = "0.31.3-beta"
 
 room = "2.6.0-alpha01"
 
-ktor = "2.3.0"
+ktor = "2.3.1"
 
 kotlinx-datetime = "0.4.0"
 kotlinx-serialization-formats = "1.5.1"
