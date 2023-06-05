@@ -27,7 +27,7 @@ kotlinx-datetime = "0.4.0"
 kotlinx-serialization-formats = "1.5.1"
 
 koin = "3.4.0"
-koin-compose = "3.4.4"
+koin-compose = "3.4.5"
 
 vico = "1.6.6"
 
