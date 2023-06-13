@@ -1,6 +1,6 @@
 [versions]
 android-gradle-plugin = "8.0.0"
-detekt = "1.22.0"
+detekt = "1.23.0"
 kotlin = "1.8.21"
 ksp = "1.8.21-1.0.11"
 
@@ -27,7 +27,7 @@ kotlinx-datetime = "0.4.0"
 kotlinx-serialization-formats = "1.5.1"
 
 koin = "3.4.2"
-koin-compose = "3.4.4"
+koin-compose = "3.4.5"
 
 vico = "1.6.6"
 
