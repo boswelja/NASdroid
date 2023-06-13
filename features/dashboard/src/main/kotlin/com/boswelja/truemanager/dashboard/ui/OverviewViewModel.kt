@@ -8,6 +8,7 @@ import com.boswelja.truemanager.core.api.v2.reporting.RequestedGraph
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 import com.boswelja.truemanager.dashboard.configuration.DashboardConfiguration
 import com.boswelja.truemanager.dashboard.configuration.DashboardEntry
+import com.boswelja.truemanager.dashboard.ui.overview.DashboardData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -123,7 +124,7 @@ class OverviewViewModel(
                         name = systemInformation.cpuInfo.model,
                         cores = systemInformation.cpuInfo.physicalCores,
                         threads = systemInformation.cpuInfo.totalCores,
-                        avgUsage = avgUsage.toFloat(),
+                        utilisation = avgUsage.toFloat(),
                         tempCelsius = temp
                     )
                 }
@@ -133,7 +134,7 @@ class OverviewViewModel(
                     val memoryData = memoryGraph.data.last { !it.contains(null) } as List<Double>
                     DashboardData.MemoryData(
                         memoryUsed = memoryData[0].toLong().bytes,
-                        memoryTotal = systemInformation.physicalMemoryBytes.bytes,
+                        memoryFree = memoryData[1].toLong().bytes,
                         isEcc = systemInformation.hasEccMemory
                     )
                 }

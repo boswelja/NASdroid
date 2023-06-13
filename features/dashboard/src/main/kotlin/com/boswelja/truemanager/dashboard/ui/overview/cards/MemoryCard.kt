@@ -27,7 +27,6 @@ import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.Capacity.Companion.gigabytes
 import com.boswelja.capacity.CapacityUnit
 import com.boswelja.truemanager.dashboard.R
-import com.boswelja.truemanager.dashboard.ui.DashboardData
 import com.boswelja.truemanager.dashboard.ui.overview.DashboardData
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
@@ -131,7 +130,7 @@ fun MemoryCardPreview() {
         MemoryCard(
             data = DashboardData.MemoryData(
                 memoryUsed = 51.1.gigabytes,
-                memoryTotal = 128.gigabytes,
+                memoryFree = 128.gigabytes - 51.1.gigabytes,
                 isEcc = true
             ),
             modifier = Modifier.fillMaxWidth()
