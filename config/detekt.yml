@@ -111,6 +111,9 @@ naming:
     active: true
   FunctionMinLength:
     active: true
+  FunctionNaming:
+    ignoreAnnotated:
+      - 'Composable'
   LambdaParameterNaming:
     active: true
   NonBooleanPropertyPrefixedWithIs:
