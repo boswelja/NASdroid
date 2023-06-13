@@ -58,7 +58,7 @@ class OverviewViewModel(
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(100),
+            SharingStarted.WhileSubscribed(),
             null
         )
 
@@ -98,20 +98,20 @@ class OverviewViewModel(
             when (entry.type) {
                 DashboardEntry.Type.SYSTEM_INFORMATION -> { /* no-op. We add this data later */ }
                 DashboardEntry.Type.CPU -> {
-                    reportingGraphsToQuery.add(RequestedGraph("cpu", null))
-                    reportingGraphsToQuery.add(RequestedGraph("cputemp", null))
+                    reportingGraphsToQuery.add(RequestedGraph(CPU_GRAPH_NAME, null))
+                    reportingGraphsToQuery.add(RequestedGraph(CPU_TEMP_GRAPH_NAME, null))
                 }
                 DashboardEntry.Type.MEMORY -> {
-                    reportingGraphsToQuery.add(RequestedGraph("memory", null))
+                    reportingGraphsToQuery.add(RequestedGraph(MEMORY_GRAPH_NAME, null))
                 }
                 DashboardEntry.Type.NETWORK -> {
                     val adapters = reportingV2Api.getReportingGraphs(
                         limit = null,
                         offset = null,
                         sort = null
-                    ).first { it.name == "interface" }.identifiers
+                    ).first { it.name == INTERFACE_GRAPH_NAME }.identifiers
                     adapters.forEach {
-                        reportingGraphsToQuery.add(RequestedGraph("interface", it))
+                        reportingGraphsToQuery.add(RequestedGraph(INTERFACE_GRAPH_NAME, it))
                     }
                 }
             }
@@ -129,16 +129,16 @@ class OverviewViewModel(
                     )
                 }
                 DashboardEntry.Type.CPU -> {
-                    val utilisationGraph = graphs.first { it.name == "cpu" }
-                    val temperatureGraph = graphs.first { it.name == "cputemp" }
+                    val utilisationGraph = graphs.first { it.name == CPU_GRAPH_NAME }
+                    val temperatureGraph = graphs.first { it.name == CPU_TEMP_GRAPH_NAME }
                     createCpuData(systemInformation, utilisationGraph, temperatureGraph)
                 }
                 DashboardEntry.Type.MEMORY -> {
-                    val memoryGraph = graphs.first { it.name == "memory" }
+                    val memoryGraph = graphs.first { it.name == MEMORY_GRAPH_NAME }
                     createMemoryData(systemInformation, memoryGraph)
                 }
                 DashboardEntry.Type.NETWORK -> {
-                    val adapterGraphs = graphs.filter { it.name == "interface" }
+                    val adapterGraphs = graphs.filter { it.name == INTERFACE_GRAPH_NAME }
                     createNetworkUsageData(adapterGraphs)
                 }
             }
@@ -182,7 +182,7 @@ class OverviewViewModel(
         usageGraph: ReportingGraphData,
         temperatureGraph: ReportingGraphData
     ): DashboardData.CpuData {
-        val avgUsage = (100 - (usageGraph.data.last { !it.contains(null) }.last() ?: 100.0)) / 100.0
+        val avgUsage = (100 - usageGraph.data.last { !it.contains(null) }.last()!!) / 100.0
         val temp = (temperatureGraph.data.last { !it.contains(null) } as List<Double>).max().roundToInt()
         return DashboardData.CpuData(
             name = systemInformation.cpuInfo.model,
@@ -191,5 +191,12 @@ class OverviewViewModel(
             utilisation = avgUsage.toFloat(),
             tempCelsius = temp
         )
+    }
+
+    companion object {
+        private const val CPU_GRAPH_NAME = "cpu"
+        private const val CPU_TEMP_GRAPH_NAME = "cputemp"
+        private const val MEMORY_GRAPH_NAME = "memory"
+        private const val INTERFACE_GRAPH_NAME = "interface"
     }
 }
