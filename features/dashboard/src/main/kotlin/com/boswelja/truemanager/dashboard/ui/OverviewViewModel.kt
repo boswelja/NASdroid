@@ -3,8 +3,10 @@ package com.boswelja.truemanager.dashboard.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boswelja.capacity.Capacity.Companion.bytes
+import com.boswelja.truemanager.core.api.v2.reporting.ReportingGraphData
 import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2Api
 import com.boswelja.truemanager.core.api.v2.reporting.RequestedGraph
+import com.boswelja.truemanager.core.api.v2.system.SystemInfo
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 import com.boswelja.truemanager.dashboard.configuration.DashboardConfiguration
 import com.boswelja.truemanager.dashboard.configuration.DashboardEntry
@@ -129,45 +131,65 @@ class OverviewViewModel(
                 DashboardEntry.Type.CPU -> {
                     val utilisationGraph = graphs.first { it.name == "cpu" }
                     val temperatureGraph = graphs.first { it.name == "cputemp" }
-                    val avgUsage = (100 - (utilisationGraph.data.last { !it.contains(null) }.last() ?: 100.0)) / 100.0
-                    val temp = (temperatureGraph.data.last { !it.contains(null) } as List<Double>).max().roundToInt()
-                    DashboardData.CpuData(
-                        name = systemInformation.cpuInfo.model,
-                        cores = systemInformation.cpuInfo.physicalCores,
-                        threads = systemInformation.cpuInfo.totalCores,
-                        utilisation = avgUsage.toFloat(),
-                        tempCelsius = temp
-                    )
+                    createCpuData(systemInformation, utilisationGraph, temperatureGraph)
                 }
                 DashboardEntry.Type.MEMORY -> {
-                    Long.MAX_VALUE
                     val memoryGraph = graphs.first { it.name == "memory" }
-                    val memoryData = memoryGraph.data.last { !it.contains(null) } as List<Double>
-                    DashboardData.MemoryData(
-                        memoryUsed = memoryData[0].toLong().bytes,
-                        memoryFree = memoryData[1].toLong().bytes,
-                        isEcc = systemInformation.hasEccMemory
-                    )
+                    createMemoryData(systemInformation, memoryGraph)
                 }
                 DashboardEntry.Type.NETWORK -> {
                     val adapterGraphs = graphs.filter { it.name == "interface" }
-                    val adaptersInfo = adapterGraphs
-                        .filter { it.data.any { it.any { it != null && it > 0 } } }
-                        .map { graph ->
-                            val data = graph.data.filter { !it.contains(null) } as List<List<Double>>
-                            val start = graph.start.toLocalDateTime(TimeZone.currentSystemDefault())
-                            val end = graph.end.toLocalDateTime(TimeZone.currentSystemDefault())
-                            DashboardData.NetworkUsageData.AdapterData(
-                                name = graph.identifier!!,
-                                address = "TODO",
-                                receivedBytes = data.map { it[0] },
-                                sentBytes = data.map { it[1] },
-                                period = start..end
-                            )
-                        }
-                    DashboardData.NetworkUsageData(adaptersInfo)
+                    createNetworkUsageData(adapterGraphs)
                 }
             }
         }
+    }
+
+    private fun createNetworkUsageData(
+        adapterGraphs: List<ReportingGraphData>
+    ): DashboardData.NetworkUsageData {
+        val adaptersInfo = adapterGraphs
+            .filter { graph -> graph.data.any { line -> line.any { point -> point != null && point > 0 } } }
+            .map { graph ->
+                val data = graph.data.filter { !it.contains(null) } as List<List<Double>>
+                val start = graph.start.toLocalDateTime(TimeZone.currentSystemDefault())
+                val end = graph.end.toLocalDateTime(TimeZone.currentSystemDefault())
+                DashboardData.NetworkUsageData.AdapterData(
+                    name = graph.identifier!!,
+                    address = "TODO",
+                    receivedBytes = data.map { it[0] },
+                    sentBytes = data.map { it[1] },
+                    period = start..end
+                )
+            }
+        return DashboardData.NetworkUsageData(adaptersInfo)
+    }
+
+    private fun createMemoryData(
+        systemInformation: SystemInfo,
+        memoryGraph: ReportingGraphData
+    ): DashboardData.MemoryData {
+        val memoryData = memoryGraph.data.last { !it.contains(null) } as List<Double>
+        return DashboardData.MemoryData(
+            memoryUsed = memoryData[0].toLong().bytes,
+            memoryFree = memoryData[1].toLong().bytes,
+            isEcc = systemInformation.hasEccMemory
+        )
+    }
+
+    private fun createCpuData(
+        systemInformation: SystemInfo,
+        usageGraph: ReportingGraphData,
+        temperatureGraph: ReportingGraphData
+    ): DashboardData.CpuData {
+        val avgUsage = (100 - (usageGraph.data.last { !it.contains(null) }.last() ?: 100.0)) / 100.0
+        val temp = (temperatureGraph.data.last { !it.contains(null) } as List<Double>).max().roundToInt()
+        return DashboardData.CpuData(
+            name = systemInformation.cpuInfo.model,
+            cores = systemInformation.cpuInfo.physicalCores,
+            threads = systemInformation.cpuInfo.totalCores,
+            utilisation = avgUsage.toFloat(),
+            tempCelsius = temp
+        )
     }
 }

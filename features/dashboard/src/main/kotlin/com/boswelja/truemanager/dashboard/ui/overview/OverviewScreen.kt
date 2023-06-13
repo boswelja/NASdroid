@@ -17,10 +17,14 @@ import com.boswelja.truemanager.dashboard.ui.overview.cards.NetworkCard
 import com.boswelja.truemanager.dashboard.ui.overview.cards.SystemInformationCard
 import org.koin.androidx.compose.getViewModel
 
+/**
+ * The Dashboard Overview screen. This displays a list of user-configurable glanceable items for the
+ * system.
+ */
 @Composable
 fun OverviewScreen(
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues,
+    contentPadding: PaddingValues = PaddingValues(),
     viewModel: OverviewViewModel = getViewModel()
 ) {
     val data by viewModel.dashboardData.collectAsState()
