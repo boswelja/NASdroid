@@ -30,6 +30,9 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
+/**
+ * Collects data for and handles events from the Dashboard overview screen.
+ */
 class OverviewViewModel(
     private val configuration: DashboardConfiguration,
     private val systemV2Api: SystemV2Api,
@@ -38,6 +41,10 @@ class OverviewViewModel(
 
     private val serverId = MutableStateFlow<String?>(null)
 
+    /**
+     * A List of [DashboardData]. The list is ordered by the users configured display order. If the
+     * value is null, data is still loading.
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     val dashboardData: StateFlow<List<DashboardData>?> = serverId
         .filterNotNull()
@@ -96,7 +103,11 @@ class OverviewViewModel(
                     reportingGraphsToQuery.add(RequestedGraph("memory", null))
                 }
                 DashboardEntry.Type.NETWORK -> {
-                    val adapters = reportingV2Api.getReportingGraphs(null, null, null).first { it.name == "interface" }.identifiers
+                    val adapters = reportingV2Api.getReportingGraphs(
+                        limit = null,
+                        offset = null,
+                        sort = null
+                    ).first { it.name == "interface" }.identifiers
                     adapters.forEach {
                         reportingGraphsToQuery.add(RequestedGraph("interface", it))
                     }
