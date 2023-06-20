@@ -5,6 +5,8 @@ import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
 import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2ApiImpl
+import com.boswelja.truemanager.core.api.v2.catalog.CatalogV2Api
+import com.boswelja.truemanager.core.api.v2.catalog.CatalogV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.pool.PoolV2Api
 import com.boswelja.truemanager.core.api.v2.pool.PoolV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2Api
@@ -64,6 +66,7 @@ val ApiV2Module = module {
 
     singleOf(::ApiKeyV2ApiImpl) bind ApiKeyV2Api::class
     singleOf(::AuthV2ApiImpl) bind AuthV2Api::class
+    singleOf(::CatalogV2ApiImpl) bind CatalogV2Api::class
     singleOf(::PoolV2ApiImpl) bind PoolV2Api::class
     singleOf(::ReportingV2ApiImpl) bind ReportingV2Api::class
     singleOf(::SystemV2ApiImpl) bind SystemV2Api::class
