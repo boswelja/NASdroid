@@ -3,8 +3,6 @@ package com.boswelja.truemanager.core.api.v2.catalog
 /**
  * Describes the TrueNAS API V2 "Catalog" group. The Catalogs API is responsible for managing
  * application catalogs, as well as getting their items.
- *
- * TODO The `getItems` endpoint returns an arbitrary number, so we don't have a mapping here yet.
  */
 interface CatalogV2Api {
 
