@@ -10,7 +10,7 @@ kotlin {
 
 detekt {
     buildUponDefaultConfig = true
-    config = files("$rootDir/config/detekt.yml")
+    config.setFrom("$rootDir/config/detekt.yml")
     basePath = rootDir.absolutePath
 }
 
