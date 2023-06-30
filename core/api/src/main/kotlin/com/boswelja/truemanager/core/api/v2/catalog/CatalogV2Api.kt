@@ -103,6 +103,18 @@ data class NewCatalog(
     val force: Boolean,
 )
 
+/**
+ * Describes possible options for retrieving catalog items.
+ *
+ * @property cache Whether item details for a catalog come from cache, if available.
+ * @property cacheOnly Force usage of cache for retrieving catalog information. If the content for
+ * the catalog in question is not cached, no content would be returned. If [cache] is false, this
+ * has no effect.
+ * @property retrieveAllTrains Whether information for all the trains present in the catalog will be
+ * retrieved.
+ * @property trains A list of trains which will allow selective filtering to retrieve only
+ * information of desired trains in a catalog. If [retrieveAllTrains] is set, this is ignored.
+ */
 data class GetCatalogItemsOptions(
     val cache: Boolean= true,
     val cacheOnly: Boolean = false,
