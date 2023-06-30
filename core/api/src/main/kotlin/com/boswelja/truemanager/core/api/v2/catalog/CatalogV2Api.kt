@@ -15,8 +15,10 @@ interface CatalogV2Api {
 
     /**
      * Creates a new catalog on the system.
+     *
+     * @return An ID for a running job. TODO Job system.
      */
-    suspend fun createCatalog(newCatalog: NewCatalog)
+    suspend fun createCatalog(newCatalog: NewCatalog): Int
 
     /**
      * Get a catalog details by its [Catalog.id].
@@ -43,18 +45,24 @@ interface CatalogV2Api {
 
     /**
      * Updates the system item cache for all catalogs.
+     *
+     * @return An ID for a running job. TODO Job system.
      */
-    suspend fun syncAll()
+    suspend fun syncAll(): Int
 
     /**
      * Updates the system item cache for the catalog with the given ID.
+     *
+     * @return An ID for a running job. TODO Job system.
      */
-    suspend fun syncCatalog(id: String)
+    suspend fun syncCatalog(id: String): Int
 
     /**
      * Checks whether the configuration for the catalog with the given ID is valid.
+     *
+     * @return An ID for a running job. TODO Job system.
      */
-    suspend fun validateCatalog(id: String): Boolean
+    suspend fun validateCatalog(id: String): Int
 }
 
 /**

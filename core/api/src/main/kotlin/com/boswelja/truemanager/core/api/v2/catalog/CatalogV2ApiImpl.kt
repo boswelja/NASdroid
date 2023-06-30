@@ -28,8 +28,8 @@ internal class CatalogV2ApiImpl(
         }
     }
 
-    override suspend fun createCatalog(newCatalog: NewCatalog) {
-        httpClient.post("catalog") {
+    override suspend fun createCatalog(newCatalog: NewCatalog): Int {
+        val result = httpClient.post("catalog") {
             setBody(
                 NewCatalogDto(
                     label = newCatalog.label,
@@ -40,6 +40,7 @@ internal class CatalogV2ApiImpl(
                 )
             )
         }
+        return result.body()
     }
 
     override suspend fun getCatalog(id: String): Catalog {
@@ -75,21 +76,23 @@ internal class CatalogV2ApiImpl(
         }
     }
 
-    override suspend fun syncAll() {
-        httpClient.get("catalog/sync_all")
+    override suspend fun syncAll(): Int {
+        val result = httpClient.get("catalog/sync_all")
+        return result.body()
     }
 
-    override suspend fun syncCatalog(id: String) {
-        httpClient.post("catalog/sync") {
+    override suspend fun syncCatalog(id: String): Int {
+        val result = httpClient.post("catalog/sync") {
             setBody(id)
         }
+        return result.body()
     }
 
-    override suspend fun validateCatalog(id: String): Boolean {
-        httpClient.post("catalog/validate") {
+    override suspend fun validateCatalog(id: String): Int {
+        val result = httpClient.post("catalog/validate") {
             setBody(id)
         }
-        return true
+        return result.body()
     }
 
     override suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions): Int {
