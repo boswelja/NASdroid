@@ -24,6 +24,13 @@ interface CatalogV2Api {
     suspend fun getCatalog(id: String): Catalog
 
     /**
+     * Starts a job to retrieve items for a catalog by its [Catalog.id].
+     *
+     * @return An ID for a running job. TODO Job system.
+     */
+    suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions): Int
+
+    /**
      * Delete a catalog by its [Catalog.id].
      */
     suspend fun deleteCatalog(id: String)
@@ -88,4 +95,11 @@ data class NewCatalog(
     val branch: String,
     val preferredTrains: List<String>,
     val force: Boolean,
+)
+
+data class GetCatalogItemsOptions(
+    val cache: Boolean= true,
+    val cacheOnly: Boolean = false,
+    val retrieveAllTrains: Boolean = true,
+    val trains: List<String> = emptyList(),
 )

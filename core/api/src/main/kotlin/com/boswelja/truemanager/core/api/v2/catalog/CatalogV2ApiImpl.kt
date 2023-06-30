@@ -7,6 +7,8 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 internal class CatalogV2ApiImpl(
     private val httpClient: HttpClient
@@ -90,22 +92,72 @@ internal class CatalogV2ApiImpl(
         return true
     }
 
+    override suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions): Int {
+        val request = httpClient.post("catalog/items") {
+            setBody(
+                CatalogItemsBodyDto(
+                    label = id,
+                    options = CatalogItemsBodyDto.CatalogItemsOptionsDto(
+                        cache = options.cache,
+                        cacheOnly = options.cacheOnly,
+                        retrieveAllTrains = options.retrieveAllTrains,
+                        trains = options.trains
+                    )
+                )
+            )
+        }
+        return request.body()
+    }
 }
 
-internal data class CatalogDto(
+@Serializable
+internal data class CatalogItemsBodyDto(
+    @SerialName("label")
     val label: String,
+    @SerialName("options")
+    val options: CatalogItemsOptionsDto
+) {
+    @Serializable
+    internal data class CatalogItemsOptionsDto(
+        @SerialName("cache")
+        val cache: Boolean= true,
+        @SerialName("cache_only")
+        val cacheOnly: Boolean = false,
+        @SerialName("retrieve_all_trains")
+        val retrieveAllTrains: Boolean = true,
+        @SerialName("trains")
+        val trains: List<String> = emptyList(),
+    )
+}
+
+@Serializable
+internal data class CatalogDto(
+    @SerialName("label")
+    val label: String,
+    @SerialName("repository")
     val repository: String,
+    @SerialName("branch")
     val branch: String,
+    @SerialName("builtin")
     val builtin: Boolean,
+    @SerialName("preferred_trains")
     val preferredTrains: List<String>,
+    @SerialName("location")
     val location: String,
+    @SerialName("id")
     val id: String,
 )
 
+@Serializable
 internal data class NewCatalogDto(
+    @SerialName("label")
     val label: String,
+    @SerialName("repository")
     val repository: String,
+    @SerialName("branch")
     val branch: String,
+    @SerialName("preferred_trains")
     val preferredTrains: List<String>,
+    @SerialName("force")
     val force: Boolean,
 )
