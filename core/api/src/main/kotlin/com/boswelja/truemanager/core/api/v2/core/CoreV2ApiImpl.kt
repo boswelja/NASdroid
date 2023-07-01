@@ -10,7 +10,7 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-class CoreV2ApiImpl(
+internal class CoreV2ApiImpl(
     private val client: HttpClient
 ) : CoreV2Api {
     override suspend fun bulkCallMethod(

@@ -151,6 +151,7 @@ data class DownloadInfo(
 /**
  * Contains information about a single job on the system.
  *
+ * @param T The type of result expected from the job.
  * @property id The job ID.
  * @property method The method this job called.
  * @property arguments A list of arguments the method was called with.
