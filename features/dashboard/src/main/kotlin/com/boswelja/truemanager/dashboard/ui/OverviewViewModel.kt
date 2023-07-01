@@ -126,7 +126,8 @@ class OverviewViewModel(
                     DashboardData.SystemInformationData(
                         version = systemInformation.version,
                         hostname = systemInformation.hostName,
-                        lastBootTime = Instant.fromEpochMilliseconds(systemInformation.bootTime).toLocalDateTime(TimeZone.currentSystemDefault())
+                        lastBootTime = Instant.fromEpochMilliseconds(systemInformation.bootTime)
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
                     )
                 }
                 DashboardEntry.Type.CPU -> {
