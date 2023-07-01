@@ -51,9 +51,11 @@ val ApiV2Module = module {
             }
 
             install(ContentNegotiation) {
-                json(Json {
-                    explicitNulls = false
-                })
+                json(
+                    Json {
+                        explicitNulls = false
+                    }
+                )
             }
             defaultRequest {
                 when (val authorization = requireNotNull(apiStateProvider.authorization)) {

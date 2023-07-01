@@ -1,6 +1,6 @@
 package com.boswelja.truemanager.core.api.v2.system
 
-import kotlinx.datetime.Instant
+import com.boswelja.truemanager.core.api.v2.TimestampUnwrapper
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -155,11 +155,13 @@ enum class State {
  * @property systemManufacturer The company that produced the system.
  * @property eccMemory Whether the server has ECC memory.
  */
+@Serializable
 data class SystemInfo(
     @SerialName("version")
     val version: String,
+    @Serializable(TimestampUnwrapper::class)
     @SerialName("buildtime")
-    val buildTime: Instant,
+    val buildTime: Long,
     @SerialName("hostname")
     val hostName: String,
     @SerialName("physmem")
@@ -184,12 +186,15 @@ data class SystemInfo(
     val systemProductVersion: String,
     @SerialName("license")
     val license: String?,
+    @Serializable(TimestampUnwrapper::class)
     @SerialName("boottime")
-    val bootTime: Instant,
+    val bootTime: Long,
+    @Serializable(TimestampUnwrapper::class)
     @SerialName("datetime")
-    val dateTime: Instant,
+    val dateTime: Long,
+    @Serializable(TimestampUnwrapper::class)
     @SerialName("birthday")
-    val birthday: Instant?,
+    val birthday: Long?,
     @SerialName("timezone")
     val timeZone: String,
     @SerialName("system_manufacturer")
