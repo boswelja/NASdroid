@@ -1,8 +1,8 @@
 package com.boswelja.truemanager.core.api.v2.system
 
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlin.time.Duration
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Describes the TrueNAS API V2 "System" group. Note these mappings may not be 1:1, as we will
@@ -92,35 +92,42 @@ interface SystemV2Api {
 /**
  * Possible host environment types for a system.
  */
+@Serializable
 enum class Environment {
     /**
      * This system is hosted on standard hardware.
      */
+    @SerialName("DEFAULT")
     DEFAULT,
 
     /**
      * This system is hosted on Amazon Web Services (AWS) EC2.
      */
+    @SerialName("EC2")
     EC2
 }
 
 /**
  * Possible system states.
  */
+@Serializable
 enum class State {
     /**
      * The system is currently booting. It will be unusable until boot has completed.
      */
+    @SerialName("BOOTING")
     BOOTING,
 
     /**
      * The system is running and ready to use.
      */
+    @SerialName("READY")
     READY,
 
     /**
      * The system is shutting down and is unusable.
      */
+    @SerialName("SHUTTING_DOWN")
     SHUTTING_DOWN
 }
 
@@ -129,61 +136,64 @@ enum class State {
  *
  * @property version The full version of the product this system is running. See [SystemV2Api.getVersion].
  * @property buildTime The time that the systems product version was built.
- * @property hostname The systems host name. It should be identifiable on the local network via this.
- * @property physicalMemoryBytes The amount of physical memory the system has, in Bytes.
- * @property cpuInfo Information about the systems CPU configuration.
+ * @property hostName The systems host name. It should be identifiable on the local network via this.
+ * @property physicalMemory The amount of physical memory the system has, in Bytes.
+ * @property cpuModel The model name of the CPU this system has.
+ * @property cores The total number of cores and threads the system has.
+ * @property physicalCores The number of physical cores the system has.
+ * @property loadAvg TODO
  * @property uptime The amount of time the system has been running for.
+ * @property uptimeSeconds The number of seconds the system has been up for.
+ * @property systemSerial TODO
+ * @property systemProduct TODO
+ * @property systemProductVersion TODO
  * @property license The systems license file, or null if not present.
  * @property bootTime The time this system was last booted.
+ * @property dateTime TODO
  * @property birthday The systems birthday.
- * @property timezone The system time zone.
- * @property hasEccMemory Whether the server has ECC memory.
- * @property hostInfo Information about the systems host hardware.
+ * @property timeZone The time zone the system is configured to use.
+ * @property systemManufacturer The company that produced the system.
+ * @property eccMemory Whether the server has ECC memory.
  */
 data class SystemInfo(
+    @SerialName("version")
     val version: String,
+    @SerialName("buildtime")
     val buildTime: Instant,
-    val hostname: String,
-    val physicalMemoryBytes: Long,
-    val cpuInfo: CpuInfo,
-    val uptime: Duration,
+    @SerialName("hostname")
+    val hostName: String,
+    @SerialName("physmem")
+    val physicalMemory: Long,
+    @SerialName("model")
+    val cpuModel: String,
+    @SerialName("cores")
+    val cores: Int,
+    @SerialName("physical_cores")
+    val physicalCores: Int,
+    @SerialName("loadavg")
+    val loadAvg: List<Double>,
+    @SerialName("uptime")
+    val uptime: String,
+    @SerialName("uptime_seconds")
+    val uptimeSeconds: Double,
+    @SerialName("system_serial")
+    val systemSerial: String,
+    @SerialName("system_product")
+    val systemProduct: String,
+    @SerialName("system_product_version")
+    val systemProductVersion: String,
+    @SerialName("license")
     val license: String?,
+    @SerialName("boottime")
     val bootTime: Instant,
+    @SerialName("datetime")
+    val dateTime: Instant,
+    @SerialName("birthday")
     val birthday: Instant?,
-    val timezone: TimeZone,
-    val hasEccMemory: Boolean,
-    val hostInfo: HostInfo
-) {
-    /**
-     * Information about a CPU.
-     *
-     * @property model The model name of the CPU.
-     * @property physicalCores The number of physical cores and threads the CPU has.
-     * @property totalCores The total number of cores this CPU configuration has.
-     */
-    data class CpuInfo(
-        val model: String,
-        val physicalCores: Int,
-        val totalCores: Int,
-    ) {
-        /**
-         * The number of NUMA nodes this COU configuration has.
-         */
-        val numaNodes: Int = totalCores / physicalCores
-    }
-
-    /**
-     * Information about host hardware for a system.
-     *
-     * @property serial The hardware serial number. This should match the OEM serial number.
-     * @property product The name of the hardware that is running the system, for example "ProLiant DL380 Gen9".
-     * @property productVersion The hardware configuration version.
-     * @property manufacturer The hardware manufacturer, for example "HP".
-     */
-    data class HostInfo(
-        val serial: String,
-        val product: String,
-        val productVersion: String?,
-        val manufacturer: String
-    )
-}
+    @SerialName("timezone")
+    val timeZone: String,
+    @SerialName("system_manufacturer")
+    val systemManufacturer: String,
+    @SerialName("ecc_memory")
+    val eccMemory: Boolean
+)
