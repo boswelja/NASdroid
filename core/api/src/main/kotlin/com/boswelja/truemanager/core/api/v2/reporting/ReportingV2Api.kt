@@ -1,6 +1,8 @@
 package com.boswelja.truemanager.core.api.v2.reporting
 
 import kotlinx.datetime.Instant
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Describes the TrueNAS API V2 "Reporting" group. Note these mappings may not be 1:1, as we will
@@ -74,16 +76,23 @@ interface ReportingV2Api {
  * @property id The reporting config ID.
  * @property cpuInPercentage Whether CPU utilisation values should be displayed as a percentage.
  * @property graphiteInstanceUrl The custom Graphite URL, if any.
- * @property graphMaxAgeMonths The maximum number of months the database should keep data for.
+ * @property graphAge The maximum number of months the database should keep data for.
  * @property graphPoints The number of points in a graph period.
  * @property graphiteSeparateInstances Whether to use a separate Graphite instance for reporting.
  */
+@Serializable
 data class ReportingConfig(
+    @SerialName("id")
     val id: Int,
+    @SerialName("cpu_in_percentage")
     val cpuInPercentage: Boolean,
+    @SerialName("graphite")
     val graphiteInstanceUrl: String?,
-    val graphMaxAgeMonths: Int,
+    @SerialName("graph_age")
+    val graphAge: Int,
+    @SerialName("graph_points")
     val graphPoints: Int,
+    @SerialName("graphite_separateinstances")
     val graphiteSeparateInstances: Boolean,
 )
 
@@ -100,12 +109,19 @@ data class ReportingConfig(
  * @property stacked TODO
  * @property stackedShowTotal TODO
  */
+@Serializable
 data class ReportingGraph(
+    @SerialName("name")
     val name: String,
+    @SerialName("title")
     val title: String,
+    @SerialName("vertical_label")
     val verticalLabel: String,
-    val identifiers: List<String>,
+    @SerialName("identifiers")
+    val identifiers: List<String>?,
+    @SerialName("stacked")
     val stacked: Boolean,
+    @SerialName("stacked_show_total")
     val stackedShowTotal: Boolean,
 )
 
@@ -122,14 +138,23 @@ data class ReportingGraph(
  * @property legend A list of labels for each line. If there is only one line, this may be empty.
  * @property aggregations [Aggregations].
  */
+@Serializable
 data class ReportingGraphData(
+    @SerialName("name")
     val name: String,
+    @SerialName("identifier")
     val identifier: String?,
+    @SerialName("data")
     val data: List<List<Double?>>,
-    val start: Instant,
-    val end: Instant,
+    @SerialName("start")
+    val start: Long,
+    @SerialName("end")
+    val end: Long,
+    @SerialName("step")
     val step: Int,
+    @SerialName("legend")
     val legend: List<String>,
+    @SerialName("aggregations")
     val aggregations: Aggregations?
 ) {
     /**
@@ -142,9 +167,13 @@ data class ReportingGraphData(
      * @property mean A list of mean average values, one for each line on the graph, or null if
      * there is no data.
      */
+    @Serializable
     data class Aggregations(
+        @SerialName("min")
         val min: List<Double?>,
+        @SerialName("max")
         val max: List<Double?>,
+        @SerialName("mean")
         val mean: List<Double?>,
     )
 }
@@ -156,18 +185,27 @@ data class ReportingGraphData(
  * @property identifier The graph identifier. Note one graph can have many identifiers, and should
  * be displayed as separate graphs.
  */
+@Serializable
 data class RequestedGraph(
+    @SerialName("name")
     val name: String,
+    @SerialName("identifier")
     val identifier: String?,
 )
 
 /**
  * Possible units for a graph to be displayed in.
  */
+@Serializable
 enum class Units {
+    @SerialName("HOUR")
     HOUR,
+    @SerialName("DAY")
     DAY,
+    @SerialName("WEEK")
     WEEK,
+    @SerialName("MONTH")
     MONTH,
+    @SerialName("YEAR")
     YEAR
 }
