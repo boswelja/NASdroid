@@ -1,8 +1,8 @@
 package com.boswelja.truemanager.core.api.v2.pool
 
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlin.time.Duration
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Describes the TrueNAS API V2 "Pool" group. Note these mappings may not be 1:1, as we will
@@ -19,9 +19,17 @@ interface PoolV2Api {
 /**
  * Describes a pool of disks on the system.
  *
+ * @property allocated The number of bytes in this pool that have data allocated.
+ * @property allocatedStr [allocated] but a string.
  * @property autotrim [Autotrim].
+ * @property encrypt TODO
+ * @property encryptKey TODO
+ * @property encryptKeyPath TODO
  * @property fragmentation TODO
+ * @property free The number of bytes in this pool that do not have data allocated.
+ * @property freeStr [free] but a string.
  * @property freeing TODO
+ * @property freeingStr [freeingStr] but a string.
  * @property guid A globally unique identifier for this pool.
  * @property healthy Whether the pool is "healthy".
  * @property id The ID of the pool. This is unique to this system.
@@ -29,68 +37,82 @@ interface PoolV2Api {
  * @property name The name of the pool.
  * @property path The path of the pool on the filesystem.
  * @property scan The most recent [Scan] that occurred.
+ * @property size The total size of the pool in bytes.
+ * @property sizeStr [size] but a string.
  * @property status The pool status. For example, 'ONLINE'.
  * @property statusDetail Reasoning for the current status.
  * @property topology [Topology].
  * @property warning Whether this pool has an active warning.
- * @property capacity [Capacity].
- * @property encryption [Encryption].
  */
+@Serializable
 data class Pool(
+    @SerialName("allocated")
+    val allocated: Long,
+    @SerialName("allocated_str")
+    val allocatedStr: String,
+    @SerialName("autotrim")
     val autotrim: Autotrim,
-    val fragmentation: Int,
+    @SerialName("encrypt")
+    val encrypt: Int,
+    @SerialName("encryptkey")
+    val encryptKey: String,
+    @SerialName("encryptkey_path")
+    val encryptKeyPath: String?,
+    @SerialName("fragmentation")
+    val fragmentation: String,
+    @SerialName("free")
+    val free: Long,
+    @SerialName("free_str")
+    val freeStr: String,
+    @SerialName("freeing")
     val freeing: Int,
+    @SerialName("freeing_str")
+    val freeingStr: String,
+    @SerialName("guid")
     val guid: String,
+    @SerialName("healthy")
     val healthy: Boolean,
+    @SerialName("id")
     val id: Int,
+    @SerialName("is_decrypted")
     val isDecrypted: Boolean,
+    @SerialName("name")
     val name: String,
+    @SerialName("path")
     val path: String,
+    @SerialName("scan")
     val scan: Scan,
+    @SerialName("size")
+    val size: Long,
+    @SerialName("size_str")
+    val sizeStr: String,
+    @SerialName("status")
     val status: String,
+    @SerialName("status_detail")
     val statusDetail: String?,
+    @SerialName("topology")
     val topology: Topology,
-    val warning: Boolean,
-    val capacity: Capacity,
-    val encryption: Encryption
+    @SerialName("warning")
+    val warning: Boolean
 ) {
     /**
      * Describes a pools Autotrim configuration.
      *
      * @property parsed TODO
+     * @property rawValue TODO
      * @property source TODO
-     * @property enabled Whether Autotrim is enabled.
+     * @property value TODO
      */
+    @Serializable
     data class Autotrim(
-        val parsed: Boolean,
+        @SerialName("parsed")
+        val parsed: String,
+        @SerialName("rawvalue")
+        val rawValue: String,
+        @SerialName("source")
         val source: String,
-        val enabled: Boolean
-    )
-
-    /**
-     * Describes the capacity and data allocation of a pool.
-     *
-     * @property allocatedBytes The number of bytes allocated in the pool
-     * @property freeBytes The number of bytes that are free in the pool.
-     * @property sizeBytes The total size of the pool in bytes.
-     */
-    data class Capacity(
-        val allocatedBytes: Long,
-        val freeBytes: Long,
-        val sizeBytes: Long
-    )
-
-    /**
-     * Describes the pools encryption status.
-     *
-     * @property encrypt TODO
-     * @property encryptkey TODO
-     * @property encryptkeyPath TODO
-     */
-    data class Encryption(
-        val encrypt: Int,
-        val encryptkey: String,
-        val encryptkeyPath: String?,
+        @SerialName("value")
+        val value: String
     )
 }
 
@@ -107,20 +129,32 @@ data class Pool(
  * @property percentage How much of the scan has been completed.
  * @property startTime The time this scan started.
  * @property state The state of the scan. For example, 'FINISHED'.
- * @property remainingTime The estimated remaining time for this scan.
+ * @property totalSecsLeft The number of seconds estimated remaining for this scan.
  */
+@Serializable
 data class Scan(
+    @SerialName("bytes_issued")
     val bytesIssued: Long,
+    @SerialName("bytes_processed")
     val bytesProcessed: Long,
+    @SerialName("bytes_to_process")
     val bytesToProcess: Long,
-    val endTime: LocalDateTime?,
+    @SerialName("end_time")
+    val endTime: Instant?,
+    @SerialName("errors")
     val errors: Int,
+    @SerialName("function")
     val function: String,
+    @SerialName("pause")
     val pause: String?,
+    @SerialName("percentage")
     val percentage: Double,
-    val startTime: LocalDateTime,
+    @SerialName("start_time")
+    val startTime: Instant,
+    @SerialName("state")
     val state: String,
-    val remainingTime: Duration
+    @SerialName("total_secs_left")
+    val totalSecsLeft: Long?
 )
 
 /**
@@ -133,12 +167,19 @@ data class Scan(
  * @property spare A list of [VDev] that are used as hot spares.
  * @property special A list of "special" [VDev].
  */
+@Serializable
 data class Topology(
+    @SerialName("cache")
     val cache: List<VDev>,
+    @SerialName("data")
     val data: List<VDev>,
+    @SerialName("dedup")
     val dedup: List<VDev>,
+    @SerialName("log")
     val log: List<VDev>,
+    @SerialName("spare")
     val spare: List<VDev>,
+    @SerialName("special")
     val special: List<VDev>
 )
 
@@ -156,23 +197,34 @@ data class Topology(
  * @property type The VDev type.
  * @property unavailDisk TODO
  */
+@Serializable
 data class VDev(
+    @SerialName("children")
     val children: List<VDev>,
+    @SerialName("device")
     val device: String?,
+    @SerialName("disk")
     val disk: String?,
+    @SerialName("guid")
     val guid: String,
+    @SerialName("name")
     val name: String,
+    @SerialName("path")
     val path: String?,
+    @SerialName("stats")
     val stats: Stats,
+    @SerialName("status")
     val status: String,
+    @SerialName("type")
     val type: String,
+    @SerialName("unavail_disk")
     val unavailDisk: String?
 )
 
 /**
  * Contains various statistics for a VDev.
  *
- * @property allocatedBytes The number of bytes allocated.
+ * @property allocated The number of bytes allocated.
  * @property bytes TODO
  * @property checksumErrors The number of checksum errors.
  * @property configuredAshift TODO
@@ -186,18 +238,32 @@ data class VDev(
  * @property timestamp TODO
  * @property writeErrors The number of write errors that have occurred.
  */
+@Serializable
 data class Stats(
-    val allocatedBytes: Long,
+    @SerialName("allocated")
+    val allocated: Long,
+    @SerialName("bytes")
     val bytes: List<Long>,
+    @SerialName("checksum_errors")
     val checksumErrors: Int,
+    @SerialName("configured_ashift")
     val configuredAshift: Int,
+    @SerialName("fragmentation")
     val fragmentation: Int,
+    @SerialName("logical_ashift")
     val logicalAshift: Int,
+    @SerialName("ops")
     val ops: List<Int>,
+    @SerialName("physical_ashift")
     val physicalAshift: Int,
+    @SerialName("read_errors")
     val readErrors: Int,
+    @SerialName("self_healed")
     val selfHealed: Int,
+    @SerialName("size")
     val size: Long,
-    val timestamp: Instant,
+    @SerialName("timestamp")
+    val timestamp: Long,
+    @SerialName("write_errors")
     val writeErrors: Int
 )

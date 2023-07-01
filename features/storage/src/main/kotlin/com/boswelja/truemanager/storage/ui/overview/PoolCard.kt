@@ -56,7 +56,8 @@ fun PoolCard(
         Column {
             PoolOverview(
                 name = pool.name,
-                capacity = pool.capacity,
+                allocatedBytes = pool.allocated,
+                totalBytes = pool.size,
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp)
             )
             ScanDetails(
@@ -109,7 +110,8 @@ fun PoolCard(
 @Composable
 fun PoolOverview(
     name: String,
-    capacity: Pool.Capacity,
+    allocatedBytes: Long,
+    totalBytes: Long,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
@@ -119,8 +121,8 @@ fun PoolOverview(
         )
         Spacer(modifier = Modifier.height(8.dp))
         StorageUseSummary(
-            usedBytes = capacity.allocatedBytes,
-            totalBytes = capacity.sizeBytes,
+            usedBytes = allocatedBytes,
+            totalBytes = totalBytes,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -131,8 +133,8 @@ fun PoolOverview(
 fun PoolCardPreview() {
     PoolCard(
         pool = Pool(
-            autotrim = Pool.Autotrim(true, "LOCAL", true),
-            fragmentation = 4,
+            autotrim = Pool.Autotrim("", "LOCAL", "", ""),
+            fragmentation = "4",
             freeing = 0,
             guid = "guid",
             healthy = true,
@@ -149,9 +151,9 @@ fun PoolCardPreview() {
                 function = "SCRUB",
                 pause = null,
                 percentage = 100.0,
-                startTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                startTime = Clock.System.now(),
                 state = "COMPLETED",
-                remainingTime = Duration.ZERO
+                totalSecsLeft = null,
             ),
             status = "ONLINE",
             statusDetail = null,
@@ -164,16 +166,16 @@ fun PoolCardPreview() {
                 special = listOf()
             ),
             warning = false,
-            capacity = Pool.Capacity(
-                allocatedBytes = 1000,
-                freeBytes = 1000,
-                sizeBytes = 2000,
-            ),
-            encryption = Pool.Encryption(
-                encrypt = 0,
-                encryptkey = "",
-                encryptkeyPath = null
-            )
+            allocated = 1000,
+            allocatedStr = "1000",
+            encrypt = 0,
+            encryptKey = "",
+            encryptKeyPath = null,
+            free = 500,
+            freeStr = "500",
+            freeingStr = "0",
+            size = 1500,
+            sizeStr = "1500"
         )
     )
 }
