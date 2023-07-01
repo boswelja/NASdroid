@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.configuration
+package com.boswelja.truemanager.data.configuration
 
 import kotlinx.coroutines.flow.Flow
 

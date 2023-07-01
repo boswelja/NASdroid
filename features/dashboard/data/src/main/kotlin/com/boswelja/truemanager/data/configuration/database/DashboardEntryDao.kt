@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.configuration.database
+package com.boswelja.truemanager.data.configuration.database
 
 import androidx.room.Dao
 import androidx.room.Delete

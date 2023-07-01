@@ -8,8 +8,8 @@ import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2Api
 import com.boswelja.truemanager.core.api.v2.reporting.RequestedGraph
 import com.boswelja.truemanager.core.api.v2.system.SystemInfo
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
-import com.boswelja.truemanager.dashboard.configuration.DashboardConfiguration
-import com.boswelja.truemanager.dashboard.configuration.DashboardEntry
+import com.boswelja.truemanager.business.configuration.DashboardConfiguration
+import com.boswelja.truemanager.business.configuration.DashboardEntry
 import com.boswelja.truemanager.dashboard.ui.overview.DashboardData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -37,7 +37,7 @@ import kotlin.time.measureTime
  * Collects data for and handles events from the Dashboard overview screen.
  */
 class OverviewViewModel(
-    private val configuration: DashboardConfiguration,
+    private val configuration: com.boswelja.truemanager.business.configuration.DashboardConfiguration,
     private val systemV2Api: SystemV2Api,
     private val reportingV2Api: ReportingV2Api
 ) : ViewModel() {
@@ -69,8 +69,8 @@ class OverviewViewModel(
             this@OverviewViewModel.serverId.value = serverId
             if (!configuration.hasAnyEntries(serverId)) {
                 configuration.insertEntries(
-                    DashboardEntry.Type.values().mapIndexed { index, type ->
-                        DashboardEntry(
+                    com.boswelja.truemanager.business.configuration.DashboardEntry.Type.values().mapIndexed { index, type ->
+                        com.boswelja.truemanager.business.configuration.DashboardEntry(
                             type = type,
                             serverId = serverId,
                             isVisible = true,
@@ -92,20 +92,20 @@ class OverviewViewModel(
         }
     }
 
-    private suspend fun getDataForEntries(entries: List<DashboardEntry>): List<DashboardData> {
+    private suspend fun getDataForEntries(entries: List<com.boswelja.truemanager.business.configuration.DashboardEntry>): List<DashboardData> {
         // Build a list of graphs to query
         val reportingGraphsToQuery = mutableListOf<RequestedGraph>()
         entries.forEach { entry ->
             when (entry.type) {
-                DashboardEntry.Type.SYSTEM_INFORMATION -> { /* no-op. We add this data later */ }
-                DashboardEntry.Type.CPU -> {
+                com.boswelja.truemanager.business.configuration.DashboardEntry.Type.SYSTEM_INFORMATION -> { /* no-op. We add this data later */ }
+                com.boswelja.truemanager.business.configuration.DashboardEntry.Type.CPU -> {
                     reportingGraphsToQuery.add(RequestedGraph(CPU_GRAPH_NAME, null))
                     reportingGraphsToQuery.add(RequestedGraph(CPU_TEMP_GRAPH_NAME, null))
                 }
-                DashboardEntry.Type.MEMORY -> {
+                com.boswelja.truemanager.business.configuration.DashboardEntry.Type.MEMORY -> {
                     reportingGraphsToQuery.add(RequestedGraph(MEMORY_GRAPH_NAME, null))
                 }
-                DashboardEntry.Type.NETWORK -> {
+                com.boswelja.truemanager.business.configuration.DashboardEntry.Type.NETWORK -> {
                     val adapters = reportingV2Api.getReportingGraphs(
                         limit = null,
                         offset = null,
@@ -122,7 +122,7 @@ class OverviewViewModel(
         val systemInformation = systemV2Api.getSystemInfo()
         return entries.map { entry ->
             when (entry.type) {
-                DashboardEntry.Type.SYSTEM_INFORMATION -> {
+                com.boswelja.truemanager.business.configuration.DashboardEntry.Type.SYSTEM_INFORMATION -> {
                     DashboardData.SystemInformationData(
                         version = systemInformation.version,
                         hostname = systemInformation.hostName,
@@ -130,16 +130,16 @@ class OverviewViewModel(
                             .toLocalDateTime(TimeZone.currentSystemDefault())
                     )
                 }
-                DashboardEntry.Type.CPU -> {
+                com.boswelja.truemanager.business.configuration.DashboardEntry.Type.CPU -> {
                     val utilisationGraph = graphs.first { it.name == CPU_GRAPH_NAME }
                     val temperatureGraph = graphs.first { it.name == CPU_TEMP_GRAPH_NAME }
                     createCpuData(systemInformation, utilisationGraph, temperatureGraph)
                 }
-                DashboardEntry.Type.MEMORY -> {
+                com.boswelja.truemanager.business.configuration.DashboardEntry.Type.MEMORY -> {
                     val memoryGraph = graphs.first { it.name == MEMORY_GRAPH_NAME }
                     createMemoryData(systemInformation, memoryGraph)
                 }
-                DashboardEntry.Type.NETWORK -> {
+                com.boswelja.truemanager.business.configuration.DashboardEntry.Type.NETWORK -> {
                     val adapterGraphs = graphs.filter { it.name == INTERFACE_GRAPH_NAME }
                     createNetworkUsageData(adapterGraphs)
                 }

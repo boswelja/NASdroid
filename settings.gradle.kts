@@ -27,7 +27,9 @@ include(
     ":core:capacity",
     ":features:apps",
     ":features:auth",
-    ":features:dashboard",
+    ":features:dashboard:business",
+    ":features:dashboard:data",
+    ":features:dashboard:ui",
     ":features:reporting",
     ":features:storage",
     ":app"

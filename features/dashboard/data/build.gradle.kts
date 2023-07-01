@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.dashboard"
+    namespace = "com.boswelja.truemanager.dashboard.data"
     compileSdk = 33
 
     defaultConfig {
@@ -24,10 +24,6 @@ android {
         }
     }
 
-    buildFeatures.compose = true
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -61,16 +57,8 @@ detekt {
 
 dependencies {
     implementation(projects.core.api)
-    implementation(projects.core.capacity)
 
-    implementation(libs.androidx.navigation)
-    implementation(libs.bundles.compose)
-    debugImplementation(libs.bundles.compose.tooling)
-
-    implementation(libs.vico)
-
-    implementation(libs.koin.android)
-    implementation(libs.koin.android.compose)
+    implementation(libs.koin.core)
 
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
