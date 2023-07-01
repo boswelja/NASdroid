@@ -45,8 +45,8 @@ class ReportingOverviewViewModel(
                     title = requestedGraph.title,
                     identifier = requestedGraph.identifier,
                     data = cleanedData,
-                    start = data.start,
-                    end = data.end,
+                    start = Instant.fromEpochMilliseconds(data.start),
+                    end = Instant.fromEpochMilliseconds(data.end),
                     legend = data.legend,
                 )
             }
@@ -66,11 +66,11 @@ class ReportingOverviewViewModel(
             val mappedGraphs = allGraphs
                 .filter { graph ->
                     // Filter out known invalid data
-                    !graph.title.contains(IdentifierMarker) || graph.identifiers.isNotEmpty()
+                    !graph.title.contains(IdentifierMarker) || !graph.identifiers.isNullOrEmpty()
                 }
                 .flatMap { graph ->
-                    if (graph.identifiers.isNotEmpty()) {
-                        graph.identifiers.map { identifier ->
+                    if (!graph.identifiers.isNullOrEmpty()) {
+                        graph.identifiers!!.map { identifier ->
                             Graph(
                                 id = graph.name,
                                 title = graph.title.replace(IdentifierMarker, identifier),

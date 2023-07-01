@@ -140,7 +140,7 @@ data class Scan(
     @SerialName("bytes_to_process")
     val bytesToProcess: Long,
     @SerialName("end_time")
-    val endTime: Instant,
+    val endTime: Instant?,
     @SerialName("errors")
     val errors: Int,
     @SerialName("function")
