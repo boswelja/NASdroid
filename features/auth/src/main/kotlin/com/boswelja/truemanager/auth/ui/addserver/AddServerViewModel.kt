@@ -8,6 +8,7 @@ import com.boswelja.truemanager.auth.serverstore.AuthenticatedServersStore
 import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import com.boswelja.truemanager.core.api.v2.Authorization
 import com.boswelja.truemanager.core.api.v2.HttpsNotOkException
+import com.boswelja.truemanager.core.api.v2.apikey.AllowRule
 import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
@@ -80,8 +81,8 @@ class AddServerViewModel(
             try {
                 val isValid = authV2Api.checkPassword(username, password)
                 if (isValid) {
-                    val apiKey = apiKeyV2Api.create("TrueManager for TrueNAS")
-                    loginWithApiKey(serverName, serverAddress, apiKey)
+                    val apiKey = apiKeyV2Api.create("TrueManager for TrueNAS", listOf(AllowRule("*", "*")))
+                    loginWithApiKey(serverName, serverAddress, apiKey.key)
                 } else {
                     apiStateProvider.authorization = null
                     _events.emit(Event.LoginFailedUsernameOrPasswordInvalid)
@@ -127,7 +128,7 @@ class AddServerViewModel(
 
             val actualName = serverName.ifBlank {
                 val systemInfo = systemV2Api.getSystemInfo()
-                systemInfo.hostInfo.product
+                systemInfo.systemProduct
             }
             authedServersStore.add(
                 AuthenticatedServer(

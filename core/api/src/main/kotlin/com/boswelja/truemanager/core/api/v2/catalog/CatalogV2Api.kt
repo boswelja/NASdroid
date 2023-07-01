@@ -1,5 +1,8 @@
 package com.boswelja.truemanager.core.api.v2.catalog
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 /**
  * Describes the TrueNAS API V2 "Catalog" group. The Catalogs API is responsible for managing
  * application catalogs, as well as getting their items.
@@ -75,13 +78,21 @@ interface CatalogV2Api {
  * @property location The path at which catalog data is stored.
  * @property id A unique identifier for this catalog.
  */
+@Serializable
 data class Catalog(
+    @SerialName("label")
     val label: String,
+    @SerialName("repository")
     val repository: String,
+    @SerialName("branch")
     val branch: String,
+    @SerialName("builtin")
     val builtin: Boolean,
+    @SerialName("preferred_trains")
     val preferredTrains: List<String>,
+    @SerialName("location")
     val location: String,
+    @SerialName("id")
     val id: String,
 )
 
@@ -95,11 +106,17 @@ data class Catalog(
  * @property preferredTrains A list of preferred release trains.
  * @property force Whether creation of the catalog should be forced.
  */
+@Serializable
 data class NewCatalog(
+    @SerialName("label")
     val label: String,
+    @SerialName("repository")
     val repository: String,
+    @SerialName("branch")
     val branch: String,
+    @SerialName("preferred_trains")
     val preferredTrains: List<String>,
+    @SerialName("force")
     val force: Boolean,
 )
 
@@ -115,9 +132,14 @@ data class NewCatalog(
  * @property trains A list of trains which will allow selective filtering to retrieve only
  * information of desired trains in a catalog. If [retrieveAllTrains] is set, this is ignored.
  */
+@Serializable
 data class GetCatalogItemsOptions(
+    @SerialName("cache")
     val cache: Boolean= true,
+    @SerialName("cache_only")
     val cacheOnly: Boolean = false,
+    @SerialName("retrieve_all_trains")
     val retrieveAllTrains: Boolean = true,
+    @SerialName("trains")
     val trains: List<String> = emptyList(),
 )

@@ -1,6 +1,5 @@
 package com.boswelja.truemanager.core.api.v2.apikey
 
-import com.boswelja.truemanager.core.api.v2.HttpsNotOkException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -9,10 +8,6 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
-import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,87 +20,39 @@ internal class ApiKeyV2ApiImpl(
             parameter("offset", offset)
             parameter("sort", sort)
         }
-        val dtos: List<ApiKeyDto> = response.body()
-        return dtos.map { key ->
-            ApiKey(
-                id = key.id,
-                name = key.name,
-                createdAt = Instant.fromEpochMilliseconds(key.createdAt.date),
-                allowList = key.allowList.map { ApiKey.AllowRule(it.method, it.resource) }
-            )
-        }
+        return response.body()
     }
 
-    override suspend fun create(name: String): String {
+    override suspend fun create(name: String, allowItems: List<AllowRule>): NewApiKey {
         val response = client.post("api_key") {
-            contentType(ContentType.Application.Json)
-            setBody(CreateApiKeyBody(name, listOf(CreateApiKeyBody.ApiKeyAllowItem("*", "*"))))
+            setBody(CreateApiKeyBody(name, allowItems))
         }
-        if (response.status != HttpStatusCode.OK) {
-            throw HttpsNotOkException(response.status.value, response.status.description)
-        }
-        val dto: ApiKeyDto = response.body()
-        return requireNotNull(dto.key)
+        return response.body()
     }
 
-    override suspend fun delete(id: Int) {
-        client.delete("api_key/id/$id")
+    override suspend fun delete(id: Int): Boolean {
+        val request = client.delete("api_key/id/$id")
+        return request.body()
     }
 
     override suspend fun get(id: Int): ApiKey {
         val response = client.get("api_key/id/$id")
-        val dto: ApiKeyDto = response.body()
-        return ApiKey(
-            id = dto.id,
-            name = dto.name,
-            createdAt = Instant.fromEpochMilliseconds(dto.createdAt.date),
-            allowList = dto.allowList.map { ApiKey.AllowRule(it.method, it.resource) }
-        )
+        return response.body()
     }
 
-    override suspend fun update(id: Int, name: String) {
-        client.put("api_key/id/$id") {
-            contentType(ContentType.Application.Json)
-            setBody(UpdateApiKeyBody(name, null))
-        }
-    }
-
-    override suspend fun reset(id: Int): String {
+    override suspend fun update(id: Int, updatedDetails: UpdateApiKey): ApiKey {
         val response = client.put("api_key/id/$id") {
-            contentType(ContentType.Application.Json)
-            setBody(UpdateApiKeyBody(null, true))
+            setBody(updatedDetails)
         }
-        val dto: ApiKeyDto = response.body()
-        return requireNotNull(dto.key)
+        return response.body()
     }
-}
 
-@Serializable
-internal data class ApiKeyDto(
-    @SerialName("id")
-    val id: Int,
-    @SerialName("name")
-    val name: String,
-    @SerialName("created_at")
-    val createdAt: CreatedAtDto,
-    @SerialName("allowlist")
-    val allowList: List<AllowRuleDto>,
-    @SerialName("key")
-    val key: String? = null
-) {
-    @Serializable
-    internal data class AllowRuleDto(
-        @SerialName("method")
-        val method: String,
-        @SerialName("resource")
-        val resource: String,
-    )
-
-    @Serializable
-    internal data class CreatedAtDto(
-        @SerialName("\$date")
-        val date: Long
-    )
+    override suspend fun reset(id: Int): NewApiKey {
+        val response = client.put("api_key/id/$id") {
+            setBody(mapOf("reset" to true))
+        }
+        return response.body()
+    }
 }
 
 @Serializable
@@ -113,21 +60,5 @@ internal data class CreateApiKeyBody(
     @SerialName("name")
     val name: String,
     @SerialName("allowlist")
-    val allowList: List<ApiKeyAllowItem>
-) {
-    @Serializable
-    internal data class ApiKeyAllowItem(
-        @SerialName("method")
-        val method: String,
-        @SerialName("resource")
-        val resource: String,
-    )
-}
-
-@Serializable
-internal data class UpdateApiKeyBody(
-    @SerialName("name")
-    val name: String?,
-    @SerialName("reset")
-    val reset: Boolean?
+    val allowList: List<AllowRule>
 )

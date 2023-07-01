@@ -19,6 +19,8 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.bearerAuth
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -49,9 +51,11 @@ val ApiV2Module = module {
             }
 
             install(ContentNegotiation) {
-                json(Json {
-                    explicitNulls = false
-                })
+                json(
+                    Json {
+                        explicitNulls = false
+                    }
+                )
             }
             defaultRequest {
                 when (val authorization = requireNotNull(apiStateProvider.authorization)) {
@@ -60,6 +64,7 @@ val ApiV2Module = module {
                 }
                 val baseUrl = requireNotNull(apiStateProvider.serverAddress)
                 url(baseUrl)
+                contentType(ContentType.Application.Json)
             }
         }
     }

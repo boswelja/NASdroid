@@ -28,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.core.api.v2.pool.Scan
 import com.boswelja.truemanager.storage.R
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toLocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -57,13 +59,14 @@ fun ScanDetails(
                 )
             },
             overlineText = {
-                Text(stringResource(R.string.scan_started_on, scan.startTime.format()))
+                Text(stringResource(R.string.scan_started_on, scan.startTime.toLocalDateTime(
+                    TimeZone.currentSystemDefault()).format()))
             },
             headlineText = {
                 Text(stringResource(R.string.scan_in_progress, scan.function))
             },
             supportingText = {
-                Text(stringResource(R.string.scan_time_remaining, scan.remainingTime))
+                Text(stringResource(R.string.scan_time_remaining, scan.totalSecsLeft ?: 0))
             },
             modifier = modifier
         )
@@ -77,7 +80,8 @@ fun ScanDetails(
                 }
             },
             overlineText = {
-                Text(stringResource(R.string.scan_finished_on, scan.endTime!!.format()))
+                Text(stringResource(R.string.scan_finished_on, scan.endTime!!.toLocalDateTime(
+                    TimeZone.currentSystemDefault()).format()))
             },
             headlineText = {
                 Text(stringResource(R.string.scan_finished, scan.function))

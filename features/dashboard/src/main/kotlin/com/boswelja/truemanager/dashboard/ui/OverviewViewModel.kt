@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.coroutines.coroutineContext
@@ -110,7 +111,7 @@ class OverviewViewModel(
                         offset = null,
                         sort = null
                     ).first { it.name == INTERFACE_GRAPH_NAME }.identifiers
-                    adapters.forEach {
+                    adapters!!.forEach {
                         reportingGraphsToQuery.add(RequestedGraph(INTERFACE_GRAPH_NAME, it))
                     }
                 }
@@ -124,8 +125,9 @@ class OverviewViewModel(
                 DashboardEntry.Type.SYSTEM_INFORMATION -> {
                     DashboardData.SystemInformationData(
                         version = systemInformation.version,
-                        hostname = systemInformation.hostname,
-                        lastBootTime = systemInformation.bootTime.toLocalDateTime(TimeZone.currentSystemDefault())
+                        hostname = systemInformation.hostName,
+                        lastBootTime = Instant.fromEpochMilliseconds(systemInformation.bootTime)
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
                     )
                 }
                 DashboardEntry.Type.CPU -> {
@@ -152,8 +154,8 @@ class OverviewViewModel(
             .filter { graph -> graph.data.any { line -> line.any { point -> point != null && point > 0 } } }
             .map { graph ->
                 val data = graph.data.filter { !it.contains(null) } as List<List<Double>>
-                val start = graph.start.toLocalDateTime(TimeZone.currentSystemDefault())
-                val end = graph.end.toLocalDateTime(TimeZone.currentSystemDefault())
+                val start = Instant.fromEpochMilliseconds(graph.start).toLocalDateTime(TimeZone.currentSystemDefault())
+                val end = Instant.fromEpochMilliseconds(graph.end).toLocalDateTime(TimeZone.currentSystemDefault())
                 DashboardData.NetworkUsageData.AdapterData(
                     name = graph.identifier!!,
                     address = "TODO",
@@ -173,7 +175,7 @@ class OverviewViewModel(
         return DashboardData.MemoryData(
             memoryUsed = memoryData[0].toLong().bytes,
             memoryFree = memoryData[1].toLong().bytes,
-            isEcc = systemInformation.hasEccMemory
+            isEcc = systemInformation.eccMemory
         )
     }
 
@@ -186,9 +188,9 @@ class OverviewViewModel(
         val avgUsage = (100 - usageGraph.data.last { !it.contains(null) }.last()!!) / 100.0
         val temp = (temperatureGraph.data.last { !it.contains(null) } as List<Double>).max().roundToInt()
         return DashboardData.CpuData(
-            name = systemInformation.cpuInfo.model,
-            cores = systemInformation.cpuInfo.physicalCores,
-            threads = systemInformation.cpuInfo.totalCores,
+            name = systemInformation.cpuModel,
+            cores = systemInformation.physicalCores,
+            threads = systemInformation.cores,
             utilisation = avgUsage.toFloat(),
             tempCelsius = temp
         )
