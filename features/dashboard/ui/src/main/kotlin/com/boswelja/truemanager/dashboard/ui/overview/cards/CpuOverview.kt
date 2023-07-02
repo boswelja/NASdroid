@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.MaterialTheme
@@ -26,54 +27,49 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.logic.DashboardData
 import com.boswelja.truemanager.dashboard.ui.R
-import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
-import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.OverviewItemListItem
 import java.text.NumberFormat
 
 /**
- * A Card displaying the given CPU information. Relevant text in the card is selectable.
+ * Displays the given CPU information. Relevant text in the card is selectable, and animations are
+ * applied where appropriate.
  */
 @Composable
-fun CpuCard(
+fun CpuOverview(
     data: DashboardData.CpuData,
     modifier: Modifier = Modifier
 ) {
-    DashboardCard(
-        title = { Text(stringResource(R.string.cpu_card_title)) },
-        modifier = modifier,
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.height(IntrinsicSize.Min).then(modifier)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.height(IntrinsicSize.Min)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CpuUsageBar(
-                    usage = data.utilisation,
-                    modifier = Modifier
-                        .width(48.dp)
-                        .weight(1f)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(data.utilisation.formattedPercent())
-            }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                CardListItem(
-                    labelContent = { Text(stringResource(R.string.cpu_name_label)) },
-                    content = { Text(data.name) }
-                )
-                CardListItem(
-                    labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
-                    content = { Text(stringResource(R.string.cpu_cores_threads_count, data.cores, data.threads)) }
-                )
-                CardListItem(
-                    labelContent = { Text(stringResource(R.string.cpu_temp_label)) },
-                    content = { Text(stringResource(R.string.cpu_temperature_celsius, data.tempCelsius)) }
-                )
-            }
+            CpuUsageBar(
+                usage = data.utilisation,
+                modifier = Modifier
+                    .width(48.dp)
+                    .weight(1f)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(data.utilisation.formattedPercent())
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OverviewItemListItem(
+                labelContent = { Text(stringResource(R.string.cpu_name_label)) },
+                content = { Text(data.name) }
+            )
+            OverviewItemListItem(
+                labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
+                content = { Text(stringResource(R.string.cpu_cores_threads_count, data.cores, data.threads)) }
+            )
+            OverviewItemListItem(
+                labelContent = { Text(stringResource(R.string.cpu_temp_label)) },
+                content = { Text(stringResource(R.string.cpu_temperature_celsius, data.tempCelsius)) }
+            )
         }
     }
 }
@@ -120,11 +116,11 @@ private fun Float.formattedPercent(): String {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun CpuCardPreview() {
+fun CpuOverviewPreview() {
     MaterialTheme {
-        CpuCard(
+        CpuOverview(
             data = DashboardData.CpuData(
                 name = "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
                 cores = 28,
@@ -132,7 +128,7 @@ fun CpuCardPreview() {
                 tempCelsius = 31,
                 utilisation = 0.43f
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
         )
     }
 }

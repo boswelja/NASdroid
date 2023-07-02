@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
  * A list item in a Dashboard card. This simply displays some labelled content, usually text.
  */
 @Composable
-fun CardListItem(
+fun OverviewItemListItem(
     labelContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
@@ -38,8 +38,8 @@ fun CardListItem(
 
 @Preview(showBackground = true)
 @Composable
-fun CardListItemPreview() {
-    CardListItem(
+fun OverviewItemListItem() {
+    OverviewItemListItem(
         labelContent = { Text("Label") },
         content = { Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse et.") },
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth()
