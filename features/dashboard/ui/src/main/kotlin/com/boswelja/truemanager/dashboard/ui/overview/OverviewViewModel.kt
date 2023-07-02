@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.dashboard.business.DashboardData
 import com.boswelja.truemanager.dashboard.business.GetDashboardData
 import com.boswelja.truemanager.dashboard.business.InitializeDashboard
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
