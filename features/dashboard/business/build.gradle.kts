@@ -50,7 +50,9 @@ detekt {
 
 dependencies {
     api(projects.core.capacity)
+    api(libs.kotlinx.coroutines)
 
+    implementation(projects.core.api)
     implementation(projects.features.dashboard.data)
 
     implementation(libs.koin.core)
