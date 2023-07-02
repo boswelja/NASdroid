@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.dashboard.business"
+    namespace = "com.boswelja.truemanager.dashboard.logic"
     compileSdk = 33
 
     defaultConfig {

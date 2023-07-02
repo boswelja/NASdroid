@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.business
+package com.boswelja.truemanager.dashboard.logic
 
 import com.boswelja.truemanager.data.dashboardDataModule
 import org.koin.core.context.loadKoinModules

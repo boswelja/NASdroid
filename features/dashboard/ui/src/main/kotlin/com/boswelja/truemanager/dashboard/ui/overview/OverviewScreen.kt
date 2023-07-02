@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.boswelja.truemanager.dashboard.business.DashboardData
+import com.boswelja.truemanager.dashboard.logic.DashboardData
 import com.boswelja.truemanager.dashboard.ui.overview.cards.CpuCard
 import com.boswelja.truemanager.dashboard.ui.overview.cards.MemoryCard
 import com.boswelja.truemanager.dashboard.ui.overview.cards.NetworkCard

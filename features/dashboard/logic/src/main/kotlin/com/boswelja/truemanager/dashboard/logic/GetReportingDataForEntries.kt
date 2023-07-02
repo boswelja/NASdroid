@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.business
+package com.boswelja.truemanager.dashboard.logic
 
 import com.boswelja.truemanager.core.api.v2.reporting.ReportingGraphData
 import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2Api

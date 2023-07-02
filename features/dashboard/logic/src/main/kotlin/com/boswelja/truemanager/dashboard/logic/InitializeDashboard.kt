@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.business
+package com.boswelja.truemanager.dashboard.logic
 
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 import com.boswelja.truemanager.data.configuration.DashboardConfiguration

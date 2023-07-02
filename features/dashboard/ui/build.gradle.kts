@@ -53,7 +53,7 @@ detekt {
 }
 
 dependencies {
-    implementation(projects.features.dashboard.business)
+    implementation(projects.features.dashboard.logic)
 
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)

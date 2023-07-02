@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.boswelja.truemanager.dashboard.business.DashboardData
+import com.boswelja.truemanager.dashboard.logic.DashboardData
 import com.boswelja.truemanager.dashboard.ui.R
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard

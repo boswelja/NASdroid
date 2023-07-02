@@ -1,6 +1,6 @@
 package com.boswelja.truemanager.dashboard.ui
 
-import com.boswelja.truemanager.dashboard.business.dashboardBusinessModule
+import com.boswelja.truemanager.dashboard.logic.dashboardBusinessModule
 import com.boswelja.truemanager.dashboard.ui.overview.OverviewViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.loadKoinModules
