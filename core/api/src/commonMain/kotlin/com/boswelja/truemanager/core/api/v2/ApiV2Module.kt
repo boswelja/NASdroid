@@ -16,7 +16,6 @@ import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 import com.boswelja.truemanager.core.api.v2.system.SystemV2ApiImpl
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.basicAuth
@@ -41,7 +40,7 @@ val ApiV2Module = module {
     // Ktor client
     single {
         val apiStateProvider: ApiStateProvider = get()
-        HttpClient(Android) {
+        HttpClient {
             // TODO if debug, BuildConfig appears to be missing
             install(io.ktor.client.plugins.logging.Logging) {
                 level = io.ktor.client.plugins.logging.LogLevel.ALL
