@@ -3,6 +3,7 @@
 /workspace.xml
 /deploymentTargetDropDown.xml
 
+/artifacts/
 /compiler.xml
 /gradle.xml
 /kotlinc.xml
