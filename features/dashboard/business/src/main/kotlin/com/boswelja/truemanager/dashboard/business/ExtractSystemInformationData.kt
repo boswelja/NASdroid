@@ -5,8 +5,17 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+/**
+ * Takes data received from the server and maps it to a [DashboardData.SystemInformationData]. See
+ * [invoke] for details.
+ */
 class ExtractSystemInformationData {
 
+    /**
+     * Produces a [DashboardData.SystemInformationData] from information retrieved from the server.
+     *
+     * @param systemInfo The server system information.
+     */
     operator fun invoke(systemInfo: SystemInfo): DashboardData.SystemInformationData {
         return DashboardData.SystemInformationData(
             version = systemInfo.version,

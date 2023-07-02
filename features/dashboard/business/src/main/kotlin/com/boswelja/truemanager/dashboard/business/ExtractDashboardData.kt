@@ -4,6 +4,10 @@ import com.boswelja.truemanager.core.api.v2.reporting.ReportingGraphData
 import com.boswelja.truemanager.core.api.v2.system.SystemInfo
 import com.boswelja.truemanager.data.configuration.DashboardEntry
 
+/**
+ * Takes a list of data received from the server and maps it to a list of [DashboardData]. See
+ * [invoke] for details.
+ */
 class ExtractDashboardData(
     private val extractNetworkUsageData: ExtractNetworkUsageData,
     private val extractMemoryUsageData: ExtractMemoryUsageData,
@@ -11,6 +15,13 @@ class ExtractDashboardData(
     private val extractSystemInformationData: ExtractSystemInformationData,
 ) {
 
+    /**
+     * Produces a list of [DashboardData] for all given [ReportingGraphData]s.
+     *
+     * @param entries A list of expected dashboard entries.
+     * @param graphs A list of reporting graphs from the server.
+     * @param systemInfo The system information from the server.
+     */
     operator fun invoke(
         entries: List<DashboardEntry>,
         graphs: List<ReportingGraphData>,

@@ -5,8 +5,18 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+/**
+ * Takes data received from the server and maps it to a [DashboardData.NetworkUsageData]. See
+ * [invoke] for details.
+ */
 class ExtractNetworkUsageData {
 
+    /**
+     * Produces a [DashboardData.NetworkUsageData] from information retrieved from the server.
+     *
+     * @param adapterGraphs A list of [ReportingGraphData] containing information about each network
+     * adapter in the system.
+     */
     operator fun invoke(adapterGraphs: List<ReportingGraphData>): DashboardData.NetworkUsageData {
         val adaptersInfo = adapterGraphs
             .filter { graph -> graph.data.any { line -> line.any { point -> point != null && point > 0 } } }
