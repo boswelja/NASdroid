@@ -48,6 +48,7 @@ gradleEnterprise {
 }
 
 configure<SettingsExtension> {
-    compileSdk = 33
+    buildToolsVersion = "34.0.0"
+    compileSdk = 34
     minSdk = 28
 }
