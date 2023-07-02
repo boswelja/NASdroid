@@ -1,8 +1,58 @@
-package com.boswelja.truemanager.dashboard.ui.overview
+package com.boswelja.truemanager.dashboard.business
 
 import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.CapacityUnit
+import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
+import com.boswelja.truemanager.dashboard.business.DashboardData.NetworkUsageData.AdapterData
+import com.boswelja.truemanager.data.configuration.DashboardConfiguration
+import com.boswelja.truemanager.data.configuration.DashboardEntry
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
 import kotlinx.datetime.LocalDateTime
+import kotlin.coroutines.coroutineContext
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
+
+class GetDashboardData(
+    private val configuration: DashboardConfiguration,
+    private val systemV2Api: SystemV2Api,
+    private val getReportingDataForEntries: GetReportingDataForEntries,
+    private val extractDashboardData: ExtractDashboardData,
+) {
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    operator fun invoke(): Flow<List<DashboardData>> = flow {
+        val serverId = systemV2Api.getHostId()
+        val flow = configuration.getVisibleEntries(serverId)
+            .flatMapLatest { entries ->
+                repeatingFlow(10.seconds) {
+                    val graphs = getReportingDataForEntries(entries)
+                    val systemInformation = systemV2Api.getSystemInfo()
+
+                    extractDashboardData(entries, graphs, systemInformation)
+                }
+            }
+
+        emitAll(flow)
+    }
+
+    @OptIn(ExperimentalTime::class)
+    private fun <T> repeatingFlow(interval: Duration, producer: suspend () -> T): Flow<T> = flow {
+        while (coroutineContext.isActive) {
+            val callTime = measureTime {
+                emit(producer())
+            }
+            delay((interval - callTime).coerceAtLeast(Duration.ZERO))
+        }
+    }
+}
 
 /**
  * Describes some data that should be displayed in the dashboard.
