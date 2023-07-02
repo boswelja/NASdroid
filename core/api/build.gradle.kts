@@ -9,11 +9,6 @@ plugins {
 
 android {
     namespace = "com.boswelja.truemanager.core.api"
-    compileSdk = 33
-
-    defaultConfig {
-        minSdk = 28
-    }
 
     buildTypes {
         release {
@@ -33,10 +28,6 @@ android {
     lint {
         sarifReport = true
         htmlReport = false
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

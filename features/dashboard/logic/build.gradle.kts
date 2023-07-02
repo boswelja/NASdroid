@@ -7,11 +7,6 @@ plugins {
 
 android {
     namespace = "com.boswelja.truemanager.dashboard.logic"
-    compileSdk = 33
-
-    defaultConfig {
-        minSdk = 28
-    }
 
     buildTypes {
         release {
@@ -23,18 +18,9 @@ android {
         }
     }
 
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
     lint {
         sarifReport = true
         htmlReport = false
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
