@@ -51,6 +51,7 @@ detekt {
 dependencies {
     api(projects.core.capacity)
     api(libs.kotlinx.coroutines)
+    api(libs.kotlinx.datetime)
 
     implementation(projects.core.api)
     implementation(projects.features.dashboard.data)

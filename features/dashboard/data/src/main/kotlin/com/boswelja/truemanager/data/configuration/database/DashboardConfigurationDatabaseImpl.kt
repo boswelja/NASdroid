@@ -3,8 +3,8 @@ package com.boswelja.truemanager.data.configuration.database
 import android.content.Context
 import androidx.room.Room
 import androidx.room.withTransaction
-import com.boswelja.truemanager.business.configuration.DashboardConfiguration
-import com.boswelja.truemanager.business.configuration.DashboardEntry
+import com.boswelja.truemanager.data.configuration.DashboardConfiguration
+import com.boswelja.truemanager.data.configuration.DashboardEntry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -27,7 +27,12 @@ class DashboardConfigurationDatabaseImpl(
         .getVisible(serverId)
         .mapLatest {
             it.map { entity ->
-                DashboardEntry(DashboardEntry.Type.valueOf(entity.type), entity.serverId, entity.isVisible, entity.priority)
+                DashboardEntry(
+                    DashboardEntry.Type.valueOf(entity.type),
+                    entity.serverId,
+                    entity.isVisible,
+                    entity.priority
+                )
             }
         }
 
