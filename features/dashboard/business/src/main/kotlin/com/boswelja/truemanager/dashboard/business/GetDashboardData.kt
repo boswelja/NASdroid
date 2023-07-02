@@ -19,6 +19,10 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
+/**
+ * Flows a list of [DashboardData], accounting for the users preferred item order and visibility.
+ * See [invoke] for details.
+ */
 class GetDashboardData(
     private val configuration: DashboardConfiguration,
     private val systemV2Api: SystemV2Api,
@@ -26,6 +30,11 @@ class GetDashboardData(
     private val extractDashboardData: ExtractDashboardData,
 ) {
 
+    /**
+     * Flow a List of [DashboardData], where the number of list items will be reconfigured based on
+     * the users preferred entry order and visibility. Data will refresh automatically at 10 second
+     * intervals.
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<List<DashboardData>> = flow {
         val serverId = systemV2Api.getHostId()

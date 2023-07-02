@@ -5,10 +5,20 @@ import com.boswelja.truemanager.core.api.v2.reporting.ReportingV2Api
 import com.boswelja.truemanager.core.api.v2.reporting.RequestedGraph
 import com.boswelja.truemanager.data.configuration.DashboardEntry
 
+/**
+ * Requests data from the server about a list of [DashboardEntry]. See [invoke] for details.
+ */
 class GetReportingDataForEntries(
     private val reportingV2Api: ReportingV2Api
 ) {
 
+    /**
+     * Takes a List of [DashboardEntry], and returns data from the server for all of them. The
+     * returned List of [ReportingGraphData] will be in an order that approximately matches the
+     * input list. For example, an input `listOf(CpuEntry, MemoryEntry, NetworkEntry)` might not
+     * return a list of 3 [ReportingGraphData]s, but the returned list would guarantee all memory
+     * data would appear after all CPU data, and before all network data.
+     */
     suspend operator fun invoke(entries: List<DashboardEntry>): List<ReportingGraphData> {
         val reportingGraphsToQuery = mutableListOf<RequestedGraph>()
         entries.forEach { entry ->
