@@ -171,6 +171,10 @@ style:
     active: true
   ForbiddenAnnotation:
     active: true
+  MagicNumber:
+    active: true
+    ignoreAnnotated:
+      - 'Preview'
   MandatoryBracesLoops:
     active: true
   MaxChainedCallsOnSameLine:

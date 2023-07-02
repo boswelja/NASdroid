@@ -1,34 +1,28 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 
     alias(libs.plugins.detekt)
 }
 
 android {
-    namespace = "com.boswelja.truemanager"
+    namespace = "com.boswelja.truemanager.dashboard.ui"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.boswelja.truemanager"
         minSdk = 28
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
+
     buildFeatures.compose = true
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
@@ -59,26 +53,14 @@ detekt {
 }
 
 dependencies {
-    implementation(projects.core.api)
+    implementation(projects.features.dashboard.logic)
 
-    implementation(projects.features.apps)
-    implementation(projects.features.auth)
-    implementation(projects.features.dashboard.ui)
-    implementation(projects.features.reporting)
-    implementation(projects.features.storage)
-
-    implementation(libs.androidx.core)
-    implementation(libs.androidx.lifecycle.runtime)
-
-    implementation(libs.koin.android)
-
-    // Compose
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.tooling)
-    androidTestImplementation(libs.compose.ui.test.junit4)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    implementation(libs.vico)
+
+    implementation(libs.koin.android)
+    implementation(libs.koin.android.compose)
 }
