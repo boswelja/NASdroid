@@ -8,7 +8,7 @@ class InitializeDashboard(
     private val configuration: DashboardConfiguration,
     private val systemV2Api: SystemV2Api
 ) {
-    operator suspend fun invoke() {
+    suspend operator fun invoke() {
         val serverId = systemV2Api.getHostId()
         if (!configuration.hasAnyEntries(serverId)) {
             configuration.insertEntries(

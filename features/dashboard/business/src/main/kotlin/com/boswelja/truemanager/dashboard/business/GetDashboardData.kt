@@ -5,7 +5,6 @@ import com.boswelja.capacity.CapacityUnit
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 import com.boswelja.truemanager.dashboard.business.DashboardData.NetworkUsageData.AdapterData
 import com.boswelja.truemanager.data.configuration.DashboardConfiguration
-import com.boswelja.truemanager.data.configuration.DashboardEntry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
