@@ -30,7 +30,7 @@ kotlinx-serialization-formats = "1.5.1"
 koin = "3.4.2"
 koin-compose = "3.4.5"
 
-vico = "1.6.6"
+vico = "1.7.0"
 
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
