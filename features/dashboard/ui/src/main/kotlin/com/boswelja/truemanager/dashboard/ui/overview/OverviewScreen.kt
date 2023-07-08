@@ -9,9 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,7 +32,6 @@ fun OverviewScreen(
     viewModel: OverviewViewModel = getViewModel()
 ) {
     val data by viewModel.dashboardData.collectAsState()
-    var isEditing by rememberSaveable { mutableStateOf(false) }
     if (data != null) {
         LazyColumn(
             modifier = modifier,
@@ -43,16 +39,19 @@ fun OverviewScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(data!!) {
-                OverviewCard(data = it, isEditing = isEditing, modifier = Modifier.fillMaxWidth())
+                OverviewCard(data = it, modifier = Modifier.fillMaxWidth())
             }
         }
     }
 }
 
+/**
+ * A convenience Composable that takes a generic [DashboardData] and renders the appropriate card
+ * with details.
+ */
 @Composable
 fun OverviewCard(
     data: DashboardData,
-    isEditing: Boolean,
     modifier: Modifier = Modifier
 ) {
     when (data) {
