@@ -50,12 +50,8 @@ fun OverviewScreen(
                     data = data,
                     cardEditControls = DashboardCardEditControls(
                         isEditing = editingItems != null,
-                        isVisible = true,
                         canMoveUp = index > 0,
                         canMoveDown = index < items!!.size - 1,
-                        onVisibilityToggle = {
-                            // TODO
-                        },
                         onMoveUp = {
                             viewModel.moveDashboardEntry(index, index - 1)
                         },
