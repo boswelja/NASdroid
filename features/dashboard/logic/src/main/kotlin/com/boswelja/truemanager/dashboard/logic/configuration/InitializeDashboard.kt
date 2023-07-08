@@ -22,6 +22,7 @@ class InitializeDashboard(
             configuration.insertEntries(
                 DashboardEntry.Type.values().mapIndexed { index, type ->
                     DashboardEntry(
+                        uid = 0,
                         type = type,
                         serverId = serverId,
                         isVisible = true,

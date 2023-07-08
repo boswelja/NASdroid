@@ -20,7 +20,7 @@ class DashboardConfigurationDatabaseImpl(
         context,
         DashboardEntryDatabase::class.java,
         "dashboard-configuration"
-    ).build()
+    ).fallbackToDestructiveMigration().build()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getVisibleEntries(serverId: String): Flow<List<DashboardEntry>> = database.getDashboardEntryDao()
@@ -28,6 +28,7 @@ class DashboardConfigurationDatabaseImpl(
         .mapLatest {
             it.map { entity ->
                 DashboardEntry(
+                    entity.uid,
                     DashboardEntry.Type.valueOf(entity.type),
                     entity.serverId,
                     entity.isVisible,
@@ -56,7 +57,7 @@ class DashboardConfigurationDatabaseImpl(
     override suspend fun insertEntries(entries: List<DashboardEntry>) {
         database.getDashboardEntryDao().add(
             entries.map {
-                DashboardEntryEntity(it.type.name, it.serverId, it.isVisible, it.priority)
+                DashboardEntryEntity(it.uid, it.type.name, it.serverId, it.isVisible, it.priority)
             }
         )
     }
