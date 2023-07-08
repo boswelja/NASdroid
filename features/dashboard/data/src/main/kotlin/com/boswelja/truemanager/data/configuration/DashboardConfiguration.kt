@@ -36,12 +36,14 @@ interface DashboardConfiguration {
 /**
  * Describes an entry on the dashboard.
  *
+ * @property uid A unique identifier for this item.
  * @property type The type of dashboard entry.
  * @property serverId The unique ID of the server this entry belongs to.
  * @property isVisible Whether this entry is visible on the dashboard.
  * @property priority THe priority of this entry. A lower number is displayed higher in the list.
  */
 data class DashboardEntry(
+    val uid: Long,
     val type: Type,
     val serverId: String,
     val isVisible: Boolean,
