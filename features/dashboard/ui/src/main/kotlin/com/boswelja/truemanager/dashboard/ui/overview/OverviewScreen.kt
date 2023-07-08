@@ -5,20 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.boswelja.truemanager.dashboard.logic.DashboardData
+import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
 import com.boswelja.truemanager.dashboard.ui.R
 import com.boswelja.truemanager.dashboard.ui.overview.cards.CpuOverview
 import com.boswelja.truemanager.dashboard.ui.overview.cards.MemoryOverview
@@ -39,21 +37,35 @@ fun OverviewScreen(
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: OverviewViewModel = getViewModel()
 ) {
-    val data by viewModel.dashboardData.collectAsState()
+    val items by viewModel.dashboardData.collectAsState()
     var isEditing by rememberSaveable { mutableStateOf(false) }
-    if (data != null) {
+    if (items != null) {
         LazyColumn(
             modifier = modifier,
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(
-                items = data!!,
-                key = { it.uid }
-            ) {
+            itemsIndexed(
+                items = items!!,
+                key = { _, data -> data.uid }
+            ) { index, data ->
                 OverviewCard(
-                    data = it,
-                    isEditing = isEditing,
+                    data = data,
+                    cardEditControls = DashboardCardEditControls(
+                        isEditing = isEditing,
+                        isVisible = true,
+                        canMoveUp = index > 0,
+                        canMoveDown = index < items!!.size - 1,
+                        onVisibilityToggle = {
+                            // TODO
+                        },
+                        onMoveUp = {
+                            viewModel.moveDashboardEntry(index, index - 1)
+                        },
+                        onMoveDown = {
+                            viewModel.moveDashboardEntry(index, index + 1)
+                        }
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .animateItemPlacement()
@@ -63,25 +75,16 @@ fun OverviewScreen(
     }
 }
 
+/**
+ * A convenience Composable that takes a generic [DashboardData] and renders the appropriate card
+ * with details.
+ */
 @Composable
 fun OverviewCard(
     data: DashboardData,
-    isEditing: Boolean,
+    cardEditControls: DashboardCardEditControls,
     modifier: Modifier = Modifier
 ) {
-    val cardEditControls by remember(data) {
-        derivedStateOf {
-            DashboardCardEditControls(
-                isEditing = isEditing,
-                isVisible = true,
-                canMoveUp = true,
-                canMoveDown = true,
-                onVisibilityToggle = {},
-                onMoveUp = {},
-                onMoveDown = {}
-            )
-        }
-    }
     when (data) {
         is DashboardData.CpuData -> {
             DashboardCard(
