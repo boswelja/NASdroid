@@ -4,6 +4,7 @@
 /deploymentTargetDropDown.xml
 
 /artifacts/
+/appInsightsSettings.xml
 /compiler.xml
 /gradle.xml
 /kotlinc.xml
