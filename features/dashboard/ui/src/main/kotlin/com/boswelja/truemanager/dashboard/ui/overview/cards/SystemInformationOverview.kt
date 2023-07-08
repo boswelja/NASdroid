@@ -103,7 +103,7 @@ fun SystemInformationOverviewPreview() {
             version = "TrueNAS-SCALE-22.12.2",
             hostname = "truenas",
             lastBootTime = LocalDateTime(2023, 3, 1, 10, 33),
-            uid = "sysinfo"
+            uid = 0
         ),
         modifier = Modifier.fillMaxWidth().padding(16.dp)
     )

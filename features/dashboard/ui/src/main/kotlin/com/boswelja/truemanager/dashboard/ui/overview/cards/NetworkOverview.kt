@@ -140,7 +140,7 @@ fun NetworkOverviewPreview() {
         val incomingRand = Random(0)
         val outgoingRandom = Random(10)
         DashboardData.NetworkUsageData(
-            uid = "network",
+            uid = 0,
             adaptersData = listOf(
                 DashboardData.NetworkUsageData.AdapterData(
                     name = "eno1",

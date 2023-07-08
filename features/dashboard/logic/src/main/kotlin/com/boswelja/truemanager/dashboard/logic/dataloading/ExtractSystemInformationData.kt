@@ -19,7 +19,7 @@ class ExtractSystemInformationData {
      */
     operator fun invoke(
         systemInfo: SystemInfo,
-        uid: String,
+        uid: Long,
     ): DashboardData.SystemInformationData {
         return DashboardData.SystemInformationData(
             uid = uid,

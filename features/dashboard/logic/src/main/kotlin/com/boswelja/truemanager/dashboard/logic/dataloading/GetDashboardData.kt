@@ -70,7 +70,7 @@ sealed interface DashboardData {
     /**
      * A unique identifier for this item.
      */
-    val uid: String
+    val uid: Long
 
     /**
      * Describes the CPU in the system.
@@ -84,7 +84,7 @@ sealed interface DashboardData {
      * core.
      */
     data class CpuData(
-        override val uid: String,
+        override val uid: Long,
         val name: String,
         val cores: Int,
         val threads: Int,
@@ -101,7 +101,7 @@ sealed interface DashboardData {
      * @property isEcc Whether the memory supports ECC.
      */
     data class MemoryData(
-        override val uid: String,
+        override val uid: Long,
         val memoryUsed: Capacity,
         val memoryFree: Capacity,
         val isEcc: Boolean
@@ -124,7 +124,7 @@ sealed interface DashboardData {
      * @property adaptersData A list of [AdapterData] describing a single adapter.
      */
     data class NetworkUsageData(
-        override val uid: String,
+        override val uid: Long,
         val adaptersData: List<AdapterData>
     ) : DashboardData {
 
@@ -157,7 +157,7 @@ sealed interface DashboardData {
      * @property lastBootTime The time the system was last started. This is used to calculate uptime.
      */
     data class SystemInformationData(
-        override val uid: String,
+        override val uid: Long,
         val version: String,
         val hostname: String,
         val lastBootTime: LocalDateTime

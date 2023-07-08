@@ -28,7 +28,7 @@ class ExtractDashboardData(
         systemInfo: SystemInfo,
     ): List<DashboardData> {
         return entries.map { entry ->
-            val uid = entry.serverId + entry.type
+            val uid = entry.uid
             when (entry.type) {
                 DashboardEntry.Type.SYSTEM_INFORMATION -> {
                     extractSystemInformationData(uid = uid, systemInfo = systemInfo)

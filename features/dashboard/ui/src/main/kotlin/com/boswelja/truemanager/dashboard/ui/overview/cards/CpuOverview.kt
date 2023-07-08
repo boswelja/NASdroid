@@ -127,7 +127,7 @@ fun CpuOverviewPreview() {
                 threads = 56,
                 tempCelsius = 31,
                 utilisation = 0.43f,
-                uid = "cpu"
+                uid = 0
             ),
             modifier = Modifier.fillMaxWidth().padding(16.dp)
         )

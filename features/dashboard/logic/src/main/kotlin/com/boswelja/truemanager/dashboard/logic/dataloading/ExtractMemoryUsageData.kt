@@ -21,7 +21,7 @@ class ExtractMemoryUsageData {
     operator fun invoke(
         systemInformation: SystemInfo,
         memoryGraph: ReportingGraphData,
-        uid: String,
+        uid: Long,
     ): DashboardData.MemoryData {
         val memoryData = memoryGraph.data.last { !it.contains(null) } as List<Double>
         return DashboardData.MemoryData(

@@ -128,7 +128,7 @@ fun MemoryCardPreview() {
                 memoryUsed = 51.1.gigabytes,
                 memoryFree = 128.gigabytes - 51.1.gigabytes,
                 isEcc = true,
-                uid = "memory"
+                uid = 0
             ),
             modifier = Modifier.fillMaxWidth().padding(16.dp)
         )

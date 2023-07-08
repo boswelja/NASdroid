@@ -20,7 +20,7 @@ class ExtractNetworkUsageData {
      */
     operator fun invoke(
         adapterGraphs: List<ReportingGraphData>,
-        uid: String,
+        uid: Long,
     ): DashboardData.NetworkUsageData {
         val adaptersInfo = adapterGraphs
             .filter { graph -> graph.data.any { line -> line.any { point -> point != null && point > 0 } } }

@@ -23,7 +23,7 @@ class ExtractCpuUsageData {
         systemInformation: SystemInfo,
         usageGraph: ReportingGraphData,
         temperatureGraph: ReportingGraphData,
-        uid: String,
+        uid: Long,
     ): DashboardData.CpuData {
         // Usage data comes to us as a 2d array. We get the last set of values that aren't null,
         // i.e. the most recent recorded values, then take the "idle" percentage from that.
