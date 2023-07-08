@@ -39,18 +39,30 @@ class OverviewViewModel(
         }
     }
 
+    /**
+     * Moves the entry at the specified position to a new position. See [MoveDashboardEntry] for
+     * details.
+     */
     fun moveDashboardEntry(from: Int, to: Int) {
         viewModelScope.launch {
             moveDashboardEntry.invoke(from, to)
         }
     }
 
+    /**
+     * Marks the dashboard entry at the specified position as visible, so that it is shown when not
+     * editing.
+     */
     fun showDashboardEntry(position: Int) {
         viewModelScope.launch {
             setDashboardEntryVisible(position, true)
         }
     }
 
+    /**
+     * Marks the dashboard entry at the specified position as gone, so that it is gone shown when
+     * not editing.
+     */
     fun hideDashboardEntry(position: Int) {
         viewModelScope.launch {
             setDashboardEntryVisible(position, false)

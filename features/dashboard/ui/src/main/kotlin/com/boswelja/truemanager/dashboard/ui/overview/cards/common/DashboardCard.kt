@@ -96,15 +96,31 @@ internal fun DashboardCardOrderControls(
 ) {
     Row(modifier = modifier) {
         PlainTooltipBox(
-            tooltip = { Text(if (editControls.isVisible) "Hide card in dashboard" else "Show card in dashboard") }
+            tooltip = {
+                Text(
+                    if (editControls.isVisible) {
+                        "Hide card in dashboard"
+                    } else {
+                        "Show card in dashboard"
+                    }
+                )
+            }
         ) {
             IconButton(
                 onClick = editControls.onVisibilityToggle,
                 modifier = Modifier.tooltipTrigger()
             ) {
                 Icon(
-                    imageVector = if (editControls.isVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                    contentDescription = if (editControls.isVisible) "Hide card in dashboard" else "Show card in dashboard"
+                    imageVector = if (editControls.isVisible) {
+                        Icons.Default.VisibilityOff
+                    } else {
+                        Icons.Default.Visibility
+                    },
+                    contentDescription = if (editControls.isVisible) {
+                        "Hide card in dashboard"
+                    } else {
+                        "Show card in dashboard"
+                    }
                 )
             }
         }
