@@ -36,20 +36,20 @@ class DashboardConfigurationDatabaseImpl(
             }
         }
 
-    override suspend fun reorderEntry(serverId: String, entryType: DashboardEntry.Type, newPriority: Int) {
+    override suspend fun reorderEntry(serverId: String, fromPosition: Int, toPosition: Int) {
         val dao = database.getDashboardEntryDao()
         database.withTransaction {
-            val operatingItem = dao.get(serverId, entryType.name)
+            val operatingItem = dao.get(serverId, fromPosition)
             val itemsToReorder = dao.getLowerPriority(serverId, operatingItem.priority)
             // If the new priority is greater than the old priority, the item is moving *down* in
             // priority. Thus, everything "below" it needs to move "up".
-            val increasePriorityForItems = operatingItem.priority < newPriority
+            val increasePriorityForItems = operatingItem.priority < toPosition
             val newItems = itemsToReorder.map { entity ->
                 entity.copy(
                     priority = if (increasePriorityForItems) entity.priority - 1 else entity.priority + 1
                 )
             }
-            dao.update(newItems + operatingItem.copy(priority = newPriority))
+            dao.update(newItems + operatingItem.copy(priority = toPosition))
         }
     }
 
@@ -65,7 +65,7 @@ class DashboardConfigurationDatabaseImpl(
         return database.getDashboardEntryDao().getAll().first().isNotEmpty()
     }
 
-    override suspend fun setEntryVisible(serverId: String, entryType: DashboardEntry.Type, isVisible: Boolean) {
-        database.getDashboardEntryDao().update(serverId, entryType.name, isVisible)
+    override suspend fun setEntryVisible(serverId: String, position: Int, isVisible: Boolean) {
+        database.getDashboardEntryDao().update(serverId, position, isVisible)
     }
 }

@@ -19,14 +19,14 @@ internal interface DashboardEntryDao {
     @Update
     suspend fun update(entries: List<DashboardEntryEntity>)
 
-    @Query("UPDATE dashboard_entry SET is_visible = :isVisible WHERE type = :entryType AND server_id = :serverId")
-    suspend fun update(serverId: String, entryType: String, isVisible: Boolean)
+    @Query("UPDATE dashboard_entry SET is_visible = :isVisible WHERE priority = :position AND server_id = :serverId")
+    suspend fun update(serverId: String, position: Int, isVisible: Boolean)
 
     @Query("SELECT * FROM dashboard_entry WHERE priority >= :maxPriority AND server_id = :serverId")
     suspend fun getLowerPriority(serverId: String, maxPriority: Int): List<DashboardEntryEntity>
 
-    @Query("SELECT * FROM dashboard_entry WHERE type = :entryType AND server_id = :serverId LIMIT 1")
-    suspend fun get(serverId: String, entryType: String): DashboardEntryEntity
+    @Query("SELECT * FROM dashboard_entry WHERE priority = :position AND server_id = :serverId LIMIT 1")
+    suspend fun get(serverId: String, position: Int): DashboardEntryEntity
 
     @Query("SELECT * FROM dashboard_entry WHERE is_visible = 1 AND server_id = :serverId ORDER BY priority")
     fun getVisible(serverId: String): Flow<List<DashboardEntryEntity>>

@@ -5,7 +5,7 @@ import androidx.room.Entity
 
 @Entity(
     tableName = "dashboard_entry",
-    primaryKeys = ["type", "server_id"]
+    primaryKeys = ["priority", "server_id"]
 )
 internal data class DashboardEntryEntity(
     @ColumnInfo(name = "type")

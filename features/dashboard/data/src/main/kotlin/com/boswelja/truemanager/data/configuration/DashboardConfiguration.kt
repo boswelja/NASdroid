@@ -20,7 +20,7 @@ interface DashboardConfiguration {
     /**
      * Moves the entry with the given ID for the specified server up or down in the priority list.
      */
-    suspend fun reorderEntry(serverId: String, entryType: DashboardEntry.Type, newPriority: Int)
+    suspend fun reorderEntry(serverId: String, fromPosition: Int, toPosition: Int)
 
     /**
      * Adds new [DashboardEntry]s to the store.
@@ -30,7 +30,7 @@ interface DashboardConfiguration {
     /**
      * Sets whether the specified entry is visible.
      */
-    suspend fun setEntryVisible(serverId: String, entryType: DashboardEntry.Type, isVisible: Boolean)
+    suspend fun setEntryVisible(serverId: String, position: Int, isVisible: Boolean)
 }
 
 /**
