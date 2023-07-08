@@ -13,24 +13,25 @@ interface DashboardConfiguration {
     fun getVisibleEntries(serverId: String): Flow<List<DashboardEntry>>
 
     /**
+     * Get a list of all entries for the specified server.
+     */
+    fun getAllEntries(serverId: String): Flow<List<DashboardEntry>>
+
+    /**
      * Get whether the server with the given ID has any entries associated at all.
      */
     suspend fun hasAnyEntries(serverId: String): Boolean
 
     /**
-     * Moves the entry with the given ID for the specified server up or down in the priority list.
+     * Update all given items. It is expected that an item with the same [DashboardEntry.uid]
+     * already exists.
      */
-    suspend fun reorderEntry(serverId: String, fromPosition: Int, toPosition: Int)
+    suspend fun update(items: List<DashboardEntry>)
 
     /**
      * Adds new [DashboardEntry]s to the store.
      */
     suspend fun insertEntries(entries: List<DashboardEntry>)
-
-    /**
-     * Sets whether the specified entry is visible.
-     */
-    suspend fun setEntryVisible(serverId: String, position: Int, isVisible: Boolean)
 }
 
 /**

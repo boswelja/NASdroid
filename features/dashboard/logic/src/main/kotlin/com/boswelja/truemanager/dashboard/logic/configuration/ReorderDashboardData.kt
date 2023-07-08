@@ -1,16 +1,11 @@
 package com.boswelja.truemanager.dashboard.logic.configuration
 
-import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
-import com.boswelja.truemanager.data.configuration.DashboardConfiguration
-import com.boswelja.truemanager.data.configuration.DashboardEntry
+import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
 
 /**
  * Moves an entry in the dashboard from one position to another. See [invoke] for details.
  */
-class MoveDashboardEntry(
-    private val configuration: DashboardConfiguration,
-    private val systemV2Api: SystemV2Api
-) {
+class ReorderDashboardData {
 
     /**
      * Relocates the entry with the given type to a new position, based on the given priority.
@@ -28,8 +23,10 @@ class MoveDashboardEntry(
      * 4 - CPU
      * ```
      */
-    suspend operator fun invoke(fromPosition: Int, toPosition: Int) {
-        val serverId = systemV2Api.getHostId()
-        configuration.reorderEntry(serverId, fromPosition, toPosition)
+    operator fun invoke(items: List<DashboardData>, fromPosition: Int, toPosition: Int): List<DashboardData> {
+        val workingList = items.toMutableList()
+        val target = workingList.removeAt(fromPosition)
+        workingList.add(toPosition, target)
+        return workingList.toList()
     }
 }

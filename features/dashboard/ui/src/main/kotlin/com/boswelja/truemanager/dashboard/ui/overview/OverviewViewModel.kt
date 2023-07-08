@@ -2,14 +2,15 @@ package com.boswelja.truemanager.dashboard.ui.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.boswelja.truemanager.dashboard.logic.configuration.InitializeDashboard
+import com.boswelja.truemanager.dashboard.logic.configuration.ReorderDashboardData
 import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
 import com.boswelja.truemanager.dashboard.logic.dataloading.GetDashboardData
-import com.boswelja.truemanager.dashboard.logic.configuration.InitializeDashboard
-import com.boswelja.truemanager.dashboard.logic.configuration.MoveDashboardEntry
-import com.boswelja.truemanager.dashboard.logic.configuration.SetDashboardEntryVisible
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
@@ -18,9 +19,20 @@ import kotlinx.coroutines.launch
 class OverviewViewModel(
     private val initializeDashboard: InitializeDashboard,
     private val getDashboardData: GetDashboardData,
-    private val moveDashboardEntry: MoveDashboardEntry,
-    private val setDashboardEntryVisible: SetDashboardEntryVisible,
+    private val reorderDashboardData: ReorderDashboardData,
 ) : ViewModel() {
+
+    private val _editingList = MutableStateFlow<List<DashboardData>?>(null)
+
+    /**
+     * Whether dashboard data is currently being edited.
+     */
+    val editingList: StateFlow<List<DashboardData>?> = _editingList
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            null
+        )
 
     /**
      * A List of [DashboardData]. The list is ordered by the users configured display order. If the
@@ -40,32 +52,20 @@ class OverviewViewModel(
     }
 
     /**
-     * Moves the entry at the specified position to a new position. See [MoveDashboardEntry] for
+     * Starts "editing mode" for the UI.
+     */
+    fun startEditing() {
+        // Freeze dashboard data for editing
+        _editingList.value = dashboardData.value
+    }
+
+    /**
+     * Moves the entry at the specified position to a new position. See [ReorderDashboardData] for
      * details.
      */
     fun moveDashboardEntry(from: Int, to: Int) {
-        viewModelScope.launch {
-            moveDashboardEntry.invoke(from, to)
-        }
-    }
-
-    /**
-     * Marks the dashboard entry at the specified position as visible, so that it is shown when not
-     * editing.
-     */
-    fun showDashboardEntry(position: Int) {
-        viewModelScope.launch {
-            setDashboardEntryVisible(position, true)
-        }
-    }
-
-    /**
-     * Marks the dashboard entry at the specified position as gone, so that it is gone shown when
-     * not editing.
-     */
-    fun hideDashboardEntry(position: Int) {
-        viewModelScope.launch {
-            setDashboardEntryVisible(position, false)
+        _editingList.update { editingList ->
+            editingList?.let { reorderDashboardData(it, from, to) }
         }
     }
 }
