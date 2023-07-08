@@ -7,12 +7,9 @@ plugins {
 
 android {
     namespace = "com.boswelja.truemanager"
-    compileSdk = 33
 
     defaultConfig {
         applicationId = "com.boswelja.truemanager"
-        minSdk = 28
-        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -60,6 +57,7 @@ detekt {
 
 dependencies {
     implementation(projects.core.api)
+    implementation(projects.core.composeMenuprovider)
 
     implementation(projects.features.apps)
     implementation(projects.features.auth)
