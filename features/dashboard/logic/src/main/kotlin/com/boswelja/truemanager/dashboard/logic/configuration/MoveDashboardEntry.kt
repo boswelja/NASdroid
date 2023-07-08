@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.logic
+package com.boswelja.truemanager.dashboard.logic.configuration
 
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 import com.boswelja.truemanager.data.configuration.DashboardConfiguration
@@ -28,8 +28,8 @@ class MoveDashboardEntry(
      * 4 - CPU
      * ```
      */
-    suspend operator fun invoke(entryType: DashboardEntry.Type, newPriority: Int) {
+    suspend operator fun invoke(fromPosition: Int, toPosition: Int) {
         val serverId = systemV2Api.getHostId()
-        configuration.reorderEntry(serverId, entryType, newPriority)
+        configuration.reorderEntry(serverId, fromPosition, toPosition)
     }
 }
