@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.dashboard.logic
+package com.boswelja.truemanager.dashboard.logic.dataloading
 
 import com.boswelja.truemanager.core.api.v2.system.SystemInfo
 import kotlinx.datetime.Instant

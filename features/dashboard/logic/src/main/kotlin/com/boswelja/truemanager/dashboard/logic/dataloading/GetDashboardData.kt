@@ -1,9 +1,9 @@
-package com.boswelja.truemanager.dashboard.logic
+package com.boswelja.truemanager.dashboard.logic.dataloading
 
 import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.CapacityUnit
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
-import com.boswelja.truemanager.dashboard.logic.DashboardData.NetworkUsageData.AdapterData
+import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData.NetworkUsageData.AdapterData
 import com.boswelja.truemanager.data.configuration.DashboardConfiguration
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
