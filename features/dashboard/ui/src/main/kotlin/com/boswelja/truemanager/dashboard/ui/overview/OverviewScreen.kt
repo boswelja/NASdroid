@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -13,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.core.menuprovider.MenuItem
+import com.boswelja.truemanager.core.menuprovider.ProvideMenuItems
 import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
 import com.boswelja.truemanager.dashboard.ui.R
 import com.boswelja.truemanager.dashboard.ui.overview.cards.CpuOverview
@@ -34,6 +38,14 @@ fun OverviewScreen(
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: OverviewViewModel = getViewModel()
 ) {
+    ProvideMenuItems(
+        MenuItem(
+            label = "Edit",
+            imageVector = Icons.Default.Edit,
+            onClick = viewModel::startEditing,
+            isImportant = true,
+        )
+    )
     val items by viewModel.dashboardData.collectAsState()
     val editingItems by viewModel.editingList.collectAsState()
     if (items != null) {
