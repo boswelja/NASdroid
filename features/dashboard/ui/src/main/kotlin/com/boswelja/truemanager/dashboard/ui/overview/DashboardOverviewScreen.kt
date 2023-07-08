@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,20 +40,29 @@ fun DashboardOverviewScreen(
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: OverviewViewModel = getViewModel()
 ) {
-    ProvideMenuItems(
-        MenuItem(
-            label = "Edit",
-            imageVector = Icons.Default.Edit,
-            onClick = viewModel::startEditing,
-            isImportant = true,
-        )
-    )
     val items by viewModel.dashboardData.collectAsState()
     val editingItems by viewModel.editingList.collectAsState()
     val isEditing by remember(editingItems) {
         derivedStateOf { editingItems != null }
     }
     items?.let {
+        ProvideMenuItems(
+            if (isEditing) {
+                MenuItem(
+                    label = "Edit",
+                    imageVector = Icons.Default.Edit,
+                    onClick = viewModel::startEditing,
+                    isImportant = true,
+                )
+            } else {
+                MenuItem(
+                    label = "Stop Editing",
+                    imageVector = Icons.Default.EditOff,
+                    onClick = viewModel::stopEditing,
+                    isImportant = true,
+                )
+            }
+        )
         DashboardOverviewList(
             items = editingItems ?: it,
             isEditing = isEditing,
