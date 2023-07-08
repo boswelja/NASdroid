@@ -29,7 +29,10 @@ internal interface DashboardEntryDao {
     suspend fun get(serverId: String, position: Int): DashboardEntryEntity
 
     @Query("SELECT * FROM dashboard_entry WHERE is_visible = 1 AND server_id = :serverId ORDER BY priority")
-    fun getVisible(serverId: String): Flow<List<DashboardEntryEntity>>
+    fun getVisibleFor(serverId: String): Flow<List<DashboardEntryEntity>>
+
+    @Query("SELECT * FROM dashboard_entry WHERE server_id = :serverId ORDER BY priority")
+    fun getFor(serverId: String): Flow<List<DashboardEntryEntity>>
 
     @Query("SELECT * FROM dashboard_entry ORDER BY priority")
     fun getAll(): Flow<List<DashboardEntryEntity>>

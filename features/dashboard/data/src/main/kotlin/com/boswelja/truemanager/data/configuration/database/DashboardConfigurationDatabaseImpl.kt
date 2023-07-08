@@ -2,7 +2,6 @@ package com.boswelja.truemanager.data.configuration.database
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.withTransaction
 import com.boswelja.truemanager.data.configuration.DashboardConfiguration
 import com.boswelja.truemanager.data.configuration.DashboardEntry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,41 +23,25 @@ class DashboardConfigurationDatabaseImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getVisibleEntries(serverId: String): Flow<List<DashboardEntry>> = database.getDashboardEntryDao()
-        .getVisible(serverId)
+        .getVisibleFor(serverId)
         .mapLatest {
-            it.map { entity ->
-                DashboardEntry(
-                    entity.uid,
-                    DashboardEntry.Type.valueOf(entity.type),
-                    entity.serverId,
-                    entity.isVisible,
-                    entity.priority
-                )
-            }
+            it.map { entity -> entity.toDashboardEntryEntry() }
         }
 
-    override suspend fun reorderEntry(serverId: String, fromPosition: Int, toPosition: Int) {
-        val dao = database.getDashboardEntryDao()
-        database.withTransaction {
-            val operatingItem = dao.get(serverId, fromPosition)
-            val itemsToReorder = dao.getLowerPriority(serverId, operatingItem.priority)
-            // If the new priority is greater than the old priority, the item is moving *down* in
-            // priority. Thus, everything "below" it needs to move "up".
-            val increasePriorityForItems = operatingItem.priority < toPosition
-            val newItems = itemsToReorder.map { entity ->
-                entity.copy(
-                    priority = if (increasePriorityForItems) entity.priority - 1 else entity.priority + 1
-                )
-            }
-            dao.update(newItems + operatingItem.copy(priority = toPosition))
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getAllEntries(serverId: String): Flow<List<DashboardEntry>> = database.getDashboardEntryDao()
+        .getAll()
+        .mapLatest {
+            it.map { entity -> entity.toDashboardEntryEntry() }
         }
+
+    override suspend fun update(items: List<DashboardEntry>) {
+        database.getDashboardEntryDao().update(items.map { it.toDashboardEntryEntity() })
     }
 
     override suspend fun insertEntries(entries: List<DashboardEntry>) {
         database.getDashboardEntryDao().add(
-            entries.map {
-                DashboardEntryEntity(it.uid, it.type.name, it.serverId, it.isVisible, it.priority)
-            }
+            entries.map { it.toDashboardEntryEntity() }
         )
     }
 
@@ -66,7 +49,23 @@ class DashboardConfigurationDatabaseImpl(
         return database.getDashboardEntryDao().getAll().first().isNotEmpty()
     }
 
-    override suspend fun setEntryVisible(serverId: String, position: Int, isVisible: Boolean) {
-        database.getDashboardEntryDao().update(serverId, position, isVisible)
+    private fun DashboardEntryEntity.toDashboardEntryEntry(): DashboardEntry {
+        return DashboardEntry(
+            uid = uid,
+            type = DashboardEntry.Type.valueOf(type),
+            serverId = serverId,
+            isVisible = isVisible,
+            priority = priority
+        )
+    }
+
+    private fun DashboardEntry.toDashboardEntryEntity(): DashboardEntryEntity {
+        return DashboardEntryEntity(
+            uid = uid,
+            type = type.name,
+            serverId = serverId,
+            isVisible = isVisible,
+            priority = priority
+        )
     }
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
 import com.boswelja.truemanager.dashboard.logic.dataloading.GetDashboardData
 import com.boswelja.truemanager.dashboard.logic.configuration.InitializeDashboard
-import com.boswelja.truemanager.dashboard.logic.configuration.MoveDashboardEntry
+import com.boswelja.truemanager.dashboard.logic.configuration.ReorderDashboardData
 import com.boswelja.truemanager.dashboard.logic.configuration.SetDashboardEntryVisible
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class OverviewViewModel(
     private val initializeDashboard: InitializeDashboard,
     private val getDashboardData: GetDashboardData,
-    private val moveDashboardEntry: MoveDashboardEntry,
+    private val reorderDashboardData: ReorderDashboardData,
     private val setDashboardEntryVisible: SetDashboardEntryVisible,
 ) : ViewModel() {
 
@@ -40,12 +40,12 @@ class OverviewViewModel(
     }
 
     /**
-     * Moves the entry at the specified position to a new position. See [MoveDashboardEntry] for
+     * Moves the entry at the specified position to a new position. See [ReorderDashboardData] for
      * details.
      */
     fun moveDashboardEntry(from: Int, to: Int) {
         viewModelScope.launch {
-            moveDashboardEntry.invoke(from, to)
+            // TODO
         }
     }
 
