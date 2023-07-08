@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
 import com.boswelja.truemanager.dashboard.logic.dataloading.GetDashboardData
 import com.boswelja.truemanager.dashboard.logic.configuration.InitializeDashboard
+import com.boswelja.truemanager.dashboard.logic.configuration.MoveDashboardEntry
+import com.boswelja.truemanager.dashboard.logic.configuration.SetDashboardEntryVisible
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -15,7 +17,9 @@ import kotlinx.coroutines.launch
  */
 class OverviewViewModel(
     private val initializeDashboard: InitializeDashboard,
-    private val getDashboardData: GetDashboardData
+    private val getDashboardData: GetDashboardData,
+    private val moveDashboardEntry: MoveDashboardEntry,
+    private val setDashboardEntryVisible: SetDashboardEntryVisible,
 ) : ViewModel() {
 
     /**
@@ -32,6 +36,24 @@ class OverviewViewModel(
     init {
         viewModelScope.launch {
             initializeDashboard()
+        }
+    }
+
+    fun moveDashboardEntry(from: Int, to: Int) {
+        viewModelScope.launch {
+            moveDashboardEntry.invoke(from, to)
+        }
+    }
+
+    fun showDashboardEntry(position: Int) {
+        viewModelScope.launch {
+            setDashboardEntryVisible(position, true)
+        }
+    }
+
+    fun hideDashboardEntry(position: Int) {
+        viewModelScope.launch {
+            setDashboardEntryVisible(position, false)
         }
     }
 }
