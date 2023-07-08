@@ -17,11 +17,11 @@ compose-icons = "1.5.0-beta02"
 compose-material3 = "1.2.0-alpha02"
 compose-runtime = "1.5.0-alpha03"
 compose-ui = "1.5.0-beta02"
-accompanist = "0.31.4-beta"
+accompanist = "0.31.5-beta"
 
 room = "2.6.0-alpha01"
 
-ktor = "2.3.1"
+ktor = "2.3.2"
 
 kotlinx-coroutines = "1.7.2"
 kotlinx-datetime = "0.4.0"
@@ -30,7 +30,7 @@ kotlinx-serialization-formats = "1.5.1"
 koin = "3.4.2"
 koin-compose = "3.4.5"
 
-vico = "1.6.6"
+vico = "1.7.0"
 
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
