@@ -16,8 +16,12 @@ class ExtractNetworkUsageData {
      *
      * @param adapterGraphs A list of [ReportingGraphData] containing information about each network
      * adapter in the system.
+     * @param uid A unique identifier for the item that will be returned.
      */
-    operator fun invoke(adapterGraphs: List<ReportingGraphData>): DashboardData.NetworkUsageData {
+    operator fun invoke(
+        adapterGraphs: List<ReportingGraphData>,
+        uid: String,
+    ): DashboardData.NetworkUsageData {
         val adaptersInfo = adapterGraphs
             .filter { graph -> graph.data.any { line -> line.any { point -> point != null && point > 0 } } }
             .map { graph ->
@@ -32,6 +36,6 @@ class ExtractNetworkUsageData {
                     period = start..end
                 )
             }
-        return DashboardData.NetworkUsageData(adaptersInfo)
+        return DashboardData.NetworkUsageData(uid = uid, adaptersInfo)
     }
 }

@@ -17,11 +17,13 @@ class ExtractCpuUsageData {
      * model and core count.
      * @param usageGraph The [ReportingGraphData] containing information about CPU usage.
      * @param temperatureGraph The [ReportingGraphData] containing data about CPU temperature.
+     * @param uid A unique identifier for the item that will be returned.
      */
     operator fun invoke(
         systemInformation: SystemInfo,
         usageGraph: ReportingGraphData,
-        temperatureGraph: ReportingGraphData
+        temperatureGraph: ReportingGraphData,
+        uid: String,
     ): DashboardData.CpuData {
         // Usage data comes to us as a 2d array. We get the last set of values that aren't null,
         // i.e. the most recent recorded values, then take the "idle" percentage from that.
@@ -32,6 +34,7 @@ class ExtractCpuUsageData {
         // null, i.e. the most recent recorded values, then we take the highest number from that.
         val temp = (temperatureGraph.data.last { !it.contains(null) } as List<Double>).max().roundToInt()
         return DashboardData.CpuData(
+            uid = uid,
             name = systemInformation.cpuModel,
             cores = systemInformation.physicalCores,
             threads = systemInformation.cores,

@@ -109,6 +109,8 @@ naming:
     active: true
   FunctionMaxLength:
     active: true
+    ignoreAnnotated:
+      - 'Preview'
   FunctionMinLength:
     active: true
   FunctionNaming:
