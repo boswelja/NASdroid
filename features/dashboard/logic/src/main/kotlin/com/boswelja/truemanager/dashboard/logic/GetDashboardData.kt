@@ -68,8 +68,14 @@ class GetDashboardData(
 sealed interface DashboardData {
 
     /**
+     * A unique identifier for this item.
+     */
+    val uid: String
+
+    /**
      * Describes the CPU in the system.
      *
+     * @property uid A unique identifier for this item.
      * @property name The name of the CPU. E.g. "Intel(R) Xeon(R) CPU E5-2680".
      * @property cores The total number of cores the CPU has.
      * @property threads The total number of threads the CPU has.
@@ -78,6 +84,7 @@ sealed interface DashboardData {
      * core.
      */
     data class CpuData(
+        override val uid: String,
         val name: String,
         val cores: Int,
         val threads: Int,
@@ -88,11 +95,13 @@ sealed interface DashboardData {
     /**
      * Describes the memory in the system.
      *
+     * @property uid A unique identifier for this item.
      * @property memoryUsed The amount of memory currently in use.
      * @property memoryFree The amount of memory currently free.
      * @property isEcc Whether the memory supports ECC.
      */
     data class MemoryData(
+        override val uid: String,
         val memoryUsed: Capacity,
         val memoryFree: Capacity,
         val isEcc: Boolean
@@ -111,9 +120,11 @@ sealed interface DashboardData {
     /**
      * Describes multiple network adapters, which should be grouped in the dashboard.
      *
+     * @property uid A unique identifier for this item.
      * @property adaptersData A list of [AdapterData] describing a single adapter.
      */
     data class NetworkUsageData(
+        override val uid: String,
         val adaptersData: List<AdapterData>
     ) : DashboardData {
 
@@ -140,11 +151,13 @@ sealed interface DashboardData {
     /**
      * Contains basic information about a TrueNAS system.
      *
+     * @property uid A unique identifier for this item.
      * @property version The full version the system is running.
      * @property hostname The system hostname. This helps identify the system on the network.
      * @property lastBootTime The time the system was last started. This is used to calculate uptime.
      */
     data class SystemInformationData(
+        override val uid: String,
         val version: String,
         val hostname: String,
         val lastBootTime: LocalDateTime

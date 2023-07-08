@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -28,22 +29,20 @@ import com.boswelja.capacity.Capacity.Companion.gigabytes
 import com.boswelja.capacity.CapacityUnit
 import com.boswelja.truemanager.dashboard.logic.DashboardData
 import com.boswelja.truemanager.dashboard.ui.R
-import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
-import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.OverviewItemListItem
 
 /**
  * A Card displaying the given system memory information.
  */
 @Composable
-fun MemoryCard(
+fun MemoryOverview(
     data: DashboardData.MemoryData,
     modifier: Modifier = Modifier
 ) {
-    DashboardCard(
-        title = { Text(stringResource(R.string.memory_card_title)) },
+    Column(
         modifier = modifier
     ) {
-        CardListItem(
+        OverviewItemListItem(
             labelContent = {
                 if (data.isEcc) {
                     Text(stringResource(R.string.memory_total_ecc_label))
@@ -54,29 +53,28 @@ fun MemoryCard(
         ) {
             Text((data.memoryUsed + data.memoryFree).formatToString())
         }
-        Column(modifier) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                MemoryUtilisationLabel(
-                    name = "Used",
-                    usage = data.memoryUsed.formatToString()
-                )
-                MemoryUtilisationLabel(
-                    name = stringResource(R.string.memory_usage_free),
-                    usage = data.memoryFree.formatToString()
-                )
-            }
-            Spacer(Modifier.height(4.dp))
-            LinearProgressIndicator(
-                progress = data.usedPercent,
-                modifier = Modifier
-                    .height(24.dp)
-                    .fillMaxWidth()
-                    .clip(CircleShape)
+        Spacer(Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            MemoryUtilisationLabel(
+                name = "Used",
+                usage = data.memoryUsed.formatToString()
+            )
+            MemoryUtilisationLabel(
+                name = stringResource(R.string.memory_usage_free),
+                usage = data.memoryFree.formatToString()
             )
         }
+        Spacer(Modifier.height(4.dp))
+        LinearProgressIndicator(
+            progress = data.usedPercent,
+            modifier = Modifier
+                .height(24.dp)
+                .fillMaxWidth()
+                .clip(CircleShape)
+        )
     }
 }
 
@@ -123,17 +121,18 @@ fun Capacity.formatToString(): String {
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun MemoryCardPreview() {
-    MaterialTheme(colorScheme = dynamicLightColorScheme(LocalContext.current)) {
-        MemoryCard(
+    MaterialTheme {
+        MemoryOverview(
             data = DashboardData.MemoryData(
                 memoryUsed = 51.1.gigabytes,
                 memoryFree = 128.gigabytes - 51.1.gigabytes,
-                isEcc = true
+                isEcc = true,
+                uid = "memory"
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
         )
     }
 }

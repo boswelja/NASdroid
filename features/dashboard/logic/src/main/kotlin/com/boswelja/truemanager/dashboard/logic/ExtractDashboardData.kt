@@ -25,25 +25,26 @@ class ExtractDashboardData(
     operator fun invoke(
         entries: List<DashboardEntry>,
         graphs: List<ReportingGraphData>,
-        systemInfo: SystemInfo
+        systemInfo: SystemInfo,
     ): List<DashboardData> {
         return entries.map { entry ->
+            val uid = entry.serverId + entry.type
             when (entry.type) {
                 DashboardEntry.Type.SYSTEM_INFORMATION -> {
-                    extractSystemInformationData(systemInfo)
+                    extractSystemInformationData(uid = uid, systemInfo = systemInfo)
                 }
                 DashboardEntry.Type.CPU -> {
                     val utilisationGraph = graphs.first { it.name == CPU_GRAPH_NAME }
                     val temperatureGraph = graphs.first { it.name == CPU_TEMP_GRAPH_NAME }
-                    extractCpuUsageData(systemInfo, utilisationGraph, temperatureGraph)
+                    extractCpuUsageData(systemInfo, utilisationGraph, temperatureGraph, uid = uid)
                 }
                 DashboardEntry.Type.MEMORY -> {
                     val memoryGraph = graphs.first { it.name == MEMORY_GRAPH_NAME }
-                    extractMemoryUsageData(systemInfo, memoryGraph)
+                    extractMemoryUsageData(systemInfo, memoryGraph, uid = uid)
                 }
                 DashboardEntry.Type.NETWORK -> {
                     val adapterGraphs = graphs.filter { it.name == INTERFACE_GRAPH_NAME }
-                    extractNetworkUsageData(adapterGraphs)
+                    extractNetworkUsageData(adapterGraphs, uid = uid)
                 }
             }
         }

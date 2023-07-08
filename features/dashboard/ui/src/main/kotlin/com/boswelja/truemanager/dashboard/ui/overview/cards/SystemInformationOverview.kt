@@ -1,6 +1,9 @@
 package com.boswelja.truemanager.dashboard.ui.overview.cards
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,10 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.dashboard.logic.DashboardData
 import com.boswelja.truemanager.dashboard.ui.R
-import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
-import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.OverviewItemListItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
@@ -32,24 +35,24 @@ import kotlin.time.measureTime
  * boot time is translated into a live-updating uptime.
  */
 @Composable
-fun SystemInformationCard(
+fun SystemInformationOverview(
     data: DashboardData.SystemInformationData,
     modifier: Modifier = Modifier
 ) {
     val uptime by data.lastBootTime.collectElapsedSinceAsState()
-    DashboardCard(
-        title = { Text(stringResource(R.string.system_info_card_title)) },
-        modifier = modifier,
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
     ) {
-        CardListItem(
+        OverviewItemListItem(
             labelContent = { Text(stringResource(R.string.system_info_version_label)) },
             content = { Text(data.version) }
         )
-        CardListItem(
+        OverviewItemListItem(
             labelContent = { Text(stringResource(R.string.system_info_hostname_label)) },
             content = { Text(data.hostname) }
         )
-        CardListItem(
+        OverviewItemListItem(
             labelContent = { Text(stringResource(R.string.system_info_uptime_label)) },
             content = { Text(uptime) }
         )
@@ -91,15 +94,16 @@ private suspend fun repeatIndefinitely(interval: Duration, block: () -> Unit) {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun SystemInformationCardPreview() {
-    SystemInformationCard(
+fun SystemInformationOverviewPreview() {
+    SystemInformationOverview(
         data = DashboardData.SystemInformationData(
             version = "TrueNAS-SCALE-22.12.2",
             hostname = "truenas",
-            lastBootTime = LocalDateTime(2023, 3, 1, 10, 33)
+            lastBootTime = LocalDateTime(2023, 3, 1, 10, 33),
+            uid = "sysinfo"
         ),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().padding(16.dp)
     )
 }

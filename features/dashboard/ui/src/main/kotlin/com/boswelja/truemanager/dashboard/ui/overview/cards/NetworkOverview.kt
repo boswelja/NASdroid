@@ -28,8 +28,7 @@ import com.boswelja.capacity.Capacity.Companion.bytes
 import com.boswelja.capacity.CapacityUnit
 import com.boswelja.truemanager.dashboard.logic.DashboardData
 import com.boswelja.truemanager.dashboard.ui.R
-import com.boswelja.truemanager.dashboard.ui.overview.cards.common.CardListItem
-import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.OverviewItemListItem
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -49,13 +48,13 @@ import kotlin.random.Random
  * @param modifier [Modifier].
  */
 @Composable
-fun NetworkCard(
+fun NetworkOverview(
     data: DashboardData.NetworkUsageData,
     modifier: Modifier = Modifier
 ) {
-    DashboardCard(
-        title = { Text(stringResource(R.string.network_card_title)) },
-        modifier = modifier,
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
     ) {
         data.adaptersData.forEachIndexed { index, adapterData ->
             if (index > 0) Divider(Modifier.padding(vertical = 8.dp))
@@ -111,7 +110,7 @@ internal fun AdapterInfo(
             )
         }
         Spacer(Modifier.height(8.dp))
-        CardListItem(labelContent = { Text("Address") }) {
+        OverviewItemListItem(labelContent = { Text("Address") }) {
             Text(adapterData.address)
         }
     }
@@ -136,11 +135,12 @@ internal fun ChartLegendItem(
 
 @Preview
 @Composable
-fun NetworkCardPreview() {
+fun NetworkOverviewPreview() {
     val data = remember {
         val incomingRand = Random(0)
         val outgoingRandom = Random(10)
         DashboardData.NetworkUsageData(
+            uid = "network",
             adaptersData = listOf(
                 DashboardData.NetworkUsageData.AdapterData(
                     name = "eno1",
@@ -183,5 +183,5 @@ fun NetworkCardPreview() {
             )
         )
     }
-    NetworkCard(data = data)
+    NetworkOverview(data = data)
 }

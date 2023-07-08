@@ -16,13 +16,16 @@ class ExtractMemoryUsageData {
      * @param systemInformation The server system information. This contains information about CPU
      * model and core count.
      * @param memoryGraph The [ReportingGraphData] containing information about memory utilisation.
+     * @param uid A unique identifier for the item that will be returned.
      */
     operator fun invoke(
         systemInformation: SystemInfo,
-        memoryGraph: ReportingGraphData
+        memoryGraph: ReportingGraphData,
+        uid: String,
     ): DashboardData.MemoryData {
         val memoryData = memoryGraph.data.last { !it.contains(null) } as List<Double>
         return DashboardData.MemoryData(
+            uid = uid,
             memoryUsed = memoryData[0].toLong().bytes,
             memoryFree = memoryData[1].toLong().bytes,
             isEcc = systemInformation.eccMemory
