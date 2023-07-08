@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.boswelja.truemanager.dashboard.ui.overview.OverviewScreen
+import com.boswelja.truemanager.dashboard.ui.overview.DashboardOverviewScreen
 
 /**
  * Registers a nested navigation graph for the Dashboard feature.
@@ -20,7 +20,7 @@ fun NavGraphBuilder.dashboardGraph(
         route = route
     ) {
         composable("overview") {
-            OverviewScreen(
+            DashboardOverviewScreen(
                 modifier = modifier,
                 contentPadding = contentPadding,
             )
