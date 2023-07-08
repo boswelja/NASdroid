@@ -51,13 +51,12 @@ class OverviewViewModel(
         }
     }
 
+    /**
+     * Starts "editing mode" for the UI.
+     */
     fun startEditing() {
         // Freeze dashboard data for editing
         _editingList.value = dashboardData.value
-    }
-
-    fun stopEditing() {
-        // TODO save new config
     }
 
     /**

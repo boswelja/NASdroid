@@ -7,12 +7,9 @@ plugins {
 
 android {
     namespace = "com.boswelja.truemanager"
-    compileSdk = 33
 
     defaultConfig {
         applicationId = "com.boswelja.truemanager"
-        minSdk = 28
-        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
