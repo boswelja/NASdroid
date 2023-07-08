@@ -16,8 +16,8 @@ class SetDashboardEntryVisible(
      * Sets whether the entry with the given type should be displayed in the dashboard. Hidden
      * entries retain their ordering.
      */
-    suspend operator fun invoke(entryType: DashboardEntry.Type, visible: Boolean) {
+    suspend operator fun invoke(position: Int, visible: Boolean) {
         val serverId = systemV2Api.getHostId()
-        configuration.setEntryVisible(serverId, entryType, visible)
+        configuration.setEntryVisible(serverId, position, visible)
     }
 }
