@@ -27,6 +27,7 @@ rootProject.name = "TrueManager"
 include(
     ":core:api",
     ":core:capacity",
+    ":core:compose-menuprovider",
     ":features:apps",
     ":features:auth",
     ":features:dashboard:data",
