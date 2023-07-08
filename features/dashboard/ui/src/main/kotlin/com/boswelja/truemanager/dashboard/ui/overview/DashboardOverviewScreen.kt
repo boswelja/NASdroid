@@ -9,7 +9,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,46 +29,69 @@ import org.koin.androidx.compose.getViewModel
  * The Dashboard Overview screen. This displays a list of user-configurable glanceable items for the
  * system.
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OverviewScreen(
+fun DashboardOverviewScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: OverviewViewModel = getViewModel()
 ) {
     val items by viewModel.dashboardData.collectAsState()
     val editingItems by viewModel.editingList.collectAsState()
-    if (items != null) {
-        LazyColumn(
-            modifier = modifier,
+    val isEditing by remember(editingItems) {
+        derivedStateOf { editingItems != null }
+    }
+    items?.let {
+        DashboardOverviewList(
+            items = editingItems ?: it,
+            isEditing = isEditing,
             contentPadding = contentPadding,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            itemsIndexed(
-                items = editingItems ?: items!!,
-                key = { _, data -> data.uid }
-            ) { index, data ->
-                OverviewCard(
-                    data = data,
-                    cardEditControls = DashboardCardEditControls(
-                        isEditing = editingItems != null,
-                        canMoveUp = index > 0,
-                        canMoveDown = index < items!!.size - 1,
-                        onMoveUp = {
-                            viewModel.moveDashboardEntry(index, index - 1)
-                        },
-                        onMoveDown = {
-                            viewModel.moveDashboardEntry(index, index + 1)
-                        }
-                    ),
-                    onLongClick = {
-                        viewModel.startEditing()
+            onMoveItem = viewModel::moveDashboardEntry,
+            onStartEditing = viewModel::startEditing,
+            modifier = modifier
+        )
+    }
+}
+
+/**
+ * Displays the given dashboard items, with toggleable editing support.
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun DashboardOverviewList(
+    items: List<DashboardData>,
+    isEditing: Boolean,
+    onMoveItem: (from: Int, to: Int) -> Unit,
+    onStartEditing: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues()
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        itemsIndexed(
+            items = items,
+            key = { _, data -> data.uid }
+        ) { index, data ->
+            OverviewCard(
+                data = data,
+                cardEditControls = DashboardCardEditControls(
+                    isEditing = isEditing,
+                    canMoveUp = index > 0,
+                    canMoveDown = index < items.size - 1,
+                    onMoveUp = {
+                        onMoveItem(index, index - 1)
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateItemPlacement()
-                )
-            }
+                    onMoveDown = {
+                        onMoveItem(index, index + 1)
+                    }
+                ),
+                onLongClick = onStartEditing,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateItemPlacement()
+            )
         }
     }
 }
