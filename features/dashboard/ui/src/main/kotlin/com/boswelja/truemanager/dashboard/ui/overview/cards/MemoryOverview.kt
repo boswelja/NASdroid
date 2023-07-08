@@ -129,7 +129,8 @@ fun MemoryCardPreview() {
             data = DashboardData.MemoryData(
                 memoryUsed = 51.1.gigabytes,
                 memoryFree = 128.gigabytes - 51.1.gigabytes,
-                isEcc = true
+                isEcc = true,
+                uid = "memory"
             ),
             modifier = Modifier.fillMaxWidth().padding(16.dp)
         )
