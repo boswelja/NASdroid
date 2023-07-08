@@ -66,6 +66,9 @@ fun OverviewScreen(
                             viewModel.moveDashboardEntry(index, index + 1)
                         }
                     ),
+                    onLongClick = {
+                        isEditing = true
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .animateItemPlacement()
@@ -83,13 +86,16 @@ fun OverviewScreen(
 fun OverviewCard(
     data: DashboardData,
     cardEditControls: DashboardCardEditControls,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    onLongClick: (() -> Unit)? = null,
 ) {
     when (data) {
         is DashboardData.CpuData -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.cpu_card_title)) },
-                onClick = {},
+                onClick = onClick,
+                onLongClick = onLongClick,
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
@@ -99,7 +105,8 @@ fun OverviewCard(
         is DashboardData.MemoryData -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.memory_card_title)) },
-                onClick = {},
+                onClick = onClick,
+                onLongClick = onLongClick,
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
@@ -109,7 +116,8 @@ fun OverviewCard(
         is DashboardData.NetworkUsageData -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.network_card_title)) },
-                onClick = {},
+                onClick = onClick,
+                onLongClick = onLongClick,
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
@@ -122,7 +130,8 @@ fun OverviewCard(
         is DashboardData.SystemInformationData -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.system_info_card_title)) },
-                onClick = {},
+                onClick = onClick,
+                onLongClick = onLongClick,
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
