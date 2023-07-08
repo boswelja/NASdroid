@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoveDown
 import androidx.compose.material.icons.filled.MoveUp
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -94,37 +92,7 @@ internal fun DashboardCardOrderControls(
     editControls: DashboardCardEditControls,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier) {
-        PlainTooltipBox(
-            tooltip = {
-                Text(
-                    if (editControls.isVisible) {
-                        "Hide card in dashboard"
-                    } else {
-                        "Show card in dashboard"
-                    }
-                )
-            }
-        ) {
-            IconButton(
-                onClick = editControls.onVisibilityToggle,
-                modifier = Modifier.tooltipTrigger()
-            ) {
-                Icon(
-                    imageVector = if (editControls.isVisible) {
-                        Icons.Default.VisibilityOff
-                    } else {
-                        Icons.Default.Visibility
-                    },
-                    contentDescription = if (editControls.isVisible) {
-                        "Hide card in dashboard"
-                    } else {
-                        "Show card in dashboard"
-                    }
-                )
-            }
-        }
-        Spacer(modifier = Modifier.weight(1f))
+    Row(modifier = modifier, horizontalArrangement = Arrangement.End) {
         PlainTooltipBox(tooltip = { Text("Move up") }) {
             IconButton(
                 onClick = editControls.onMoveUp,
@@ -150,7 +118,6 @@ internal fun DashboardCardOrderControls(
 @Composable
 fun DashboardCardPreview() {
     var isEditing by remember { mutableStateOf(true) }
-    var isVisible by remember { mutableStateOf(true) }
     var index by remember { mutableIntStateOf(0) }
     val imaginaryItemCount = 3
 
@@ -164,10 +131,8 @@ fun DashboardCardPreview() {
             },
             cardEditControls = DashboardCardEditControls(
                 isEditing = isEditing,
-                onVisibilityToggle = { isVisible = !isVisible },
                 onMoveUp = { index-- },
                 onMoveDown = { index++ },
-                isVisible = isVisible,
                 canMoveUp = index > 0,
                 canMoveDown = index < imaginaryItemCount
             ),
@@ -180,20 +145,16 @@ fun DashboardCardPreview() {
  * pressed.
  *
  * @property isEditing Whether the UI is in an "editing" state.
- * @property isVisible Whether the dashboard item would normally be displayed.
  * @property canMoveUp Whether the item can be moved up in the list.
  * @property canMoveDown Whether the item can be moved down in the list.
- * @property onVisibilityToggle Called when the visibility toggle button is pressed.
  * @property onMoveUp Called when the move up button is pressed.
  * @property onMoveDown Called when the move down button is pressed.
  */
 @Stable
 data class DashboardCardEditControls(
     val isEditing: Boolean,
-    val isVisible: Boolean,
     val canMoveUp: Boolean,
     val canMoveDown: Boolean,
-    val onVisibilityToggle: () -> Unit,
     val onMoveUp: () -> Unit,
     val onMoveDown: () -> Unit,
 )
