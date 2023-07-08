@@ -2,7 +2,6 @@ package com.boswelja.truemanager.dashboard.logic
 
 import com.boswelja.truemanager.dashboard.logic.configuration.InitializeDashboard
 import com.boswelja.truemanager.dashboard.logic.configuration.ReorderDashboardData
-import com.boswelja.truemanager.dashboard.logic.configuration.SetDashboardEntryVisible
 import com.boswelja.truemanager.dashboard.logic.dataloading.ExtractCpuUsageData
 import com.boswelja.truemanager.dashboard.logic.dataloading.ExtractDashboardData
 import com.boswelja.truemanager.dashboard.logic.dataloading.ExtractMemoryUsageData
@@ -31,5 +30,4 @@ val dashboardBusinessModule = module {
     factoryOf(::GetReportingDataForEntries)
     factoryOf(::InitializeDashboard)
     factoryOf(::ReorderDashboardData)
-    factoryOf(::SetDashboardEntryVisible)
 }

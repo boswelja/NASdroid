@@ -10,9 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,7 +35,7 @@ fun OverviewScreen(
     viewModel: OverviewViewModel = getViewModel()
 ) {
     val items by viewModel.dashboardData.collectAsState()
-    var isEditing by rememberSaveable { mutableStateOf(false) }
+    val editingItems by viewModel.editingList.collectAsState()
     if (items != null) {
         LazyColumn(
             modifier = modifier,
@@ -46,13 +43,13 @@ fun OverviewScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             itemsIndexed(
-                items = items!!,
+                items = editingItems ?: items!!,
                 key = { _, data -> data.uid }
             ) { index, data ->
                 OverviewCard(
                     data = data,
                     cardEditControls = DashboardCardEditControls(
-                        isEditing = isEditing,
+                        isEditing = editingItems != null,
                         isVisible = true,
                         canMoveUp = index > 0,
                         canMoveDown = index < items!!.size - 1,
@@ -67,7 +64,7 @@ fun OverviewScreen(
                         }
                     ),
                     onLongClick = {
-                        isEditing = true
+                        viewModel.startEditing()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
