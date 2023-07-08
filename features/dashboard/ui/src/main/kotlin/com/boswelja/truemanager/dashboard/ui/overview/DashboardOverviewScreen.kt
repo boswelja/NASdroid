@@ -49,16 +49,16 @@ fun DashboardOverviewScreen(
         ProvideMenuItems(
             if (isEditing) {
                 MenuItem(
-                    label = "Edit",
-                    imageVector = Icons.Default.Edit,
-                    onClick = viewModel::startEditing,
+                    label = "Stop Editing",
+                    imageVector = Icons.Default.EditOff,
+                    onClick = viewModel::stopEditing,
                     isImportant = true,
                 )
             } else {
                 MenuItem(
-                    label = "Stop Editing",
-                    imageVector = Icons.Default.EditOff,
-                    onClick = viewModel::stopEditing,
+                    label = "Edit",
+                    imageVector = Icons.Default.Edit,
+                    onClick = viewModel::startEditing,
                     isImportant = true,
                 )
             }
