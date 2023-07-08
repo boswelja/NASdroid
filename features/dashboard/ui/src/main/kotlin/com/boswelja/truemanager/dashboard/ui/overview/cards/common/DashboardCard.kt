@@ -159,6 +159,18 @@ fun DashboardCardPreview() {
     }
 }
 
+/**
+ * Describes the state of the dashboard edit controls, as well as what happens when a button is
+ * pressed.
+ *
+ * @property isEditing Whether the UI is in an "editing" state.
+ * @property isVisible Whether the dashboard item would normally be displayed.
+ * @property canMoveUp Whether the item can be moved up in the list.
+ * @property canMoveDown Whether the item can be moved down in the list.
+ * @property onVisibilityToggle Called when the visibility toggle button is pressed.
+ * @property onMoveUp Called when the move up button is pressed.
+ * @property onMoveDown Called when the move down button is pressed.
+ */
 @Stable
 data class DashboardCardEditControls(
     val isEditing: Boolean,
