@@ -1,5 +1,6 @@
 package com.boswelja.truemanager.dashboard.ui.overview
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,8 +9,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -22,12 +25,14 @@ import com.boswelja.truemanager.dashboard.ui.overview.cards.MemoryOverview
 import com.boswelja.truemanager.dashboard.ui.overview.cards.NetworkOverview
 import com.boswelja.truemanager.dashboard.ui.overview.cards.SystemInformationOverview
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCard
+import com.boswelja.truemanager.dashboard.ui.overview.cards.common.DashboardCardEditControls
 import org.koin.androidx.compose.getViewModel
 
 /**
  * The Dashboard Overview screen. This displays a list of user-configurable glanceable items for the
  * system.
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OverviewScreen(
     modifier: Modifier = Modifier,
@@ -42,8 +47,17 @@ fun OverviewScreen(
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(data!!) {
-                OverviewCard(data = it, isEditing = isEditing, modifier = Modifier.fillMaxWidth())
+            items(
+                items = data!!,
+                key = { it.uid }
+            ) {
+                OverviewCard(
+                    data = it,
+                    isEditing = isEditing,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItemPlacement()
+                )
             }
         }
     }
@@ -55,10 +69,25 @@ fun OverviewCard(
     isEditing: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val cardEditControls by remember(data) {
+        derivedStateOf {
+            DashboardCardEditControls(
+                isEditing = isEditing,
+                isVisible = true,
+                canMoveUp = true,
+                canMoveDown = true,
+                onVisibilityToggle = {},
+                onMoveUp = {},
+                onMoveDown = {}
+            )
+        }
+    }
     when (data) {
         is DashboardData.CpuData -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.cpu_card_title)) },
+                onClick = {},
+                cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
                 CpuOverview(data = data)
@@ -67,6 +96,8 @@ fun OverviewCard(
         is DashboardData.MemoryData -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.memory_card_title)) },
+                onClick = {},
+                cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
                 MemoryOverview(data = data)
@@ -75,6 +106,8 @@ fun OverviewCard(
         is DashboardData.NetworkUsageData -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.network_card_title)) },
+                onClick = {},
+                cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
                 NetworkOverview(
@@ -86,6 +119,8 @@ fun OverviewCard(
         is DashboardData.SystemInformationData -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.system_info_card_title)) },
+                onClick = {},
+                cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
                 SystemInformationOverview(
