@@ -101,7 +101,8 @@ fun SystemInformationOverviewPreview() {
         data = DashboardData.SystemInformationData(
             version = "TrueNAS-SCALE-22.12.2",
             hostname = "truenas",
-            lastBootTime = LocalDateTime(2023, 3, 1, 10, 33)
+            lastBootTime = LocalDateTime(2023, 3, 1, 10, 33),
+            uid = "sysinfo"
         ),
         modifier = Modifier.fillMaxWidth().padding(16.dp)
     )
