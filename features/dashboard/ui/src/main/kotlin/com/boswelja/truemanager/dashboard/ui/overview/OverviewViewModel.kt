@@ -2,9 +2,9 @@ package com.boswelja.truemanager.dashboard.ui.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.truemanager.dashboard.logic.DashboardData
-import com.boswelja.truemanager.dashboard.logic.GetDashboardData
-import com.boswelja.truemanager.dashboard.logic.InitializeDashboard
+import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
+import com.boswelja.truemanager.dashboard.logic.dataloading.GetDashboardData
+import com.boswelja.truemanager.dashboard.logic.configuration.InitializeDashboard
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
