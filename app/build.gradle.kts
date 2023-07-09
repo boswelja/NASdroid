@@ -57,6 +57,7 @@ detekt {
 
 dependencies {
     implementation(projects.core.api)
+    implementation(projects.core.composeMenuprovider)
 
     implementation(projects.features.apps)
     implementation(projects.features.auth)

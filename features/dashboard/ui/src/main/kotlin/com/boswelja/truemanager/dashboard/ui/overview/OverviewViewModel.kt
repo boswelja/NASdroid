@@ -60,6 +60,14 @@ class OverviewViewModel(
     }
 
     /**
+     * Stops editing mode and saves any pending changes.
+     */
+    fun stopEditing() {
+        // TODO Save the list
+        _editingList.value = null
+    }
+
+    /**
      * Moves the entry at the specified position to a new position. See [ReorderDashboardData] for
      * details.
      */

@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,6 +45,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.core.menuprovider.LocalMenuHost
+import com.boswelja.truemanager.core.menuprovider.MenuItem
+import com.boswelja.truemanager.core.menuprovider.ProvideMenuHost
+import com.boswelja.truemanager.core.menuprovider.ProvideMenuItems
+import com.boswelja.truemanager.core.menuprovider.rememberMenuHost
 import kotlinx.coroutines.launch
 
 /**
@@ -129,56 +137,62 @@ fun ModalNavigationDrawer(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val menuHost = rememberMenuHost()
 
-    ModalNavigationDrawer(
-        drawerContent = {
-            ModalDrawerSheet {
-                Spacer(Modifier.height(12.dp))
-                destinations.forEach { destination ->
-                    NavigationDrawerItem(
-                        icon = { Icon(destination.icon, contentDescription = null) },
-                        label = { Text(stringResource(destination.labelRes)) },
-                        selected = destination == selectedDestination,
-                        onClick = {
-                            navigateTo(destination)
-                            coroutineScope.launch {
-                                drawerState.close()
+    ProvideMenuHost(menuHost = menuHost) {
+        ModalNavigationDrawer(
+            drawerContent = {
+                ModalDrawerSheet {
+                    Spacer(Modifier.height(12.dp))
+                    destinations.forEach { destination ->
+                        NavigationDrawerItem(
+                            icon = { Icon(destination.icon, contentDescription = null) },
+                            label = { Text(stringResource(destination.labelRes)) },
+                            selected = destination == selectedDestination,
+                            onClick = {
+                                navigateTo(destination)
+                                coroutineScope.launch {
+                                    drawerState.close()
+                                }
+                            },
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                        )
+                    }
+                }
+            },
+            drawerState = drawerState,
+            gesturesEnabled = navigationVisible && !canNavigateBack,
+            modifier = modifier
+        ) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
+                        navigationIcon = {
+                            if (canNavigateBack) {
+                                NavigateBackButton(onClick = navigateBack)
+                            } else if (navigationVisible) {
+                                IconButton(
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            drawerState.open()
+                                        }
+                                    }
+                                ) {
+                                    Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
+                                }
                             }
                         },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                    )
-                }
-            }
-        },
-        drawerState = drawerState,
-        gesturesEnabled = navigationVisible && !canNavigateBack,
-        modifier = modifier
-    ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
-                    navigationIcon = {
-                        if (canNavigateBack) {
-                            IconButton(onClick = navigateBack) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Navigate back")
-                            }
-                        } else if (navigationVisible) {
-                            IconButton(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        drawerState.open()
-                                    }
-                                }
-                            ) {
-                                Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
+                        actions = {
+                            LocalMenuHost.current.menuItems.forEach { menuItem ->
+                                MenuItem(menuItem)
                             }
                         }
-                    }
-                )
-            },
-            content = content
-        )
+                    )
+                },
+                content = content
+            )
+        }
     }
 }
 
@@ -207,40 +221,47 @@ fun NavigationRail(
     navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    Row(modifier) {
-        AnimatedVisibility(
-            visible = navigationVisible,
-            enter = slideInHorizontally(),
-            exit = slideOutHorizontally { -it/2 }
-        ) {
-            NavigationRail {
-                Spacer(Modifier.height(12.dp + 64.dp))
-                destinations.forEach { destination ->
-                    val label = stringResource(destination.labelRes)
-                    NavigationRailItem(
-                        selected = destination == selectedDestination,
-                        onClick = { navigateTo(destination) },
-                        icon = { Icon(destination.icon, contentDescription = label) },
-                        label = { Text(label) }
-                    )
+    val menuHost = rememberMenuHost()
+
+    ProvideMenuHost(menuHost = menuHost) {
+        Row(modifier) {
+            AnimatedVisibility(
+                visible = navigationVisible,
+                enter = slideInHorizontally(),
+                exit = slideOutHorizontally { -it/2 }
+            ) {
+                NavigationRail {
+                    Spacer(Modifier.height(12.dp + 64.dp))
+                    destinations.forEach { destination ->
+                        val label = stringResource(destination.labelRes)
+                        NavigationRailItem(
+                            selected = destination == selectedDestination,
+                            onClick = { navigateTo(destination) },
+                            icon = { Icon(destination.icon, contentDescription = label) },
+                            label = { Text(label) }
+                        )
+                    }
                 }
             }
-        }
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { },
-                    navigationIcon = {
-                        if (canNavigateBack) {
-                            IconButton(onClick = navigateBack) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Navigation back")
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { },
+                        navigationIcon = {
+                            if (canNavigateBack) {
+                                NavigateBackButton(onClick = navigateBack)
+                            }
+                        },
+                        actions = {
+                            LocalMenuHost.current.menuItems.forEach { menuItem ->
+                                MenuItem(menuItem)
                             }
                         }
-                    }
-                )
-            },
-            content = content
-        )
+                    )
+                },
+                content = content
+            )
+        }
     }
 }
 
@@ -269,40 +290,70 @@ fun PermanentNavigationDrawer(
     navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    Row(modifier) {
-        AnimatedVisibility(
-            visible = navigationVisible,
-            enter = slideInHorizontally(),
-            exit = slideOutHorizontally { -it/2 }
-        ) {
-            PermanentDrawerSheet {
-                Spacer(Modifier.height(12.dp + 64.dp))
-                destinations.forEach { destination ->
-                    NavigationDrawerItem(
-                        icon = { Icon(destination.icon, contentDescription = null) },
-                        label = { Text(stringResource(destination.labelRes)) },
-                        selected = destination == selectedDestination,
-                        onClick = { navigateTo(destination) },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                    )
+    val menuHost = rememberMenuHost()
+
+    ProvideMenuHost(menuHost = menuHost) {
+        Row(modifier) {
+            AnimatedVisibility(
+                visible = navigationVisible,
+                enter = slideInHorizontally(),
+                exit = slideOutHorizontally { -it/2 }
+            ) {
+                PermanentDrawerSheet {
+                    Spacer(Modifier.height(12.dp + 64.dp))
+                    destinations.forEach { destination ->
+                        NavigationDrawerItem(
+                            icon = { Icon(destination.icon, contentDescription = null) },
+                            label = { Text(stringResource(destination.labelRes)) },
+                            selected = destination == selectedDestination,
+                            onClick = { navigateTo(destination) },
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                        )
+                    }
                 }
             }
-        }
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { },
-                    navigationIcon = {
-                        if (canNavigateBack) {
-                            IconButton(onClick = navigateBack) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Navigation back")
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { },
+                        navigationIcon = {
+                            if (canNavigateBack) {
+                                NavigateBackButton(onClick = navigateBack)
+                            }
+                        },
+                        actions = {
+                            LocalMenuHost.current.menuItems.forEach { menuItem ->
+                                MenuItem(menuItem)
                             }
                         }
-                    }
-                )
-            },
-            content = content
+                    )
+                },
+                content = content
+            )
+        }
+    }
+}
+
+@Composable
+internal fun MenuItem(
+    menuItem: MenuItem,
+    modifier: Modifier = Modifier
+) {
+    IconButton(onClick = menuItem.onClick, modifier = modifier) {
+        Icon(
+            imageVector = menuItem.imageVector,
+            contentDescription = menuItem.label
         )
+    }
+}
+
+@Composable
+internal fun NavigateBackButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(onClick = onClick, modifier = modifier) {
+        Icon(Icons.Default.ArrowBack, contentDescription = "Navigate back")
     }
 }
 
@@ -325,6 +376,14 @@ fun ModalNavigationDrawerPreview() {
         canNavigateBack = false,
         navigateBack = {}
     ) {
+        ProvideMenuItems(
+            MenuItem(
+                label = "Edit",
+                imageVector = Icons.Default.Edit,
+                onClick = {},
+                isImportant = true
+            )
+        )
         Box(
             Modifier
                 .padding(it)
@@ -353,6 +412,14 @@ fun NavigationRailPreview() {
         canNavigateBack = true,
         navigateBack = {}
     ) {
+        ProvideMenuItems(
+            MenuItem(
+                label = "More",
+                imageVector = Icons.Default.MoreVert,
+                onClick = {},
+                isImportant = true
+            )
+        )
         Box(
             Modifier
                 .padding(it)
@@ -381,6 +448,14 @@ fun PermanentNavigationDrawerPreview() {
         canNavigateBack = true,
         navigateBack = {}
     ) {
+        ProvideMenuItems(
+            MenuItem(
+                label = "Stop editing",
+                imageVector = Icons.Default.EditOff,
+                onClick = {},
+                isImportant = true
+            )
+        )
         Box(
             Modifier
                 .padding(it)

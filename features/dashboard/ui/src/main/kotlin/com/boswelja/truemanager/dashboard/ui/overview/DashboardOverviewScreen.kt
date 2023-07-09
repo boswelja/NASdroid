@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.core.menuprovider.MenuItem
+import com.boswelja.truemanager.core.menuprovider.ProvideMenuItems
 import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
 import com.boswelja.truemanager.dashboard.ui.R
 import com.boswelja.truemanager.dashboard.ui.overview.cards.CpuOverview
@@ -41,6 +46,23 @@ fun DashboardOverviewScreen(
         derivedStateOf { editingItems != null }
     }
     items?.let {
+        ProvideMenuItems(
+            if (isEditing) {
+                MenuItem(
+                    label = "Stop Editing",
+                    imageVector = Icons.Default.EditOff,
+                    onClick = viewModel::stopEditing,
+                    isImportant = true,
+                )
+            } else {
+                MenuItem(
+                    label = "Edit",
+                    imageVector = Icons.Default.Edit,
+                    onClick = viewModel::startEditing,
+                    isImportant = true,
+                )
+            }
+        )
         DashboardOverviewList(
             items = editingItems ?: it,
             isEditing = isEditing,

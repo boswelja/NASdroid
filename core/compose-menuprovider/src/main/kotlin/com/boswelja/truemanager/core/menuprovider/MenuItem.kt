@@ -1,5 +1,6 @@
 package com.boswelja.truemanager.core.menuprovider
 
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * @property isImportant Whether the item should be considered "important". Important items should
  * be displayed as icons outside of an overflow menu, if possible.
  */
+@Stable
 data class MenuItem(
     val label: String,
     val imageVector: ImageVector,
