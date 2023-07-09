@@ -59,7 +59,7 @@ dependencies {
     implementation(projects.core.api)
     implementation(projects.core.composeMenuprovider)
 
-    implementation(projects.features.apps)
+    implementation(projects.features.apps.ui)
     implementation(projects.features.auth)
     implementation(projects.features.dashboard.ui)
     implementation(projects.features.reporting)
