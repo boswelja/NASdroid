@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.apps"
+    namespace = "com.boswelja.truemanager.apps.ui"
 
     buildTypes {
         release {
@@ -39,7 +39,7 @@ detekt {
 }
 
 dependencies {
-    implementation(projects.core.api)
+    implementation(projects.features.apps.logic)
 
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
