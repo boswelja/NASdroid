@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -376,7 +378,7 @@ fun ModalNavigationDrawerPreview() {
     ) {
         ProvideMenuItems(
             MenuItem(
-                label = "Menu item",
+                label = "Edit",
                 imageVector = Icons.Default.Edit,
                 onClick = {},
                 isImportant = true
@@ -412,8 +414,8 @@ fun NavigationRailPreview() {
     ) {
         ProvideMenuItems(
             MenuItem(
-                label = "Menu item",
-                imageVector = Icons.Default.Edit,
+                label = "More",
+                imageVector = Icons.Default.MoreVert,
                 onClick = {},
                 isImportant = true
             )
@@ -448,8 +450,8 @@ fun PermanentNavigationDrawerPreview() {
     ) {
         ProvideMenuItems(
             MenuItem(
-                label = "Menu item",
-                imageVector = Icons.Default.Edit,
+                label = "Stop editing",
+                imageVector = Icons.Default.EditOff,
                 onClick = {},
                 isImportant = true
             )
