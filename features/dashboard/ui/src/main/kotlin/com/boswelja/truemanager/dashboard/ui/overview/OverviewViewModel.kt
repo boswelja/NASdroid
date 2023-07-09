@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.dashboard.logic.configuration.InitializeDashboard
 import com.boswelja.truemanager.dashboard.logic.configuration.ReorderDashboardData
+import com.boswelja.truemanager.dashboard.logic.configuration.SaveDashboardOrder
 import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
 import com.boswelja.truemanager.dashboard.logic.dataloading.GetDashboardData
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,7 @@ class OverviewViewModel(
     private val initializeDashboard: InitializeDashboard,
     private val getDashboardData: GetDashboardData,
     private val reorderDashboardData: ReorderDashboardData,
+    private val saveDashboardOrder: SaveDashboardOrder,
 ) : ViewModel() {
 
     private val _editingList = MutableStateFlow<List<DashboardData>?>(null)
@@ -74,6 +76,11 @@ class OverviewViewModel(
     fun moveDashboardEntry(from: Int, to: Int) {
         _editingList.update { editingList ->
             editingList?.let { reorderDashboardData(it, from, to) }
+        }
+        viewModelScope.launch {
+            _editingList.value?.let {
+                saveDashboardOrder(it)
+            }
         }
     }
 }
