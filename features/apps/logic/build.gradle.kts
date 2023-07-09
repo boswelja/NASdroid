@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.apps.ui"
+    namespace = "com.boswelja.truemanager.dashboard.logic"
 
     buildTypes {
         release {
@@ -18,10 +18,6 @@ android {
         }
     }
 
-    buildFeatures.compose = true
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     lint {
         sarifReport = true
         htmlReport = false
@@ -39,12 +35,10 @@ detekt {
 }
 
 dependencies {
-    implementation(projects.features.apps.logic)
+    api(libs.kotlinx.coroutines)
+    api(libs.kotlinx.datetime)
 
-    implementation(libs.androidx.navigation)
-    implementation(libs.bundles.compose)
-    debugImplementation(libs.bundles.compose.tooling)
+    implementation(projects.core.api)
 
-    implementation(libs.koin.android)
-    implementation(libs.koin.android.compose)
+    implementation(libs.koin.core)
 }

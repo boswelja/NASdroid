@@ -28,6 +28,7 @@ include(
     ":core:api",
     ":core:capacity",
     ":core:compose-menuprovider",
+    ":features:apps:logic",
     ":features:apps:ui",
     ":features:auth",
     ":features:dashboard:data",
