@@ -168,9 +168,7 @@ fun ModalNavigationDrawer(
                         title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
                         navigationIcon = {
                             if (canNavigateBack) {
-                                IconButton(onClick = navigateBack) {
-                                    Icon(Icons.Default.ArrowBack, contentDescription = "Navigate back")
-                                }
+                                NavigateBackButton(onClick = navigateBack)
                             } else if (navigationVisible) {
                                 IconButton(
                                     onClick = {
@@ -185,12 +183,7 @@ fun ModalNavigationDrawer(
                         },
                         actions = {
                             LocalMenuHost.current.menuItems.forEach { menuItem ->
-                                IconButton(onClick = menuItem.onClick) {
-                                    Icon(
-                                        imageVector = menuItem.imageVector,
-                                        contentDescription = menuItem.label
-                                    )
-                                }
+                                MenuItem(menuItem)
                             }
                         }
                     )
@@ -254,19 +247,12 @@ fun NavigationRail(
                         title = { },
                         navigationIcon = {
                             if (canNavigateBack) {
-                                IconButton(onClick = navigateBack) {
-                                    Icon(Icons.Default.ArrowBack, contentDescription = "Navigation back")
-                                }
+                                NavigateBackButton(onClick = navigateBack)
                             }
                         },
                         actions = {
                             LocalMenuHost.current.menuItems.forEach { menuItem ->
-                                IconButton(onClick = menuItem.onClick) {
-                                    Icon(
-                                        imageVector = menuItem.imageVector,
-                                        contentDescription = menuItem.label
-                                    )
-                                }
+                                MenuItem(menuItem)
                             }
                         }
                     )
@@ -330,19 +316,12 @@ fun PermanentNavigationDrawer(
                         title = { },
                         navigationIcon = {
                             if (canNavigateBack) {
-                                IconButton(onClick = navigateBack) {
-                                    Icon(Icons.Default.ArrowBack, contentDescription = "Navigation back")
-                                }
+                                NavigateBackButton(onClick = navigateBack)
                             }
                         },
                         actions = {
                             LocalMenuHost.current.menuItems.forEach { menuItem ->
-                                IconButton(onClick = menuItem.onClick) {
-                                    Icon(
-                                        imageVector = menuItem.imageVector,
-                                        contentDescription = menuItem.label
-                                    )
-                                }
+                                MenuItem(menuItem)
                             }
                         }
                     )
@@ -350,6 +329,29 @@ fun PermanentNavigationDrawer(
                 content = content
             )
         }
+    }
+}
+
+@Composable
+internal fun MenuItem(
+    menuItem: MenuItem,
+    modifier: Modifier = Modifier
+) {
+    IconButton(onClick = menuItem.onClick, modifier = modifier) {
+        Icon(
+            imageVector = menuItem.imageVector,
+            contentDescription = menuItem.label
+        )
+    }
+}
+
+@Composable
+internal fun NavigateBackButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(onClick = onClick, modifier = modifier) {
+        Icon(Icons.Default.ArrowBack, contentDescription = "Navigate back")
     }
 }
 
