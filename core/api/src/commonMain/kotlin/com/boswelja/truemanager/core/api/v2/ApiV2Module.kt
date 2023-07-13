@@ -7,6 +7,8 @@ import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
 import com.boswelja.truemanager.core.api.v2.auth.AuthV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.catalog.CatalogV2Api
 import com.boswelja.truemanager.core.api.v2.catalog.CatalogV2ApiImpl
+import com.boswelja.truemanager.core.api.v2.chart.release.ChartReleaseV2Api
+import com.boswelja.truemanager.core.api.v2.chart.release.ChartReleaseV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.core.CoreV2Api
 import com.boswelja.truemanager.core.api.v2.core.CoreV2ApiImpl
 import com.boswelja.truemanager.core.api.v2.pool.PoolV2Api
@@ -73,6 +75,7 @@ val ApiV2Module = module {
     singleOf(::ApiKeyV2ApiImpl) bind ApiKeyV2Api::class
     singleOf(::AuthV2ApiImpl) bind AuthV2Api::class
     singleOf(::CatalogV2ApiImpl) bind CatalogV2Api::class
+    singleOf(::ChartReleaseV2ApiImpl) bind ChartReleaseV2Api::class
     singleOf(::CoreV2ApiImpl) bind CoreV2Api::class
     singleOf(::PoolV2ApiImpl) bind PoolV2Api::class
     singleOf(::ReportingV2ApiImpl) bind ReportingV2Api::class
