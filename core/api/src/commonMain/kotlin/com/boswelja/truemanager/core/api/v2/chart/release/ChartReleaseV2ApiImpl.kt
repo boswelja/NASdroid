@@ -34,7 +34,7 @@ internal class ChartReleaseV2ApiImpl(
     }
 
     override suspend fun updateChartRelease(newChartData: ChartRelease) {
-        val request = httpClient.put("chart/release/id/${newChartData.id}") {
+        httpClient.put("chart/release/id/${newChartData.id}") {
             setBody(newChartData)
         }
     }
