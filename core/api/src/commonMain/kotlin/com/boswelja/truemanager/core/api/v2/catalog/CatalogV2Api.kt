@@ -1,5 +1,6 @@
 package com.boswelja.truemanager.core.api.v2.catalog
 
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -29,7 +30,8 @@ interface CatalogV2Api {
     /**
      * Starts a job to retrieve items for a catalog by its [Catalog.id].
      *
-     * @return An ID for a running job. TODO Job system.
+     * @return An ID for a running job. See
+     * [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob]. The Job returns [CatalogItems].
      */
     suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions = GetCatalogItemsOptions()): Int
 
@@ -47,7 +49,8 @@ interface CatalogV2Api {
     /**
      * Updates the system item cache for all catalogs.
      *
-     * @return An ID for a running job. TODO Job system.
+     * @return An ID for a running job. See
+     * [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun syncAll(): Int
 
@@ -64,6 +67,92 @@ interface CatalogV2Api {
      * @return An ID for a running job. TODO Job system.
      */
     suspend fun validateCatalog(id: String): Int
+}
+
+typealias CatalogItems = Map<String, Map<String, CatalogItem>>
+
+/**
+ * Describes aa catalog item available from a configured catalog.
+ *
+ * @property appReadme The HTML-formatted app README.
+ * @property categories A list of categories this item belongs to.
+ * @property description The app description.
+ * @property healthy Whether the catalog entry is considered "healthy".
+ * @property healthyError If not [healthy], this explains why.
+ * @property homeUrl a URL pointing to the catalog items main website.
+ * @property location The path where this catalog items chart information is stored.
+ * @property latestVersion The latest available version of the catalog items container.
+ * @property latestAppVersion The latest available version of the catalog items app.
+ * @property latestHumanVersion A human-readable combination of [latestVersion] and
+ * [latestAppVersion].
+ * @property lastUpdate The date and time the last catalog update was published.
+ * @property name The name of the catalog item.
+ * @property recommended Whether the catalog item is recommended.
+ * @property title The human-readable title of the catalog item.
+ * @property maintainers A list of [Maintainer]s for the item.
+ * @property tags A list of tags this catalog item has.
+ * @property screenshotUrls A list of URLs for available screenshots of the app this item runs.
+ * @property sourceUrls A list of URLs for available source code this catalog item uses.
+ * @property iconUrl The URL of the catalog item icon.
+ */
+@Serializable
+data class CatalogItem(
+    @SerialName("app_readme")
+    val appReadme: String,
+    @SerialName("categories")
+    val categories: List<String>,
+    @SerialName("description")
+    val description: String,
+    @SerialName("healthy")
+    val healthy: Boolean,
+    @SerialName("healthy_error")
+    val healthyError: String?,
+    @SerialName("home")
+    val homeUrl: String,
+    @SerialName("location")
+    val location: String,
+    @SerialName("latest_version")
+    val latestVersion: String,
+    @SerialName("latest_app_version")
+    val latestAppVersion: String,
+    @SerialName("latest_human_version")
+    val latestHumanVersion: String,
+    @SerialName("last_update")
+    val lastUpdate: LocalDateTime,
+    @SerialName("name")
+    val name: String,
+    @SerialName("recommended")
+    val recommended: String,
+    @SerialName("title")
+    val title: String,
+    @SerialName("maintainers")
+    val maintainers: List<Maintainer>,
+    @SerialName("tags")
+    val tags: List<String>,
+    @SerialName("screenshots")
+    val screenshotUrls: List<String>,
+    @SerialName("sources")
+    val sourceUrls: List<String>,
+    @SerialName("icon_url")
+    val iconUrl: String,
+) {
+
+    /**
+     * Describes a maintainer for a catalog item.
+     *
+     * @property name The full name of the maintainer.
+     * @property url A URL to the maintainers website.
+     * @property email The maintainers email address.
+     */
+    @Serializable
+    data class Maintainer(
+        @SerialName("name")
+        val name: String,
+        @SerialName("url")
+        val url: String,
+        @SerialName("email")
+        val email: String
+    )
 }
 
 /**
