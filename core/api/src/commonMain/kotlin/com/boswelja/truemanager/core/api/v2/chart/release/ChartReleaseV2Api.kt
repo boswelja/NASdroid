@@ -43,6 +43,7 @@ interface ChartReleaseV2Api {
 /**
  * Describes a new chart release to be created.
  *
+ * @property item The name of the item in the catalog.
  * @property releaseName The user-specified name for the release.
  * @property catalogId The ID of the catalog item that will be configured for this chart.
  * @property train The catalog train the item comes from.
@@ -51,6 +52,8 @@ interface ChartReleaseV2Api {
  */
 @Serializable
 data class CreateChartRelease(
+    @SerialName("item")
+    val item: String,
     @SerialName("release_name")
     val releaseName: String,
     @SerialName("catalog")
