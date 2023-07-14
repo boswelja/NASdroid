@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_installed_apps">Installed Apps</string>
+    <string name="tab_available_apps">Available Apps</string>
+    <string name="tab_manage_catalogs">Manage Catalogs</string>
+    <string name="tab_manage_docker">Manage Docker Images</string>
+</resources>
