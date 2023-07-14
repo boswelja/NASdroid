@@ -31,7 +31,7 @@ interface CatalogV2Api {
      *
      * @return An ID for a running job. TODO Job system.
      */
-    suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions): Int
+    suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions = GetCatalogItemsOptions()): Int
 
     /**
      * Delete a catalog by its [Catalog.id].
