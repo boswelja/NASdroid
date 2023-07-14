@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AppRegistration
@@ -25,7 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.boswelja.truemanager.apps.ui.available.AvailableAppsScreen
+import com.boswelja.truemanager.apps.ui.installed.InstalledAppsScreen
 
+/**
+ * The main entrypoint for the Apps feature. This screen is tabbed to allow the user to switch
+ * between installed and available apps, as well as catalog and cache management.
+ */
 @Composable
 fun AppsScreen(
     modifier: Modifier = Modifier,
@@ -38,12 +45,26 @@ fun AppsScreen(
             onSelectTabItem = setSelectedTab,
             modifier = Modifier.fillMaxWidth()
         )
-        AnimatedContent(targetState = selectedTab) { tab ->
+        AnimatedContent(targetState = selectedTab, label = "Selected tab content") { tab ->
             when (tab) {
-                TabItem.INSTALLED_APPS -> TODO()
-                TabItem.AVAILABLE_APPS -> TODO()
-                TabItem.MANAGE_CATALOGS -> TODO()
-                TabItem.MANAGE_DOCKER_IMAGES -> TODO()
+                TabItem.INSTALLED_APPS -> {
+                    InstalledAppsScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = contentPadding,
+                    )
+                }
+                TabItem.AVAILABLE_APPS -> {
+                    AvailableAppsScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = contentPadding,
+                    )
+                }
+                TabItem.MANAGE_CATALOGS -> {
+                    TODO()
+                }
+                TabItem.MANAGE_DOCKER_IMAGES -> {
+                    TODO()
+                }
             }
         }
     }
