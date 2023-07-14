@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.apps.logic
+package com.boswelja.truemanager.apps.logic.available
 
 import com.boswelja.truemanager.core.api.v2.catalog.CatalogItems
 import com.boswelja.truemanager.core.api.v2.catalog.CatalogV2Api

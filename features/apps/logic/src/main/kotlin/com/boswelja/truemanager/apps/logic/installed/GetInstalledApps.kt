@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.apps.logic
+package com.boswelja.truemanager.apps.logic.installed
 
 import com.boswelja.truemanager.core.api.v2.chart.release.ChartReleaseV2Api
 
