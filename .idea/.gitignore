@@ -4,6 +4,7 @@
 /deploymentTargetDropDown.xml
 
 /artifacts/
+/codeStyles/
 /appInsightsSettings.xml
 /compiler.xml
 /gradle.xml
