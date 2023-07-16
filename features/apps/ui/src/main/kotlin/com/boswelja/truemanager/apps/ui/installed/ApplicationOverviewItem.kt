@@ -1,9 +1,12 @@
 package com.boswelja.truemanager.apps.ui.installed
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Start
@@ -13,6 +16,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,7 +39,9 @@ fun ApplicationOverviewItem(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(applicationOverview.iconUrl)
@@ -45,12 +52,61 @@ fun ApplicationOverviewItem(
                     modifier = Modifier
                         .size(64.dp)
                 )
-                Column {
-                    Text(applicationOverview.name)
-                    Text(applicationOverview.version)
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        text = applicationOverview.name,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = applicationOverview.version,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = if (applicationOverview.updateAvailable) {
+                            "Update available"
+                        } else {
+                            "Up to date"
+                        },
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Surface(
+                    shape = MaterialTheme.shapes.small,
+                    color = MaterialTheme.colorScheme.primaryContainer
+                ) {
+                    when (applicationOverview.state) {
+                        ApplicationOverview.State.STOPPED -> {
+                            Text(
+                                text = "Stopped",
+                                style = MaterialTheme.typography.labelMedium,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                        ApplicationOverview.State.STARTING -> {
+                            Text(
+                                text = "Starting",
+                                style = MaterialTheme.typography.labelMedium,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                        ApplicationOverview.State.ACTIVE -> {
+                            Text(
+                                text = "Active",
+                                style = MaterialTheme.typography.labelMedium,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                        ApplicationOverview.State.STOPPING -> {
+                            Text(
+                                text = "Stopping",
+                                style = MaterialTheme.typography.labelMedium,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
                 }
             }
-            Divider()
+            Divider(Modifier.padding(vertical = 12.dp))
             Row {
                 if (applicationOverview.webPortalUrl != null) {
                     IconButton(onClick = { /*TODO*/ }) {
