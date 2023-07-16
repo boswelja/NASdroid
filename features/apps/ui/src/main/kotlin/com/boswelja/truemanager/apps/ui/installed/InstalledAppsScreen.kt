@@ -1,5 +1,6 @@
 package com.boswelja.truemanager.apps.ui.installed
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -25,6 +26,8 @@ fun InstalledAppsScreen(
         columns = GridCells.Adaptive(240.dp),
         modifier = modifier,
         contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         installedApps?.let {
             items(
