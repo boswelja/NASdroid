@@ -19,6 +19,8 @@ compose-runtime = "1.5.0-alpha03"
 compose-ui = "1.5.0-beta03"
 accompanist = "0.31.5-beta"
 
+coil = "2.4.0"
+
 room = "2.6.0-alpha02"
 
 ktor = "2.3.2"
@@ -59,6 +61,8 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3", 
 compose-material3-windowsizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "compose-material3" }
 accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
 
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
 room-runtime = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
