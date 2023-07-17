@@ -1,8 +1,13 @@
 @file:Suppress("UndocumentedPublicClass", "UndocumentedPublicProperty") // Yeah, no.
 package com.boswelja.truemanager.core.api.v2.chart.release
 
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.SealedClassSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonContentPolymorphicSerializer
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonObject
 
 @Serializable
 data class ChartRelease(
@@ -186,9 +191,9 @@ data class ChartRelease(
         @SerialName("networkPolicy")
         val networkPolicy: List<String>?,
         @SerialName("persistence")
-        val persistence: Persistence?,
+        val persistence: PersistenceListItem?,
         @SerialName("persistenceList")
-        val persistenceList: List<PersistenceListItem>?,
+        val persistenceList: List<Persistence>?,
         @SerialName("podOptions")
         val podOptions: PodOptions?,
         @SerialName("portal")
@@ -794,8 +799,16 @@ data class ChartRelease(
             @SerialName("setPermissions")
             val setPermissions: Boolean,
             @SerialName("type")
-            val type: String
-        )
+            val type: String,
+            @SerialName("autoPermissions")
+            val autoPermissions: AutoPermissions
+        ) {
+            @Serializable
+            data class AutoPermissions(
+                @SerialName("enabled")
+                val enabled: Boolean
+            )
+        }
 
         @Serializable
         data class PodOptions(
@@ -1248,13 +1261,27 @@ data class ChartRelease(
         val available: Int
     )
 
-    @Serializable
-    data class Portals(
-        @SerialName("web_portal")
-        val webPortal: List<String>?,
-        @SerialName("open")
-        val `open`: List<String>?
-    )
+    @OptIn(InternalSerializationApi::class)
+    @Serializable(with = PortalsSerializer::class)
+    sealed class Portals {
+        abstract val webPortal: List<String>?
+        abstract val open: List<String>?
+        @Serializable
+        data class WebPortal(
+            @SerialName("web_portal")
+            override val webPortal: List<String>?,
+            @SerialName("open")
+            override val open: List<String>?
+        ) : Portals()
+
+        @Serializable
+        data class BadWebPortal(
+            @SerialName("Web Portal")
+            override val webPortal: List<String>?,
+            @SerialName("open")
+            override val open: List<String>?
+        ) : Portals()
+    }
 
     @Serializable
     data class Hook(
@@ -1284,5 +1311,11 @@ data class ChartRelease(
             @SerialName("phase")
             val phase: String
         )
+    }
+}
+internal object PortalsSerializer : JsonContentPolymorphicSerializer<ChartRelease.Portals>(ChartRelease.Portals::class) {
+    override fun selectDeserializer(element: JsonElement) = when {
+        "Web Portal" in element.jsonObject -> ChartRelease.Portals.BadWebPortal.serializer()
+        else -> ChartRelease.Portals.WebPortal.serializer()
     }
 }
