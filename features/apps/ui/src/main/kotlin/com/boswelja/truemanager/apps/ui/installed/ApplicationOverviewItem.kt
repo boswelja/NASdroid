@@ -176,19 +176,14 @@ internal fun AppStateControlButton(
                 Text("Start")
             }
         }
-        ApplicationOverview.State.STARTING -> {
-            FilledTonalButton(onClick = onStart, enabled = false, modifier = modifier) {
-                Text("Start")
-            }
-        }
         ApplicationOverview.State.ACTIVE -> {
             FilledTonalButton(onClick = onStop, modifier = modifier) {
                 Text("Stop")
             }
         }
-        ApplicationOverview.State.STOPPING -> {
+        ApplicationOverview.State.DEPLOYING -> {
             FilledTonalButton(onClick = onStop, enabled = false, modifier = modifier) {
-                Text("Stop")
+                Text("Start")
             }
         }
     }
@@ -212,13 +207,6 @@ internal fun AppStateChip(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
-            ApplicationOverview.State.STARTING -> {
-                Text(
-                    text = "Starting",
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                )
-            }
             ApplicationOverview.State.ACTIVE -> {
                 Text(
                     text = "Active",
@@ -226,9 +214,9 @@ internal fun AppStateChip(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
-            ApplicationOverview.State.STOPPING -> {
+            ApplicationOverview.State.DEPLOYING -> {
                 Text(
-                    text = "Stopping",
+                    text = "Deploying",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )

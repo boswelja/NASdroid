@@ -23,9 +23,8 @@ class GetInstalledApps(
                 train = chartRelease.catalogTrain,
                 state = when (chartRelease.status) {
                     "ACTIVE" -> ApplicationOverview.State.ACTIVE
-                    "STARTING" -> ApplicationOverview.State.STARTING
-                    "STOPPING" -> ApplicationOverview.State.STOPPING
                     "STOPPED" -> ApplicationOverview.State.STOPPED
+                    "DEPLOYING" -> ApplicationOverview.State.DEPLOYING
                     else -> error("Unhandled state: ${chartRelease.status}")
                 },
                 updateAvailable = chartRelease.updateAvailable,
@@ -61,9 +60,8 @@ data class ApplicationOverview(
      * Possible states an application may be in.
      */
     enum class State {
-        STOPPED,
-        STARTING,
+        DEPLOYING,
         ACTIVE,
-        STOPPING
+        STOPPED
     }
 }
