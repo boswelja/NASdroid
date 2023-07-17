@@ -40,6 +40,9 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.boswelja.truemanager.apps.logic.installed.ApplicationOverview
 
+/**
+ * Displays information contained in the given [ApplicationOverview] as a short, reusable list item.
+ */
 @Composable
 fun ApplicationOverviewItem(
     applicationOverview: ApplicationOverview,
