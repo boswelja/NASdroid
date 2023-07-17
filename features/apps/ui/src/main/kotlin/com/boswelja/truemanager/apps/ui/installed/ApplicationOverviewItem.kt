@@ -1,25 +1,36 @@
 package com.boswelja.truemanager.apps.ui.installed
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.OpenInNew
-import androidx.compose.material.icons.filled.Start
-import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material.icons.filled.Terminal
+import androidx.compose.material.icons.filled.TextSnippet
+import androidx.compose.material.icons.filled.Upgrade
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,10 +45,11 @@ fun ApplicationOverviewItem(
     applicationOverview: ApplicationOverview,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier) {
+    ElevatedCard(modifier = modifier) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -50,94 +62,178 @@ fun ApplicationOverviewItem(
                         .build(),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(64.dp)
+                        .size(48.dp)
+                        .align(Alignment.CenterVertically)
                 )
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        text = applicationOverview.name,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = applicationOverview.version,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = if (applicationOverview.updateAvailable) {
-                            "Update available"
-                        } else {
-                            "Up to date"
-                        },
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                Surface(
-                    shape = MaterialTheme.shapes.small,
-                    color = MaterialTheme.colorScheme.primaryContainer
-                ) {
-                    when (applicationOverview.state) {
-                        ApplicationOverview.State.STOPPED -> {
-                            Text(
-                                text = "Stopped",
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
-                        ApplicationOverview.State.STARTING -> {
-                            Text(
-                                text = "Starting",
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
-                        ApplicationOverview.State.ACTIVE -> {
-                            Text(
-                                text = "Active",
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
-                        ApplicationOverview.State.STOPPING -> {
-                            Text(
-                                text = "Stopping",
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
-                    }
-                }
+                AppInfoText(
+                    applicationOverview = applicationOverview,
+                    modifier = Modifier.weight(1f)
+                )
             }
-            Divider(Modifier.padding(vertical = 12.dp))
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 if (applicationOverview.webPortalUrl != null) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.OpenInNew, null)
+                    FilledTonalButton(onClick = { /*TODO*/ }) {
+                        Text("Web Portal")
                     }
                 }
-                when (applicationOverview.state) {
-                    ApplicationOverview.State.STOPPED -> {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(Icons.Default.Start, null)
-                        }
-                    }
-                    ApplicationOverview.State.STARTING -> {
-                        IconButton(onClick = { /*TODO*/ }, enabled = false) {
-                            Icon(Icons.Default.Start, null)
-                        }
-                    }
-                    ApplicationOverview.State.ACTIVE -> {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(Icons.Default.Stop, null)
-                        }
-                    }
-                    ApplicationOverview.State.STOPPING -> {
-                        IconButton(onClick = { /*TODO*/ }, enabled = false) {
-                            Icon(Icons.Default.Stop, null)
-                        }
-                    }
-                }
+                AppStateControlButton(
+                    state = applicationOverview.state,
+                    onStart = { /*TODO*/ },
+                    onStop = { /*TODO*/ }
+                )
+                Spacer(Modifier.weight(1f))
+                AppControlsOverflowMenu()
             }
         }
+    }
+}
 
+@Composable
+internal fun AppInfoText(
+    applicationOverview: ApplicationOverview,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier) {
+        Row {
+            Text(
+                text = applicationOverview.name,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
+            AppStateChip(state = applicationOverview.state)
+        }
+        Text(
+            text = applicationOverview.version,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = if (applicationOverview.updateAvailable) {
+                "Update available"
+            } else {
+                "Up to date"
+            },
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+@Composable
+internal fun AppControlsOverflowMenu(
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
+        var expanded by remember { mutableStateOf(false) }
+        IconButton(onClick = { expanded = true }, modifier = modifier) {
+            Icon(Icons.Default.MoreVert, null)
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            DropdownMenuItem(
+                text = { Text("Upgrade") },
+                leadingIcon = { Icon(Icons.Default.Upgrade, null) },
+                onClick = { /*TODO*/ }
+            )
+            DropdownMenuItem(
+                text = { Text("Roll Back") },
+                leadingIcon = { Icon(Icons.Default.Restore, null) },
+                onClick = { /*TODO*/ }
+            )
+            DropdownMenuItem(
+                text = { Text("Edit") },
+                leadingIcon = { Icon(Icons.Default.Edit, null) },
+                onClick = { /*TODO*/ }
+            )
+            DropdownMenuItem(
+                text = { Text("Shell") },
+                leadingIcon = { Icon(Icons.Default.Terminal, null) },
+                onClick = { /*TODO*/ }
+            )
+            DropdownMenuItem(
+                text = { Text("Logs") },
+                leadingIcon = { Icon(Icons.Default.TextSnippet, null) },
+                onClick = { /*TODO*/ }
+            )
+            DropdownMenuItem(
+                text = { Text("Delete") },
+                leadingIcon = { Icon(Icons.Default.Delete, null) },
+                onClick = { /*TODO*/ }
+            )
+        }
+    }
+}
+
+@Composable
+internal fun AppStateControlButton(
+    state: ApplicationOverview.State,
+    onStart: () -> Unit,
+    onStop: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    when (state) {
+        ApplicationOverview.State.STOPPED -> {
+            FilledTonalButton(onClick = onStart, modifier = modifier) {
+                Text("Start")
+            }
+        }
+        ApplicationOverview.State.STARTING -> {
+            FilledTonalButton(onClick = onStart, enabled = false, modifier = modifier) {
+                Text("Start")
+            }
+        }
+        ApplicationOverview.State.ACTIVE -> {
+            FilledTonalButton(onClick = onStop, modifier = modifier) {
+                Text("Stop")
+            }
+        }
+        ApplicationOverview.State.STOPPING -> {
+            FilledTonalButton(onClick = onStop, enabled = false, modifier = modifier) {
+                Text("Stop")
+            }
+        }
+    }
+}
+
+@Composable
+internal fun AppStateChip(
+    state: ApplicationOverview.State,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        modifier = modifier
+    ) {
+        when (state) {
+            ApplicationOverview.State.STOPPED -> {
+                Text(
+                    text = "Stopped",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+            ApplicationOverview.State.STARTING -> {
+                Text(
+                    text = "Starting",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+            ApplicationOverview.State.ACTIVE -> {
+                Text(
+                    text = "Active",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+            ApplicationOverview.State.STOPPING -> {
+                Text(
+                    text = "Stopping",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+        }
     }
 }
 

@@ -23,7 +23,7 @@ fun InstalledAppsScreen(
 ) {
     val installedApps by viewModel.installedApps.collectAsState()
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(300.dp),
+        columns = GridCells.Adaptive(240.dp),
         modifier = modifier,
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
