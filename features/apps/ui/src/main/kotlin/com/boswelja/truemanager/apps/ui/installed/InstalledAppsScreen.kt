@@ -5,11 +5,17 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.apps.ui.R
+import com.boswelja.truemanager.core.menuprovider.MenuItem
+import com.boswelja.truemanager.core.menuprovider.ProvideMenuItems
 import org.koin.androidx.compose.getViewModel
 
 /**
@@ -21,6 +27,15 @@ fun InstalledAppsScreen(
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: InstalledAppsViewModel = getViewModel()
 ) {
+    ProvideMenuItems(
+        MenuItem(
+            label = stringResource(R.string.menu_item_refresh),
+            imageVector = Icons.Default.Refresh,
+            onClick = viewModel::refresh,
+            isImportant = true
+        )
+    )
+
     val installedApps by viewModel.installedApps.collectAsState()
     LazyVerticalGrid(
         columns = GridCells.Adaptive(240.dp),
