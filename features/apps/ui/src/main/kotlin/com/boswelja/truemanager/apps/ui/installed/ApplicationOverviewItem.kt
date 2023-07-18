@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Upgrade
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,12 +44,17 @@ import com.boswelja.truemanager.apps.logic.installed.ApplicationOverview
 /**
  * Displays information contained in the given [ApplicationOverview] as a short, reusable list item.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApplicationOverviewItem(
     applicationOverview: ApplicationOverview,
+    onClick: () -> Unit,
+    onLaunchWebPortal: () -> Unit,
+    onStart: () -> Unit,
+    onStop: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ElevatedCard(modifier = modifier) {
+    ElevatedCard(modifier = modifier, onClick = onClick) {
         Column(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -77,14 +83,14 @@ fun ApplicationOverviewItem(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (applicationOverview.webPortalUrl != null) {
-                    FilledTonalButton(onClick = { /*TODO*/ }) {
+                    FilledTonalButton(onClick = onLaunchWebPortal) {
                         Text("Web Portal")
                     }
                 }
                 AppStateControlButton(
                     state = applicationOverview.state,
-                    onStart = { /*TODO*/ },
-                    onStop = { /*TODO*/ }
+                    onStart = onStart,
+                    onStop = onStop
                 )
                 Spacer(Modifier.weight(1f))
                 AppControlsOverflowMenu()
@@ -243,6 +249,10 @@ fun ApplicationOverviewItemPreview() {
                 updateAvailable = false,
                 webPortalUrl = "http://my.jellyfin.local/"
             ),
+            onClick = { /* no-op */ },
+            onLaunchWebPortal = { /* no-op */ },
+            onStart = { /* no-op */ },
+            onStop = { /* no-op */ },
             modifier = Modifier.padding(16.dp)
         )
     }

@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.apps.ui.R
 import com.boswelja.truemanager.core.menuprovider.MenuItem
 import com.boswelja.truemanager.core.menuprovider.ProvideMenuItems
+import com.boswelja.truemanager.core.urllauncher.rememberUrlLauncher
 import org.koin.androidx.compose.getViewModel
 
 /**
@@ -27,6 +28,8 @@ fun InstalledAppsScreen(
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: InstalledAppsViewModel = getViewModel()
 ) {
+    val urlLauncher = rememberUrlLauncher()
+
     ProvideMenuItems(
         MenuItem(
             label = stringResource(R.string.menu_item_refresh),
@@ -44,11 +47,22 @@ fun InstalledAppsScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        installedApps?.let {
+        installedApps?.let { apps ->
             items(
-                items = it,
+                items = apps,
+                key = { it.name }
             ) { applicationOverview ->
-                ApplicationOverviewItem(applicationOverview = applicationOverview)
+                ApplicationOverviewItem(
+                    applicationOverview = applicationOverview,
+                    onClick = { /* TODO */ },
+                    onLaunchWebPortal = {
+                        applicationOverview.webPortalUrl?.let {
+                            urlLauncher.launchUrl(it)
+                        }
+                    },
+                    onStart = { /* TODO */ },
+                    onStop = { /* TODO */ }
+                )
             }
         }
     }
