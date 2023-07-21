@@ -1,6 +1,5 @@
 package com.boswelja.truemanager.apps.logic.installed
 
-import android.util.Log
 import com.boswelja.truemanager.core.api.v2.chart.release.ChartReleaseV2Api
 import com.boswelja.truemanager.core.api.v2.core.CoreV2Api
 
@@ -21,7 +20,6 @@ class StopApp(
         var isFinished = false
         while (!isFinished) {
             val jobResult = coreV2Api.getJob<String>(jobId)
-            Log.d("StartApp", jobResult.state)
             if (jobResult.state != "RUNNING") {
                 isFinished = true
             }

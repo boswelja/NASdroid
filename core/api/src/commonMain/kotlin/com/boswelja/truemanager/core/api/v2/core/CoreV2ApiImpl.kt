@@ -59,7 +59,8 @@ internal class CoreV2ApiImpl(
             parameter("id", id)
         }
         val result: String = response.bodyAsText()
-        return Json.decodeFromString(result)
+        val items: List<Job<T>> = Json.decodeFromString(result)
+        return items.first()
     }
 
     override suspend fun abortJob(id: Int) {
