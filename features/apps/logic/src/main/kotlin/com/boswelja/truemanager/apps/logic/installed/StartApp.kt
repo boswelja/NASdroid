@@ -22,7 +22,7 @@ class StartApp(
         while (!isFinished) {
             val jobResult = coreV2Api.getJob<String>(jobId)
             Log.d("StartApp", jobResult.state)
-            if (jobResult.state == "SUCCESS") {
+            if (jobResult.state != "RUNNING") {
                 isFinished = true
             }
         }
