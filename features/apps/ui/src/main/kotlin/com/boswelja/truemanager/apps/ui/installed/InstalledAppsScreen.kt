@@ -60,8 +60,8 @@ fun InstalledAppsScreen(
                             urlLauncher.launchUrl(it)
                         }
                     },
-                    onStart = { /* TODO */ },
-                    onStop = { /* TODO */ }
+                    onStart = { viewModel.start(applicationOverview.name) },
+                    onStop = { viewModel.stop(applicationOverview.name) }
                 )
             }
         }

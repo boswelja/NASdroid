@@ -38,6 +38,12 @@ interface ChartReleaseV2Api {
      * Updates the details for the chart release whose ID matches the given [ChartRelease.id].
      */
     suspend fun updateChartRelease(newChartData: ChartRelease)
+
+    /**
+     * Scales [releaseName] to [replicaCount] instances.
+     * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     */
+    suspend fun scale(releaseName: String, replicaCount: Int): Int
 }
 
 /**
