@@ -41,9 +41,17 @@ interface ChartReleaseV2Api {
 
     /**
      * Scales [releaseName] to [replicaCount] instances.
+     *
      * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun scale(releaseName: String, replicaCount: Int): Int
+
+    /**
+     * Roll back a release to a specified version.
+     *
+     * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     */
+    suspend fun rollbackRelease(releaseName: String, options: RollbackOptions): Int
 }
 
 /**
@@ -70,4 +78,27 @@ data class CreateChartRelease(
     val version: String,
     @SerialName("values")
     val values: Map<String, String>
+)
+
+/**
+ * Options for rolling back a release. See [ChartReleaseV2Api.rollbackRelease].
+ *
+ * @property itemVersion The version to roll the chart release back to.
+ * @property forceRollback Force the rollback operation to proceed even when no snapshots are found.
+ * This is only considered when [rollbackSnapshot] is set.
+ * @property recreateResources If true, the release Kubernetes resources will be deleted and
+ * recreated.
+ * @property rollbackSnapshot If true, roll back any PVC or IX Volume snapshots consumed by the
+ * chart.
+ */
+@Serializable
+data class RollbackOptions(
+    @SerialName("item_version")
+    val itemVersion: String,
+    @SerialName("force_rollback")
+    val forceRollback: Boolean = false,
+    @SerialName("recreate_resources")
+    val recreateResources: Boolean = false,
+    @SerialName("rollback_snapshot")
+    val rollbackSnapshot: Boolean = true,
 )

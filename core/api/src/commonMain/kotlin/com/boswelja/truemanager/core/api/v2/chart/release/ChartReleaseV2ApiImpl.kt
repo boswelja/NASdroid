@@ -47,6 +47,13 @@ internal class ChartReleaseV2ApiImpl(
         }
         return response.body()
     }
+
+    override suspend fun rollbackRelease(releaseName: String, options: RollbackOptions): Int {
+        val response = httpClient.post("chart/release/rollback") {
+            setBody(RollbackReleaseBody(releaseName, options))
+        }
+        return response.body()
+    }
 }
 
 @Serializable
@@ -62,3 +69,11 @@ internal data class ScaleReleaseBody(
         val replicaCount: Int
     )
 }
+
+@Serializable
+internal data class RollbackReleaseBody(
+    @SerialName("release_name")
+    val releaseName: String,
+    @SerialName("rollback_options")
+    val rollbackOptions: RollbackOptions,
+)
