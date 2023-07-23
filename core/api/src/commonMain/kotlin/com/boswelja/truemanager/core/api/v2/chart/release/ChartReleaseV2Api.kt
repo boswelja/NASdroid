@@ -63,6 +63,11 @@ interface ChartReleaseV2Api {
      * TODO Return type
      */
     suspend fun getPodLogs(releaseName: String, podLogsOptions: PodLogsOptions)
+
+    /**
+     * Deletes the release with the given ID.
+     */
+    suspend fun deleteRelease(id: String)
 }
 
 /**

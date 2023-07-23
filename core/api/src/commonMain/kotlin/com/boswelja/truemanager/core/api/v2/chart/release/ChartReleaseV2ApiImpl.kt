@@ -68,6 +68,10 @@ internal class ChartReleaseV2ApiImpl(
         }
         return response.body()
     }
+
+    override suspend fun deleteRelease(id: String) {
+        httpClient.delete("chart/release/id/$id")
+    }
 }
 
 @Serializable
