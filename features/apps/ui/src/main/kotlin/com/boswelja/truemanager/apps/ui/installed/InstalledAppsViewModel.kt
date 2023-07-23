@@ -3,6 +3,7 @@ package com.boswelja.truemanager.apps.ui.installed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.apps.logic.installed.ApplicationOverview
+import com.boswelja.truemanager.apps.logic.installed.DeleteApp
 import com.boswelja.truemanager.apps.logic.installed.GetInstalledApps
 import com.boswelja.truemanager.apps.logic.installed.StartApp
 import com.boswelja.truemanager.apps.logic.installed.StopApp
@@ -17,6 +18,7 @@ class InstalledAppsViewModel(
     private val getInstalledApps: GetInstalledApps,
     private val startApp: StartApp,
     private val stopApp: StopApp,
+    private val deleteApp: DeleteApp,
 ) : ViewModel() {
 
     private val _installedApps = MutableStateFlow<List<ApplicationOverview>?>(null)
@@ -49,6 +51,13 @@ class InstalledAppsViewModel(
     fun stop(appName: String) {
         viewModelScope.launch {
             stopApp(appName)
+            refreshSuspending()
+        }
+    }
+
+    fun delete(appName: String) {
+        viewModelScope.launch {
+            deleteApp(appName)
             refreshSuspending()
         }
     }

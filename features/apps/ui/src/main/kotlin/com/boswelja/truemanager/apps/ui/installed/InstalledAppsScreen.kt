@@ -62,7 +62,13 @@ fun InstalledAppsScreen(
                         }
                     },
                     onStart = { viewModel.start(applicationOverview.name) },
-                    onStop = { viewModel.stop(applicationOverview.name) }
+                    onStop = { viewModel.stop(applicationOverview.name) },
+                    onStartUpgrade = { /* no-op */ },
+                    onStartRollback = { /* no-op */ },
+                    onEdit = { /* no-op */ },
+                    onOpenShell = { /* no-op */ },
+                    onOpenLogs = { /* no-op */ },
+                    onStartDelete = { /* no-op */ },
                 )
             }
         }

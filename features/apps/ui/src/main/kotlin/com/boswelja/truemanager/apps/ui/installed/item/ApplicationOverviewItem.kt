@@ -33,6 +33,12 @@ fun ApplicationOverviewItem(
     onLaunchWebPortal: () -> Unit,
     onStart: () -> Unit,
     onStop: () -> Unit,
+    onStartUpgrade: () -> Unit,
+    onStartRollback: () -> Unit,
+    onEdit: () -> Unit,
+    onOpenShell: () -> Unit,
+    onOpenLogs: () -> Unit,
+    onStartDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(modifier = modifier, onClick = onClick) {
@@ -76,7 +82,16 @@ fun ApplicationOverviewItem(
                 Spacer(Modifier.weight(1f))
                 AppControlsOverflowMenu(
                     app = applicationOverview,
-                    onControlClick = {}
+                    onControlClick = { control ->
+                        when (control) {
+                            AppControl.UPGRADE -> onStartUpgrade()
+                            AppControl.ROLL_BACK -> onStartRollback()
+                            AppControl.EDIT -> onEdit()
+                            AppControl.SHELL -> onOpenShell()
+                            AppControl.LOGS -> onOpenLogs()
+                            AppControl.DELETE -> onStartDelete()
+                        }
+                    }
                 )
             }
         }
@@ -128,6 +143,12 @@ fun ApplicationOverviewItemPreview() {
             onLaunchWebPortal = { /* no-op */ },
             onStart = { /* no-op */ },
             onStop = { /* no-op */ },
+            onStartUpgrade = { /* no-op */ },
+            onStartRollback = { /* no-op */ },
+            onEdit = { /* no-op */ },
+            onOpenShell = { /* no-op */ },
+            onOpenLogs = { /* no-op */ },
+            onStartDelete = { /* no-op */ },
             modifier = Modifier.padding(16.dp)
         )
     }
