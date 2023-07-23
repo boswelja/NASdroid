@@ -66,8 +66,10 @@ interface ChartReleaseV2Api {
 
     /**
      * Deletes the release with the given ID.
+     *
+     * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
      */
-    suspend fun deleteRelease(id: String)
+    suspend fun deleteRelease(id: String, deleteUnusedImages: Boolean): Int
 }
 
 /**

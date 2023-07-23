@@ -55,9 +55,9 @@ class InstalledAppsViewModel(
         }
     }
 
-    fun delete(appName: String) {
+    fun delete(appName: String, deleteUnusedImages: Boolean) {
         viewModelScope.launch {
-            deleteApp(appName)
+            deleteApp(appName, deleteUnusedImages)
             refreshSuspending()
         }
     }

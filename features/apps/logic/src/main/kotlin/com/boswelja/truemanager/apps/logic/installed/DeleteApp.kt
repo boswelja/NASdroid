@@ -12,7 +12,7 @@ class DeleteApp(
     /**
      * Deletes the specified application, and all its volumes.
      */
-    suspend operator fun invoke(releaseName: String) {
-        chartReleaseV2Api.deleteRelease(releaseName)
+    suspend operator fun invoke(releaseName: String, deleteUnusedImages: Boolean) {
+        chartReleaseV2Api.deleteRelease(releaseName, deleteUnusedImages)
     }
 }

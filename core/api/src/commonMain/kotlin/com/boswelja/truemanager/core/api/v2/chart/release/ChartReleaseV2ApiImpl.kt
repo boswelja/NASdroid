@@ -69,8 +69,11 @@ internal class ChartReleaseV2ApiImpl(
         return response.body()
     }
 
-    override suspend fun deleteRelease(id: String) {
-        httpClient.delete("chart/release/id/$id")
+    override suspend fun deleteRelease(id: String, deleteUnusedImages: Boolean): Int {
+        val response = httpClient.delete("chart/release/id/$id") {
+            setBody(DeleteAppBody(deleteUnusedImages))
+        }
+        return response.body()
     }
 }
 
@@ -102,4 +105,10 @@ internal data class PodLogsBody(
     val releaseName: String,
     @SerialName("options")
     val options: PodLogsOptions,
+)
+
+@Serializable
+internal data class DeleteAppBody(
+    @SerialName("delete_unused_images")
+    val deleteUnusedImages: Boolean,
 )
