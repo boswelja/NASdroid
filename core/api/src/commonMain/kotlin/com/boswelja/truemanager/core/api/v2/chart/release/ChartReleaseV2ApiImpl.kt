@@ -54,6 +54,20 @@ internal class ChartReleaseV2ApiImpl(
         }
         return response.body()
     }
+
+    override suspend fun getPodLogChoices(releaseName: String): PodLogChoices {
+        val response = httpClient.post("chart/release/pod_logs_choices") {
+            setBody(releaseName)
+        }
+        return response.body()
+    }
+
+    override suspend fun getPodLogs(releaseName: String, podLogsOptions: PodLogsOptions) {
+        val response = httpClient.post("chart/release/pod_logs") {
+            setBody(PodLogsBody(releaseName, podLogsOptions))
+        }
+        return response.body()
+    }
 }
 
 @Serializable
@@ -76,4 +90,12 @@ internal data class RollbackReleaseBody(
     val releaseName: String,
     @SerialName("rollback_options")
     val rollbackOptions: RollbackOptions,
+)
+
+@Serializable
+internal data class PodLogsBody(
+    @SerialName("release_name")
+    val releaseName: String,
+    @SerialName("options")
+    val options: PodLogsOptions,
 )

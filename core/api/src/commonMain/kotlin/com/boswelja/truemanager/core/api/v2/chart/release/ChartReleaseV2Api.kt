@@ -52,6 +52,17 @@ interface ChartReleaseV2Api {
      * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun rollbackRelease(releaseName: String, options: RollbackOptions): Int
+
+    /**
+     * Gets the available log choices for the given release.
+     */
+    suspend fun getPodLogChoices(releaseName: String): PodLogChoices
+
+    /**
+     * Exports logs for a container in a pod for the given release.
+     * TODO Return type
+     */
+    suspend fun getPodLogs(releaseName: String, podLogsOptions: PodLogsOptions)
 }
 
 /**
@@ -101,4 +112,29 @@ data class RollbackOptions(
     val recreateResources: Boolean = false,
     @SerialName("rollback_snapshot")
     val rollbackSnapshot: Boolean = true,
+)
+
+/**
+ * A Map of pod names to a list of container names.
+ */
+typealias PodLogChoices = Map<String, List<String>>
+
+/**
+ * Options for retrieving pod logs.
+ *
+ * @property podName The name of the pod hosting the desired container.
+ * @property containerName The name of the container inside the target pod.
+ * @property limitBytes The maximum number of bytes worth of logs to export.
+ * @property tailLines The maximum number of log lines to retrieve.
+ */
+@Serializable
+data class PodLogsOptions(
+    @SerialName("pod_name")
+    val podName: String,
+    @SerialName("container_name")
+    val containerName: String,
+    @SerialName("limit_bytes")
+    val limitBytes: Long? = null,
+    @SerialName("tail_lines")
+    val tailLines: Long = 500,
 )
