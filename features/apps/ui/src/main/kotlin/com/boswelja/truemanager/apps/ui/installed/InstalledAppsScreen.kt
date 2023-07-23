@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.apps.ui.R
+import com.boswelja.truemanager.apps.ui.installed.item.ApplicationOverviewItem
 import com.boswelja.truemanager.core.menuprovider.MenuItem
 import com.boswelja.truemanager.core.menuprovider.ProvideMenuItems
 import com.boswelja.truemanager.core.urllauncher.rememberUrlLauncher
