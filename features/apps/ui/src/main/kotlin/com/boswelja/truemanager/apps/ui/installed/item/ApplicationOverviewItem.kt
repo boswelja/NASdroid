@@ -74,7 +74,10 @@ fun ApplicationOverviewItem(
                     onStop = onStop
                 )
                 Spacer(Modifier.weight(1f))
-                AppControlsOverflowMenu(canUpgrade = applicationOverview.updateAvailable)
+                AppControlsOverflowMenu(
+                    app = applicationOverview,
+                    onControlClick = {}
+                )
             }
         }
     }
