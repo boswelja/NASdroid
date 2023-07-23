@@ -93,7 +93,7 @@ fun ApplicationOverviewItem(
                     onStop = onStop
                 )
                 Spacer(Modifier.weight(1f))
-                AppControlsOverflowMenu()
+                AppControlsOverflowMenu(canUpgrade = applicationOverview.updateAvailable)
             }
         }
     }
@@ -130,6 +130,7 @@ internal fun AppInfoText(
 
 @Composable
 internal fun AppControlsOverflowMenu(
+    canUpgrade: Boolean,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
@@ -141,7 +142,8 @@ internal fun AppControlsOverflowMenu(
             DropdownMenuItem(
                 text = { Text("Upgrade") },
                 leadingIcon = { Icon(Icons.Default.Upgrade, null) },
-                onClick = { /*TODO*/ }
+                onClick = { /*TODO*/ },
+                enabled = canUpgrade
             )
             DropdownMenuItem(
                 text = { Text("Roll Back") },
