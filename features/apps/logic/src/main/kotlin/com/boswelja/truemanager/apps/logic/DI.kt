@@ -1,6 +1,7 @@
 package com.boswelja.truemanager.apps.logic
 
 import com.boswelja.truemanager.apps.logic.installed.GetInstalledApps
+import com.boswelja.truemanager.apps.logic.installed.GetLogOptions
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -9,4 +10,5 @@ import org.koin.dsl.module
  */
 val AppsLogicModule = module {
     factoryOf(::GetInstalledApps)
+    factoryOf(::GetLogOptions)
 }
