@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.apps.logic.installed.LogOptions
 import com.boswelja.truemanager.apps.ui.R
 import com.boswelja.truemanager.apps.ui.installed.item.AppAction
 import com.boswelja.truemanager.apps.ui.installed.item.ApplicationOverviewItem

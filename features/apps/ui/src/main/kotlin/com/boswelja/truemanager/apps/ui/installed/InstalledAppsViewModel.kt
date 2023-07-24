@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.apps.logic.installed.ApplicationOverview
 import com.boswelja.truemanager.apps.logic.installed.DeleteApp
 import com.boswelja.truemanager.apps.logic.installed.GetInstalledApps
+import com.boswelja.truemanager.apps.logic.installed.LogOptions
 import com.boswelja.truemanager.apps.logic.installed.StartApp
 import com.boswelja.truemanager.apps.logic.installed.StopApp
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +42,9 @@ class InstalledAppsViewModel(
         }
     }
 
+    /**
+     * Starts an app that is currently stopped.
+     */
     fun start(appName: String) {
         viewModelScope.launch {
             startApp(appName)
@@ -48,6 +52,9 @@ class InstalledAppsViewModel(
         }
     }
 
+    /**
+     * Stop an app that is currently active.
+     */
     fun stop(appName: String) {
         viewModelScope.launch {
             stopApp(appName)
@@ -55,6 +62,9 @@ class InstalledAppsViewModel(
         }
     }
 
+    /**
+     * Delete an installed app.
+     */
     fun delete(appName: String, deleteUnusedImages: Boolean) {
         viewModelScope.launch {
             deleteApp(appName, deleteUnusedImages)
