@@ -6,9 +6,11 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 internal class CoreV2ApiImpl(
     private val client: HttpClient
@@ -56,7 +58,9 @@ internal class CoreV2ApiImpl(
         val response = client.get("core/get_jobs") {
             parameter("id", id)
         }
-        return response.body()
+        val result: String = response.bodyAsText()
+        val items: List<Job<T>> = Json.decodeFromString(result)
+        return items.first()
     }
 
     override suspend fun abortJob(id: Int) {
