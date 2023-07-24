@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.apps.ui.R
+import com.boswelja.truemanager.apps.ui.installed.item.AppAction
 import com.boswelja.truemanager.apps.ui.installed.item.ApplicationOverviewItem
 import com.boswelja.truemanager.core.menuprovider.MenuItem
 import com.boswelja.truemanager.core.menuprovider.ProvideMenuItems
@@ -71,19 +72,29 @@ fun InstalledAppsScreen(
                 ApplicationOverviewItem(
                     applicationOverview = applicationOverview,
                     onClick = { /* TODO */ },
-                    onLaunchWebPortal = {
-                        applicationOverview.webPortalUrl?.let {
-                            urlLauncher.launchUrl(it)
+                    onActionClick = { action ->
+                        when (action) {
+                            AppAction.START -> {
+                                viewModel.start(applicationOverview.name)
+                            }
+                            AppAction.STOP -> {
+                                viewModel.stop(applicationOverview.name)
+                            }
+                            AppAction.DELETE -> {
+                                deletingApp = applicationOverview.name
+                            }
+                            AppAction.EDIT -> TODO()
+                            AppAction.UPGRADE -> TODO()
+                            AppAction.ROLLBACK -> TODO()
+                            AppAction.SHELL -> TODO()
+                            AppAction.LOGS -> TODO()
+                            AppAction.WEB_PORTAL -> {
+                                applicationOverview.webPortalUrl?.let {
+                                    urlLauncher.launchUrl(it)
+                                }
+                            }
                         }
                     },
-                    onStart = { viewModel.start(applicationOverview.name) },
-                    onStop = { viewModel.stop(applicationOverview.name) },
-                    onStartUpgrade = { /* no-op */ },
-                    onStartRollback = { /* no-op */ },
-                    onEdit = { /* no-op */ },
-                    onOpenShell = { /* no-op */ },
-                    onOpenLogs = { /* no-op */ },
-                    onStartDelete = { deletingApp = applicationOverview.name },
                 )
             }
         }

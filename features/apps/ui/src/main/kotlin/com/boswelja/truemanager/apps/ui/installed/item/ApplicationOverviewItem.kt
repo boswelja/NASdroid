@@ -30,15 +30,7 @@ import com.boswelja.truemanager.apps.logic.installed.ApplicationOverview
 fun ApplicationOverviewItem(
     applicationOverview: ApplicationOverview,
     onClick: () -> Unit,
-    onLaunchWebPortal: () -> Unit,
-    onStart: () -> Unit,
-    onStop: () -> Unit,
-    onStartUpgrade: () -> Unit,
-    onStartRollback: () -> Unit,
-    onEdit: () -> Unit,
-    onOpenShell: () -> Unit,
-    onOpenLogs: () -> Unit,
-    onStartDelete: () -> Unit,
+    onActionClick: (AppAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(modifier = modifier, onClick = onClick) {
@@ -70,26 +62,26 @@ fun ApplicationOverviewItem(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (applicationOverview.webPortalUrl != null) {
-                    FilledTonalButton(onClick = onLaunchWebPortal) {
+                    FilledTonalButton(onClick = { onActionClick(AppAction.WEB_PORTAL) }) {
                         Text("Web Portal")
                     }
                 }
                 AppStateControlButton(
                     state = applicationOverview.state,
-                    onStart = onStart,
-                    onStop = onStop
+                    onStart = { onActionClick(AppAction.START) },
+                    onStop = { onActionClick(AppAction.STOP) }
                 )
                 Spacer(Modifier.weight(1f))
                 AppControlsOverflowMenu(
                     app = applicationOverview,
                     onControlClick = { control ->
                         when (control) {
-                            AppControl.UPGRADE -> onStartUpgrade()
-                            AppControl.ROLL_BACK -> onStartRollback()
-                            AppControl.EDIT -> onEdit()
-                            AppControl.SHELL -> onOpenShell()
-                            AppControl.LOGS -> onOpenLogs()
-                            AppControl.DELETE -> onStartDelete()
+                            AppControl.UPGRADE -> onActionClick(AppAction.UPGRADE)
+                            AppControl.ROLL_BACK -> onActionClick(AppAction.ROLLBACK)
+                            AppControl.EDIT -> onActionClick(AppAction.EDIT)
+                            AppControl.SHELL -> onActionClick(AppAction.SHELL)
+                            AppControl.LOGS -> onActionClick(AppAction.LOGS)
+                            AppControl.DELETE -> onActionClick(AppAction.DELETE)
                         }
                     }
                 )
@@ -124,6 +116,21 @@ internal fun AppStateControlButton(
     }
 }
 
+/**
+ * Describes all possible actions the user can perform on a single app item.
+ */
+enum class AppAction {
+    START,
+    STOP,
+    DELETE,
+    EDIT,
+    UPGRADE,
+    ROLLBACK,
+    SHELL,
+    LOGS,
+    WEB_PORTAL
+}
+
 @Preview
 @Composable
 fun ApplicationOverviewItemPreview() {
@@ -140,15 +147,7 @@ fun ApplicationOverviewItemPreview() {
                 webPortalUrl = "http://my.jellyfin.local/"
             ),
             onClick = { /* no-op */ },
-            onLaunchWebPortal = { /* no-op */ },
-            onStart = { /* no-op */ },
-            onStop = { /* no-op */ },
-            onStartUpgrade = { /* no-op */ },
-            onStartRollback = { /* no-op */ },
-            onEdit = { /* no-op */ },
-            onOpenShell = { /* no-op */ },
-            onOpenLogs = { /* no-op */ },
-            onStartDelete = { /* no-op */ },
+            onActionClick = { /* no-op */ },
             modifier = Modifier.padding(16.dp)
         )
     }
