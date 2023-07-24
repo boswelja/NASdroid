@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.boswelja.truemanager.apps.logic.installed.LogOptions
 import com.boswelja.truemanager.apps.ui.R
 import com.boswelja.truemanager.apps.ui.installed.item.AppAction
 import com.boswelja.truemanager.apps.ui.installed.item.ApplicationOverviewItem
@@ -39,6 +38,7 @@ import org.koin.androidx.compose.getViewModel
  */
 @Composable
 fun InstalledAppsScreen(
+    onShowLogs: (appName: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: InstalledAppsViewModel = getViewModel()
@@ -88,7 +88,9 @@ fun InstalledAppsScreen(
                             AppAction.UPGRADE -> TODO()
                             AppAction.ROLLBACK -> TODO()
                             AppAction.SHELL -> TODO()
-                            AppAction.LOGS -> TODO()
+                            AppAction.LOGS -> {
+                                onShowLogs(applicationOverview.name)
+                            }
                             AppAction.WEB_PORTAL -> {
                                 applicationOverview.webPortalUrl?.let {
                                     urlLauncher.launchUrl(it)
