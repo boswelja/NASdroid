@@ -28,7 +28,9 @@ class GetInstalledApps(
                     else -> error("Unhandled state: ${chartRelease.status}")
                 },
                 updateAvailable = chartRelease.updateAvailable,
-                webPortalUrl = chartRelease.path
+                webPortalUrl = chartRelease.portals?.let { portals ->
+                    portals.open?.firstOrNull() ?: portals.webPortal?.firstOrNull()
+                }
             )
         }
     }
