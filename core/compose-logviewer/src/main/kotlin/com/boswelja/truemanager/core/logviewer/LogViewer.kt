@@ -15,6 +15,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -61,6 +62,7 @@ fun LogViewer(
                 ) {
                     Text(
                         text = lineNumber,
+                        color = MaterialTheme.colorScheme.contentColorFor(background),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     )
                     VerticalDivider(
@@ -68,6 +70,7 @@ fun LogViewer(
                     )
                     Text(
                         text = logLine,
+                        color = MaterialTheme.colorScheme.contentColorFor(background),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     )
                 }
