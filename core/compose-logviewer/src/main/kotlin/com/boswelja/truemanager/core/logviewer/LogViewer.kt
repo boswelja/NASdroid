@@ -31,9 +31,20 @@ fun LogViewer(
 ) {
     val fontFamily = rememberFontFamily()
 
+    val maxLineCount = remember(logContents) { (logContents.size + 1).toString() }
     ProvideTextStyle(value = LocalTextStyle.current.copy(fontFamily = fontFamily)) {
         LazyColumn(modifier = modifier, contentPadding = contentPadding) {
             itemsIndexed(logContents) { index, logLine ->
+                val lineNumber = remember(index, maxLineCount) {
+                    val lineNumStr = (index + 1).toString()
+                    val blankSpaceCount = maxLineCount.length - lineNumStr.length
+                    buildString {
+                        (0..blankSpaceCount).forEach { _ ->
+                            append("\u0020")
+                        }
+                        append(lineNumStr)
+                    }
+                }
                 val background = if (index % 2 == 0) {
                     MaterialTheme.colorScheme.surface
                 } else {
@@ -45,7 +56,7 @@ fun LogViewer(
                         .background(background)
                         .padding(horizontal = 8.dp, vertical = 2.dp)
                 ) {
-                    Text((index + 1).toString())
+                    Text(lineNumber)
                     VerticalDivider()
                     Text(logLine)
                 }
