@@ -27,6 +27,9 @@ import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+/**
+ * A Composable that can be used to display log-style text.
+ */
 @Composable
 fun LogViewer(
     logContents: List<String>,
