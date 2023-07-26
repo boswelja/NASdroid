@@ -1,6 +1,7 @@
 package com.boswelja.truemanager.apps.ui.installed.logs
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -29,6 +30,9 @@ fun LogOptionsPicker(
     val (selectedContainer, setSelectedContainer) = rememberSaveable(options) {
         mutableStateOf("")
     }
+    val (maxLines, setMaxLines) = rememberSaveable {
+        mutableStateOf("")
+    }
     Column(modifier) {
         PodPicker(
             podOptions = options?.podsAndCharts?.keys.orEmpty().toList(),
@@ -40,6 +44,26 @@ fun LogOptionsPicker(
             selectedContainer = selectedContainer,
             onContainerSelected = setSelectedContainer
         )
+        TextField(
+            value = maxLines,
+            onValueChange = setMaxLines,
+            label = {
+                Text("Tail lines")
+            }
+        )
+        Button(
+            onClick = {
+                onLogOptionsSelected(
+                    SelectedLogOptions(
+                        podName = selectedPod,
+                        containerName = selectedContainer,
+                        maxLines = maxLines.toLong()
+                    )
+                )
+            }
+        ) {
+            Text("View Logs")
+        }
     }
 }
 
@@ -66,6 +90,9 @@ internal fun PodPicker(
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = podPickerExpanded
                 )
+            },
+            label = {
+                Text("Pod")
             },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
             modifier = modifier
@@ -114,6 +141,9 @@ internal fun ContainerPicker(
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = containerPickerExpanded
                 )
+            },
+            label = {
+                Text("Container")
             },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
             modifier = modifier
