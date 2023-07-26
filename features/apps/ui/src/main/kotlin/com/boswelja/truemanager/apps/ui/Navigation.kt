@@ -26,14 +26,14 @@ fun NavGraphBuilder.appsGraph(
         composable("overview") {
             AppsScreen(
                 onShowLogs = {
-                    navController.navigate("logs")
+                    navController.navigate("logs/$it")
                 },
                 modifier = modifier,
                 contentPadding = contentPadding
             )
         }
         composable(
-            route = "logs",
+            route = "logs/{appName}",
             arguments = listOf(
                 navArgument("appName") {
                     nullable = false
@@ -45,17 +45,6 @@ fun NavGraphBuilder.appsGraph(
                 modifier = modifier,
                 contentPadding = contentPadding
             )
-        }
-        composable(
-            route = "logs",
-            arguments = listOf(
-                navArgument(name = "appName") {
-                    type = NavType.StringType
-                    nullable = false
-                }
-            )
-        ) {
-            LogsScreen(modifier = modifier, contentPadding = contentPadding)
         }
     }
 }
