@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.apps.ui"
+    namespace = "com.boswelja.truemanager.core.logviewer"
 
     buildTypes {
         release {
@@ -39,19 +39,8 @@ detekt {
 }
 
 dependencies {
-    implementation(projects.core.composeLogviewer)
-    implementation(projects.core.composeMenuprovider)
-    implementation(projects.core.composeUrllauncher)
-
-    implementation(projects.features.apps.logic)
-
-    implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.tooling)
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.4.3")
 
-    implementation(libs.koin.android)
-    implementation(libs.koin.android.compose)
-
-    implementation(libs.coil.compose)
-    implementation(libs.coil.svg)
 }
