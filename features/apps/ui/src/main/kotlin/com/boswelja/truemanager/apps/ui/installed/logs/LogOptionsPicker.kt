@@ -19,9 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.boswelja.truemanager.apps.logic.installed.LogOptions
 import com.boswelja.truemanager.apps.logic.installed.SelectedLogOptions
+import com.boswelja.truemanager.apps.ui.R
 
 /**
  * A form-style picker for log options. This allows the user to construct a [SelectedLogOptions]
@@ -67,9 +69,7 @@ fun LogOptionsPicker(
         TextField(
             value = maxLines,
             onValueChange = setMaxLines,
-            label = {
-                Text("Tail lines")
-            },
+            label = { Text(stringResource(R.string.log_options_max_lines)) },
             isError = maxLines.isEmpty(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
@@ -85,7 +85,7 @@ fun LogOptionsPicker(
             },
             enabled = contentValid
         ) {
-            Text("View Logs")
+            Text(stringResource(R.string.log_options_save))
         }
     }
 }
@@ -110,21 +110,15 @@ internal fun PodPicker(
             onValueChange = onPodSelected,
             enabled = podOptions.isNotEmpty(),
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = podPickerExpanded
-                )
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = podPickerExpanded)
             },
-            label = {
-                Text("Pod")
-            },
+            label = { Text(stringResource(R.string.log_options_pod)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
             modifier = modifier
         )
         ExposedDropdownMenu(
             expanded = podPickerExpanded,
-            onDismissRequest = {
-                podPickerExpanded = false
-            }
+            onDismissRequest = { podPickerExpanded = false }
         ) {
             podOptions.forEach { selectionOption ->
                 DropdownMenuItem(
@@ -161,21 +155,15 @@ internal fun ContainerPicker(
             onValueChange = onContainerSelected,
             enabled = containerOptions.isNotEmpty(),
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = containerPickerExpanded
-                )
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = containerPickerExpanded)
             },
-            label = {
-                Text("Container")
-            },
+            label = { Text(stringResource(R.string.log_options_container)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
             modifier = modifier
         )
         ExposedDropdownMenu(
             expanded = containerPickerExpanded,
-            onDismissRequest = {
-                containerPickerExpanded = false
-            }
+            onDismissRequest = { containerPickerExpanded = false }
         ) {
             containerOptions.forEach { selectionOption ->
                 DropdownMenuItem(
