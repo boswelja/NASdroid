@@ -46,5 +46,16 @@ fun NavGraphBuilder.appsGraph(
                 contentPadding = contentPadding
             )
         }
+        composable(
+            route = "logs",
+            arguments = listOf(
+                navArgument(name = "appName") {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            )
+        ) {
+            LogsScreen(modifier = modifier, contentPadding = contentPadding)
+        }
     }
 }
