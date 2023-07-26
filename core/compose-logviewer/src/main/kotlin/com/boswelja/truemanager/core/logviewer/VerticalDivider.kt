@@ -12,6 +12,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * A Material3 Divider, but vertical rather than horizontal.
+ */
 @Composable
 fun VerticalDivider(
     modifier: Modifier = Modifier,
