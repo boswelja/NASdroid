@@ -61,6 +61,9 @@ class LogsViewModel(
             }
     }
 
+    /**
+     * Sets the current [SelectedLogOptions].
+     */
     fun setSelectedLogOptions(newOptions: SelectedLogOptions) {
         _selectedLogOptions.value = newOptions
     }

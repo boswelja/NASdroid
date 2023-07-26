@@ -18,6 +18,10 @@ import androidx.compose.ui.Modifier
 import com.boswelja.truemanager.apps.logic.installed.LogOptions
 import com.boswelja.truemanager.apps.logic.installed.SelectedLogOptions
 
+/**
+ * A form-style picker for log options. This allows the user to construct a [SelectedLogOptions]
+ * from a [LogOptions].
+ */
 @Composable
 fun LogOptionsPicker(
     options: LogOptions?,
