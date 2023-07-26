@@ -25,15 +25,18 @@ fun NavGraphBuilder.appsGraph(
             AppsScreen(modifier = modifier, contentPadding = contentPadding)
         }
         composable(
-            route = "logs",
+            route = "logs/{appName}",
             arguments = listOf(
-                navArgument(name = "appName") {
+                navArgument("appName") {
                     type = NavType.StringType
                     nullable = false
                 }
             )
         ) {
-            LogsScreen(modifier = modifier, contentPadding = contentPadding)
+            LogsScreen(
+                modifier = modifier,
+                contentPadding = contentPadding
+            )
         }
     }
 }
