@@ -1,20 +1,25 @@
 package com.boswelja.truemanager.apps.ui.installed.logs
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import com.boswelja.truemanager.apps.logic.installed.LogOptions
 import com.boswelja.truemanager.apps.logic.installed.SelectedLogOptions
 
@@ -31,13 +36,24 @@ fun LogOptionsPicker(
     val (selectedPod, setSelectedPod) = rememberSaveable(options) {
         mutableStateOf(options?.podsAndCharts?.keys?.firstOrNull().orEmpty())
     }
-    val (selectedContainer, setSelectedContainer) = rememberSaveable(options) {
-        mutableStateOf("")
+    val (selectedContainer, setSelectedContainer) = rememberSaveable(selectedPod) {
+        mutableStateOf(options?.podsAndCharts?.get(selectedPod)?.firstOrNull().orEmpty())
     }
     val (maxLines, setMaxLines) = rememberSaveable {
         mutableStateOf("")
     }
+
+    val contentValid by remember(selectedPod, selectedContainer, maxLines) {
+        derivedStateOf {
+            selectedPod.isNotEmpty() && selectedContainer.isNotEmpty() && maxLines.isNotEmpty()
+        }
+    }
+
     Column(modifier) {
+        AnimatedVisibility(visible = options == null) {
+            LinearProgressIndicator()
+        }
+
         PodPicker(
             podOptions = options?.podsAndCharts?.keys.orEmpty().toList(),
             selectedPod = selectedPod,
@@ -53,7 +69,9 @@ fun LogOptionsPicker(
             onValueChange = setMaxLines,
             label = {
                 Text("Tail lines")
-            }
+            },
+            isError = maxLines.isEmpty(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
         Button(
             onClick = {
@@ -64,7 +82,8 @@ fun LogOptionsPicker(
                         maxLines = maxLines.toLong()
                     )
                 )
-            }
+            },
+            enabled = contentValid
         ) {
             Text("View Logs")
         }
