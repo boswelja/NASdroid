@@ -60,9 +60,8 @@ interface ChartReleaseV2Api {
 
     /**
      * Exports logs for a container in a pod for the given release.
-     * TODO Return type
      */
-    suspend fun getPodLogs(releaseName: String, podLogsOptions: PodLogsOptions)
+    suspend fun getPodLogs(releaseName: String, podLogsOptions: PodLogsOptions): List<String>
 
     /**
      * Deletes the release with the given ID.

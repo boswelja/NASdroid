@@ -1,6 +1,7 @@
 package com.boswelja.truemanager.apps.logic
 
 import com.boswelja.truemanager.apps.logic.installed.DeleteApp
+import com.boswelja.truemanager.apps.logic.installed.GetAppLogs
 import com.boswelja.truemanager.apps.logic.installed.GetInstalledApps
 import com.boswelja.truemanager.apps.logic.installed.GetLogOptions
 import com.boswelja.truemanager.apps.logic.installed.RollbackApp
@@ -14,6 +15,7 @@ import org.koin.dsl.module
  */
 val AppsLogicModule = module {
     factoryOf(::DeleteApp)
+    factoryOf(::GetAppLogs)
     factoryOf(::GetInstalledApps)
     factoryOf(::GetLogOptions)
     factoryOf(::RollbackApp)
