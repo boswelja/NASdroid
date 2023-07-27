@@ -7,6 +7,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -57,16 +58,19 @@ internal class ChartReleaseV2ApiImpl(
 
     override suspend fun getPodLogChoices(releaseName: String): PodLogChoices {
         val response = httpClient.post("chart/release/pod_logs_choices") {
-            setBody(releaseName)
+            setBody("\"$releaseName\"")
         }
         return response.body()
     }
 
-    override suspend fun getPodLogs(releaseName: String, podLogsOptions: PodLogsOptions) {
+    override suspend fun getPodLogs(
+        releaseName: String,
+        podLogsOptions: PodLogsOptions
+    ): List<String> {
         val response = httpClient.post("chart/release/pod_logs") {
             setBody(PodLogsBody(releaseName, podLogsOptions))
         }
-        return response.body()
+        return response.bodyAsText().split("\n")
     }
 
     override suspend fun deleteRelease(id: String, deleteUnusedImages: Boolean): Int {

@@ -39,6 +39,8 @@ detekt {
 }
 
 dependencies {
+    implementation(projects.core.composeLogviewer)
+
     implementation(projects.features.apps.logic)
 
     implementation(libs.androidx.navigation)
