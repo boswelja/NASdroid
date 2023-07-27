@@ -1,24 +1,23 @@
 package com.boswelja.truemanager.core.logviewer
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
@@ -37,43 +36,24 @@ fun LogViewer(
     contentPadding: PaddingValues = PaddingValues()
 ) {
     val fontFamily = rememberFontFamily()
-
-    val maxLineCount = remember(logContents) { (logContents.size + 1).toString() }
+    val lines by remember(logContents) {
+        derivedStateOf {
+            logContents.map { LogLine.from(it) }
+        }
+    }
     ProvideTextStyle(value = LocalTextStyle.current.copy(fontFamily = fontFamily)) {
         LazyColumn(modifier = modifier, contentPadding = contentPadding) {
-            itemsIndexed(logContents) { index, logLine ->
-                val lineNumber = remember(index, maxLineCount) {
-                    val lineNumStr = (index + 1).toString()
-                    val blankSpaceCount = maxLineCount.length - lineNumStr.length
-                    buildString {
-                        (0..blankSpaceCount).forEach { _ ->
-                            append("\u0020")
-                        }
-                        append(lineNumStr)
-                    }
-                }
-                val background = if (index % 2 == 0) {
-                    MaterialTheme.colorScheme.surface
-                } else {
-                    MaterialTheme.colorScheme.surfaceVariant
-                }
+            items(
+                items = lines,
+                key = { it.timestamp }
+            ) { logLine ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(IntrinsicSize.Min)
-                        .background(background)
                 ) {
                     Text(
-                        text = lineNumber,
-                        color = MaterialTheme.colorScheme.contentColorFor(background),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                    )
-                    VerticalDivider(
-                        modifier = Modifier.fillMaxHeight()
-                    )
-                    Text(
-                        text = logLine,
-                        color = MaterialTheme.colorScheme.contentColorFor(background),
+                        text = logLine.toString(),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     )
                 }
