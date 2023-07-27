@@ -1,14 +1,14 @@
 package com.boswelja.truemanager.core.logviewer
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
@@ -20,12 +20,19 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.core.logviewer.color.blend.Blend
 import com.boswelja.truemanager.core.logviewer.parser.DefaultLogParser
+import com.boswelja.truemanager.core.logviewer.parser.LogLevel
+import com.boswelja.truemanager.core.logviewer.parser.LogLine
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 /**
  * A Composable that can be used to display log-style text.
@@ -49,18 +56,49 @@ fun LogViewer(
                 items = lines,
                 key = { it.hashCode() }
             ) { logLine ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                ) {
-                    Text(
-                        text = logLine.toString(),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                    )
-                }
+                LogText(
+                    logLine = logLine,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
             }
         }
+    }
+}
+
+@Composable
+internal fun LogText(logLine: LogLine, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+    ) {
+        Text(text = logLine.timestamp.toLocalDateTime(TimeZone.UTC).time.toString().dropLast(3))
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = logLine.content,
+            color = when (logLine.level) {
+                LogLevel.Debug -> harmonize(target = DebugColorLight)
+                LogLevel.Info -> harmonize(target = InfoColorLight)
+                LogLevel.Warning -> harmonize(target = WarningColorLight)
+                LogLevel.Error -> MaterialTheme.colorScheme.error
+                null -> LocalContentColor.current
+            }
+        )
+    }
+}
+
+private val DebugColorLight = Color(0xff006782)
+private val DebugColorDark = Color(0xff5ed4ff)
+private val InfoColorLight = Color(0xff026e00)
+private val InfoColorDark = Color(0xff02e600)
+private val WarningColorLight = Color(0xff626200)
+private val WarningColorDark = Color(0xffcdcd00)
+
+@Composable
+internal fun harmonize(
+    target: Color,
+    themeColor: Color = MaterialTheme.colorScheme.primary
+): Color {
+    return remember(target, themeColor) {
+        Color(Blend.harmonize(target.toArgb(), themeColor.toArgb()))
     }
 }
 
@@ -85,19 +123,19 @@ fun LogViewerPreview() {
         LogViewer(
             logContents = listOf(
                 "2023-07-24 08:39:32.538870+00:002023/07/24 08:39:32.538561 [info] AdGuard Home, version v0.107.34",
-                "2023-07-24 08:39:32.538972+00:002023/07/24 08:39:32.538640 [info] AdGuard Home updates are disabled",
-                "2023-07-24 08:39:32.540734+00:002023/07/24 08:39:32.540604 [info] tls: using default ciphers",
+                "2023-07-24 08:39:32.538972+00:002023/07/24 08:39:32.538640 [warn] AdGuard Home updates are disabled",
+                "2023-07-24 08:39:32.540734+00:002023/07/24 08:39:32.540604 [debug] tls: using default ciphers",
                 "2023-07-24 08:39:32.548932+00:002023/07/24 08:39:32.548823 [info] safesearch default: disabled",
-                "2023-07-24 08:39:32.553088+00:002023/07/24 08:39:32.552956 [info] Initializing auth module: /opt/adguardhome/work/data/sessions.db",
-                "2023-07-24 08:39:32.553828+00:002023/07/24 08:39:32.553718 [info] auth: initialized.  users:1  sessions:2",
-                "2023-07-24 08:39:32.553865+00:002023/07/24 08:39:32.553768 [info] web: initializing",
-                "2023-07-24 08:39:32.737805+00:002023/07/24 08:39:32.737657 [info] dnsproxy: cache: enabled, size 4096 b",
-                "2023-07-24 08:39:32.737850+00:002023/07/24 08:39:32.737677 [info] dnsproxy: max goroutines is set to 300",
+                "2023-07-24 08:39:32.553088+00:002023/07/24 08:39:32.552956 [debug] Initializing auth module: /opt/adguardhome/work/data/sessions.db",
+                "2023-07-24 08:39:32.553828+00:002023/07/24 08:39:32.553718 [debug] auth: initialized.  users:1  sessions:2",
+                "2023-07-24 08:39:32.553865+00:002023/07/24 08:39:32.553768 [debug] web: initializing",
+                "2023-07-24 08:39:32.737805+00:002023/07/24 08:39:32.737657 [debug] dnsproxy: cache: enabled, size 4096 b",
+                "2023-07-24 08:39:32.737850+00:002023/07/24 08:39:32.737677 [debug] dnsproxy: max goroutines is set to 300",
                 "2023-07-24 08:39:32.745533+00:002023/07/24 08:39:32.745355 [info] AdGuard Home is available at the following addresses:",
                 "2023-07-24 08:39:32.746465+00:002023/07/24 08:39:32.746278 [info] go to http://127.0.0.1:10232",
                 "2023-07-24 08:39:32.746526+00:002023/07/24 08:39:32.746289 [info] go to http://[::1]:10232",
-                "2023-07-24 08:39:35.870714+00:002023/07/24 08:39:35.870474 [info] dnsproxy: starting dns proxy server",
-                "2023-07-24 08:39:35.870796+00:002023/07/24 08:39:35.870642 [info] The server is configured to refuse ANY requests",
+                "2023-07-24 08:39:35.870714+00:002023/07/24 08:39:35.870474 [debug] dnsproxy: starting dns proxy server",
+                "2023-07-24 08:39:35.870796+00:002023/07/24 08:39:35.870642 [error] The server is configured to refuse ANY requests",
                 "2023-07-24 08:39:35.870813+00:002023/07/24 08:39:35.870656 [info] dnsproxy: cache: enabled, size 16777216 b",
                 "2023-07-24 08:39:35.870827+00:002023/07/24 08:39:35.870669 [info] dnsproxy: max goroutines is set to 300",
                 "2023-07-24 08:39:35.871072+00:002023/07/24 08:39:35.870926 [info] dnsproxy: creating udp server socket 0.0.0.0:53",
