@@ -58,7 +58,7 @@ internal class ChartReleaseV2ApiImpl(
 
     override suspend fun getPodLogChoices(releaseName: String): PodLogChoices {
         val response = httpClient.post("chart/release/pod_logs_choices") {
-            setBody(releaseName)
+            setBody("\"$releaseName\"")
         }
         return response.body()
     }
