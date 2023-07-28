@@ -61,7 +61,7 @@ internal class DefaultLogParser : LogParser {
     companion object {
         private val logLevelPattern = LogLevel.entries
             .flatMap { it.knownNames }
-            .joinToString(separator = "|") { "(\\[$it])|(\\($it\\))" }
+            .joinToString(separator = "|") { it }
             .toRegex()
         private val timestampRegex = Regex("^(\\d{4})-(\\d{2})-(\\d{2})[T ](\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d*)?)((\\+(\\d{2}):(\\d{2})|Z)?)((-(\\d{2}):(\\d{2})|Z)?)")
     }
