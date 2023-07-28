@@ -73,7 +73,10 @@ internal fun LogText(
     Row(
         modifier = modifier
     ) {
-        Text(text = logLine.timestamp.toLocalDateTime(TimeZone.UTC).time.toString().dropLast(3))
+        Text(
+            text = logLine.timestamp.toLocalDateTime(TimeZone.UTC).time.toString().dropLast(3),
+            color = logColors.timestamp,
+        )
         Spacer(Modifier.width(8.dp))
         Text(
             text = logLine.content,
