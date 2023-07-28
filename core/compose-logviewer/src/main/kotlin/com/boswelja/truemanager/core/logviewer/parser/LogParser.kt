@@ -10,14 +10,14 @@ interface LogParser {
      * Takes a single line of text and attempts to extract log-related information from it.
      *
      * @return The [LogLine] containing log-related information, as well as the sanitized log
-     * contents.
+     * contents. If the input line is blank, this returns null.
      */
-    fun parseLine(logLine: String): LogLine
+    fun parseLine(logLine: String): LogLine?
 
     /**
-     * A convenience function that parses multiple lines at once.
+     * A convenience function that parses multiple lines at once. Blank lines are ignored.
      */
     fun parseLines(logLines: List<String>): List<LogLine> {
-        return logLines.map { parseLine(it) }
+        return logLines.mapNotNull { parseLine(it) }
     }
 }
