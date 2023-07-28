@@ -66,6 +66,7 @@ fun LogViewer(
     }
 }
 
+private const val TIMESTAMP_PRECISION = 12
 @Composable
 internal fun LogText(
     logLine: LogLine,
@@ -84,7 +85,11 @@ internal fun LogText(
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
-            text = logLine.timestamp.toLocalDateTime(TimeZone.UTC).time.toString().dropLast(3),
+            text = logLine.timestamp
+                .toLocalDateTime(TimeZone.UTC)
+                .time
+                .toString()
+                .take(TIMESTAMP_PRECISION),
             color = logColors.timestamp,
         )
         LogLevelIndicator(
