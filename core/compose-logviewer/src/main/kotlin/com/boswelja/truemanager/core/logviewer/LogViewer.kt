@@ -1,11 +1,14 @@
 package com.boswelja.truemanager.core.logviewer
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.LocalContentColor
@@ -20,7 +23,10 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,27 +76,59 @@ internal fun LogText(
     logColors: LogColors,
     modifier: Modifier = Modifier
 ) {
+    val logColor = when (logLine.level) {
+        LogLevel.Debug ->logColors.debug
+        LogLevel.Info -> logColors.info
+        LogLevel.Warning -> logColors.warn
+        LogLevel.Error -> logColors.error
+        null -> LocalContentColor.current
+    }
     Row(
-        modifier = modifier
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
             text = logLine.timestamp.toLocalDateTime(TimeZone.UTC).time.toString().dropLast(3),
             color = logColors.timestamp,
         )
-        Spacer(Modifier.width(8.dp))
+        LogLevelIndicator(
+            logLevel = logLine.level,
+            textColor = logColors.levelIndicator,
+            backgroundColor = logColor
+        )
         Text(
             text = logLine.content,
-            color = when (logLine.level) {
-                LogLevel.Debug ->logColors.debug
-                LogLevel.Info -> logColors.info
-                LogLevel.Warning -> logColors.warn
-                LogLevel.Error -> logColors.error
-                null -> LocalContentColor.current
-            }
+            color = logColor
         )
     }
 }
 
+@Composable
+internal fun LogLevelIndicator(
+    logLevel: LogLevel?,
+    textColor: Color,
+    backgroundColor: Color,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .background(backgroundColor)
+            .layout { measurable, constraints ->
+                val placeable = measurable.measure(constraints)
+                val height = placeable.height
+                val contentStart = (height / 2) - (placeable.width / 2)
+                layout(height, height) {
+                    placeable.placeRelative(contentStart, 0)
+                }
+            }
+    ) {
+        Text(
+            text = logLevel?.name?.first()?.toString() ?: "?",
+            color = textColor,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
 @Composable
 internal fun rememberFontFamily(): FontFamily {
     return remember {

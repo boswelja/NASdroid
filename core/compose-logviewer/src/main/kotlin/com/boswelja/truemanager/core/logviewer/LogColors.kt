@@ -23,6 +23,7 @@ data class LogColors(
     val warn: Color,
     val error: Color,
     val timestamp: Color,
+    val levelIndicator: Color,
 )
 
 @Suppress("MagicNumber")
@@ -46,6 +47,7 @@ fun rememberMaterial3LogColors(
 ): LogColors {
     val errorColor = MaterialTheme.colorScheme.error
     val timestampColor = LocalContentColor.current
+    val levelIndicatorColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.65f)
     return remember(isSystemInDarkTheme, themePrimaryColor) {
         val themeColorArgb = themePrimaryColor.toArgb()
         if (isSystemInDarkTheme) {
@@ -55,6 +57,7 @@ fun rememberMaterial3LogColors(
                 warn = Color(Blend.harmonize(LogColorDefaults.WarningColorDark.toArgb(), themeColorArgb)),
                 error = errorColor,
                 timestamp = timestampColor,
+                levelIndicator = levelIndicatorColor,
             )
         } else {
             LogColors(
@@ -63,6 +66,7 @@ fun rememberMaterial3LogColors(
                 warn = Color(Blend.harmonize(LogColorDefaults.WarningColorLight.toArgb(), themeColorArgb)),
                 error = errorColor,
                 timestamp = timestampColor,
+                levelIndicator = levelIndicatorColor
             )
         }
     }
