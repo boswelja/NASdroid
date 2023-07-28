@@ -20,14 +20,11 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.boswelja.truemanager.core.logviewer.color.blend.Blend
 import com.boswelja.truemanager.core.logviewer.parser.DefaultLogParser
 import com.boswelja.truemanager.core.logviewer.parser.LogLevel
 import com.boswelja.truemanager.core.logviewer.parser.LogLine
@@ -41,7 +38,8 @@ import kotlinx.datetime.toLocalDateTime
 fun LogViewer(
     logContents: List<String>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
+    contentPadding: PaddingValues = PaddingValues(),
+    logColors: LogColors = rememberMaterial3LogColors()
 ) {
     val fontFamily = rememberFontFamily()
     val lines by remember(logContents) {
@@ -58,6 +56,7 @@ fun LogViewer(
             ) { logLine ->
                 LogText(
                     logLine = logLine,
+                    logColors = logColors,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
@@ -66,7 +65,11 @@ fun LogViewer(
 }
 
 @Composable
-internal fun LogText(logLine: LogLine, modifier: Modifier = Modifier) {
+internal fun LogText(
+    logLine: LogLine,
+    logColors: LogColors,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
     ) {
@@ -75,30 +78,13 @@ internal fun LogText(logLine: LogLine, modifier: Modifier = Modifier) {
         Text(
             text = logLine.content,
             color = when (logLine.level) {
-                LogLevel.Debug -> harmonize(target = DebugColorLight)
-                LogLevel.Info -> harmonize(target = InfoColorLight)
-                LogLevel.Warning -> harmonize(target = WarningColorLight)
-                LogLevel.Error -> MaterialTheme.colorScheme.error
+                LogLevel.Debug ->logColors.debug
+                LogLevel.Info -> logColors.info
+                LogLevel.Warning -> logColors.warn
+                LogLevel.Error -> logColors.error
                 null -> LocalContentColor.current
             }
         )
-    }
-}
-
-private val DebugColorLight = Color(0xff006782)
-private val DebugColorDark = Color(0xff5ed4ff)
-private val InfoColorLight = Color(0xff026e00)
-private val InfoColorDark = Color(0xff02e600)
-private val WarningColorLight = Color(0xff626200)
-private val WarningColorDark = Color(0xffcdcd00)
-
-@Composable
-internal fun harmonize(
-    target: Color,
-    themeColor: Color = MaterialTheme.colorScheme.primary
-): Color {
-    return remember(target, themeColor) {
-        Color(Blend.harmonize(target.toArgb(), themeColor.toArgb()))
     }
 }
 
