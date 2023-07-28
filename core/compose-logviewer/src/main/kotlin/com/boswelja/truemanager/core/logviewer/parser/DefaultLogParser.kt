@@ -4,7 +4,8 @@ import kotlinx.datetime.Instant
 
 internal class DefaultLogParser : LogParser {
 
-    override fun parseLine(logLine: String): LogLine {
+    override fun parseLine(logLine: String): LogLine? {
+        if (logLine.isBlank()) return null
         var workingLine = logLine
 
         // Extract timestamp info
@@ -31,7 +32,7 @@ internal class DefaultLogParser : LogParser {
 
     internal fun extractTimestamp(input: String): StringMutation<Instant> {
         val timestampMatch = timestampRegex.find(input)
-        requireNotNull(timestampMatch) { "No timestamp found in the given String!" }
+        requireNotNull(timestampMatch) { "No timestamp found in: $input" }
         val timestamp = Instant.parse(timestampMatch.value.replace(" ", "T"))
         return StringMutation(
             result = input.substring(timestampMatch.range.last + 1),
