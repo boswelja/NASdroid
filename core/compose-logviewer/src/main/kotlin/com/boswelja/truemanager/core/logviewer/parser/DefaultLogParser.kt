@@ -18,10 +18,12 @@ internal class DefaultLogParser : LogParser {
 
         // Extract log level
         val logLevel = extractLogLevel(workingLine)
-        workingLine = logLevel.result
+        if (logLevel != null) {
+            workingLine = logLevel.result
+        }
 
         return LogLine(
-            level = logLevel.extractedData,
+            level = logLevel?.extractedData,
             timestamp = timestampMutation.extractedData,
             content = workingLine.trim()
         )
@@ -37,8 +39,9 @@ internal class DefaultLogParser : LogParser {
         )
     }
 
-    internal fun extractLogLevel(input: String): StringMutation<LogLevel?> {
-        val logLevelMatch = logLevelPattern.find(input) ?: return StringMutation(input, null)
+    @Suppress("ReturnCount")
+    internal fun extractLogLevel(input: String): StringMutation<LogLevel>? {
+        val logLevelMatch = logLevelPattern.find(input) ?: return null
         for (logLevel in LogLevel.entries) {
             for (knownEntryName in logLevel.knownNames) {
                 if (logLevelMatch.value.contains(knownEntryName)) {
@@ -49,7 +52,7 @@ internal class DefaultLogParser : LogParser {
                 }
             }
         }
-        return StringMutation(input, null)
+        return null
     }
 
     internal data class StringMutation<T>(val result: String, val extractedData: T)
