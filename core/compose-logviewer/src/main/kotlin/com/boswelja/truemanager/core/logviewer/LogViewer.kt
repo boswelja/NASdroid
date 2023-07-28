@@ -4,10 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -50,9 +48,7 @@ fun LogViewer(
     val fontFamily = rememberFontFamily()
     val lines by remember(logContents) {
         val logParser = DefaultLogParser()
-        derivedStateOf {
-            logContents.map { logParser.parseLine(it) }
-        }
+        derivedStateOf { logParser.parseLines(logContents) }
     }
     ProvideTextStyle(value = LocalTextStyle.current.copy(fontFamily = fontFamily)) {
         LazyColumn(modifier = modifier, contentPadding = contentPadding) {
@@ -129,6 +125,7 @@ internal fun LogLevelIndicator(
         )
     }
 }
+
 @Composable
 internal fun rememberFontFamily(): FontFamily {
     return remember {

@@ -16,6 +16,7 @@ import com.boswelja.truemanager.core.logviewer.color.blend.Blend
  * @property warn The color of warning-level log lines.
  * @property error The color of error-level log lines.
  * @property timestamp The color of log line timestamps.
+ * @property levelIndicator The color of the log level indicator text.
  */
 data class LogColors(
     val debug: Color,
