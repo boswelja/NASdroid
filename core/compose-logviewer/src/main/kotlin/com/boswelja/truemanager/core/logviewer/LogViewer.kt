@@ -119,7 +119,7 @@ internal fun LogLevelIndicator(
             }
     ) {
         Text(
-            text = logLevel?.name?.first()?.toString() ?: "?",
+            text = logLevel?.identifier?.toString() ?: "?",
             color = textColor,
             fontWeight = FontWeight.SemiBold
         )
