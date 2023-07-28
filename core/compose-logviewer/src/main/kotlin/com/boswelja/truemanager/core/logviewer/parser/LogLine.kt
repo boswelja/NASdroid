@@ -25,8 +25,8 @@ data class LogLine(
  * [Error] - A critical event, possibly fatal. This is the highest severity level.
  */
 enum class LogLevel(internal val knownNames: Set<String>, internal val identifier: Char) {
-    Debug(setOf("debug"), 'D'),
-    Info(setOf("info"), 'I'),
-    Warning(setOf("warn", "warning"), 'W'),
-    Error(setOf("error"), 'E'),
+    Debug(setOf("[debug]", "[Debug]", "debug:", "DEBUG", "(D)"), 'D'),
+    Info(setOf("[info]", "[Info]", "info:", "INFO", "(I)", "[INF]"), 'I'),
+    Warning(setOf("[warn]", "[Warn]", "[warning]", "warn:", "WARNING", "[WRN]", "(W)"), 'W'),
+    Error(setOf("[error]", "[Error]", "error:", "ERROR", "[ERR]", "(E)"), 'E'),
 }

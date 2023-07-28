@@ -35,7 +35,7 @@ internal class DefaultLogParser : LogParser {
         requireNotNull(timestampMatch) { "No timestamp found in: $input" }
         val timestamp = Instant.parse(timestampMatch.value.replace(" ", "T"))
         return StringMutation(
-            result = input.substring(timestampMatch.range.last + 1),
+            result = input.removeRange(timestampMatch.range),
             extractedData = timestamp
         )
     }
@@ -47,7 +47,7 @@ internal class DefaultLogParser : LogParser {
             for (knownEntryName in logLevel.knownNames) {
                 if (logLevelMatch.value.contains(knownEntryName)) {
                     return StringMutation(
-                        result = input.substring(logLevelMatch.range.last + 1),
+                        result = input.removeRange(logLevelMatch.range),
                         extractedData = logLevel
                     )
                 }
@@ -61,7 +61,7 @@ internal class DefaultLogParser : LogParser {
     companion object {
         private val logLevelPattern = LogLevel.entries
             .flatMap { it.knownNames }
-            .joinToString(separator = "|") { "(\\[$it])" }
+            .joinToString(separator = "|") { Regex.escape(it) }
             .toRegex()
         private val timestampRegex = Regex("^(\\d{4})-(\\d{2})-(\\d{2})[T ](\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d*)?)((\\+(\\d{2}):(\\d{2})|Z)?)((-(\\d{2}):(\\d{2})|Z)?)")
     }
