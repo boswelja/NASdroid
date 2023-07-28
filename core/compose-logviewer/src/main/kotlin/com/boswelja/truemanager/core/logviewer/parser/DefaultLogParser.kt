@@ -35,7 +35,7 @@ internal class DefaultLogParser : LogParser {
         requireNotNull(timestampMatch) { "No timestamp found in: $input" }
         val timestamp = Instant.parse(timestampMatch.value.replace(" ", "T"))
         return StringMutation(
-            result = input.substring(timestampMatch.range.last + 1),
+            result = input.removeRange(timestampMatch.range),
             extractedData = timestamp
         )
     }
@@ -47,7 +47,7 @@ internal class DefaultLogParser : LogParser {
             for (knownEntryName in logLevel.knownNames) {
                 if (logLevelMatch.value.contains(knownEntryName)) {
                     return StringMutation(
-                        result = input.substring(logLevelMatch.range.last + 1),
+                        result = input.removeRange(logLevelMatch.range),
                         extractedData = logLevel
                     )
                 }
