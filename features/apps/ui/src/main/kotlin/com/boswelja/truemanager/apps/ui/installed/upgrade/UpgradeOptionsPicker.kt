@@ -5,9 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,10 +14,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,51 +30,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.apps.ui.R
 
+/**
+ * A Picker that allows users to pick options for an app upgrade.
+ */
 @Composable
 fun UpgradeOptionsPicker(
     targetVersion: String,
     onTargetVersionChanged: (String) -> Unit,
     upgradeMetadata: UpgradeMetadata,
-    appMetadata: AppMetadata,
-    onUpgrade: () -> Unit,
-    onCancel: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var changelogVisible by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var imagesVisible by rememberSaveable {
-        mutableStateOf(false)
-    }
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         TargetVersionPicker(
             targetVersion = targetVersion,
             onTargetVersionChanged = onTargetVersionChanged,
             availableVersions = upgradeMetadata.availableVersions,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(8.dp))
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 36.dp)
-                .clickable { imagesVisible = !imagesVisible }
-        ) {
-            Text("Images to be updated")
-            Icon(Icons.Default.ExpandMore, contentDescription = null)
-        }
-        AnimatedVisibility(visible = imagesVisible) {
-            if (upgradeMetadata.imagesToBeUpdated.isEmpty()) {
-                Text("There are no images requiring upgrade")
-            } else {
-                upgradeMetadata.imagesToBeUpdated.forEach {
-                    Text(it)
-                }
-            }
-        }
-        Spacer(Modifier.height(8.dp))
+        ImagesSection(imagesToBeUpdated = upgradeMetadata.imagesToBeUpdated)
+        ChangelogSection(changelog = upgradeMetadata.changelog)
+    }
+}
+
+@Composable
+internal fun ChangelogSection(
+    changelog: String,
+    modifier: Modifier = Modifier
+) {
+    var changelogVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+    Column(modifier) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -91,22 +76,42 @@ fun UpgradeOptionsPicker(
             Icon(Icons.Default.ExpandMore, contentDescription = null)
         }
         AnimatedVisibility(visible = changelogVisible) {
-            if (upgradeMetadata.changelog.isEmpty()) {
+            if (changelog.isEmpty()) {
                 Text("No Changelog")
             } else {
-                Text(text = upgradeMetadata.changelog)
+                Text(text = changelog)
             }
         }
-        Spacer(Modifier.height(16.dp))
+    }
+}
+
+@Composable
+internal fun ImagesSection(
+    imagesToBeUpdated: List<String>,
+    modifier: Modifier = Modifier
+) {
+    var imagesVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+    Column(modifier) {
         Row(
-            modifier = Modifier.align(Alignment.End),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 36.dp)
+                .clickable { imagesVisible = !imagesVisible }
         ) {
-            TextButton(onClick = onCancel) {
-                Text("Close")
-            }
-            FilledTonalButton(onClick = onUpgrade) {
-                Text("Upgrade")
+            Text("Images to be updated")
+            Icon(Icons.Default.ExpandMore, contentDescription = null)
+        }
+        AnimatedVisibility(visible = imagesVisible) {
+            if (imagesToBeUpdated.isEmpty()) {
+                Text("There are no images requiring upgrade")
+            } else {
+                imagesToBeUpdated.forEach {
+                    Text(it)
+                }
             }
         }
     }
@@ -172,15 +177,11 @@ fun UpgradeOptionsPickerPreview() {
         upgradeMetadata = UpgradeMetadata(
             availableVersions = availableVersions,
             changelog = "",
-            imagesToBeUpdated = listOf()
-        ),
-        appMetadata = AppMetadata(
+            imagesToBeUpdated = listOf(),
+            appName = "",
+            currentVersion = "",
             iconUrl = "",
-            appName = "app",
-            currentVersion = "0.1"
         ),
-        onUpgrade = {},
-        onCancel = {},
         modifier = Modifier.padding(16.dp)
     )
 }
