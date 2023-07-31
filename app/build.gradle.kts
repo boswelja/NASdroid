@@ -65,7 +65,6 @@ dependencies {
     implementation(projects.features.reporting)
     implementation(projects.features.storage)
 
-    implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
 
     implementation(libs.koin.android)
@@ -78,5 +77,4 @@ dependencies {
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
 }
