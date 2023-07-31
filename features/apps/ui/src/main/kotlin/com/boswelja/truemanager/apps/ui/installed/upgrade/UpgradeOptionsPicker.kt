@@ -30,8 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.apps.ui.R
@@ -41,6 +39,7 @@ fun UpgradeOptionsPicker(
     targetVersion: String,
     onTargetVersionChanged: (String) -> Unit,
     upgradeMetadata: UpgradeMetadata,
+    appMetadata: AppMetadata,
     onUpgrade: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier
@@ -174,6 +173,11 @@ fun UpgradeOptionsPickerPreview() {
             availableVersions = availableVersions,
             changelog = "",
             imagesToBeUpdated = listOf()
+        ),
+        appMetadata = AppMetadata(
+            iconUrl = "",
+            appName = "app",
+            currentVersion = "0.1"
         ),
         onUpgrade = {},
         onCancel = {},
