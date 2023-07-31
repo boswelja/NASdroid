@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
@@ -136,13 +138,16 @@ fun ModalNavigationDrawer(
     content: @Composable (PaddingValues) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val drawerScrollState = rememberScrollState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val menuHost = rememberMenuHost()
 
     ProvideMenuHost(menuHost = menuHost) {
         ModalNavigationDrawer(
             drawerContent = {
-                ModalDrawerSheet {
+                ModalDrawerSheet(
+                    modifier = Modifier.verticalScroll(drawerScrollState)
+                ) {
                     Spacer(Modifier.height(12.dp))
                     destinations.forEach { destination ->
                         NavigationDrawerItem(
@@ -291,6 +296,7 @@ fun PermanentNavigationDrawer(
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val menuHost = rememberMenuHost()
+    val drawerScrollState = rememberScrollState()
 
     ProvideMenuHost(menuHost = menuHost) {
         Row(modifier) {
@@ -299,7 +305,9 @@ fun PermanentNavigationDrawer(
                 enter = slideInHorizontally(),
                 exit = slideOutHorizontally { -it/2 }
             ) {
-                PermanentDrawerSheet {
+                PermanentDrawerSheet(
+                    modifier = Modifier.verticalScroll(drawerScrollState)
+                ) {
                     Spacer(Modifier.height(12.dp + 64.dp))
                     destinations.forEach { destination ->
                         NavigationDrawerItem(
