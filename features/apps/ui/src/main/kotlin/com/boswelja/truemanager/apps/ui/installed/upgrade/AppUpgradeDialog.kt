@@ -1,7 +1,6 @@
 package com.boswelja.truemanager.apps.ui.installed.upgrade
 
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
@@ -72,19 +71,20 @@ fun AppUpgradeDialog(
 @Preview
 @Composable
 fun AppUpgradeDialogPreview() {
-    AppUpgradeDialog(
-        metadata = UpgradeMetadata(
-            iconUrl = "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/shield/default/48px.svg",
-            appName = "Adguard Home",
-            currentVersion = "1.2.3",
-            availableVersions = listOf(
-                "1.2.4",
-                "1.3.0",
-                "2.0.0"
-            ),
-            changelog = "",
-            imagesToBeUpdated = listOf()
+    val metadata = UpgradeMetadata(
+        iconUrl = "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/shield/default/48px.svg",
+        appName = "Adguard Home",
+        currentVersion = "1.2.3",
+        availableVersions = listOf(
+            "1.2.4",
+            "1.3.0",
+            "2.0.0"
         ),
+        changelog = "",
+        imagesToBeUpdated = listOf()
+    )
+    AppUpgradeDialog(
+        metadata = metadata,
         onStartUpgrade = {},
         onDismissRequest = {}
     )
