@@ -100,6 +100,20 @@ internal class ChartReleaseV2ApiImpl(
         }
         return response.body()
     }
+
+    override suspend fun upgrade(releaseName: String, targetVersion: String): Int {
+        val response = httpClient.post("chart/release/upgrade") {
+            setBody(
+                UpgradeBody(
+                    releaseName = releaseName,
+                    options = UpgradeBody.Options(
+                        itemVersion = targetVersion
+                    )
+                )
+            )
+        }
+        return response.body()
+    }
 }
 
 @Serializable
@@ -143,6 +157,20 @@ internal data class UpgradeSummaryBody(
     @SerialName("release_name")
     val releaseName: String,
     @SerialName("options")
+    val options: Options = Options()
+) {
+    @Serializable
+    data class Options(
+        @SerialName("item_version")
+        val itemVersion: String = "latest"
+    )
+}
+
+@Serializable
+internal data class UpgradeBody(
+    @SerialName("release_name")
+    val releaseName: String,
+    @SerialName("upgrade_options")
     val options: Options = Options()
 ) {
     @Serializable

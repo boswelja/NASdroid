@@ -74,6 +74,13 @@ interface ChartReleaseV2Api {
      * Gets an [UpgradeSummary] for an intended upgrade.
      */
     suspend fun getUpgradeSummary(releaseName: String, targetVersion: String? = null): UpgradeSummary
+
+    /**
+     * Upgrades a release to the specified version.
+     *
+     * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     */
+    suspend fun upgrade(releaseName: String, targetVersion: String): Int
 }
 
 /**
