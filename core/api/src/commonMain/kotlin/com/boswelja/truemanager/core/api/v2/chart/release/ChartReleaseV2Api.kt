@@ -69,6 +69,11 @@ interface ChartReleaseV2Api {
      * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun deleteRelease(id: String, deleteUnusedImages: Boolean): Int
+
+    /**
+     * Gets an [UpgradeSummary] for an intended upgrade.
+     */
+    suspend fun getUpgradeSummary(releaseName: String, targetVersion: String? = null): UpgradeSummary
 }
 
 /**
@@ -144,3 +149,52 @@ data class PodLogsOptions(
     @SerialName("tail_lines")
     val tailLines: Long = 500,
 )
+
+/**
+ * Describes what will happen for an intended upgrade.
+ *
+ * @property containerImagesToUpdate A list of container images that will be upgraded.
+ * @property changelog The item changelog, if available.
+ * @property availableVersions A list of [UpgradeVersion]s that are available to upgrade to.
+ * @property itemUpdateAvailable Whether the item will be updated with this upgrade.
+ * @property imageUpdateAvailable Whether the image will be updated with this upgrade.
+ * @property latestVersion The latest available version of the release.
+ * @property upgradeVersion The target version that this summary describes.
+ * @property latestHumanVersion A human-readable variant of [latestVersion].
+ * @property upgradeHumanVersion A human-readable variant of [upgradeVersion].
+ */
+@Serializable
+data class UpgradeSummary(
+    @SerialName("container_images_to_update")
+    val containerImagesToUpdate: List<String>,
+    @SerialName("changelog")
+    val changelog: String?,
+    @SerialName("available_versions_for_upgrade")
+    val availableVersions: List<UpgradeVersion>,
+    @SerialName("item_update_available")
+    val itemUpdateAvailable: Boolean,
+    @SerialName("image_update_available")
+    val imageUpdateAvailable: Boolean,
+    @SerialName("latest_version")
+    val latestVersion: String,
+    @SerialName("upgrade_version")
+    val upgradeVersion: String,
+    @SerialName("latest_human_version")
+    val latestHumanVersion: String,
+    @SerialName("upgrade_human_version")
+    val upgradeHumanVersion: String,
+) {
+    /**
+     * Describes a version that can be upgraded to.
+     *
+     * @property version The version that the release can be upgraded to.
+     * @property humanVersion A human-readable version of [version].
+     */
+    @Serializable
+    data class UpgradeVersion(
+        @SerialName("version")
+        val version: String,
+        @SerialName("human_version")
+        val humanVersion: String,
+    )
+}

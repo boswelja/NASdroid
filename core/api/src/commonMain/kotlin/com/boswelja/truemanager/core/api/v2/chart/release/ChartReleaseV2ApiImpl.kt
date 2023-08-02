@@ -79,6 +79,27 @@ internal class ChartReleaseV2ApiImpl(
         }
         return response.body()
     }
+
+    override suspend fun getUpgradeSummary(
+        releaseName: String,
+        targetVersion: String?
+    ): UpgradeSummary {
+        val response = httpClient.post("chart/release/upgrade_summary") {
+            if (targetVersion != null) {
+                setBody(
+                    UpgradeSummaryBody(
+                        releaseName = releaseName,
+                        options = UpgradeSummaryBody.Options(
+                            itemVersion = targetVersion
+                        )
+                    )
+                )
+            } else {
+                setBody(UpgradeSummaryBody(releaseName = releaseName))
+            }
+        }
+        return response.body()
+    }
 }
 
 @Serializable
@@ -116,3 +137,17 @@ internal data class DeleteAppBody(
     @SerialName("delete_unused_images")
     val deleteUnusedImages: Boolean,
 )
+
+@Serializable
+internal data class UpgradeSummaryBody(
+    @SerialName("release_name")
+    val releaseName: String,
+    @SerialName("options")
+    val options: Options = Options()
+) {
+    @Serializable
+    data class Options(
+        @SerialName("item_version")
+        val itemVersion: String = "latest"
+    )
+}
