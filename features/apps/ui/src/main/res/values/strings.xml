@@ -18,4 +18,6 @@
     <string name="log_options_container">Container</string>
     <string name="log_options_max_lines">Tail lines</string>
     <string name="log_options_save">Load Logs</string>
+
+    <string name="upgrade_options_version">Target Version</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,7 +58,7 @@ fun NetworkOverview(
         modifier = modifier
     ) {
         data.adaptersData.forEachIndexed { index, adapterData ->
-            if (index > 0) Divider(Modifier.padding(vertical = 8.dp))
+            if (index > 0) HorizontalDivider(Modifier.padding(vertical = 8.dp))
             AdapterInfo(adapterData = adapterData)
         }
     }
