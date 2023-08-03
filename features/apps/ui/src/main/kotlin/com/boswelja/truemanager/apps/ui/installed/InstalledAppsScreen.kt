@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.apps.ui.installed.item.ApplicationOverviewItem
+import com.boswelja.truemanager.apps.ui.installed.item.InstalledAppAction
 import org.koin.androidx.compose.getViewModel
 
 /**
@@ -34,7 +35,22 @@ fun InstalledAppsScreen(
             items(
                 items = it,
             ) { applicationOverview ->
-                ApplicationOverviewItem(installedApplication = applicationOverview)
+                ApplicationOverviewItem(
+                    installedApplication = applicationOverview,
+                    onActionClicked = {
+                        when (it) {
+                            InstalledAppAction.UPGRADE -> TODO()
+                            InstalledAppAction.ROLL_BACK -> TODO()
+                            InstalledAppAction.EDIT -> TODO()
+                            InstalledAppAction.SHELL -> TODO()
+                            InstalledAppAction.LOGS -> TODO()
+                            InstalledAppAction.DELETE -> TODO()
+                            InstalledAppAction.START -> TODO()
+                            InstalledAppAction.STOP -> TODO()
+                            InstalledAppAction.WEB_PORTAL -> TODO()
+                        }
+                    }
+                )
             }
         }
     }

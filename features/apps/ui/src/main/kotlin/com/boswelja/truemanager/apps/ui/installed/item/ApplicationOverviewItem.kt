@@ -28,6 +28,7 @@ import com.boswelja.truemanager.apps.logic.installed.InstalledApplication
 @Composable
 fun ApplicationOverviewItem(
     installedApplication: InstalledApplication,
+    onActionClicked: (InstalledAppAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(modifier = modifier) {
@@ -59,19 +60,28 @@ fun ApplicationOverviewItem(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (installedApplication.webPortalUrl != null) {
-                    FilledTonalButton(onClick = { /*TODO*/ }) {
+                    FilledTonalButton(onClick = { onActionClicked(InstalledAppAction.WEB_PORTAL) }) {
                         Text("Web Portal")
                     }
                 }
                 AppStateControlButton(
                     state = installedApplication.state,
-                    onStart = { /*TODO*/ },
-                    onStop = { /*TODO*/ }
+                    onStart = { onActionClicked(InstalledAppAction.START) },
+                    onStop = { onActionClicked(InstalledAppAction.STOP) }
                 )
                 Spacer(Modifier.weight(1f))
                 AppControlsOverflowMenu(
                     app = installedApplication,
-                    onControlClick = { /*TODO*/ }
+                    onControlClick = {
+                        when (it) {
+                            AppControl.UPGRADE -> onActionClicked(InstalledAppAction.UPGRADE)
+                            AppControl.ROLL_BACK -> onActionClicked(InstalledAppAction.ROLL_BACK)
+                            AppControl.EDIT -> onActionClicked(InstalledAppAction.EDIT)
+                            AppControl.SHELL -> onActionClicked(InstalledAppAction.SHELL)
+                            AppControl.LOGS -> onActionClicked(InstalledAppAction.LOGS)
+                            AppControl.DELETE -> onActionClicked(InstalledAppAction.DELETE)
+                        }
+                    }
                 )
             }
         }
@@ -184,6 +194,7 @@ fun ApplicationOverviewItemPreview() {
                 updateAvailable = false,
                 webPortalUrl = "http://my.jellyfin.local/"
             ),
+            onActionClicked = {},
             modifier = Modifier.padding(16.dp)
         )
     }
