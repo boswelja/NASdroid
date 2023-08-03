@@ -2,7 +2,7 @@ package com.boswelja.truemanager.apps.ui.installed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.truemanager.apps.logic.installed.ApplicationOverview
+import com.boswelja.truemanager.apps.logic.installed.InstalledApplication
 import com.boswelja.truemanager.apps.logic.installed.GetInstalledApps
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,12 +15,12 @@ class InstalledAppsViewModel(
     private val getInstalledApps: GetInstalledApps
 ) : ViewModel() {
 
-    private val _installedApps = MutableStateFlow<List<ApplicationOverview>?>(null)
+    private val _installedApps = MutableStateFlow<List<InstalledApplication>?>(null)
 
     /**
-     * A list of [ApplicationOverview]s representing all installed apps.
+     * A list of [InstalledApplication]s representing all installed apps.
      */
-    val installedApps: StateFlow<List<ApplicationOverview>?> = _installedApps
+    val installedApps: StateFlow<List<InstalledApplication>?> = _installedApps
 
     init {
         refresh()

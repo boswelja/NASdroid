@@ -20,14 +20,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
-import com.boswelja.truemanager.apps.logic.installed.ApplicationOverview
+import com.boswelja.truemanager.apps.logic.installed.InstalledApplication
 
 /**
- * Displays information contained in the given [ApplicationOverview] as a short, reusable list item.
+ * Displays information contained in the given [InstalledApplication] as a short, reusable list item.
  */
 @Composable
 fun ApplicationOverviewItem(
-    applicationOverview: ApplicationOverview,
+    installedApplication: InstalledApplication,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(modifier = modifier) {
@@ -41,7 +41,7 @@ fun ApplicationOverviewItem(
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(applicationOverview.iconUrl)
+                        .data(installedApplication.iconUrl)
                         .decoderFactory(SvgDecoder.Factory())
                         .crossfade(true)
                         .build(),
@@ -51,26 +51,26 @@ fun ApplicationOverviewItem(
                         .align(Alignment.CenterVertically)
                 )
                 AppInfoText(
-                    applicationOverview = applicationOverview,
+                    installedApplication = installedApplication,
                     modifier = Modifier.weight(1f)
                 )
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                if (applicationOverview.webPortalUrl != null) {
+                if (installedApplication.webPortalUrl != null) {
                     FilledTonalButton(onClick = { /*TODO*/ }) {
                         Text("Web Portal")
                     }
                 }
                 AppStateControlButton(
-                    state = applicationOverview.state,
+                    state = installedApplication.state,
                     onStart = { /*TODO*/ },
                     onStop = { /*TODO*/ }
                 )
                 Spacer(Modifier.weight(1f))
                 AppControlsOverflowMenu(
-                    app = applicationOverview,
+                    app = installedApplication,
                     onControlClick = { /*TODO*/ }
                 )
             }
@@ -80,24 +80,24 @@ fun ApplicationOverviewItem(
 
 @Composable
 internal fun AppInfoText(
-    applicationOverview: ApplicationOverview,
+    installedApplication: InstalledApplication,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
         Row {
             Text(
-                text = applicationOverview.name,
+                text = installedApplication.name,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.weight(1f)
             )
-            AppStateChip(state = applicationOverview.state)
+            AppStateChip(state = installedApplication.state)
         }
         Text(
-            text = applicationOverview.version,
+            text = installedApplication.version,
             style = MaterialTheme.typography.bodyMedium
         )
         Text(
-            text = if (applicationOverview.updateAvailable) {
+            text = if (installedApplication.updateAvailable) {
                 "Update available"
             } else {
                 "Up to date"
@@ -109,23 +109,23 @@ internal fun AppInfoText(
 
 @Composable
 internal fun AppStateControlButton(
-    state: ApplicationOverview.State,
+    state: InstalledApplication.State,
     onStart: () -> Unit,
     onStop: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
-        ApplicationOverview.State.STOPPED -> {
+        InstalledApplication.State.STOPPED -> {
             FilledTonalButton(onClick = onStart, modifier = modifier) {
                 Text("Start")
             }
         }
-        ApplicationOverview.State.ACTIVE -> {
+        InstalledApplication.State.ACTIVE -> {
             FilledTonalButton(onClick = onStop, modifier = modifier) {
                 Text("Stop")
             }
         }
-        ApplicationOverview.State.DEPLOYING -> {
+        InstalledApplication.State.DEPLOYING -> {
             FilledTonalButton(onClick = onStop, enabled = false, modifier = modifier) {
                 Text("Start")
             }
@@ -135,7 +135,7 @@ internal fun AppStateControlButton(
 
 @Composable
 internal fun AppStateChip(
-    state: ApplicationOverview.State,
+    state: InstalledApplication.State,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -144,21 +144,21 @@ internal fun AppStateChip(
         modifier = modifier
     ) {
         when (state) {
-            ApplicationOverview.State.STOPPED -> {
+            InstalledApplication.State.STOPPED -> {
                 Text(
                     text = "Stopped",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
-            ApplicationOverview.State.ACTIVE -> {
+            InstalledApplication.State.ACTIVE -> {
                 Text(
                     text = "Active",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
-            ApplicationOverview.State.DEPLOYING -> {
+            InstalledApplication.State.DEPLOYING -> {
                 Text(
                     text = "Deploying",
                     style = MaterialTheme.typography.labelMedium,
@@ -174,13 +174,13 @@ internal fun AppStateChip(
 fun ApplicationOverviewItemPreview() {
     MaterialTheme {
         ApplicationOverviewItem(
-            applicationOverview = ApplicationOverview(
+            installedApplication = InstalledApplication(
                 name = "Jellyfin",
                 version = "10.8.10_14.1.9",
                 iconUrl = "https://github.com/jellyfin/jellyfin-ux/blob/master/branding/SVG/icon-transparent.svg",
                 catalog = "Truenas",
                 train = "Community",
-                state = ApplicationOverview.State.ACTIVE,
+                state = InstalledApplication.State.ACTIVE,
                 updateAvailable = false,
                 webPortalUrl = "http://my.jellyfin.local/"
             ),

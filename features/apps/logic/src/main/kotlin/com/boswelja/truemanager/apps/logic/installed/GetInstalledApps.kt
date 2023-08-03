@@ -12,19 +12,19 @@ class GetInstalledApps(
     /**
      * Gets a list of all applications installed on the system.
      */
-    suspend operator fun invoke(): List<ApplicationOverview> {
+    suspend operator fun invoke(): List<InstalledApplication> {
         val releaseDtos = chartReleaseV2Api.getChartReleases()
         return releaseDtos.map { chartRelease ->
-            ApplicationOverview(
+            InstalledApplication(
                 name = chartRelease.id,
                 version = chartRelease.humanVersion,
                 iconUrl = chartRelease.chartMetadata.icon,
                 catalog = chartRelease.catalog,
                 train = chartRelease.catalogTrain,
                 state = when (chartRelease.status) {
-                    "ACTIVE" -> ApplicationOverview.State.ACTIVE
-                    "STOPPED" -> ApplicationOverview.State.STOPPED
-                    "DEPLOYING" -> ApplicationOverview.State.DEPLOYING
+                    "ACTIVE" -> InstalledApplication.State.ACTIVE
+                    "STOPPED" -> InstalledApplication.State.STOPPED
+                    "DEPLOYING" -> InstalledApplication.State.DEPLOYING
                     else -> error("Unhandled state: ${chartRelease.status}")
                 },
                 updateAvailable = chartRelease.updateAvailable,
@@ -48,7 +48,7 @@ class GetInstalledApps(
  * @property updateAvailable Whether the application has an update available.
  * @property webPortalUrl The URL to the applications web interface, if any.
  */
-data class ApplicationOverview(
+data class InstalledApplication(
     val name: String,
     val version: String,
     val iconUrl: String,
