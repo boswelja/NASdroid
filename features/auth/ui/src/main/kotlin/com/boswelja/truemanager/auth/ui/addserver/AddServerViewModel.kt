@@ -3,8 +3,8 @@ package com.boswelja.truemanager.auth.ui.addserver
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.truemanager.auth.serverstore.AuthenticatedServer
-import com.boswelja.truemanager.auth.serverstore.AuthenticatedServersStore
+import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer
+import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServersStore
 import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import com.boswelja.truemanager.core.api.v2.Authorization
 import com.boswelja.truemanager.core.api.v2.HttpsNotOkException
@@ -28,7 +28,7 @@ class AddServerViewModel(
     private val authV2Api: AuthV2Api,
     private val apiKeyV2Api: ApiKeyV2Api,
     private val systemV2Api: SystemV2Api,
-    private val authedServersStore: AuthenticatedServersStore,
+    private val authedServersStore: com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServersStore,
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -131,7 +131,7 @@ class AddServerViewModel(
                 systemInfo.systemProduct
             }
             authedServersStore.add(
-                AuthenticatedServer(
+                com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer(
                     uid = uid,
                     serverAddress = serverAddress,
                     token = apiKey,

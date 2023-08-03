@@ -1,0 +1,52 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "e56838beabbdeb7e25cbc2abc9fa23d3",
+    "entities": [
+      {
+        "tableName": "authenticated_servers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`host_id` TEXT NOT NULL, `server_address` TEXT NOT NULL, `token` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`host_id`))",
+        "fields": [
+          {
+            "fieldPath": "hostId",
+            "columnName": "host_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverAddress",
+            "columnName": "server_address",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "token",
+            "columnName": "token",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "host_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e56838beabbdeb7e25cbc2abc9fa23d3')"
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.auth.serverstore
+package com.boswelja.truemanager.auth.data.serverstore
 
 import android.content.Context
 import androidx.room.ColumnInfo
