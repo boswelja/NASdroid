@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.boswelja.truemanager.apps.ui.installed.item.ApplicationOverviewItem
 import org.koin.androidx.compose.getViewModel
 
 /**
