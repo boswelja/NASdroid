@@ -1,5 +1,6 @@
 package com.boswelja.truemanager.auth.logic.addserver
 
+import com.boswelja.truemanager.auth.logic.then
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 
 class AuthenticateAndAddServer(
@@ -14,39 +15,37 @@ class AuthenticateAndAddServer(
         serverAddress: String,
         username: String,
         password: String
-    ): Result<Unit> = runCatching {
-        val apiKey = createApiKey(
+    ): Result<Unit> =
+        createApiKey(
             serverAddress = serverAddress,
             username = username,
             password = password,
             keyName = "TrueManager for TrueNAS"
-        ).getOrThrow()
-
-        invoke(
-            serverName = serverName,
-            serverAddress = serverAddress,
-            apiKey = apiKey
-        ).getOrThrow()
-    }
+        ).then { apiKey ->
+            invoke(
+                serverName = serverName,
+                serverAddress = serverAddress,
+                apiKey = apiKey
+            )
+        }
 
     suspend operator fun invoke(
         serverName: String,
         serverAddress: String,
         apiKey: String
-    ): Result<Unit> = runCatching {
-        testApiKey(serverAddress, apiKey).getOrThrow()
-
-        val actualName = serverName.ifBlank {
-            val systemInfo = systemV2Api.getSystemInfo()
-            systemInfo.systemProduct
-        }
-        val uid = systemV2Api.getHostId()
-
-        addNewServer(
-            serverUid = uid,
-            serverAddress = serverAddress,
-            apiKey = apiKey,
-            serverName = actualName
-        )
-    }
+    ): Result<Unit> =
+        testApiKey(serverAddress, apiKey)
+            .then {
+                val actualName = serverName.ifBlank {
+                    val systemInfo = systemV2Api.getSystemInfo()
+                    systemInfo.systemProduct
+                }
+                val uid = systemV2Api.getHostId()
+                addNewServer(
+                    serverUid = uid,
+                    serverAddress = serverAddress,
+                    apiKey = apiKey,
+                    serverName = actualName
+                )
+            }
 }
