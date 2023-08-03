@@ -34,6 +34,7 @@ include(
     ":features:apps:logic",
     ":features:apps:ui",
     ":features:auth:data",
+    ":features:auth:logic",
     ":features:auth:ui",
     ":features:dashboard:data",
     ":features:dashboard:logic",
