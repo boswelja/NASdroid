@@ -34,7 +34,7 @@ fun InstalledAppsScreen(
             items(
                 items = it,
             ) { applicationOverview ->
-                ApplicationOverviewItem(applicationOverview = applicationOverview)
+                ApplicationOverviewItem(installedApplication = applicationOverview)
             }
         }
     }
