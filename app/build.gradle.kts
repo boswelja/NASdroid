@@ -39,10 +39,6 @@ android {
         sarifReport = true
         htmlReport = false
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
 }
 
 kotlin {
