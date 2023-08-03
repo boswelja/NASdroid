@@ -22,7 +22,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.boswelja.truemanager.auth.R
+import com.boswelja.truemanager.auth.ui.R
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 

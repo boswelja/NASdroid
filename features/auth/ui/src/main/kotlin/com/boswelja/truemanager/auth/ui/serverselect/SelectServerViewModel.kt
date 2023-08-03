@@ -2,8 +2,8 @@ package com.boswelja.truemanager.auth.ui.serverselect
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.truemanager.auth.serverstore.AuthenticatedServer
-import com.boswelja.truemanager.auth.serverstore.AuthenticatedServersStore
+import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer
+import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServersStore
 import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import com.boswelja.truemanager.core.api.v2.Authorization
 import kotlinx.coroutines.channels.BufferOverflow
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  */
 class SelectServerViewModel(
     private val apiStateProvider: ApiStateProvider,
-    authenticatedServersStore: AuthenticatedServersStore,
+    authenticatedServersStore: com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServersStore,
 ) : ViewModel() {
     /**
      * Flows a list of servers the user has previously authenticated with.
@@ -61,7 +61,7 @@ class SelectServerViewModel(
     /**
      * Try log in to the given server.
      */
-    fun tryLogIn(server: AuthenticatedServer) {
+    fun tryLogIn(server: com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer) {
         _isLoading.value = true
         viewModelScope.launch {
             apiStateProvider.serverAddress = server.serverAddress
