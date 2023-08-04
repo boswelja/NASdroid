@@ -3,8 +3,8 @@ package com.boswelja.truemanager.auth.ui.serverselect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer
-import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServersStore
 import com.boswelja.truemanager.auth.logic.auth.LogIn
+import com.boswelja.truemanager.auth.logic.manageservers.GetAllServers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,13 +19,13 @@ import kotlinx.coroutines.launch
  */
 class SelectServerViewModel(
     private val logIn: LogIn,
-    authenticatedServersStore: AuthenticatedServersStore,
+    getAllServers: GetAllServers,
 ) : ViewModel() {
 
     /**
      * Flows a list of servers the user has previously authenticated with.
      */
-    val authenticatedServers = authenticatedServersStore.getAll()
+    val authenticatedServers = getAllServers()
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
