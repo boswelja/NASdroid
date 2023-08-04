@@ -16,13 +16,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoveDown
 import androidx.compose.material.icons.filled.MoveUp
-import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,7 +51,7 @@ fun DashboardCard(
     onLongClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    OutlinedCard(
+    ElevatedCard(
         modifier = modifier.combinedClickable(
             onLongClick = onLongClick,
             onClick = onClick
@@ -71,7 +71,7 @@ fun DashboardCard(
         // We animate the divider separately so it can fade in separate from the other content,
         // giving us a better "growing card" effect
         AnimatedVisibility(visible = cardEditControls.isEditing) {
-            Divider()
+            HorizontalDivider()
         }
         AnimatedVisibility(
             visible = cardEditControls.isEditing,

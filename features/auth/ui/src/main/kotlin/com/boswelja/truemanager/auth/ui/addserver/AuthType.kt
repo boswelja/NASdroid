@@ -9,7 +9,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.boswelja.truemanager.auth.R
+import com.boswelja.truemanager.auth.ui.R
 
 sealed class AuthType(
     @StringRes val labelRes: Int,

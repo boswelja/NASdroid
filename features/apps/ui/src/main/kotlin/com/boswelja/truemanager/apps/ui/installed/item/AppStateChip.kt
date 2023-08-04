@@ -10,11 +10,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.boswelja.truemanager.apps.logic.installed.ApplicationOverview
+import com.boswelja.truemanager.apps.logic.installed.InstalledApplication
 
 @Composable
 internal fun AppStateChip(
-    state: ApplicationOverview.State,
+    state: InstalledApplication.State,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -23,21 +23,21 @@ internal fun AppStateChip(
         modifier = modifier
     ) {
         when (state) {
-            ApplicationOverview.State.STOPPED -> {
+            InstalledApplication.State.STOPPED -> {
                 Text(
                     text = "Stopped",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
-            ApplicationOverview.State.ACTIVE -> {
+            InstalledApplication.State.ACTIVE -> {
                 Text(
                     text = "Active",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
-            ApplicationOverview.State.DEPLOYING -> {
+            InstalledApplication.State.DEPLOYING -> {
                 Text(
                     text = "Deploying",
                     style = MaterialTheme.typography.labelMedium,
@@ -51,7 +51,7 @@ internal fun AppStateChip(
 @Preview(showBackground = true)
 @Composable
 fun AppStateChipPreview(
-    @PreviewParameter(provider = ApplicationStateProvider::class) state: ApplicationOverview.State
+    @PreviewParameter(provider = ApplicationStateProvider::class) state: InstalledApplication.State
 ) {
     MaterialTheme {
         AppStateChip(
@@ -61,7 +61,7 @@ fun AppStateChipPreview(
     }
 }
 
-internal class ApplicationStateProvider : PreviewParameterProvider<ApplicationOverview.State> {
-    override val values: Sequence<ApplicationOverview.State> =
-        ApplicationOverview.State.entries.asSequence()
+internal class ApplicationStateProvider : PreviewParameterProvider<InstalledApplication.State> {
+    override val values: Sequence<InstalledApplication.State> =
+        InstalledApplication.State.entries.asSequence()
 }

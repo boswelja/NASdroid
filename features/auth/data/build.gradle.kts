@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.auth"
+    namespace = "com.boswelja.truemanager.auth.data"
 
     buildTypes {
         release {
@@ -17,11 +17,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-
-    buildFeatures.compose = true
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     lint {
         sarifReport = true
@@ -46,20 +41,9 @@ detekt {
 }
 
 dependencies {
-    implementation(projects.core.api)
-
-    implementation(libs.androidx.window)
-
     // Room
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
 
-    // Compose
-    implementation(libs.androidx.navigation)
-    implementation(libs.accompanist.drawablepainter)
-    implementation(libs.bundles.compose)
-    debugImplementation(libs.bundles.compose.tooling)
-
     implementation(libs.koin.android)
-    implementation(libs.koin.android.compose)
 }

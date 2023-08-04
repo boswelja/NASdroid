@@ -25,12 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import com.boswelja.truemanager.apps.logic.installed.ApplicationOverview
+import com.boswelja.truemanager.apps.logic.installed.InstalledApplication
 import com.boswelja.truemanager.apps.ui.R
 
 @Composable
 internal fun AppControlsOverflowMenu(
-    app: ApplicationOverview,
+    app: InstalledApplication,
     onControlClick: (AppControl) -> Unit,
     modifier: Modifier = Modifier,
     controls: Iterable<AppControl> = AppControl.entries
@@ -69,7 +69,7 @@ internal fun AppControlsOverflowMenu(
 enum class AppControl(
     @StringRes val titleRes: Int,
     val icon: ImageVector,
-    val enabled: (ApplicationOverview) -> Boolean,
+    val enabled: (InstalledApplication) -> Boolean,
 ) {
     UPGRADE(
         titleRes = R.string.app_control_upgrade,
@@ -94,7 +94,7 @@ enum class AppControl(
     LOGS(
         titleRes = R.string.app_control_logs,
         icon = Icons.Default.TextSnippet,
-        enabled = { it.state == ApplicationOverview.State.ACTIVE }
+        enabled = { it.state == InstalledApplication.State.ACTIVE }
     ),
     DELETE(
         titleRes = R.string.app_control_delete,

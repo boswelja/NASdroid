@@ -26,8 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.apps.ui.R
-import com.boswelja.truemanager.apps.ui.installed.item.AppAction
 import com.boswelja.truemanager.apps.ui.installed.item.ApplicationOverviewItem
+import com.boswelja.truemanager.apps.ui.installed.item.InstalledAppAction
 import com.boswelja.truemanager.core.menuprovider.MenuItem
 import com.boswelja.truemanager.core.menuprovider.ProvideMenuItems
 import com.boswelja.truemanager.core.urllauncher.rememberUrlLauncher
@@ -71,33 +71,22 @@ fun InstalledAppsScreen(
                 key = { it.name }
             ) { applicationOverview ->
                 ApplicationOverviewItem(
-                    applicationOverview = applicationOverview,
-                    onClick = { /* TODO */ },
-                    onActionClick = { action ->
-                        when (action) {
-                            AppAction.START -> {
-                                viewModel.start(applicationOverview.name)
-                            }
-                            AppAction.STOP -> {
-                                viewModel.stop(applicationOverview.name)
-                            }
-                            AppAction.DELETE -> {
-                                deletingApp = applicationOverview.name
-                            }
-                            AppAction.EDIT -> TODO()
-                            AppAction.UPGRADE -> TODO()
-                            AppAction.ROLLBACK -> TODO()
-                            AppAction.SHELL -> TODO()
-                            AppAction.LOGS -> {
-                                onShowLogs(applicationOverview.name)
-                            }
-                            AppAction.WEB_PORTAL -> {
-                                applicationOverview.webPortalUrl?.let {
-                                    urlLauncher.launchUrl(it)
-                                }
+                    installedApplication = applicationOverview,
+                    onActionClicked = {
+                        when (it) {
+                            InstalledAppAction.UPGRADE -> TODO()
+                            InstalledAppAction.ROLL_BACK -> TODO()
+                            InstalledAppAction.EDIT -> TODO()
+                            InstalledAppAction.SHELL -> TODO()
+                            InstalledAppAction.LOGS -> onShowLogs(applicationOverview.name)
+                            InstalledAppAction.DELETE -> deletingApp = applicationOverview.name
+                            InstalledAppAction.START -> viewModel.start(applicationOverview.name)
+                            InstalledAppAction.STOP -> viewModel.stop(applicationOverview.name)
+                            InstalledAppAction.WEB_PORTAL -> applicationOverview.webPortalUrl?.let {
+                                urlLauncher.launchUrl(it)
                             }
                         }
-                    },
+                    }
                 )
             }
         }
