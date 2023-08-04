@@ -4,8 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer
 import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServersStore
-import com.boswelja.truemanager.core.api.v2.ApiStateProvider
-import com.boswelja.truemanager.core.api.v2.Authorization
+import com.boswelja.truemanager.auth.logic.auth.LogIn
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,9 +18,10 @@ import kotlinx.coroutines.launch
  * Responsible for exposing data to and handling events from the "select server" UI.
  */
 class SelectServerViewModel(
-    private val apiStateProvider: ApiStateProvider,
-    authenticatedServersStore: com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServersStore,
+    private val logIn: LogIn,
+    authenticatedServersStore: AuthenticatedServersStore,
 ) : ViewModel() {
+
     /**
      * Flows a list of servers the user has previously authenticated with.
      */
@@ -61,12 +61,11 @@ class SelectServerViewModel(
     /**
      * Try log in to the given server.
      */
-    fun tryLogIn(server: com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer) {
+    fun tryLogIn(server: AuthenticatedServer) {
         _isLoading.value = true
         viewModelScope.launch {
-            apiStateProvider.serverAddress = server.serverAddress
-            apiStateProvider.authorization = Authorization.ApiKey(server.token)
-            // TODO validate token
+            logIn(server)
+            // TODO handle failures
             _events.emit(Event.LoginSuccess)
             _isLoading.value = false
         }

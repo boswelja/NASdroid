@@ -1,5 +1,7 @@
-package com.boswelja.truemanager.auth.logic.addserver
+package com.boswelja.truemanager.auth.logic.manageservers
 
+import com.boswelja.truemanager.auth.logic.CreateApiKey
+import com.boswelja.truemanager.auth.logic.TestApiKey
 import com.boswelja.truemanager.auth.logic.then
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 

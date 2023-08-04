@@ -1,4 +1,4 @@
-package com.boswelja.truemanager.auth.logic.addserver
+package com.boswelja.truemanager.auth.logic
 
 import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import com.boswelja.truemanager.core.api.v2.Authorization

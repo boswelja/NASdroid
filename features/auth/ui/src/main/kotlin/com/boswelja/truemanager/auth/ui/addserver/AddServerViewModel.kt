@@ -2,7 +2,7 @@ package com.boswelja.truemanager.auth.ui.addserver
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.truemanager.auth.logic.addserver.AuthenticateAndAddServer
+import com.boswelja.truemanager.auth.logic.manageservers.AuthenticateAndAddServer
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
