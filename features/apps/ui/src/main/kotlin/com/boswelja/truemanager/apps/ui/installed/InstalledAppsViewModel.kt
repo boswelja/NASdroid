@@ -31,8 +31,12 @@ class InstalledAppsViewModel(
      */
     fun refresh() {
         viewModelScope.launch {
-            val installedApps = getInstalledApps()
-            _installedApps.emit(installedApps)
+            refreshSuspending()
         }
+    }
+
+    private suspend fun refreshSuspending() {
+        val installedApps = getInstalledApps()
+        _installedApps.emit(installedApps)
     }
 }

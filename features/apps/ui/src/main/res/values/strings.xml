@@ -5,6 +5,8 @@
     <string name="tab_manage_catalogs">Catalogs</string>
     <string name="tab_manage_docker">Docker Images</string>
 
+    <string name="menu_item_refresh">Refresh</string>
+
     <string name="app_control_upgrade">Upgrade</string>
     <string name="app_control_rollback">Roll back</string>
     <string name="app_control_edit">Edit</string>
