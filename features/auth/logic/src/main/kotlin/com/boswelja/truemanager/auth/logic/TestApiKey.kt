@@ -4,11 +4,17 @@ import com.boswelja.truemanager.core.api.v2.ApiStateProvider
 import com.boswelja.truemanager.core.api.v2.Authorization
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 
+/**
+ * Tests an existing API key functionality for a server. See [invoke] for details.
+ */
 class TestApiKey(
     private val apiStateProvider: ApiStateProvider,
     private val systemV2Api: SystemV2Api,
 ) {
 
+    /**
+     * Tests [apiKey] still functions correctly on the server at [serverAddress].
+     */
     suspend operator fun invoke(
         serverAddress: String,
         apiKey: String

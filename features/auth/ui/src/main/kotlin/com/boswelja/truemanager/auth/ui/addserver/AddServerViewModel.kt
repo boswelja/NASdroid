@@ -2,7 +2,7 @@ package com.boswelja.truemanager.auth.ui.addserver
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.truemanager.auth.logic.manageservers.AuthenticateAndAddServer
+import com.boswelja.truemanager.auth.logic.manageservers.AddNewServer
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
  * Responsible for exposing data to and handling events from the "add server" UI.
  */
 class AddServerViewModel(
-    private val authenticateAndAddServer: AuthenticateAndAddServer,
+    private val addNewServer: AddNewServer,
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -61,7 +61,7 @@ class AddServerViewModel(
     ) {
         _isLoading.value = true
         viewModelScope.launch {
-            authenticateAndAddServer(
+            addNewServer(
                 serverName = serverName,
                 serverAddress = serverAddress,
                 username = username,
@@ -86,7 +86,7 @@ class AddServerViewModel(
     ) {
         _isLoading.value = true
         viewModelScope.launch {
-            authenticateAndAddServer(
+            addNewServer(
                 serverName = serverName,
                 serverAddress = serverAddress,
                 apiKey = apiKey
