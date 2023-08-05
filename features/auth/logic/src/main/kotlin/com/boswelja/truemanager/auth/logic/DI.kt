@@ -5,6 +5,8 @@ import com.boswelja.truemanager.auth.logic.auth.LogIn
 import com.boswelja.truemanager.auth.logic.auth.LogOut
 import com.boswelja.truemanager.auth.logic.manageservers.AddNewServer
 import com.boswelja.truemanager.auth.logic.manageservers.AuthenticateAndAddServer
+import com.boswelja.truemanager.auth.logic.manageservers.GetAllServers
+import com.boswelja.truemanager.auth.logic.manageservers.GetServerToken
 import org.koin.core.context.loadKoinModules
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -20,6 +22,8 @@ val AuthLogicModule = module {
 
     factoryOf(::AddNewServer)
     factoryOf(::AuthenticateAndAddServer)
+    factoryOf(::GetAllServers)
+    factoryOf(::GetServerToken)
 
     factoryOf(::CreateApiKey)
     factoryOf(::TestApiKey)
