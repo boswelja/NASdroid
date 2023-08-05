@@ -2,6 +2,7 @@ package com.boswelja.truemanager.apps.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -13,6 +14,7 @@ import com.boswelja.truemanager.apps.ui.installed.logs.LogsScreen
  * Registers a nested navigation graph for the Apps feature.
  */
 fun NavGraphBuilder.appsGraph(
+    navController: NavController,
     route: String,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
@@ -22,14 +24,20 @@ fun NavGraphBuilder.appsGraph(
         route = route
     ) {
         composable("overview") {
-            AppsScreen(modifier = modifier, contentPadding = contentPadding)
+            AppsScreen(
+                onShowLogs = {
+                    navController.navigate("logs/$it")
+                },
+                modifier = modifier,
+                contentPadding = contentPadding
+            )
         }
         composable(
             route = "logs/{appName}",
             arguments = listOf(
                 navArgument("appName") {
-                    type = NavType.StringType
                     nullable = false
+                    type = NavType.StringType
                 }
             )
         ) {

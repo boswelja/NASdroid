@@ -135,7 +135,7 @@ fun MainNavHost(
                 TopLevelDestination.Network -> {}
                 TopLevelDestination.Credentials -> {}
                 TopLevelDestination.Virtualization -> {}
-                TopLevelDestination.Apps -> appsGraph(destination.route, modifier, contentPadding)
+                TopLevelDestination.Apps -> appsGraph(navController, destination.route, modifier, contentPadding)
                 TopLevelDestination.Reporting -> reportingGraph(destination.route, modifier, contentPadding)
                 TopLevelDestination.SystemSettings -> {}
             }

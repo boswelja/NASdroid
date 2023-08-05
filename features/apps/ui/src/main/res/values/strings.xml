@@ -5,12 +5,19 @@
     <string name="tab_manage_catalogs">Catalogs</string>
     <string name="tab_manage_docker">Docker Images</string>
 
+    <string name="menu_item_refresh">Refresh</string>
+
     <string name="app_control_upgrade">Upgrade</string>
     <string name="app_control_rollback">Roll back</string>
     <string name="app_control_edit">Edit</string>
     <string name="app_control_shell">Shell</string>
     <string name="app_control_logs">Logs</string>
     <string name="app_control_delete">Delete</string>
+
+    <string name="app_delete_continue">Continue</string>
+    <string name="app_delete_cancel">Cancel</string>
+    <string name="app_delete_title">Delete %s</string>
+    <string name="app_delete_data">Delete docker images used by the app</string>
 
     <string name="log_options_pod">Pod</string>
     <string name="log_options_container">Container</string>
