@@ -14,6 +14,11 @@
     <string name="app_control_logs">Logs</string>
     <string name="app_control_delete">Delete</string>
 
+    <string name="app_delete_continue">Continue</string>
+    <string name="app_delete_cancel">Cancel</string>
+    <string name="app_delete_title">Delete %s</string>
+    <string name="app_delete_data">Delete docker images used by the app</string>
+
     <string name="log_options_pod">Pod</string>
     <string name="log_options_container">Container</string>
     <string name="log_options_max_lines">Tail lines</string>
