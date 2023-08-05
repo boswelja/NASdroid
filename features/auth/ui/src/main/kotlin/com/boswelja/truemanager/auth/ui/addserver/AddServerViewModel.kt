@@ -89,7 +89,7 @@ class AddServerViewModel(
             addNewServer(
                 serverName = serverName,
                 serverAddress = serverAddress,
-                apiKey = apiKey
+                token = apiKey
             )
             _isLoading.value = false
         }
