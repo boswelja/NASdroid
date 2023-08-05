@@ -15,6 +15,11 @@ interface AuthenticatedServersStore {
     fun getAll(): Flow<List<AuthenticatedServer>>
 
     /**
+     * Get an authenticated server details by its [AuthenticatedServer.uid].
+     */
+    suspend fun get(id: String): AuthenticatedServer
+
+    /**
      * Delete an [AuthenticatedServer] from the store.
      */
     suspend fun delete(server: AuthenticatedServer)

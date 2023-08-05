@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.auth.ui.R
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
-
 @Composable
 fun AuthHeader(
     modifier: Modifier = Modifier

@@ -44,10 +44,12 @@ class AuthenticateAndAddServer(
                 }
                 val uid = systemV2Api.getHostId()
                 addNewServer(
-                    serverUid = uid,
-                    serverAddress = serverAddress,
+                    server = Server(
+                        id = uid,
+                        name = actualName,
+                        url = serverAddress
+                    ),
                     apiKey = apiKey,
-                    serverName = actualName
                 )
             }
 }

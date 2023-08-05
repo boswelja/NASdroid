@@ -2,9 +2,9 @@ package com.boswelja.truemanager.auth.ui.serverselect
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer
 import com.boswelja.truemanager.auth.logic.auth.LogIn
 import com.boswelja.truemanager.auth.logic.manageservers.GetAllServers
+import com.boswelja.truemanager.auth.logic.manageservers.Server
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,7 +61,7 @@ class SelectServerViewModel(
     /**
      * Try log in to the given server.
      */
-    fun tryLogIn(server: AuthenticatedServer) {
+    fun tryLogIn(server: Server) {
         _isLoading.value = true
         viewModelScope.launch {
             logIn(server)

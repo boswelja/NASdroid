@@ -8,17 +8,15 @@ class AddNewServer(
 ) {
 
     suspend operator fun invoke(
-        serverUid: String,
-        serverName: String,
-        serverAddress: String,
+        server: Server,
         apiKey: String
     ): Result<Unit> = runCatching {
         authedServersStore.add(
             AuthenticatedServer(
-                uid = serverUid,
-                serverAddress = serverAddress,
+                uid = server.id,
+                serverAddress = server.url,
                 token = apiKey,
-                name = serverName
+                name = server.name
             )
         )
     }

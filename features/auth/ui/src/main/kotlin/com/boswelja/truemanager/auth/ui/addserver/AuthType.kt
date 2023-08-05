@@ -15,8 +15,8 @@ sealed class AuthType(
     @StringRes val labelRes: Int,
     val icon: ImageVector
 ) {
-    object BasicAuth : AuthType(R.string.auth_type_basic, Icons.Default.Password)
-    object ApiKeyAuth : AuthType(R.string.auth_type_key, Icons.Default.Key)
+    data object BasicAuth : AuthType(R.string.auth_type_basic, Icons.Default.Password)
+    data object ApiKeyAuth : AuthType(R.string.auth_type_key, Icons.Default.Key)
 
 }
 
