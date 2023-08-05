@@ -89,35 +89,6 @@ fun ApplicationOverviewItem(
 }
 
 @Composable
-internal fun AppInfoText(
-    installedApplication: InstalledApplication,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier) {
-        Row {
-            Text(
-                text = installedApplication.name,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.weight(1f)
-            )
-            AppStateChip(state = installedApplication.state)
-        }
-        Text(
-            text = installedApplication.version,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Text(
-            text = if (installedApplication.updateAvailable) {
-                "Update available"
-            } else {
-                "Up to date"
-            },
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
-}
-
-@Composable
 internal fun AppStateControlButton(
     state: InstalledApplication.State,
     onStart: () -> Unit,
@@ -138,42 +109,6 @@ internal fun AppStateControlButton(
         InstalledApplication.State.DEPLOYING -> {
             FilledTonalButton(onClick = onStop, enabled = false, modifier = modifier) {
                 Text("Start")
-            }
-        }
-    }
-}
-
-@Composable
-internal fun AppStateChip(
-    state: InstalledApplication.State,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        modifier = modifier
-    ) {
-        when (state) {
-            InstalledApplication.State.STOPPED -> {
-                Text(
-                    text = "Stopped",
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                )
-            }
-            InstalledApplication.State.ACTIVE -> {
-                Text(
-                    text = "Active",
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                )
-            }
-            InstalledApplication.State.DEPLOYING -> {
-                Text(
-                    text = "Deploying",
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                )
             }
         }
     }

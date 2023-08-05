@@ -31,6 +31,7 @@ import com.boswelja.truemanager.apps.ui.installed.item.ApplicationOverviewItem
 import com.boswelja.truemanager.apps.ui.installed.item.InstalledAppAction
 import com.boswelja.truemanager.core.menuprovider.MenuItem
 import com.boswelja.truemanager.core.menuprovider.ProvideMenuItems
+import com.boswelja.truemanager.core.urllauncher.rememberUrlLauncher
 import org.koin.androidx.compose.getViewModel
 
 /**
@@ -38,10 +39,13 @@ import org.koin.androidx.compose.getViewModel
  */
 @Composable
 fun InstalledAppsScreen(
+    onShowLogs: (appName: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: InstalledAppsViewModel = getViewModel()
 ) {
+    val urlLauncher = rememberUrlLauncher()
+
     ProvideMenuItems(
         MenuItem(
             label = stringResource(R.string.menu_item_refresh),
@@ -75,11 +79,13 @@ fun InstalledAppsScreen(
                             InstalledAppAction.ROLL_BACK -> TODO()
                             InstalledAppAction.EDIT -> TODO()
                             InstalledAppAction.SHELL -> TODO()
-                            InstalledAppAction.LOGS -> TODO()
+                            InstalledAppAction.LOGS -> onShowLogs(applicationOverview.name)
                             InstalledAppAction.DELETE -> deletingApp = applicationOverview.name
                             InstalledAppAction.START -> viewModel.start(applicationOverview.name)
                             InstalledAppAction.STOP -> viewModel.stop(applicationOverview.name)
-                            InstalledAppAction.WEB_PORTAL -> TODO()
+                            InstalledAppAction.WEB_PORTAL -> applicationOverview.webPortalUrl?.let {
+                                urlLauncher.launchUrl(it)
+                            }
                         }
                     }
                 )
