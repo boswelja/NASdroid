@@ -11,12 +11,25 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.boswelja.truemanager.auth.ui.R
 
+/**
+ * Various authenticastion types available to users.
+ *
+ * @property labelRes The String resource pointing to type title.
+ * @property icon An icon representing the auth type.
+ */
 sealed class AuthType(
     @StringRes val labelRes: Int,
     val icon: ImageVector
 ) {
-    object BasicAuth : AuthType(R.string.auth_type_basic, Icons.Default.Password)
-    object ApiKeyAuth : AuthType(R.string.auth_type_key, Icons.Default.Key)
+    /**
+     * Describes "basic" authentication, that is authentication via a username and password.
+     */
+    data object BasicAuth : AuthType(R.string.auth_type_basic, Icons.Default.Password)
+
+    /**
+     * Describes authentication via API Key.
+     */
+    data object ApiKeyAuth : AuthType(R.string.auth_type_key, Icons.Default.Key)
 
 }
 

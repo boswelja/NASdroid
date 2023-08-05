@@ -1,34 +1,20 @@
 package com.boswelja.truemanager.auth.ui.addserver
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer
-import com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServersStore
-import com.boswelja.truemanager.core.api.v2.ApiStateProvider
-import com.boswelja.truemanager.core.api.v2.Authorization
-import com.boswelja.truemanager.core.api.v2.HttpsNotOkException
-import com.boswelja.truemanager.core.api.v2.apikey.AllowRule
-import com.boswelja.truemanager.core.api.v2.apikey.ApiKeyV2Api
-import com.boswelja.truemanager.core.api.v2.auth.AuthV2Api
-import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
+import com.boswelja.truemanager.auth.logic.manageservers.AddNewServer
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 /**
  * Responsible for exposing data to and handling events from the "add server" UI.
  */
 class AddServerViewModel(
-    private val apiStateProvider: ApiStateProvider,
-    private val authV2Api: AuthV2Api,
-    private val apiKeyV2Api: ApiKeyV2Api,
-    private val systemV2Api: SystemV2Api,
-    private val authedServersStore: com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServersStore,
+    private val addNewServer: AddNewServer,
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -74,23 +60,13 @@ class AddServerViewModel(
         password: String
     ) {
         _isLoading.value = true
-        apiStateProvider.serverAddress = serverAddress
         viewModelScope.launch {
-            apiStateProvider.authorization = Authorization.Basic(username, password)
-
-            try {
-                val isValid = authV2Api.checkPassword(username, password)
-                if (isValid) {
-                    val apiKey = apiKeyV2Api.create("TrueManager for TrueNAS", listOf(AllowRule("*", "*")))
-                    loginWithApiKey(serverName, serverAddress, apiKey.key)
-                } else {
-                    apiStateProvider.authorization = null
-                    _events.emit(Event.LoginFailedUsernameOrPasswordInvalid)
-                }
-            } catch (_: IOException) {
-                _events.emit(Event.LoginFailedServerNotFound)
-                apiStateProvider.authorization = null
-            }
+            addNewServer(
+                serverName = serverName,
+                serverAddress = serverAddress,
+                username = username,
+                password = password
+            )
             _isLoading.value = false
         }
     }
@@ -109,46 +85,13 @@ class AddServerViewModel(
         apiKey: String
     ) {
         _isLoading.value = true
-        apiStateProvider.serverAddress = serverAddress
         viewModelScope.launch {
-            loginWithApiKey(serverName, serverAddress, apiKey)
-            _isLoading.value = false
-        }
-    }
-
-    private suspend fun loginWithApiKey(
-        serverName: String,
-        serverAddress: String,
-        apiKey: String
-    ) {
-        apiStateProvider.authorization = Authorization.ApiKey(apiKey)
-
-        try {
-            val uid = systemV2Api.getHostId()
-
-            val actualName = serverName.ifBlank {
-                val systemInfo = systemV2Api.getSystemInfo()
-                systemInfo.systemProduct
-            }
-            authedServersStore.add(
-                com.boswelja.truemanager.auth.data.serverstore.AuthenticatedServer(
-                    uid = uid,
-                    serverAddress = serverAddress,
-                    token = apiKey,
-                    name = actualName
-                )
+            addNewServer(
+                serverName = serverName,
+                serverAddress = serverAddress,
+                token = apiKey
             )
-            _events.emit(Event.LoginSuccess)
-        } catch (e: HttpsNotOkException) {
-            apiStateProvider.authorization = null
-            when (e.code) {
-                HttpCodeUnprocessableEntity -> _events.emit(Event.LoginFailedKeyAlreadyExists)
-                HttpCodeUnauthorized -> _events.emit(Event.LoginFailedKeyInvalid)
-                else -> Log.e(::AddServerViewModel.name, "Unhandled exception $e")
-            }
-        } catch (_: IOException) {
-            _events.emit(Event.LoginFailedServerNotFound)
-            apiStateProvider.authorization = null
+            _isLoading.value = false
         }
     }
 
@@ -162,10 +105,5 @@ class AddServerViewModel(
         LoginFailedUsernameOrPasswordInvalid,
         LoginFailedServerNotFound,
         LoginFailedNotHttps
-    }
-
-    companion object {
-        private const val HttpCodeUnprocessableEntity = 422
-        private const val HttpCodeUnauthorized = 401
     }
 }

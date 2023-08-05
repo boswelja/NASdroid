@@ -39,6 +39,16 @@ internal class AuthenticatedServersStoreImpl(
         }
     }
 
+    override suspend fun get(id: String): AuthenticatedServer {
+        val dto = database.authenticatedServerDao().get(id)
+        return AuthenticatedServer(
+            uid = dto.hostId,
+            serverAddress = dto.serverAddress,
+            token = dto.token,
+            name = dto.name
+        )
+    }
+
     override suspend fun delete(server: AuthenticatedServer) {
         database.authenticatedServerDao().delete(
             AuthenticatedServerDto(
@@ -79,6 +89,9 @@ internal data class AuthenticatedServerDto(
 internal interface AuthenticatedServerDao {
     @Query("SELECT * FROM authenticated_servers")
     fun getAll(): Flow<List<AuthenticatedServerDto>>
+
+    @Query("SELECT * FROM authenticated_servers WHERE host_id = :id")
+    suspend fun get(id: String): AuthenticatedServerDto
 
     @Insert
     suspend fun insertAll(vararg servers: AuthenticatedServerDto)

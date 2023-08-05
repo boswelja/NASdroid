@@ -76,11 +76,11 @@ fun SelectServerScreen(
         ) {
             items(
                 items = authenticatedServers,
-                key = { it.token }
+                key = { it.id }
             ) { authenticatedServer ->
                 ListItem(
                     headlineContent = { Text(authenticatedServer.name) },
-                    supportingContent = { Text(authenticatedServer.serverAddress) },
+                    supportingContent = { Text(authenticatedServer.url) },
                     leadingContent = { Icon(Icons.Default.Dns, contentDescription = null) },
                     modifier = Modifier
                         .clickable(enabled = !isLoading) { viewModel.tryLogIn(authenticatedServer) }
