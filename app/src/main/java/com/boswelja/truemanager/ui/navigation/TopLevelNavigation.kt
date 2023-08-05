@@ -236,7 +236,7 @@ fun NavigationRail(
                 exit = slideOutHorizontally { -it/2 }
             ) {
                 NavigationRail {
-                    Spacer(Modifier.height(12.dp + 64.dp))
+                    Spacer(Modifier.height(12.dp))
                     destinations.forEach { destination ->
                         val label = stringResource(destination.labelRes)
                         NavigationRailItem(
@@ -308,7 +308,7 @@ fun PermanentNavigationDrawer(
                 PermanentDrawerSheet(
                     modifier = Modifier.verticalScroll(drawerScrollState)
                 ) {
-                    Spacer(Modifier.height(12.dp + 64.dp))
+                    Spacer(Modifier.height(12.dp))
                     destinations.forEach { destination ->
                         NavigationDrawerItem(
                             icon = { Icon(destination.icon, contentDescription = null) },
