@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,7 +57,7 @@ fun InstalledAppsScreen(
 
     val installedApps by viewModel.installedApps.collectAsState()
 
-    var deletingApp by remember { mutableStateOf<String?>(null) }
+    var deletingApp by rememberSaveable { mutableStateOf<String?>(null) }
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(240.dp),
@@ -113,19 +114,19 @@ internal fun DeleteAppDialog(
         onDismissRequest = onCancel,
         confirmButton = {
             TextButton(onClick = { onConfirm(deleteImages) }) {
-                Text("Continue")
+                Text(stringResource(R.string.app_delete_continue))
             }
         },
         dismissButton = {
             TextButton(onClick = onCancel) {
-                Text("Cancel")
+                Text(stringResource(R.string.app_delete_cancel))
             }
         },
         icon = {
             Icon(Icons.Default.Delete, null)
         },
         title = {
-            Text("Delete $appName")
+            Text(stringResource(R.string.app_delete_title, appName))
         },
         text = {
             Row(
@@ -134,7 +135,7 @@ internal fun DeleteAppDialog(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Checkbox(checked = deleteImages, onCheckedChange = null)
-                Text("Delete docker images used by the app")
+                Text(stringResource(R.string.app_delete_data))
             }
         },
         modifier = modifier
