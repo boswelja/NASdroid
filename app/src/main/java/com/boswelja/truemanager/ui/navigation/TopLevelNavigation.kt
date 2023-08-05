@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -146,7 +147,7 @@ fun ModalNavigationDrawer(
         ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet(
-                    modifier = Modifier.verticalScroll(drawerScrollState)
+                    modifier = Modifier.fillMaxHeight().verticalScroll(drawerScrollState)
                 ) {
                     Spacer(Modifier.height(12.dp))
                     destinations.forEach { destination ->
