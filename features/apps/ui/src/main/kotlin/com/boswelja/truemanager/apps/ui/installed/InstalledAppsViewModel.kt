@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.boswelja.truemanager.apps.logic.installed.InstalledApplication
 import com.boswelja.truemanager.apps.logic.installed.DeleteApp
 import com.boswelja.truemanager.apps.logic.installed.GetInstalledApps
-import com.boswelja.truemanager.apps.logic.installed.LogOptions
 import com.boswelja.truemanager.apps.logic.installed.StartApp
 import com.boswelja.truemanager.apps.logic.installed.StopApp
 import kotlinx.coroutines.flow.MutableStateFlow
