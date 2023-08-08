@@ -26,6 +26,11 @@ jobs:
       - name: Run Detekt & Lint
         continue-on-error: true
         run: ./gradlew detekt lint --continue
+      - name: Upload SARIF binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: sarif-reports
+          path: '**/*.sarif'
 
   upload-results:
     needs: static-analysis
@@ -52,7 +57,11 @@ jobs:
           - features/virtualization
           - app
     steps:
+      - name: Download scan results
+        uses: actions/download-artifact@v3
+        with:
+          name: sarif-reports
       - uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: ${{ github.workspace }}/${{ matrix.path }}/
+          sarif_file: ${{ matrix.path }}/
           category: ${{ matrix.path }}
