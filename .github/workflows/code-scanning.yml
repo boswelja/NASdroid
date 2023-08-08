@@ -54,5 +54,5 @@ jobs:
     steps:
       - uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: ${{ matrix.path }}
+          sarif_file: ${{ github.workspace }}/${{ matrix.path }}/
           category: ${{ matrix.path }}
