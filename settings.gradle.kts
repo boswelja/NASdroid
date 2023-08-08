@@ -39,6 +39,8 @@ include(
     ":features:dashboard:data",
     ":features:dashboard:logic",
     ":features:dashboard:ui",
+    ":features:datasets:logic",
+    ":features:datasets:ui",
     ":features:reporting",
     ":features:storage",
     ":app"
