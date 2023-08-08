@@ -26,20 +26,10 @@ jobs:
       - name: Run Detekt
         continue-on-error: true
         run: ./gradlew detekt --continue
-      - name: Upload core.* SARIF files
+      - name: Upload SARIF files
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: ./core/
-          category: detekt
-      - name: Upload features.* SARIF files
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ./features/
-          category: detekt
-      - name: Upload app SARIF files
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ./app/
+          sarif_file: ./
           category: detekt
   lint-checks:
     permissions:
@@ -58,18 +48,8 @@ jobs:
       - name: Run Lint
         continue-on-error: true
         run: ./gradlew lint --continue
-      - name: Upload core.* SARIF files
+      - name: Upload SARIF files
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: ./core/
-          category: lint
-      - name: Upload features.* SARIF files
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ./features/
-          category: lint
-      - name: Upload app.* SARIF files
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ./app/
+          sarif_file: ./
           category: lint
