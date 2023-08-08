@@ -26,14 +26,10 @@ jobs:
       - name: Run Detekt
         continue-on-error: true
         run: ./gradlew detekt --continue
-      - name: Merge SARIF
-        uses:  microsoft/sarif-actions@v0.1
-        with:
-          command: 'merge **/detekt.sarif --recurse true --output-file=detekt-merged.sarif'
       - name: Upload SARIF files
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: detekt-merged.sarif
+          sarif_file: ./
           category: detekt
   lint-checks:
     permissions:
@@ -52,12 +48,8 @@ jobs:
       - name: Run Lint
         continue-on-error: true
         run: ./gradlew lint --continue
-      - name: Merge SARIF
-        uses:  microsoft/sarif-actions@v0.1
-        with:
-          command: 'merge **/lint-results-debug.sarif --recurse true --output-file=lint-merged.sarif'
       - name: Upload SARIF files
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: lint-merged.sarif
+          sarif_file: ./
           category: lint
