@@ -10,8 +10,6 @@ on:
 
 jobs:
   static-analysis:
-    permissions:
-      security-events: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,6 +33,8 @@ jobs:
   upload-results:
     needs: static-analysis
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
     strategy:
       matrix:
         path:
