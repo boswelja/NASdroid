@@ -9,7 +9,7 @@ on:
     - cron: '33 19 * * *'
 
 jobs:
-  detekt-checks:
+  static-analysis:
     permissions:
       security-events: write
     runs-on: ubuntu-latest
@@ -25,31 +25,34 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Run Detekt
         continue-on-error: true
-        run: ./gradlew detekt --continue
-      - name: Upload SARIF files
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ./
-          category: detekt
-  lint-checks:
-    permissions:
-      security-events: write
+        run: ./gradlew detekt lint --continue
+
+  upload-results:
+    needs: static-analysis
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        path:
+          - core/api
+          - core/capacity
+          - core/compose-logviewer
+          - core/compose-menuprovider
+          - core/compose-urllauncher
+          - features/apps
+          - features/auth
+          - features/credentials
+          - features/dashboard
+          - features/dataprotection
+          - features/datasets
+          - features/network
+          - features/reporting
+          - features/shares
+          - features/storage
+          - features/systemsettings
+          - features/virtualization
+          - app
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Java JDK
-        uses: actions/setup-java@v3.9.0
+      - uses: github/codeql-action/upload-sarif@v2
         with:
-          java-version: 17
-          distribution: temurin
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-      - name: Run Lint
-        continue-on-error: true
-        run: ./gradlew lint --continue
-      - name: Upload SARIF files
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ./
-          category: lint
+          sarif_file: ./${{ matrix.path }}
+          category: ${{ matrix.path.replace('/', ':') }}
