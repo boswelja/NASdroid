@@ -50,6 +50,7 @@ viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-
 compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "compose-animation" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose-foundation" }
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-ui" }
+compose-ui-fonts-google = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "compose-ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose-ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose-ui" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-ui" }

@@ -41,6 +41,6 @@ detekt {
 dependencies {
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.tooling)
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.4.3")
+    implementation(libs.compose.ui.fonts.google)
     implementation(libs.kotlinx.datetime)
 }
