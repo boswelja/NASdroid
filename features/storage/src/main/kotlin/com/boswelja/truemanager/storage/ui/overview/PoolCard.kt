@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -33,9 +33,6 @@ import com.boswelja.truemanager.core.api.v2.pool.Scan
 import com.boswelja.truemanager.core.api.v2.pool.Topology
 import com.boswelja.truemanager.storage.R
 import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Duration
 
 /**
  * Displays information about a given [Pool].
@@ -64,7 +61,7 @@ fun PoolCard(
                 scan = pool.scan,
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 16.dp)
             )
-            Divider(
+            HorizontalDivider(
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = dividerPadding)
@@ -104,7 +101,8 @@ fun PoolCard(
  * Displays basic details about a pool, such as the pool name & storage usage.
  *
  * @param name The human-readable name of the pool.
- * @param capacity Capacity information for the pool.
+ * @param allocatedBytes The number of bytes with data allocated in the pool.
+ * @param totalBytes The total number of bytes in the pool.
  * @param modifier [Modifier].
  */
 @Composable

@@ -4,24 +4,24 @@ detekt = "1.23.1"
 kotlin = "1.9.0"
 ksp = "1.9.0-1.0.13"
 
-androidx-browser = "1.6.0-rc01"
+androidx-browser = "1.6.0"
 androidx-lifecycle = "2.7.0-alpha01"
-androidx-navigation = "2.7.0-rc01"
+androidx-navigation = "2.7.0"
 androidx-window = "1.2.0-beta01"
 
 activity-compose = "1.8.0-alpha06"
-compose-animation = "1.6.0-alpha02"
+compose-animation = "1.6.0-alpha03"
 compose-compiler = "1.5.1"
-compose-foundation = "1.6.0-alpha02"
-compose-icons = "1.5.0-rc01"
-compose-material3 = "1.2.0-alpha04"
+compose-foundation = "1.6.0-alpha03"
+compose-icons = "1.5.0"
+compose-material3 = "1.2.0-alpha05"
 compose-runtime = "1.6.0-alpha02"
-compose-ui = "1.6.0-alpha02"
+compose-ui = "1.6.0-alpha03"
 accompanist = "0.31.6-rc"
 
 coil = "2.4.0"
 
-room = "2.6.0-alpha02"
+room = "2.6.0-alpha03"
 
 ktor = "2.3.3"
 
@@ -50,6 +50,7 @@ viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-
 compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "compose-animation" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose-foundation" }
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-ui" }
+compose-ui-fonts-google = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "compose-ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose-ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose-ui" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-ui" }

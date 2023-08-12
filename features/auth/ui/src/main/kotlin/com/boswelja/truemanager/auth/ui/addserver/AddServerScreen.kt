@@ -25,7 +25,7 @@ fun AuthScreen(
         AuthHeader(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(16 / 9f)
+                .aspectRatio(2f)
                 .padding(contentPadding)
         )
         AuthComponents(onLoginSuccess, Modifier.fillMaxSize(), contentPadding)

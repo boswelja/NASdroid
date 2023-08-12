@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,8 +29,8 @@ import com.boswelja.capacity.CapacityUnit
 import com.boswelja.truemanager.dashboard.logic.dataloading.DashboardData
 import com.boswelja.truemanager.dashboard.ui.R
 import com.boswelja.truemanager.dashboard.ui.overview.cards.common.OverviewItemListItem
-import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberEndAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
@@ -86,8 +85,8 @@ internal fun AdapterInfo(
         ProvideChartStyle(chartStyle) {
             Chart(
                 chart = lineChart(),
-                bottomAxis = bottomAxis(label = null),
-                endAxis = endAxis(
+                bottomAxis = rememberBottomAxis(label = null),
+                endAxis = rememberEndAxis(
                     valueFormatter = { value, _ ->
                         val mb = value.toLong().bytes.toDouble(CapacityUnit.KILOBYTE)
                         "%.1f KB".format(mb)
