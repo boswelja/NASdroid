@@ -1,6 +1,5 @@
 package com.boswelja.truemanager.core.api.v2.catalog
 
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -127,11 +126,11 @@ data class CatalogItem(
     @SerialName("latest_human_version")
     val latestHumanVersion: String,
     @SerialName("last_update")
-    val lastUpdate: LocalDateTime,
+    val lastUpdate: String,
     @SerialName("name")
     val name: String,
     @SerialName("recommended")
-    val recommended: String,
+    val recommended: Boolean,
     @SerialName("title")
     val title: String,
     @SerialName("maintainers")
