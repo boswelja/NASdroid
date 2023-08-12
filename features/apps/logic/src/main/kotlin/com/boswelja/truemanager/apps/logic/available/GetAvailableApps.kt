@@ -31,7 +31,7 @@ class GetAvailableApps(
                     name = item.name,
                     title = item.title,
                     version = item.latestHumanVersion,
-                    iconUrl = item.iconUrl,
+                    iconUrl = item.iconUrl ?: "",
                     catalog = catalog,
                     train = train,
                 )

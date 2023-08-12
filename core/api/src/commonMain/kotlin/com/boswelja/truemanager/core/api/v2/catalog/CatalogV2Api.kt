@@ -110,7 +110,7 @@ data class CatalogItem(
     @SerialName("categories")
     val categories: List<String>,
     @SerialName("description")
-    val description: String,
+    val description: String?,
     @SerialName("healthy")
     val healthy: Boolean,
     @SerialName("healthy_error")
@@ -142,7 +142,7 @@ data class CatalogItem(
     @SerialName("sources")
     val sourceUrls: List<String>,
     @SerialName("icon_url")
-    val iconUrl: String,
+    val iconUrl: String?,
 ) {
 
     /**
