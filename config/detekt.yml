@@ -63,7 +63,12 @@ comments:
     active: true
   UndocumentedPublicFunction:
     active: true
-    ignoreAnnotated: ['Preview']
+    ignoreAnnotated:
+      - 'Preview'
+      - 'PreviewScreenSize'
+      - 'PreviewFontScale'
+      - 'PreviewLightDark'
+      - 'PreviewDynamicColors'
   UndocumentedPublicProperty:
     active: true
 
@@ -111,6 +116,10 @@ naming:
     active: true
     ignoreAnnotated:
       - 'Preview'
+      - 'PreviewScreenSize'
+      - 'PreviewFontScale'
+      - 'PreviewLightDark'
+      - 'PreviewDynamicColors'
   FunctionMinLength:
     active: true
   FunctionNaming:
@@ -177,6 +186,10 @@ style:
     active: true
     ignoreAnnotated:
       - 'Preview'
+      - 'PreviewScreenSize'
+      - 'PreviewFontScale'
+      - 'PreviewLightDark'
+      - 'PreviewDynamicColors'
   MandatoryBracesLoops:
     active: true
   MaxChainedCallsOnSameLine:
