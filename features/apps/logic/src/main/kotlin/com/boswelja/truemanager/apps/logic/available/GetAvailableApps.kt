@@ -3,6 +3,7 @@ package com.boswelja.truemanager.apps.logic.available
 import com.boswelja.truemanager.core.api.v2.catalog.CatalogItems
 import com.boswelja.truemanager.core.api.v2.catalog.CatalogV2Api
 import com.boswelja.truemanager.core.api.v2.core.CoreV2Api
+import com.boswelja.truemanager.core.api.v2.core.Job
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -19,14 +20,14 @@ class GetAvailableApps(
      */
     suspend operator fun invoke(catalog: String): List<AvailableApp> {
         val jobId = catalogV2Api.getCatalogItems(catalog)
-        var job = coreV2Api.getJob<CatalogItems>(jobId)
-        while (job.state != "FINISHED") {
-            job = coreV2Api.getJob(jobId)
+        var job: Job<CatalogItems>? = null
+        while (job?.result == null) {
             delay(JOB_POLLING_INTERVAL)
+            job = coreV2Api.getJob(jobId)
         }
         val items = requireNotNull(job.result) { "Failed getting items for $catalog" }
-        return items.flatMap { (catalog, trains) ->
-            trains.map { (train, item) ->
+        return items.trainsToItems.flatMap { (train, items) ->
+            items.map { (_, item) ->
                 AvailableApp(
                     name = item.name,
                     title = item.title,

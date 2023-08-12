@@ -69,7 +69,16 @@ interface CatalogV2Api {
     suspend fun validateCatalog(id: String): Int
 }
 
-typealias CatalogItems = Map<String, Map<String, CatalogItem>>
+/**
+ * Contains all available [CatalogItem]s in a catalog, grouped by the train that provides them.
+ *
+ * @property trainsToItems A Map of a catalog train to a list of [CatalogItem]s it provides.
+ */
+@JvmInline
+@Serializable
+value class CatalogItems(
+    val trainsToItems: Map<String, Map<String, CatalogItem>>
+)
 
 /**
  * Describes aa catalog item available from a configured catalog.
