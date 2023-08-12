@@ -3,6 +3,9 @@ package com.boswelja.truemanager.core.api.v2.core
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlin.reflect.KClass
 
 /**
  * Describes the TrueNAS API V2 "Core" group.
@@ -68,7 +71,7 @@ interface CoreV2Api {
     /**
      * Gets information about the job with the given ID.
      */
-    suspend fun <T> getJob(id: Int): Job<T>
+    suspend fun <T : Any> getJob(id: Int, type: KClass<T>): Job<T>
 
     // TODO get_websocket_messages
 
@@ -89,6 +92,10 @@ interface CoreV2Api {
      * Send an ICMP echo request to [hostName] and will wait up to [timeout] seconds for a reply.
      */
     suspend fun pingRemote(type: PingType, hostName: String, timeout: Int)
+}
+
+suspend inline fun <reified T: Any> CoreV2Api.getJob(id: Int): Job<T> {
+    return getJob(id, T::class)
 }
 
 /**
@@ -176,7 +183,7 @@ data class Job<T>(
     @SerialName("method")
     val method: String,
     @SerialName("arguments")
-    val arguments: List<String>,
+    val arguments: List<JsonElement>, // TODO Serializer
     @SerialName("transient")
     val transient: Boolean,
     @SerialName("description")
