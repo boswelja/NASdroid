@@ -157,9 +157,7 @@ fun ModalNavigationDrawer(
                             selected = destination == selectedDestination,
                             onClick = {
                                 navigateTo(destination)
-                                coroutineScope.launch {
-                                    drawerState.close()
-                                }
+                                coroutineScope.launch { drawerState.close() }
                             },
                             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                         )
@@ -180,9 +178,7 @@ fun ModalNavigationDrawer(
                             } else if (navigationVisible) {
                                 IconButton(
                                     onClick = {
-                                        coroutineScope.launch {
-                                            drawerState.open()
-                                        }
+                                        coroutineScope.launch { drawerState.open() }
                                     }
                                 ) {
                                     Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
