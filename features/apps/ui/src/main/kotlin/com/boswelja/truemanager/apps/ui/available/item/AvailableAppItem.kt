@@ -89,18 +89,19 @@ internal fun AppInfoText(
 @PreviewLightDark
 @Composable
 fun AvailableAppItemPreview() {
+    val availableApp = AvailableApp(
+        name = "elastic-search",
+        title = "elastic-search",
+        version = "8.9.0-1.0.18",
+        iconUrl = "https://images.contentstack.io/v3/assets/bltefdd0b53724fa2ce/blt280217a63b82a734/6202d3378b1f312528798412/elastic-logo.svg",
+        catalog = "Truenas",
+        train = "Charts"
+    )
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
         AvailableAppItem(
-            availableApp = AvailableApp(
-                name = "elastic-search",
-                title = "elastic-search",
-                version = "8.9.0-1.0.18",
-                iconUrl = "https://images.contentstack.io/v3/assets/bltefdd0b53724fa2ce/blt280217a63b82a734/6202d3378b1f312528798412/elastic-logo.svg",
-                catalog = "Truenas",
-                train = "Charts"
-            ),
+            availableApp = availableApp,
             onInstallClicked = {},
             modifier = Modifier.widthIn(max = 280.dp)
         )
