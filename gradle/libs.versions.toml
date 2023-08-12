@@ -27,7 +27,7 @@ ktor = "2.3.3"
 
 kotlinx-coroutines = "1.7.3"
 kotlinx-datetime = "0.4.0"
-kotlinx-serialization-formats = "1.5.1"
+kotlinx-serialization-formats = "1.6.0-RC"
 
 koin = "3.4.3"
 koin-compose = "3.4.6"
