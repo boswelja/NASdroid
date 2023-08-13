@@ -36,6 +36,7 @@ import com.boswelja.truemanager.apps.ui.installed.InstalledAppsScreen
 @Composable
 fun AppsScreen(
     onShowLogs: (appName: String) -> Unit,
+    onStartUpgrade: (appName: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
@@ -51,6 +52,7 @@ fun AppsScreen(
                 TabItem.INSTALLED_APPS -> {
                     InstalledAppsScreen(
                         onShowLogs = onShowLogs,
+                        onStartUpgrade = onStartUpgrade,
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = contentPadding,
                     )

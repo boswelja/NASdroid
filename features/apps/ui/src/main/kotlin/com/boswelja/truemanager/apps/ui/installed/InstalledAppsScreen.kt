@@ -40,6 +40,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun InstalledAppsScreen(
     onShowLogs: (appName: String) -> Unit,
+    onStartUpgrade: (appName: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: InstalledAppsViewModel = getViewModel()
@@ -75,7 +76,7 @@ fun InstalledAppsScreen(
                     installedApplication = applicationOverview,
                     onActionClicked = {
                         when (it) {
-                            InstalledAppAction.UPGRADE -> TODO()
+                            InstalledAppAction.UPGRADE -> onStartUpgrade(applicationOverview.name)
                             InstalledAppAction.ROLL_BACK -> TODO()
                             InstalledAppAction.EDIT -> TODO()
                             InstalledAppAction.SHELL -> TODO()

@@ -6,9 +6,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.boswelja.truemanager.apps.ui.installed.logs.LogsScreen
+import com.boswelja.truemanager.apps.ui.installed.upgrade.AppUpgradeDialog
 
 /**
  * Registers a nested navigation graph for the Apps feature.
@@ -28,6 +30,9 @@ fun NavGraphBuilder.appsGraph(
                 onShowLogs = {
                     navController.navigate("logs/$it")
                 },
+                onStartUpgrade = {
+                    navController.navigate("upgrade/$it")
+                },
                 modifier = modifier,
                 contentPadding = contentPadding
             )
@@ -44,6 +49,19 @@ fun NavGraphBuilder.appsGraph(
             LogsScreen(
                 modifier = modifier,
                 contentPadding = contentPadding
+            )
+        }
+        dialog(
+            "upgrade/{appName}",
+            arguments = listOf(
+                navArgument("appName") {
+                    nullable = false
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            AppUpgradeDialog(
+                onDismissRequest = { navController.popBackStack() }
             )
         }
     }
