@@ -7,6 +7,7 @@ import com.boswelja.truemanager.apps.logic.installed.DeleteApp
 import com.boswelja.truemanager.apps.logic.installed.GetAppLogs
 import com.boswelja.truemanager.apps.logic.installed.GetInstalledApps
 import com.boswelja.truemanager.apps.logic.installed.GetLogOptions
+import com.boswelja.truemanager.apps.logic.installed.GetUpgradeDetails
 import com.boswelja.truemanager.apps.logic.installed.RollbackApp
 import com.boswelja.truemanager.apps.logic.installed.StartApp
 import com.boswelja.truemanager.apps.logic.installed.StopApp
@@ -25,6 +26,7 @@ val AppsLogicModule = module {
     factoryOf(::GetAppLogs)
     factoryOf(::GetInstalledApps)
     factoryOf(::GetLogOptions)
+    factoryOf(::GetUpgradeDetails)
     factoryOf(::RollbackApp)
     factoryOf(::StartApp)
     factoryOf(::StopApp)
