@@ -2,6 +2,7 @@ package com.boswelja.truemanager.core.api.v2.chart.release
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 
 /**
  * Describes the TrueNAS API V2 "chart.release" group. The Charts API is responsible for managing
@@ -173,7 +174,7 @@ data class PodLogsOptions(
 @Serializable
 data class UpgradeSummary(
     @SerialName("container_images_to_update")
-    val containerImagesToUpdate: List<String>,
+    val containerImagesToUpdate: Map<String, JsonObject>,
     @SerialName("changelog")
     val changelog: String?,
     @SerialName("available_versions_for_upgrade")

@@ -22,6 +22,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -41,7 +42,7 @@ fun AppsScreen(
     contentPadding: PaddingValues = PaddingValues()
 ) {
     Column(modifier) {
-        val (selectedTab, setSelectedTab) = remember { mutableStateOf(TabItem.INSTALLED_APPS) }
+        val (selectedTab, setSelectedTab) = rememberSaveable { mutableStateOf(TabItem.INSTALLED_APPS) }
         AppsTabRow(
             selectedTab = selectedTab,
             onSelectTabItem = setSelectedTab,

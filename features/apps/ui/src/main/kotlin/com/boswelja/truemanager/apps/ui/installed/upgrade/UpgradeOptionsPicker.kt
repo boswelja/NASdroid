@@ -37,8 +37,11 @@ import com.boswelja.truemanager.apps.ui.R
 fun UpgradeOptionsPicker(
     targetVersion: String,
     onTargetVersionChanged: (String) -> Unit,
-    upgradeMetadata: UpgradeMetadata,
-    modifier: Modifier = Modifier
+    availableVersions: List<String>,
+    imagesToBeUpdated: List<String>,
+    changelog: String?,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Column(
         modifier = modifier,
@@ -47,11 +50,12 @@ fun UpgradeOptionsPicker(
         TargetVersionPicker(
             targetVersion = targetVersion,
             onTargetVersionChanged = onTargetVersionChanged,
-            availableVersions = upgradeMetadata.availableVersions,
-            modifier = Modifier.fillMaxWidth()
+            availableVersions = availableVersions,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
         )
-        ImagesSection(imagesToBeUpdated = upgradeMetadata.imagesToBeUpdated)
-        ChangelogSection(changelog = upgradeMetadata.changelog)
+        ImagesSection(imagesToBeUpdated = imagesToBeUpdated)
+        changelog?.let { ChangelogSection(changelog = it) }
     }
 }
 
@@ -123,12 +127,15 @@ internal fun TargetVersionPicker(
     targetVersion: String,
     onTargetVersionChanged: (String) -> Unit,
     availableVersions: List<String>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     var versionPickerExpanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = versionPickerExpanded,
-        onExpandedChange = { versionPickerExpanded = !versionPickerExpanded }
+        onExpandedChange = {
+            if (enabled) versionPickerExpanded = !versionPickerExpanded
+        }
     ) {
         TextField(
             readOnly = true,
@@ -139,7 +146,8 @@ internal fun TargetVersionPicker(
             },
             label = { Text(stringResource(R.string.upgrade_options_version)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = modifier
+            modifier = modifier,
+            enabled = enabled,
         )
         ExposedDropdownMenu(
             expanded = versionPickerExpanded,
@@ -174,14 +182,9 @@ fun UpgradeOptionsPickerPreview() {
     UpgradeOptionsPicker(
         targetVersion = targetVersion,
         onTargetVersionChanged = { targetVersion = it },
-        upgradeMetadata = UpgradeMetadata(
-            availableVersions = availableVersions,
-            changelog = "",
-            imagesToBeUpdated = listOf(),
-            appName = "",
-            currentVersion = "",
-            iconUrl = "",
-        ),
+        availableVersions = availableVersions,
+        changelog = "",
+        imagesToBeUpdated = listOf(),
         modifier = Modifier.padding(16.dp)
     )
 }

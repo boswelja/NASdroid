@@ -4,6 +4,7 @@ import com.boswelja.truemanager.apps.logic.AppsLogicModule
 import com.boswelja.truemanager.apps.ui.available.AvailableAppsViewModel
 import com.boswelja.truemanager.apps.ui.installed.InstalledAppsViewModel
 import com.boswelja.truemanager.apps.ui.installed.logs.LogsViewModel
+import com.boswelja.truemanager.apps.ui.installed.upgrade.AppUpgradeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
@@ -18,4 +19,5 @@ val AppsModule = module {
 
     viewModelOf(::InstalledAppsViewModel)
     viewModelOf(::LogsViewModel)
+    viewModelOf(::AppUpgradeViewModel)
 }

@@ -9,7 +9,7 @@ class GetUpgradeDetails(
     suspend operator fun invoke(releaseName: String, targetVersion: String? = null): UpgradeDetails {
         val upgradeSummary = chartReleaseV2Api.getUpgradeSummary(releaseName, targetVersion)
         return UpgradeDetails(
-            containerImagesToUpdate = upgradeSummary.containerImagesToUpdate,
+            containerImagesToUpdate = upgradeSummary.containerImagesToUpdate.map { it.key },
             changelog = upgradeSummary.changelog,
             availableVersions = upgradeSummary.availableVersions.map { it.humanVersion }, // TODO include non-human versions for API calls
             targetVersion = upgradeSummary.upgradeHumanVersion
