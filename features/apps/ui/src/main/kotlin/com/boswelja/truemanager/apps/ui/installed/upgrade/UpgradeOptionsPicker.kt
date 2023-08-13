@@ -146,7 +146,7 @@ internal fun TargetVersionPicker(
             },
             label = { Text(stringResource(R.string.upgrade_options_version)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = modifier,
+            modifier = Modifier.menuAnchor().then(modifier),
             enabled = enabled,
         )
         ExposedDropdownMenu(
