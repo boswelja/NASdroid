@@ -30,6 +30,7 @@ fun AppUpgradeDialog(
     viewModel: AppUpgradeViewModel = getViewModel(),
 ) {
     val upgradeDetails by viewModel.upgradeDetails.collectAsState()
+    val appOverview by viewModel.appOverview.collectAsState()
     val isLoading by viewModel.loading.collectAsState()
 
     AlertDialog(
@@ -50,7 +51,7 @@ fun AppUpgradeDialog(
         icon = {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("")
+                    .data(appOverview?.iconUrl)
                     .decoderFactory(SvgDecoder.Factory())
                     .crossfade(true)
                     .build(),
@@ -59,7 +60,7 @@ fun AppUpgradeDialog(
                     .height(36.dp)
             )
         },
-        title = { Text("App name") },
+        title = { Text(appOverview?.title.orEmpty()) },
         text = {
             upgradeDetails?.let { details ->
                 var targetVersion by remember(details) {
