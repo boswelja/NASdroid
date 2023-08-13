@@ -1,6 +1,5 @@
 package com.boswelja.truemanager.core.api.v2.catalog
 
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -69,7 +68,16 @@ interface CatalogV2Api {
     suspend fun validateCatalog(id: String): Int
 }
 
-typealias CatalogItems = Map<String, Map<String, CatalogItem>>
+/**
+ * Contains all available [CatalogItem]s in a catalog, grouped by the train that provides them.
+ *
+ * @property trainsToItems A Map of a catalog train to a list of [CatalogItem]s it provides.
+ */
+@JvmInline
+@Serializable
+value class CatalogItems(
+    val trainsToItems: Map<String, Map<String, CatalogItem>>
+)
 
 /**
  * Describes aa catalog item available from a configured catalog.
@@ -102,7 +110,7 @@ data class CatalogItem(
     @SerialName("categories")
     val categories: List<String>,
     @SerialName("description")
-    val description: String,
+    val description: String?,
     @SerialName("healthy")
     val healthy: Boolean,
     @SerialName("healthy_error")
@@ -118,11 +126,11 @@ data class CatalogItem(
     @SerialName("latest_human_version")
     val latestHumanVersion: String,
     @SerialName("last_update")
-    val lastUpdate: LocalDateTime,
+    val lastUpdate: String,
     @SerialName("name")
     val name: String,
     @SerialName("recommended")
-    val recommended: String,
+    val recommended: Boolean,
     @SerialName("title")
     val title: String,
     @SerialName("maintainers")
@@ -134,7 +142,7 @@ data class CatalogItem(
     @SerialName("sources")
     val sourceUrls: List<String>,
     @SerialName("icon_url")
-    val iconUrl: String,
+    val iconUrl: String?,
 ) {
 
     /**
