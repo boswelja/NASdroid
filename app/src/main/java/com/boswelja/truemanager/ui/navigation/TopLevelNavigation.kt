@@ -170,27 +170,29 @@ fun ModalNavigationDrawer(
         ) {
             Scaffold(
                 topBar = {
-                    TopAppBar(
-                        title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
-                        navigationIcon = {
-                            if (canNavigateBack) {
-                                NavigateBackButton(onClick = navigateBack)
-                            } else if (navigationVisible) {
-                                IconButton(
-                                    onClick = {
-                                        coroutineScope.launch { drawerState.open() }
+                    if (canNavigateBack || navigationVisible) {
+                        TopAppBar(
+                            title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
+                            navigationIcon = {
+                                if (canNavigateBack) {
+                                    NavigateBackButton(onClick = navigateBack)
+                                } else {
+                                    IconButton(
+                                        onClick = {
+                                            coroutineScope.launch { drawerState.open() }
+                                        }
+                                    ) {
+                                        Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
                                     }
-                                ) {
-                                    Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
+                                }
+                            },
+                            actions = {
+                                LocalMenuHost.current.menuItems.forEach { menuItem ->
+                                    MenuItem(menuItem)
                                 }
                             }
-                        },
-                        actions = {
-                            LocalMenuHost.current.menuItems.forEach { menuItem ->
-                                MenuItem(menuItem)
-                            }
-                        }
-                    )
+                        )
+                    }
                 },
                 content = content
             )
@@ -247,19 +249,21 @@ fun NavigationRail(
             }
             Scaffold(
                 topBar = {
-                    TopAppBar(
-                        title = { },
-                        navigationIcon = {
-                            if (canNavigateBack) {
-                                NavigateBackButton(onClick = navigateBack)
+                    if (navigationVisible || canNavigateBack) {
+                        TopAppBar(
+                            title = { },
+                            navigationIcon = {
+                                if (canNavigateBack) {
+                                    NavigateBackButton(onClick = navigateBack)
+                                }
+                            },
+                            actions = {
+                                LocalMenuHost.current.menuItems.forEach { menuItem ->
+                                    MenuItem(menuItem)
+                                }
                             }
-                        },
-                        actions = {
-                            LocalMenuHost.current.menuItems.forEach { menuItem ->
-                                MenuItem(menuItem)
-                            }
-                        }
-                    )
+                        )
+                    }
                 },
                 content = content
             )
@@ -319,19 +323,21 @@ fun PermanentNavigationDrawer(
             }
             Scaffold(
                 topBar = {
-                    TopAppBar(
-                        title = { },
-                        navigationIcon = {
-                            if (canNavigateBack) {
-                                NavigateBackButton(onClick = navigateBack)
+                    if (navigationVisible || canNavigateBack) {
+                        TopAppBar(
+                            title = { },
+                            navigationIcon = {
+                                if (canNavigateBack) {
+                                    NavigateBackButton(onClick = navigateBack)
+                                }
+                            },
+                            actions = {
+                                LocalMenuHost.current.menuItems.forEach { menuItem ->
+                                    MenuItem(menuItem)
+                                }
                             }
-                        },
-                        actions = {
-                            LocalMenuHost.current.menuItems.forEach { menuItem ->
-                                MenuItem(menuItem)
-                            }
-                        }
-                    )
+                        )
+                    }
                 },
                 content = content
             )
