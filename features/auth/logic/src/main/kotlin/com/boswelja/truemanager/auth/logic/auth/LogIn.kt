@@ -21,7 +21,10 @@ class LogIn(
      */
     suspend operator fun invoke(server: Server) : Result<Unit> =
         getServerToken(server.id)
-            .onSuccess { testServerToken(server.url, it) }
+            .mapCatching {
+                testServerToken(server.url, it).getOrThrow()
+                it
+            }
             .onSuccess {
                 apiStateProvider.serverAddress = server.url
                 apiStateProvider.authorization = Authorization.ApiKey(it)
