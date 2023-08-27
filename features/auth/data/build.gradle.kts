@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.androidx.room)
 
     alias(libs.plugins.detekt)
 }
@@ -28,8 +29,11 @@ kotlin {
     jvmToolchain(17)
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
     arg("room.incremental", "true")
     arg("room.generateKotlin", "true")
 }
