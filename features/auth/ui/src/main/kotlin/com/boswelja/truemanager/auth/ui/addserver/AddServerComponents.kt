@@ -30,8 +30,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -52,6 +50,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.auth.ui.R
 import kotlinx.coroutines.flow.collectLatest
@@ -269,30 +268,6 @@ fun ServerAddressField(
         }} else null,
         modifier = modifier
     )
-}
-
-@Composable
-fun AuthTypeSelector(
-    currentType: AuthType,
-    onAuthTypeChange: (AuthType) -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
-    // TODO Segmented Buttons
-    TabRow(
-        selectedTabIndex = AuthTypes.indexOf(currentType),
-        modifier = modifier
-    ) {
-        AuthTypes.forEach { authType ->
-            Tab(
-                selected = currentType == authType,
-                onClick = { onAuthTypeChange(authType) },
-                text = { Text(stringResource(authType.labelRes)) },
-                icon = { Icon(imageVector = authType.icon, contentDescription = null) },
-                enabled = enabled
-            )
-        }
-    }
 }
 
 @Composable
