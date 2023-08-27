@@ -23,7 +23,8 @@ class TestServerToken(
         apiStateProvider.authorization = Authorization.ApiKey(apiKey)
         try {
             // Getting the host ID requires valid authentication. If it's not valid this will throw.
-            systemV2Api.getHostId()
+            val token = systemV2Api.getHostId()
+            check(token.isNotBlank()) { "The server returned a blank ID!" }
         } finally {
             apiStateProvider.authorization = null
             apiStateProvider.serverAddress = null
