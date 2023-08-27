@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
-    id("androidx.room") version libs.versions.room.get()
+    alias(libs.plugins.androidx.room)
 
     alias(libs.plugins.detekt)
 }
