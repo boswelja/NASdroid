@@ -35,6 +35,7 @@ vico = "1.11.0"
 
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
+mockk = "1.13.7"
 
 [libraries]
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx-browser" }
@@ -81,8 +82,11 @@ koin-android-compose = { group = "io.insert-koin", name = "koin-androidx-compose
 
 vico = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }

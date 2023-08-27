@@ -120,6 +120,8 @@ naming:
       - 'PreviewFontScale'
       - 'PreviewLightDark'
       - 'PreviewDynamicColors'
+    excludes:
+      - '**/test/**.kt'
   FunctionMinLength:
     active: true
   FunctionNaming:

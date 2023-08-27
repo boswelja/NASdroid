@@ -39,4 +39,8 @@ dependencies {
     implementation(projects.features.auth.data)
 
     implementation(libs.koin.android)
+
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

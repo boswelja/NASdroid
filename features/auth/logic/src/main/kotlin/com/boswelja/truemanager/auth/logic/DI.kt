@@ -26,5 +26,5 @@ val AuthLogicModule = module {
     factoryOf(::StoreNewServer)
 
     factoryOf(::CreateApiKey)
-    factoryOf(::TestApiKey)
+    factoryOf(::TestServerToken)
 }
