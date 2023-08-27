@@ -23,7 +23,7 @@ internal class AuthenticatedServersStoreImpl(
         context,
         AuthenticatedServerDatabase::class.java,
         "authenticated-servers"
-    ).fallbackToDestructiveMigration().build() // TODO disable destructive migration
+    ).build()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAll(): Flow<List<AuthenticatedServer>> {
