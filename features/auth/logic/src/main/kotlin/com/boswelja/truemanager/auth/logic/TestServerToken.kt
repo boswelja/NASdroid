@@ -5,9 +5,9 @@ import com.boswelja.truemanager.core.api.v2.Authorization
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 
 /**
- * Tests an existing API key functionality for a server. See [invoke] for details.
+ * Tests an existing authentication token is still operational for a server. See [invoke] for details.
  */
-class TestApiKey(
+class TestServerToken(
     private val apiStateProvider: ApiStateProvider,
     private val systemV2Api: SystemV2Api,
 ) {

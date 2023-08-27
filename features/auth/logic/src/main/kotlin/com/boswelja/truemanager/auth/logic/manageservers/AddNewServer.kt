@@ -1,7 +1,7 @@
 package com.boswelja.truemanager.auth.logic.manageservers
 
 import com.boswelja.truemanager.auth.logic.CreateApiKey
-import com.boswelja.truemanager.auth.logic.TestApiKey
+import com.boswelja.truemanager.auth.logic.TestServerToken
 import com.boswelja.truemanager.auth.logic.then
 import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 
@@ -11,7 +11,7 @@ import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
 class AddNewServer(
     private val systemV2Api: SystemV2Api,
     private val createApiKey: CreateApiKey,
-    private val testApiKey: TestApiKey,
+    private val testServerToken: TestServerToken,
     private val storeNewServer: StoreNewServer,
 ) {
 
@@ -46,7 +46,7 @@ class AddNewServer(
         serverAddress: String,
         token: String
     ): Result<Unit> =
-        testApiKey(serverAddress, token)
+        testServerToken(serverAddress, token)
             .then {
                 val actualName = serverName.ifBlank {
                     val systemInfo = systemV2Api.getSystemInfo()
