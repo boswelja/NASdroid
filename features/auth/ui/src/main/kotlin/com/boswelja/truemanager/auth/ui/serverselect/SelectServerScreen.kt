@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -59,7 +60,8 @@ fun SelectServerScreen(
         AuthHeader(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(16 / 9f)
+                .heightIn(max = 180.dp)
+                .aspectRatio(2f)
                 .padding(contentPadding)
         )
         AnimatedVisibility(visible = isLoading) {
