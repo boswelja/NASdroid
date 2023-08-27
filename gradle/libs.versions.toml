@@ -1,33 +1,32 @@
 [versions]
-android-gradle-plugin = "8.2.0-alpha15"
+android-gradle-plugin = "8.3.0-alpha01"
 detekt = "1.23.1"
-kotlin = "1.9.0"
-ksp = "1.9.0-1.0.13"
+kotlin = "1.9.10"
+ksp = "1.9.10-1.0.13"
 
 androidx-browser = "1.6.0"
 androidx-lifecycle = "2.7.0-alpha01"
-androidx-navigation = "2.7.0"
+androidx-navigation = "2.7.1"
 androidx-window = "1.2.0-beta01"
 
-activity-compose = "1.8.0-alpha06"
-compose-animation = "1.6.0-alpha03"
-compose-compiler = "1.5.1"
-compose-foundation = "1.6.0-alpha03"
+activity-compose = "1.8.0-alpha07"
+compose-animation = "1.6.0-alpha04"
+compose-compiler = "1.5.2"
+compose-foundation = "1.6.0-alpha04"
 compose-icons = "1.5.0"
-compose-material3 = "1.2.0-alpha05"
-compose-runtime = "1.6.0-alpha02"
-compose-ui = "1.6.0-alpha03"
+compose-material3 = "1.2.0-alpha06"
+compose-ui = "1.6.0-alpha04"
 accompanist = "0.33.0-alpha"
 
 coil = "2.4.0"
 
-room = "2.6.0-alpha03"
+room = "2.6.0-beta01"
 
 ktor = "2.3.3"
 
 kotlinx-coroutines = "1.7.3"
 kotlinx-datetime = "0.4.0"
-kotlinx-serialization-formats = "1.6.0-RC"
+kotlinx-serialization-formats = "1.6.0"
 
 koin = "3.4.3"
 koin-compose = "3.4.6"
