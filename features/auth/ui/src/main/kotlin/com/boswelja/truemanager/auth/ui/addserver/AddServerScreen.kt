@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.boswelja.truemanager.auth.ui.common.AuthHeader
+import com.boswelja.truemanager.auth.ui.serverselect.AuthHeader
 
 @Composable
 fun AuthScreen(
