@@ -1,6 +1,7 @@
 package com.boswelja.truemanager.auth.ui
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -15,6 +16,7 @@ import com.boswelja.truemanager.auth.ui.serverselect.SelectServerScreen
 fun NavGraphBuilder.authNavigation(
     navController: NavHostController,
     route: String,
+    windowSizeClass: WindowSizeClass,
     onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -37,7 +39,8 @@ fun NavGraphBuilder.authNavigation(
                     navController.navigate("login")
                 },
                 modifier = modifier,
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                windowSizeClass = windowSizeClass,
             )
         }
     }

@@ -1,6 +1,7 @@
 package com.boswelja.truemanager.auth.ui.serverselect
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,32 +30,31 @@ import com.boswelja.truemanager.auth.ui.R
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Composable
-fun AuthHeader(
+fun AppBranding(
     modifier: Modifier = Modifier
 ) {
-    Box(
+    Row(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(painter = rememberAppIconPainter(), contentDescription = null)
-            Spacer(Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = buildAnnotatedString {
-                        append(stringResource(R.string.auth_header_true))
-                        withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) {
-                            append(stringResource(R.string.auth_header_manager))
-                        }
-                    },
-                    style = MaterialTheme.typography.headlineLarge
-                )
-                Text(
-                    text = stringResource(R.string.auth_header_label),
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.padding(start = 4.dp)
-                )
-            }
+        Image(painter = rememberAppIconPainter(), contentDescription = null)
+        Spacer(Modifier.width(16.dp))
+        Column {
+            Text(
+                text = buildAnnotatedString {
+                    append(stringResource(R.string.auth_header_true))
+                    withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) {
+                        append(stringResource(R.string.auth_header_manager))
+                    }
+                },
+                style = MaterialTheme.typography.headlineLarge
+            )
+            Text(
+                text = stringResource(R.string.auth_header_label),
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(start = 4.dp)
+            )
         }
     }
 }

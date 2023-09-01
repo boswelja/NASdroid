@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.boswelja.truemanager.auth.ui.serverselect.AuthHeader
+import com.boswelja.truemanager.auth.ui.serverselect.AppBranding
 
 @Composable
 fun AuthScreen(
@@ -24,7 +24,7 @@ fun AuthScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        AuthHeader(
+        AppBranding(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(max = 180.dp)
