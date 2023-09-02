@@ -1,12 +1,15 @@
 # Contributing
 
-* Pull requests are more than welcome!
-* If you plan on working on a new feature or functionality, please open an issue so we can discuss viability and implementation.
-* If you want to work on an existing issue, drop a comment on the issue and (as long as there's nobody assigned already) we can assign you.
-* If you're looking for something to work on, our issues board is a great place to start.
+We are accepting pull requests! Please follow the etiquette outlined below to avoid duplicate, discarded or ignored work:
 
-## Pull Requests and Commits
-
-* Commit messages should essentially be sentences without periods; add the description if it makes sense to do so (sentence *with* a period). For example: `git commit -am "Commit message" -m "Commit description."`.
-* Please add a PR description that clearly describes your changes, with links to relevant documentation, API references, etc.
-* Pull requests are squashed, so don't worry too much about commits to branches. That said, unreadable commit messages make it hard to follow along with what you're doing.
+* Check for an existing issue on [our board](./issues)
+    * If an issue already exists, check whether anyone is assigned, or if there is open work
+        * If there is an open pull request, review it
+        * If there is someone assigned, drop them a comment asking if you can help
+        * If nobody is assigned, drop a comment to see if you can pick it up
+    * If no issue exists, you can create one
+        * Try not to start any work until one of the team has reviewed it to make sure it's viable
+* Pull request titles should briefly explain your change, for example "Updated Compose to 1.5.0"
+* Pull request descriptions should include more detailed information about your change, ideally
+    * Release note links for dependency updates
+    * Screenshots for changed UI
