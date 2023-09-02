@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.core.logviewer"
+    namespace = "com.nasdroid.core.logviewer"
 
     buildTypes {
         release {

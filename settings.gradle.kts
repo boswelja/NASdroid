@@ -24,7 +24,7 @@ plugins {
 
 enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
 
-rootProject.name = "TrueManager"
+rootProject.name = "NASdroid"
 include(
     ":core:api",
     ":core:capacity",

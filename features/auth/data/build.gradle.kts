@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.auth.data"
+    namespace = "com.nasdroid.auth.data"
 
     buildTypes {
         release {

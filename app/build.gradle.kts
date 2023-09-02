@@ -6,10 +6,10 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager"
+    namespace = "com.nasdroid"
 
     defaultConfig {
-        applicationId = "com.boswelja.truemanager"
+        applicationId = "com.nasdroid"
         versionCode = 1
         versionName = "1.0"
 

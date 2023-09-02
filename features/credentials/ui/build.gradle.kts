@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.credentials.ui"
+    namespace = "com.nasdroid.credentials.ui"
 
     buildTypes {
         release {

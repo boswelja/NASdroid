@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.apps.ui"
+    namespace = "com.nasdroid.apps.ui"
 
     buildTypes {
         release {

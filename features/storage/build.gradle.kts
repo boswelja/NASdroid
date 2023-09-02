@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.storage"
+    namespace = "com.nasdroid.storage"
 
     buildTypes {
         release {
