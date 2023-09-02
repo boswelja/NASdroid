@@ -7,7 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.boswelja.truemanager.auth.ui.addserver.AuthScreen
+import com.boswelja.truemanager.auth.ui.addserver.AddServerScreen
 import com.boswelja.truemanager.auth.ui.serverselect.SelectServerScreen
 
 /**
@@ -26,7 +26,7 @@ fun NavGraphBuilder.authNavigation(
         route = route
     ) {
         composable("login") {
-            AuthScreen(
+            AddServerScreen(
                 onLoginSuccess = onLoginSuccess,
                 modifier = modifier,
                 contentPadding = contentPadding
