@@ -18,12 +18,3 @@ jobs:
           configuration-path: .github/area-labeler.yml
           sync-labels: true
           dot: true
-
-      - uses: codelytv/pr-size-labeler@v1
-        with:
-          GITHUB_TOKEN: ${{ github.token }}
-          xs_label: 'size:xs'
-          s_label: 'size:s'
-          m_label: 'size:m'
-          l_label: 'size:l'
-          xl_label: 'size:xl'
