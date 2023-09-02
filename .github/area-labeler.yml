@@ -2,6 +2,8 @@ workflows:
   - .github/**
 documentation:
   - '**/*.md'
+dependencies:
+  - gradle/libs.versions.toml
 
 logic:
   - features/*/logic/**
