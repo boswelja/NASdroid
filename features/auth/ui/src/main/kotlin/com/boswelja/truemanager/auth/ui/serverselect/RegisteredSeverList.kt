@@ -22,6 +22,16 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.boswelja.truemanager.auth.logic.manageservers.Server
 
+/**
+ * Displays a list of "registered" servers, and an "add" button to add new servers.
+ *
+ * @param servers The list of [Server]s that are "registered".
+ * @param enabled Whether items in the list can be interacted with.
+ * @param onServerClick Called when a server is clicked.
+ * @param onAddServerClick Called when the "add" button is clicked.
+ * @param modifier [Modifier].
+ * @param contentPadding The [PaddingValues] for content.
+ */
 @Composable
 fun RegisteredServerList(
     servers: List<Server>,

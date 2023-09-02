@@ -41,6 +41,9 @@ import com.boswelja.truemanager.auth.logic.manageservers.Server
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * A screen that allows users to select a registered server to log in to, or add a new server.
+ */
 @Composable
 fun SelectServerScreen(
     onLoginSuccess: () -> Unit,
@@ -76,6 +79,10 @@ fun SelectServerScreen(
     )
 }
 
+/**
+ * Size-aware content for [SelectServerScreen]. This will choose the appropriate layout for the
+ * given [WindowSizeClass].
+ */
 @Composable
 fun SelectServerContent(
     isLoading: Boolean,
@@ -86,9 +93,9 @@ fun SelectServerContent(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
-
     when {
-        windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact && windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact -> {
+        windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact &&
+                windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact -> {
             SelectServerHorizontalContent(
                 isLoading = isLoading,
                 servers = servers,
@@ -98,7 +105,8 @@ fun SelectServerContent(
                 contentPadding = contentPadding,
             )
         }
-        windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded && windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded -> {
+        windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded &&
+                windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded -> {
             SelectServerCenteredContent(
                 isLoading = isLoading,
                 servers = servers,
@@ -121,6 +129,10 @@ fun SelectServerContent(
     }
 }
 
+/**
+ * Content for [SelectServerScreen], where the content is laid out vertically. The server picker is
+ * aligned to the bottom of the screen, and app branding is centered in the remaining space.
+ */
 @Composable
 fun SelectServerVerticalContent(
     isLoading: Boolean,
@@ -140,7 +152,7 @@ fun SelectServerVerticalContent(
                 .heightIn(min = 120.dp)
                 .padding(contentPadding)
         )
-        ServerSelecter(
+        ServerSelectorCard(
             servers = servers,
             loading = isLoading,
             onServerClick = onServerClick,
@@ -153,6 +165,10 @@ fun SelectServerVerticalContent(
     }
 }
 
+/**
+ * Content for [SelectServerScreen], where the content is laid out horizontally. The server picker
+ * is constrained to the end half of the screen, while app branding is centered in the start half.
+ */
 @Composable
 fun SelectServerHorizontalContent(
     isLoading: Boolean,
@@ -172,7 +188,7 @@ fun SelectServerHorizontalContent(
                 .heightIn(min = 120.dp)
                 .padding(contentPadding)
         )
-        ServerSelecter(
+        ServerSelectorCard(
             servers = servers,
             loading = isLoading,
             onServerClick = onServerClick,
@@ -184,6 +200,10 @@ fun SelectServerHorizontalContent(
     }
 }
 
+/**
+ * Content for [SelectServerScreen], where the content is centered in the screen. The server picker
+ * is laid out below app branding, and can grow or shrink as necessary.
+ */
 @Composable
 fun SelectServerCenteredContent(
     isLoading: Boolean,
@@ -203,7 +223,7 @@ fun SelectServerCenteredContent(
                 .height(180.dp)
                 .padding(contentPadding)
         )
-        ServerSelecter(
+        ServerSelectorCard(
             servers = servers,
             loading = isLoading,
             onServerClick = onServerClick,
@@ -216,8 +236,11 @@ fun SelectServerCenteredContent(
     }
 }
 
+/**
+ * A Card that allows the user to select a server, or start the "add server" flow.
+ */
 @Composable
-fun ServerSelecter(
+fun ServerSelectorCard(
     servers: List<Server>,
     loading: Boolean,
     onServerClick: (Server) -> Unit,
