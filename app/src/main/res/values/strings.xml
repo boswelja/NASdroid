@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TrueManager</string>
+    <string name="app_name">NASdroid</string>
 
     <string name="feature_dashboard">Dashboard</string>
     <string name="feature_storage">Storage</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="auth_header_true">True</string>
-    <string name="auth_header_manager">Manager</string>
+    <string name="auth_header_true">NAS</string>
+    <string name="auth_header_manager">droid</string>
     <string name="auth_header_label">for TrueNAS</string>
 
     <string name="auth_type_basic">Basic</string>

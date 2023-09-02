@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.reporting"
+    namespace = "com.nasdroid.reporting"
 
     buildTypes {
         release {

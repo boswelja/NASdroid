@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.core.api"
+    namespace = "com.nasdroid.core.api"
 
     buildTypes {
         release {

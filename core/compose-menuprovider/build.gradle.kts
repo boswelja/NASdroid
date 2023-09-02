@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.core.menuprovider"
+    namespace = "com.nasdroid.core.menuprovider"
 
     buildTypes {
         release {

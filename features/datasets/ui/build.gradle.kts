@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.datasets.ui"
+    namespace = "com.nasdroid.datasets.ui"
 
     buildTypes {
         release {

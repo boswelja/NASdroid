@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.shares.logic"
+    namespace = "com.nasdroid.shares.logic"
 
     buildTypes {
         release {

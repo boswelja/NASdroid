@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.dashboard.data"
+    namespace = "com.nasdroid.dashboard.data"
 
     buildTypes {
         release {

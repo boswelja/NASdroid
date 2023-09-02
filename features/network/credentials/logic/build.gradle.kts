@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.dataprotection.logic"
+    namespace = "com.nasdroid.dataprotection.logic"
 
     buildTypes {
         release {

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boswelja.truemanager.virtualization.logic"
+    namespace = "com.nasdroid.virtualization.logic"
 
     buildTypes {
         release {
