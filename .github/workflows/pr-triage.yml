@@ -1,0 +1,19 @@
+name: "Triage new pull request"
+
+on:
+  - pull_request_target
+
+jobs:
+  area-label:
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/labeler@v4
+        with:
+          configuration-path: .github/area-labeler.yml
+          sync-labels: true
