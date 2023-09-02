@@ -1,0 +1,45 @@
+workflows:
+  - .github/**
+documentation:
+  - '**/*.md'
+
+logic:
+  - features/*/logic/**
+ui-ux:
+  - features/*/ui/**
+
+core:api:
+  - core/api/**
+core:capacity:
+  - core/capacity/**
+core:compose-logviewer:
+  - core/compose-logviewer/**
+core:compose-menuprovider:
+  - core/compose-menuprovider/**
+core:compose-urllauncher:
+  - core/compose-urllauncher/**
+
+features:apps:
+  - features/apps/**
+features:auth:
+  - features/auth/**
+features:credentials:
+  - features/credentials/**
+features:dashboard:
+  - features/dashboard/**
+features:dataprotection:
+  - features/dataprotection/**
+features:datasets:
+  - features/datasets/**
+features:network:
+  - features/network/**
+features:reporting:
+  - features/reporting/**
+features:shares:
+  - features/shares/**
+features:storage:
+  - features/storage/**
+feature:systemsettings:
+  - features/systemsettings/**
+features:virtualization:
+  - features/virtualization/**
