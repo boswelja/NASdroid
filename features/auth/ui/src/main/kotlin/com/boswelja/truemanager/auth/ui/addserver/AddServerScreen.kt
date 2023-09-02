@@ -27,6 +27,9 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * A screen that allows the user to add a new registered server.
+ */
 @Composable
 fun AddServerScreen(
     onLoginSuccess: () -> Unit,

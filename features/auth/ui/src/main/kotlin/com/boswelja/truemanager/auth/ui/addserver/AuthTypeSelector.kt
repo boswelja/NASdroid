@@ -25,6 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 
+/**
+ * A selector for different authentication types available to the user.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthTypeSelector(
