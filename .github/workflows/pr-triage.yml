@@ -21,7 +21,7 @@ jobs:
 
       - uses: codelytv/pr-size-labeler@v1
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           xs_label: 'size:xs'
           s_label: 'size:s'
           m_label: 'size:m'
