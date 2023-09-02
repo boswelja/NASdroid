@@ -26,7 +26,7 @@ import com.nasdroid.reporting.reportingGraph
 import com.nasdroid.storage.ui.storageGraph
 import com.nasdroid.ui.navigation.TopLevelDestination
 import com.nasdroid.ui.navigation.TopLevelNavigation
-import com.nasdroid.ui.theme.TrueManagerTheme
+import com.nasdroid.ui.theme.NasDroidTheme
 
 /**
  * The main entrypoint of the app. See [MainScreen] for content.
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val windowSizeClass = calculateWindowSizeClass(activity = this)
-            TrueManagerTheme {
+            NasDroidTheme {
                 MainScreen(windowSizeClass)
             }
         }

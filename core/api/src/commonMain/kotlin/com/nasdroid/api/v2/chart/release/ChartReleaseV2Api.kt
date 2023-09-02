@@ -17,7 +17,7 @@ interface ChartReleaseV2Api {
     /**
      * Create a new chart release on the system. This is equivalent to installing an application.
      *
-     * @return An ID for a running job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     * @return An ID for a running job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun createChartRelease(newRelease: CreateChartRelease): Int
 
@@ -25,7 +25,7 @@ interface ChartReleaseV2Api {
      * Deletes an existing chart release, including its data, from the system.
      *
      * @param id The ID of the chart to delete.
-     * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun deleteChartRelease(id: String): Int
 
@@ -42,14 +42,14 @@ interface ChartReleaseV2Api {
     /**
      * Scales [releaseName] to [replicaCount] instances.
      *
-     * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun scale(releaseName: String, replicaCount: Int): Int
 
     /**
      * Roll back a release to a specified version.
      *
-     * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun rollbackRelease(releaseName: String, options: RollbackOptions): Int
 
@@ -66,7 +66,7 @@ interface ChartReleaseV2Api {
     /**
      * Deletes the release with the given ID.
      *
-     * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun deleteRelease(id: String, deleteUnusedImages: Boolean): Int
 
@@ -78,7 +78,7 @@ interface ChartReleaseV2Api {
     /**
      * Upgrades a release to the specified version.
      *
-     * @return An ID for running a job. See [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun upgrade(releaseName: String, targetVersion: String): Int
 }

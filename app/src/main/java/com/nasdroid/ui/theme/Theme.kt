@@ -31,7 +31,7 @@ private val LightColorScheme = lightColorScheme(
  * The base application theme. TODO This should have base colors that reflect TrueNAS colors.
  */
 @Composable
-fun TrueManagerTheme(
+fun NasDroidTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

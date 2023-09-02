@@ -30,7 +30,7 @@ interface CatalogV2Api {
      * Starts a job to retrieve items for a catalog by its [Catalog.id].
      *
      * @return An ID for a running job. See
-     * [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob]. The Job returns [CatalogItems].
+     * [com.nasdroid.api.v2.core.CoreV2Api.getJob]. The Job returns [CatalogItems].
      */
     suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions = GetCatalogItemsOptions()): Int
 
@@ -49,7 +49,7 @@ interface CatalogV2Api {
      * Updates the system item cache for all catalogs.
      *
      * @return An ID for a running job. See
-     * [com.boswelja.truemanager.core.api.v2.core.CoreV2Api.getJob].
+     * [com.nasdroid.api.v2.core.CoreV2Api.getJob].
      */
     suspend fun syncAll(): Int
 

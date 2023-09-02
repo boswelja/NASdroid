@@ -28,7 +28,7 @@ class AddNewServer(
             serverAddress = serverAddress,
             username = username,
             password = password,
-            keyName = "TrueManager for TrueNAS"
+            keyName = "NASdroid for TrueNAS"
         ).then { apiKey ->
             invoke(
                 serverName = serverName,

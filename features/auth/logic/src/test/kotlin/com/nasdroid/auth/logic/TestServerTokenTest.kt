@@ -1,6 +1,6 @@
 package com.nasdroid.auth.logic
 
-import com.boswelja.truemanager.core.api.v2.system.SystemV2Api
+import com.nasdroid.api.v2.system.SystemV2Api
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
