@@ -1,4 +1,4 @@
-name: "Triage new pull request"
+name: "Triage"
 
 on:
   - pull_request_target
@@ -17,6 +17,7 @@ jobs:
         with:
           configuration-path: .github/area-labeler.yml
           sync-labels: true
+          dot: true
 
       - uses: codelytv/pr-size-labeler@v1
         with:
