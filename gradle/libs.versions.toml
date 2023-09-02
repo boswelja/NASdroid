@@ -22,7 +22,7 @@ coil = "2.4.0"
 
 room = "2.6.0-beta01"
 
-ktor = "2.3.3"
+ktor = "2.3.4"
 
 kotlinx-coroutines = "1.7.3"
 kotlinx-datetime = "0.4.0"
