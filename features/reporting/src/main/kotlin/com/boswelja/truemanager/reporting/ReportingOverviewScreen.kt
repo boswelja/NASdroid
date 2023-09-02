@@ -1,6 +1,5 @@
 package com.boswelja.truemanager.reporting
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberEndAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
@@ -48,10 +47,7 @@ import com.patrykandpatrick.vico.core.entry.entriesOf
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportingOverviewScreen(
     modifier: Modifier = Modifier,
@@ -136,7 +132,7 @@ fun GraphCard(
                 Chart(
                     chart = lineChart(),
                     model = graphModel,
-                    endAxis = endAxis(
+                    endAxis = rememberEndAxis(
                         titleComponent = textComponent(),
                     ),
                     chartScrollSpec = rememberChartScrollSpec(false),
