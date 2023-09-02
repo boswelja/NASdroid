@@ -4,7 +4,7 @@ on:
   - pull_request_target
 
 jobs:
-  area-label:
+  label:
     permissions:
       contents: read
       pull-requests: write
@@ -17,3 +17,11 @@ jobs:
         with:
           configuration-path: .github/area-labeler.yml
           sync-labels: true
+
+      - uses: codelytv/pr-size-labeler@v1
+        with:
+          xs_label: 'size:xs'
+          s_label: 'size:s'
+          m_label: 'size:m'
+          l_label: 'size:l'
+          xl_label: 'size:xl'
