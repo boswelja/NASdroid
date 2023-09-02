@@ -92,7 +92,8 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
-            contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
+            contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp),
+            windowSizeClass = windowSizeClass,
         )
     }
 }
@@ -103,6 +104,7 @@ fun MainScreen(
 @Composable
 fun MainNavHost(
     navController: NavHostController,
+    windowSizeClass: WindowSizeClass,
     destinations: List<TopLevelDestination>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -122,7 +124,8 @@ fun MainNavHost(
                 }
             },
             modifier = modifier,
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
+            windowSizeClass = windowSizeClass,
         )
 
         destinations.forEach { destination ->

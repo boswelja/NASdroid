@@ -1,12 +1,13 @@
 package com.boswelja.truemanager.auth.ui
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.boswelja.truemanager.auth.ui.addserver.AuthScreen
+import com.boswelja.truemanager.auth.ui.addserver.AddServerScreen
 import com.boswelja.truemanager.auth.ui.serverselect.SelectServerScreen
 
 /**
@@ -15,6 +16,7 @@ import com.boswelja.truemanager.auth.ui.serverselect.SelectServerScreen
 fun NavGraphBuilder.authNavigation(
     navController: NavHostController,
     route: String,
+    windowSizeClass: WindowSizeClass,
     onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -24,7 +26,7 @@ fun NavGraphBuilder.authNavigation(
         route = route
     ) {
         composable("login") {
-            AuthScreen(
+            AddServerScreen(
                 onLoginSuccess = onLoginSuccess,
                 modifier = modifier,
                 contentPadding = contentPadding
@@ -37,7 +39,8 @@ fun NavGraphBuilder.authNavigation(
                     navController.navigate("login")
                 },
                 modifier = modifier,
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                windowSizeClass = windowSizeClass,
             )
         }
     }
