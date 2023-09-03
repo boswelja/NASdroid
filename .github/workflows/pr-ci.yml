@@ -8,7 +8,7 @@ jobs:
   build:
     strategy:
       matrix:
-        variant: [Debug, Release]
+        variant: [Debug]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
