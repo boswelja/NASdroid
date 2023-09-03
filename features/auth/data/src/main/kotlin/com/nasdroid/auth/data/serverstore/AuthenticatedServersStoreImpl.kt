@@ -2,8 +2,8 @@ package com.nasdroid.auth.data.serverstore
 
 import android.content.Context
 import androidx.room.Room
-import com.nasdroid.auth.data.serverstore.database.AuthenticatedServerDatabase
-import com.nasdroid.auth.data.serverstore.database.AuthenticatedServerDto
+import com.nasdroid.auth.data.serverstore.room.AuthenticatedServerDatabase
+import com.nasdroid.auth.data.serverstore.room.AuthenticatedServerDto
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest

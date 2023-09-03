@@ -1,4 +1,4 @@
-package com.nasdroid.auth.data.serverstore.database
+package com.nasdroid.auth.data.serverstore.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

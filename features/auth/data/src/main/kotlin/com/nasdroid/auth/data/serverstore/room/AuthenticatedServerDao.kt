@@ -1,4 +1,4 @@
-package com.nasdroid.auth.data.serverstore.database
+package com.nasdroid.auth.data.serverstore.room
 
 import androidx.room.Dao
 import androidx.room.Delete
