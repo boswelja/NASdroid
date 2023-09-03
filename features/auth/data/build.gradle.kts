@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.sqldelight)
 
     alias(libs.plugins.detekt)
 }
@@ -45,6 +46,9 @@ detekt {
 }
 
 dependencies {
+    // SQLDelight
+    implementation(libs.sqldelight.driver.android)
+
     // Room
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
