@@ -1,0 +1,10 @@
+CREATE TABLE storedServers (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    url TEXT NOT NULL,
+    basic_auth_id INTEGER,
+    api_key_id INTEGER,
+    CONSTRAINT has_auth_method CHECK ((basic_auth_id IS NOT NULL AND api_key_id IS NULL) OR (basic_auth_id IS NULL AND api_key_id IS NOT NULL)),
+    FOREIGN KEY (basic_auth_id) REFERENCES basicAuths (id),
+    FOREIGN KEY (api_key_id) REFERENCES apiKeys (id)
+);

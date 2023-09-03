@@ -1,0 +1,4 @@
+CREATE TABLE apiKeys (
+    id INTEGER PRIMARY KEY NOT NULL,
+    key TEXT NOT NULL
+);
