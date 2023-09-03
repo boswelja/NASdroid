@@ -1,0 +1,15 @@
+CREATE TABLE apiKeys (
+    key_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    key TEXT NOT NULL
+);
+
+insert:
+INSERT INTO apiKeys
+VALUES (?, ?);
+
+lastInsertedRowId:
+SELECT last_insert_rowid();
+
+delete:
+DELETE FROM apiKeys
+WHERE key_id = ?;

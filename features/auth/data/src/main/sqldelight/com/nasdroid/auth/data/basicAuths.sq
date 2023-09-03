@@ -1,0 +1,16 @@
+CREATE TABLE basicAuths (
+    basic_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL
+);
+
+insert:
+INSERT INTO basicAuths
+VALUES (?, ?, ?);
+
+lastInsertedRowId:
+SELECT last_insert_rowid();
+
+delete:
+DELETE FROM basicAuths
+WHERE basic_id = ?;

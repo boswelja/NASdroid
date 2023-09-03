@@ -18,6 +18,8 @@ compose-material3 = "1.2.0-alpha06"
 compose-ui = "1.6.0-alpha04"
 accompanist = "0.33.1-alpha"
 
+sqldelight = "2.0.0"
+
 coil = "2.4.0"
 
 room = "2.6.0-beta01"
@@ -61,6 +63,9 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3", 
 compose-material3-windowsizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "compose-material3" }
 accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
 
+sqldelight-driver-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqldelight" }
+sqldelight-extensions-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }
+
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
 room-runtime = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -98,6 +103,7 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 [bundles]
 compose = [

@@ -1,0 +1,31 @@
+CREATE TABLE storedServers (
+    server_id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    url TEXT NOT NULL,
+    basic_auth_id INTEGER,
+    api_key_id INTEGER,
+    CONSTRAINT has_auth_method CHECK ((basic_auth_id IS NOT NULL AND api_key_id IS NULL) OR (basic_auth_id IS NULL AND api_key_id IS NOT NULL)),
+    FOREIGN KEY (basic_auth_id) REFERENCES basicAuths (basic_id),
+    FOREIGN KEY (api_key_id) REFERENCES apiKeys (key_id)
+);
+
+selectAll:
+SELECT server_id, name, url, username, password, key
+FROM storedServers
+JOIN apiKeys ON storedServers.api_key_id = apiKeys.key_id
+JOIN basicAuths ON storedServers.basic_auth_id = basicAuths.basic_id;
+
+selectOne:
+SELECT server_id, name, url, username, password, key
+FROM storedServers
+JOIN apiKeys ON storedServers.api_key_id = apiKeys.key_id
+JOIN basicAuths ON storedServers.basic_auth_id = basicAuths.basic_id
+WHERE server_id = ?;
+
+insert:
+INSERT INTO storedServers
+VALUES (?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM storedServers
+WHERE server_id = ?;
