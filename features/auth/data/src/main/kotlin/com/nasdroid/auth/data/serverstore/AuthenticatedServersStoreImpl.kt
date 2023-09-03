@@ -12,8 +12,9 @@ import kotlin.coroutines.CoroutineContext
 
 internal class AuthenticatedServersStoreImpl(
     private val database: AuthDatabase,
-    private val context: CoroutineContext = Dispatchers.IO,
 ) : AuthenticatedServersStore {
+
+    private val context: CoroutineContext = Dispatchers.IO
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAll(): Flow<List<AuthenticatedServer>> {

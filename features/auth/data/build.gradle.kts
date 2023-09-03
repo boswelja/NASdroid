@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.androidx.room)
     alias(libs.plugins.sqldelight)
 
     alias(libs.plugins.detekt)
@@ -30,21 +29,12 @@ kotlin {
     jvmToolchain(17)
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
-
 sqldelight {
     databases {
         create("AuthDatabase") {
             packageName.set("com.nasdroid.auth.data.serverstore.sqldelight")
         }
     }
-}
-
-ksp {
-    arg("room.incremental", "true")
-    arg("room.generateKotlin", "true")
 }
 
 detekt {
@@ -57,10 +47,6 @@ dependencies {
     // SQLDelight
     implementation(libs.sqldelight.driver.android)
     implementation(libs.sqldelight.extensions.coroutines)
-
-    // Room
-    implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
 
     implementation(libs.koin.android)
 }
