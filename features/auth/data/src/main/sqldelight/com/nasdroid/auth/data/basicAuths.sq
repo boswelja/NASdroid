@@ -3,3 +3,11 @@ CREATE TABLE basicAuths (
     username TEXT NOT NULL,
     password TEXT NOT NULL
 );
+
+insert:
+INSERT INTO basicAuths
+VALUES (?, ?, ?);
+
+delete:
+DELETE FROM basicAuths
+WHERE id = ?;

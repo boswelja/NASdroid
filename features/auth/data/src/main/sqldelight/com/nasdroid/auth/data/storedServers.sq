@@ -8,3 +8,17 @@ CREATE TABLE storedServers (
     FOREIGN KEY (basic_auth_id) REFERENCES basicAuths (id),
     FOREIGN KEY (api_key_id) REFERENCES apiKeys (id)
 );
+
+selectAll:
+SELECT *
+FROM storedServers
+JOIN apiKeys ON storedServers.api_key_id = apiKeys.id
+JOIN basicAuths ON storedServers.basic_auth_id = basicAuths.id;
+
+insert:
+INSERT INTO storedServers
+VALUES (?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM storedServers
+WHERE id = ?;
