@@ -34,6 +34,14 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
+sqldelight {
+    databases {
+        create("AuthDatabase") {
+            packageName.set("com.nasdroid.auth.data.serverstore.sqldelight")
+        }
+    }
+}
+
 ksp {
     arg("room.incremental", "true")
     arg("room.generateKotlin", "true")
@@ -48,6 +56,7 @@ detekt {
 dependencies {
     // SQLDelight
     implementation(libs.sqldelight.driver.android)
+    implementation(libs.sqldelight.extensions.coroutines)
 
     // Room
     implementation(libs.room.runtime)
