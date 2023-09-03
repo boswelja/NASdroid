@@ -1,16 +1,9 @@
 package com.nasdroid.auth.data.serverstore
 
 import android.content.Context
-import androidx.room.ColumnInfo
-import androidx.room.Dao
-import androidx.room.Database
-import androidx.room.Delete
-import androidx.room.Entity
-import androidx.room.Insert
-import androidx.room.PrimaryKey
-import androidx.room.Query
 import androidx.room.Room
-import androidx.room.RoomDatabase
+import com.nasdroid.auth.data.serverstore.room.AuthenticatedServerDatabase
+import com.nasdroid.auth.data.serverstore.room.AuthenticatedServerDto
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
@@ -70,37 +63,4 @@ internal class AuthenticatedServersStoreImpl(
             )
         )
     }
-}
-
-@Entity(tableName = "authenticated_servers")
-internal data class AuthenticatedServerDto(
-    @PrimaryKey
-    @ColumnInfo("host_id")
-    val hostId: String,
-    @ColumnInfo(name = "server_address")
-    val serverAddress: String,
-    @ColumnInfo(name = "token")
-    val token: String,
-    @ColumnInfo("name")
-    val name: String,
-)
-
-@Dao
-internal interface AuthenticatedServerDao {
-    @Query("SELECT * FROM authenticated_servers")
-    fun getAll(): Flow<List<AuthenticatedServerDto>>
-
-    @Query("SELECT * FROM authenticated_servers WHERE host_id = :id")
-    suspend fun get(id: String): AuthenticatedServerDto
-
-    @Insert
-    suspend fun insertAll(vararg servers: AuthenticatedServerDto)
-
-    @Delete
-    suspend fun delete(server: AuthenticatedServerDto)
-}
-
-@Database(entities = [AuthenticatedServerDto::class], version = 2)
-internal abstract class AuthenticatedServerDatabase : RoomDatabase() {
-    abstract fun authenticatedServerDao(): AuthenticatedServerDao
 }
