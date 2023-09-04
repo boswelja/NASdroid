@@ -5,6 +5,8 @@ documentation:
 dependencies:
   - gradle/libs.versions.toml
 
+data:
+  - features/*/data/**
 logic:
   - features/*/logic/**
 ui-ux:
