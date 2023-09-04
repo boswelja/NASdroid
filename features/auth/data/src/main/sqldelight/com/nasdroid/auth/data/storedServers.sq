@@ -12,14 +12,14 @@ CREATE TABLE storedServers (
 selectAll:
 SELECT server_id, name, url, username, password, key
 FROM storedServers
-JOIN apiKeys ON storedServers.api_key_id = apiKeys.key_id
-JOIN basicAuths ON storedServers.basic_auth_id = basicAuths.basic_id;
+LEFT JOIN apiKeys ON storedServers.api_key_id = apiKeys.key_id
+LEFT JOIN basicAuths ON storedServers.basic_auth_id = basicAuths.basic_id;
 
 selectOne:
 SELECT server_id, name, url, username, password, key
 FROM storedServers
-JOIN apiKeys ON storedServers.api_key_id = apiKeys.key_id
-JOIN basicAuths ON storedServers.basic_auth_id = basicAuths.basic_id
+LEFT JOIN apiKeys ON storedServers.api_key_id = apiKeys.key_id
+LEFT JOIN basicAuths ON storedServers.basic_auth_id = basicAuths.basic_id
 WHERE server_id = ?;
 
 insert:
