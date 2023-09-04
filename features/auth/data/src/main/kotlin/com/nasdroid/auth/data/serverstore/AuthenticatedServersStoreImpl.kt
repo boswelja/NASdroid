@@ -22,12 +22,22 @@ internal class AuthenticatedServersStoreImpl(
             .mapToList(context)
             .mapLatest { servers ->
                 servers.map { server ->
-                    AuthenticatedServer(
-                        server.server_id,
-                        server.url,
-                        server.key,
-                        server.name,
-                    )
+                    if (server.key != null) {
+                        AuthenticatedServer.ApiKey(
+                            uid = server.server_id,
+                            serverAddress = server.url,
+                            name = server.name,
+                            apiKey = server.key,
+                        )
+                    } else {
+                        AuthenticatedServer.Basic(
+                            uid = server.server_id,
+                            serverAddress = server.url,
+                            name = server.name,
+                            username = server.username!!,
+                            password = server.password!!
+                        )
+                    }
                 }
             }
     }
@@ -35,12 +45,22 @@ internal class AuthenticatedServersStoreImpl(
     override suspend fun get(id: String): AuthenticatedServer {
         return withContext(context) {
             val dto = database.storedServersQueries.selectOne(id).executeAsOne()
-            AuthenticatedServer(
-                uid = dto.server_id,
-                serverAddress = dto.url,
-                token = dto.key,
-                name = dto.name
-            )
+            if (dto.key != null) {
+                AuthenticatedServer.ApiKey(
+                    uid = dto.server_id,
+                    serverAddress = dto.url,
+                    name = dto.name,
+                    apiKey = dto.key,
+                )
+            } else {
+                AuthenticatedServer.Basic(
+                    uid = dto.server_id,
+                    serverAddress = dto.url,
+                    name = dto.name,
+                    username = dto.username!!,
+                    password = dto.password!!
+                )
+            }
         }
     }
 
@@ -53,18 +73,37 @@ internal class AuthenticatedServersStoreImpl(
     override suspend fun add(server: AuthenticatedServer) {
         withContext(context) {
             database.transaction {
-                database.apiKeysQueries.insert(
-                    key_id = null,
-                    key = server.token
-                )
-                val keyId = database.apiKeysQueries.lastInsertedRowId().executeAsOne()
-                database.storedServersQueries.insert(
-                    server_id = server.uid,
-                    name = server.name,
-                    url = server.serverAddress,
-                    basic_auth_id = null,
-                    api_key_id = keyId
-                )
+                when (server) {
+                    is AuthenticatedServer.ApiKey -> {
+                        database.apiKeysQueries.insert(
+                            key_id = null,
+                            key = server.apiKey,
+                        )
+                        val keyId = database.apiKeysQueries.lastInsertedRowId().executeAsOne()
+                        database.storedServersQueries.insert(
+                            server_id = server.uid,
+                            name = server.name,
+                            url = server.serverAddress,
+                            basic_auth_id = null,
+                            api_key_id = keyId
+                        )
+                    }
+                    is AuthenticatedServer.Basic -> {
+                        database.basicAuthsQueries.insert(
+                            basic_id = null,
+                            username = server.username,
+                            password = server.password,
+                        )
+                        val keyId = database.basicAuthsQueries.lastInsertedRowId().executeAsOne()
+                        database.storedServersQueries.insert(
+                            server_id = server.uid,
+                            name = server.name,
+                            url = server.serverAddress,
+                            basic_auth_id = keyId,
+                            api_key_id = null
+                        )
+                    }
+                }
             }
         }
     }

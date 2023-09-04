@@ -17,13 +17,6 @@ class StoreNewServer(
         server: Server,
         token: String
     ): Result<Unit> = runCatching {
-        authedServersStore.add(
-            AuthenticatedServer(
-                uid = server.id,
-                serverAddress = server.url,
-                token = token,
-                name = server.name
-            )
-        )
+        TODO()
     }
 }

@@ -13,6 +13,6 @@ class GetServerToken(
      * Gets the stored token for the server with the given [Server.id].
      */
     suspend operator fun invoke(id: String): Result<String> = runCatching {
-        authenticatedServersStore.get(id).token
+        TODO()
     }
 }
