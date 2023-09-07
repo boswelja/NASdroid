@@ -17,7 +17,7 @@ class GetAllServers(
      */
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<List<Server>> {
-        return authenticatedServersStore.getAll()
+        return authenticatedServersStore.getAllServers()
             .mapLatest { servers ->
                 servers.map {
                     Server(

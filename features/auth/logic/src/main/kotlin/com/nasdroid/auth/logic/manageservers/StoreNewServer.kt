@@ -1,7 +1,8 @@
 package com.nasdroid.auth.logic.manageservers
 
-import com.nasdroid.auth.data.serverstore.AuthenticatedServer
+import com.nasdroid.auth.data.serverstore.Server as AuthenticatedServer
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
+import com.nasdroid.auth.data.serverstore.Authentication
 
 /**
  * Adds a new server to the authenticated server store. See [invoke] for details.
@@ -21,9 +22,9 @@ class StoreNewServer(
             AuthenticatedServer(
                 uid = server.id,
                 serverAddress = server.url,
-                token = token,
                 name = server.name
-            )
+            ),
+            Authentication.ApiKey(token)
         )
     }
 }

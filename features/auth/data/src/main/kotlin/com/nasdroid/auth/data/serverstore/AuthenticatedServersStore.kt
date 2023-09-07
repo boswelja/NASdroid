@@ -10,36 +10,60 @@ import kotlinx.coroutines.flow.Flow
 interface AuthenticatedServersStore {
 
     /**
-     * Flow a list of all [AuthenticatedServer]s.
+     * Flow a list of all [Server]s.
      */
-    fun getAll(): Flow<List<AuthenticatedServer>>
+    fun getAllServers(): Flow<List<Server>>
 
     /**
-     * Get an authenticated server details by its [AuthenticatedServer.uid].
+     * Get authentication information for a server by its [Server.uid].
      */
-    suspend fun get(id: String): AuthenticatedServer
+    suspend fun getAuthentication(serverId: String): Authentication
 
     /**
-     * Delete an [AuthenticatedServer] from the store.
+     * Delete an [Server] from the store.
      */
-    suspend fun delete(server: AuthenticatedServer)
+    suspend fun delete(server: Server)
 
     /**
      * Add a new server to the authentication store.
      */
-    suspend fun add(server: AuthenticatedServer)
+    suspend fun add(server: Server, authentication: Authentication)
 }
 
 /**
  * Details for a server that has been previously authenticated.
  * @property uid A unique identifier for this server.
  * @property serverAddress The URL of the server. Note this is different from the URL for the API.
- * @property token The bearer token used to access the server. This may or may not still be valid.
  * @property name A friendly name for the server.
  */
-data class AuthenticatedServer(
+data class Server(
     val uid: String,
     val serverAddress: String,
-    val token: String,
     val name: String,
 )
+
+/**
+ * Describes a mode of authentication for a server.
+ */
+sealed interface Authentication {
+
+    /**
+     * Authentication via an API key.
+     *
+     * @property key The API key to use for authentication.
+     */
+    data class ApiKey(
+        val key: String
+    ) : Authentication
+
+    /**
+     * Describes authentication via a username and password.
+     *
+     * @property username The username to use.
+     * @property password The password to use.
+     */
+    data class Basic(
+        val username: String,
+        val password: String
+    ) : Authentication
+}
