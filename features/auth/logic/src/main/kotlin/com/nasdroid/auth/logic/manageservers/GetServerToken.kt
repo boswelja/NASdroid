@@ -5,6 +5,7 @@ import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 /**
  * Gets the stored authentication token for a server. See [invoke] for details.
  */
+@Deprecated("Use GetServerAuthentication instead")
 class GetServerToken(
     private val authenticatedServersStore: AuthenticatedServersStore,
 ) {
