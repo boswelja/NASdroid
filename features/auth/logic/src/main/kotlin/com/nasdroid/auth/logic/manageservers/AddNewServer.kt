@@ -27,18 +27,10 @@ class AddNewServer(
     ): Result<Unit> =
         testServerAuthentication(serverAddress, username, password)
             .then {
-                val actualName = serverName.ifBlank {
-                    val systemInfo = systemV2Api.getSystemInfo()
-                    systemInfo.systemProduct
-                }
-                val uid = systemV2Api.getHostId()
                 storeNewServer(
-                    server = Server(
-                        uid = uid,
-                        name = actualName,
-                        serverAddress = serverAddress
-                    ),
-                    Authentication.Basic(username, password)
+                    serverName = serverName,
+                    serverAddress = serverAddress,
+                    authentication = Authentication.Basic(username, password)
                 )
             }
 
@@ -52,27 +44,25 @@ class AddNewServer(
     ): Result<Unit> =
         testServerAuthentication(serverAddress, token)
             .then {
-                val actualName = serverName.ifBlank {
-                    val systemInfo = systemV2Api.getSystemInfo()
-                    systemInfo.systemProduct
-                }
-                val uid = systemV2Api.getHostId()
                 storeNewServer(
-                    server = Server(
-                        uid = uid,
-                        name = actualName,
-                        serverAddress = serverAddress
-                    ),
+                    serverName = serverName,
+                    serverAddress = serverAddress,
                     Authentication.ApiKey(token)
                 )
             }
 
     private suspend fun storeNewServer(
-        server: Server,
+        serverName: String,
+        serverAddress: String,
         authentication: Authentication,
     ): Result<Unit> = runCatching {
+        val actualName = serverName.ifBlank {
+            val systemInfo = systemV2Api.getSystemInfo()
+            systemInfo.systemProduct
+        }
+        val uid = systemV2Api.getHostId()
         authenticatedServersStore.add(
-            server,
+            Server(uid = uid, serverAddress = serverAddress, name = actualName),
             authentication
         )
     }
