@@ -37,11 +37,11 @@ import org.koin.dsl.module
 @OptIn(ExperimentalSerializationApi::class)
 val ApiV2Module = module {
     // API state
-    singleOf(::InMemoryApiStateProvider) bind com.nasdroid.api.v2.ApiStateProvider::class
+    singleOf(::InMemoryApiStateProvider) bind ApiStateProvider::class
 
     // Ktor client
     single {
-        val apiStateProvider: com.nasdroid.api.v2.ApiStateProvider = get()
+        val apiStateProvider: ApiStateProvider = get()
         HttpClient {
             // TODO if debug, BuildConfig appears to be missing
             install(io.ktor.client.plugins.logging.Logging) {
@@ -62,8 +62,8 @@ val ApiV2Module = module {
             }
             defaultRequest {
                 when (val authorization = requireNotNull(apiStateProvider.authorization)) {
-                    is com.nasdroid.api.v2.Authorization.ApiKey -> bearerAuth(authorization.apiKey)
-                    is com.nasdroid.api.v2.Authorization.Basic -> basicAuth(authorization.username, authorization.password)
+                    is Authorization.ApiKey -> bearerAuth(authorization.apiKey)
+                    is Authorization.Basic -> basicAuth(authorization.username, authorization.password)
                 }
                 val baseUrl = requireNotNull(apiStateProvider.serverAddress)
                 url(baseUrl)

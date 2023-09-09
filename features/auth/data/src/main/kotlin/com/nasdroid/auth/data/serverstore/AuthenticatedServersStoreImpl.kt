@@ -60,6 +60,14 @@ internal class AuthenticatedServersStoreImpl(
                             key_id = null,
                             key = authentication.key,
                         )
+                        val keyId = database.apiKeysQueries.lastInsertedRowId().executeAsOne()
+                        database.storedServersQueries.insert(
+                            server_id = server.uid,
+                            name = server.name,
+                            url = server.serverAddress,
+                            basic_auth_id = null,
+                            api_key_id = keyId
+                        )
                     }
                     is Authentication.Basic -> {
                         database.basicAuthsQueries.insert(
@@ -67,17 +75,16 @@ internal class AuthenticatedServersStoreImpl(
                             username = authentication.username,
                             password = authentication.password,
                         )
+                        val basicId = database.basicAuthsQueries.lastInsertedRowId().executeAsOne()
+                        database.storedServersQueries.insert(
+                            server_id = server.uid,
+                            name = server.name,
+                            url = server.serverAddress,
+                            basic_auth_id = basicId,
+                            api_key_id = null
+                        )
                     }
                 }
-
-                val keyId = database.apiKeysQueries.lastInsertedRowId().executeAsOne()
-                database.storedServersQueries.insert(
-                    server_id = server.uid,
-                    name = server.name,
-                    url = server.serverAddress,
-                    basic_auth_id = null,
-                    api_key_id = keyId
-                )
             }
         }
     }

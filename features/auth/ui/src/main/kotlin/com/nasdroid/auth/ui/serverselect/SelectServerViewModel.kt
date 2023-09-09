@@ -64,10 +64,14 @@ class SelectServerViewModel(
     fun tryLogIn(server: Server) {
         _isLoading.value = true
         viewModelScope.launch {
-            logIn(server)
+            val result = logIn(server)
             // TODO handle failures
-            _events.emit(Event.LoginSuccess)
-            _isLoading.value = false
+            if (result.isSuccess) {
+                _events.emit(Event.LoginSuccess)
+                _isLoading.value = false
+            } else {
+                result.getOrThrow()
+            }
         }
     }
 

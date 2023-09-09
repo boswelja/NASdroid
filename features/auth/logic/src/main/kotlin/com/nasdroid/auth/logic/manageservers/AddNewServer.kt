@@ -1,5 +1,7 @@
 package com.nasdroid.auth.logic.manageservers
 
+import com.nasdroid.api.v2.ApiStateProvider
+import com.nasdroid.api.v2.Authorization
 import com.nasdroid.auth.logic.then
 import com.nasdroid.api.v2.system.SystemV2Api
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
@@ -14,6 +16,7 @@ class AddNewServer(
     private val systemV2Api: SystemV2Api,
     private val testServerAuthentication: TestServerAuthentication,
     private val authenticatedServersStore: AuthenticatedServersStore,
+    private val apiStateProvider: ApiStateProvider,
 ) {
 
     /**
@@ -56,14 +59,24 @@ class AddNewServer(
         serverAddress: String,
         authentication: Authentication,
     ): Result<Unit> = runCatching {
-        val actualName = serverName.ifBlank {
-            val systemInfo = systemV2Api.getSystemInfo()
-            systemInfo.systemProduct
+        try {
+            apiStateProvider.serverAddress = serverAddress
+            apiStateProvider.authorization = when (authentication) {
+                is Authentication.ApiKey -> Authorization.ApiKey(authentication.key)
+                is Authentication.Basic -> Authorization.Basic(authentication.username, authentication.password)
+            }
+            val actualName = serverName.ifBlank {
+                val systemInfo = systemV2Api.getSystemInfo()
+                systemInfo.systemProduct
+            }
+            val uid = systemV2Api.getHostId()
+            authenticatedServersStore.add(
+                Server(uid = uid, serverAddress = serverAddress, name = actualName),
+                authentication
+            )
+        } finally {
+            apiStateProvider.serverAddress = null
+            apiStateProvider.authorization = null
         }
-        val uid = systemV2Api.getHostId()
-        authenticatedServersStore.add(
-            Server(uid = uid, serverAddress = serverAddress, name = actualName),
-            authentication
-        )
     }
 }
