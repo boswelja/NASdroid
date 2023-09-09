@@ -1,9 +1,10 @@
 package com.nasdroid.auth.logic.manageservers
 
-import com.nasdroid.auth.logic.CreateApiKey
-import com.nasdroid.auth.logic.TestServerToken
+import com.nasdroid.auth.logic.internal.CreateApiKey
+import com.nasdroid.auth.logic.internal.TestServerToken
 import com.nasdroid.auth.logic.then
 import com.nasdroid.api.v2.system.SystemV2Api
+import com.nasdroid.auth.logic.Server
 
 /**
  * Creates a token for and stores a new server. See [invoke] for details.

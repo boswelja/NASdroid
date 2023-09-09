@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.auth.logic.auth.LogIn
 import com.nasdroid.auth.logic.manageservers.GetAllServers
-import com.nasdroid.auth.logic.manageservers.Server
+import com.nasdroid.auth.logic.Server
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

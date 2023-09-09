@@ -1,4 +1,4 @@
-package com.nasdroid.auth.logic
+package com.nasdroid.auth.logic.internal
 
 import com.nasdroid.api.v2.apikey.AllowRule
 import com.nasdroid.api.v2.apikey.ApiKeyV2Api
@@ -6,6 +6,7 @@ import com.nasdroid.api.v2.apikey.ApiKeyV2Api
 /**
  * Create an API key on a server. See [invoke] for details.
  */
+@Deprecated("Avoid creating an API key from login")
 class CreateApiKey(
     private val apiStateProvider: com.nasdroid.api.v2.ApiStateProvider,
     private val apiKeyV2Api: ApiKeyV2Api,

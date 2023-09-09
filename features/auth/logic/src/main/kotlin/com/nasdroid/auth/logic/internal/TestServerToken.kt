@@ -1,10 +1,11 @@
-package com.nasdroid.auth.logic
+package com.nasdroid.auth.logic.internal
 
 import com.nasdroid.api.v2.system.SystemV2Api
 
 /**
  * Tests an existing authentication token is still operational for a server. See [invoke] for details.
  */
+@Deprecated("Use TestServerAuthentication instead")
 class TestServerToken(
     private val apiStateProvider: com.nasdroid.api.v2.ApiStateProvider,
     private val systemV2Api: SystemV2Api,

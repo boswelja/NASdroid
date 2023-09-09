@@ -4,8 +4,8 @@ import com.nasdroid.api.v2.ApiStateProvider
 import com.nasdroid.api.v2.Authorization
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 import com.nasdroid.auth.data.serverstore.Authentication
-import com.nasdroid.auth.logic.TestServerToken
-import com.nasdroid.auth.logic.manageservers.Server
+import com.nasdroid.auth.logic.internal.TestServerToken
+import com.nasdroid.auth.logic.Server
 
 /**
  * Attempts to authenticate with a server. See [invoke] for details.

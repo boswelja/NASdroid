@@ -1,6 +1,7 @@
 package com.nasdroid.auth.logic
 
 import com.nasdroid.api.v2.system.SystemV2Api
+import com.nasdroid.auth.logic.internal.TestServerToken
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

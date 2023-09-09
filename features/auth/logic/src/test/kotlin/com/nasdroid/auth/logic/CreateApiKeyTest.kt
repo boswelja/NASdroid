@@ -2,6 +2,7 @@ package com.nasdroid.auth.logic
 
 import com.nasdroid.api.v2.apikey.ApiKeyV2Api
 import com.nasdroid.api.v2.apikey.NewApiKey
+import com.nasdroid.auth.logic.internal.CreateApiKey
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
