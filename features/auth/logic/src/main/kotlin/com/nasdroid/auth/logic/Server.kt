@@ -1,4 +1,4 @@
-package com.nasdroid.auth.logic.manageservers
+package com.nasdroid.auth.logic
 
 /**
  * A Server that has been stored in the apps authenticated server store.

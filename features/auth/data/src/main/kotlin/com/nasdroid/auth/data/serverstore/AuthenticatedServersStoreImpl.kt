@@ -17,54 +17,74 @@ internal class AuthenticatedServersStoreImpl(
     private val context: CoroutineContext = Dispatchers.IO
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getAll(): Flow<List<AuthenticatedServer>> {
+    override fun getAllServers(): Flow<List<Server>> {
         return database.storedServersQueries.selectAll().asFlow()
             .mapToList(context)
             .mapLatest { servers ->
                 servers.map { server ->
-                    AuthenticatedServer(
+                    Server(
                         server.server_id,
                         server.url,
-                        server.key,
                         server.name,
                     )
                 }
             }
     }
 
-    override suspend fun get(id: String): AuthenticatedServer {
+    override suspend fun getAuthentication(serverId: String): Authentication {
         return withContext(context) {
-            val dto = database.storedServersQueries.selectOne(id).executeAsOne()
-            AuthenticatedServer(
-                uid = dto.server_id,
-                serverAddress = dto.url,
-                token = dto.key,
-                name = dto.name
-            )
+            val authData = database.storedServersQueries.selectAuthentication(serverId)
+                .executeAsOne()
+            if (authData.key != null) {
+                Authentication.ApiKey(authData.key)
+            } else {
+                requireNotNull(authData.username)
+                requireNotNull(authData.password)
+                Authentication.Basic(authData.username, authData.password)
+            }
         }
     }
 
-    override suspend fun delete(server: AuthenticatedServer) {
+    override suspend fun delete(server: Server) {
         withContext(context) {
             database.storedServersQueries.delete(server.uid)
         }
     }
 
-    override suspend fun add(server: AuthenticatedServer) {
+    override suspend fun add(server: Server, authentication: Authentication) {
         withContext(context) {
             database.transaction {
-                database.apiKeysQueries.insert(
-                    key_id = null,
-                    key = server.token
-                )
-                val keyId = database.apiKeysQueries.lastInsertedRowId().executeAsOne()
-                database.storedServersQueries.insert(
-                    server_id = server.uid,
-                    name = server.name,
-                    url = server.serverAddress,
-                    basic_auth_id = null,
-                    api_key_id = keyId
-                )
+                when (authentication) {
+                    is Authentication.ApiKey -> {
+                        database.apiKeysQueries.insert(
+                            key_id = null,
+                            key = authentication.key,
+                        )
+                        val keyId = database.apiKeysQueries.lastInsertedRowId().executeAsOne()
+                        database.storedServersQueries.insert(
+                            server_id = server.uid,
+                            name = server.name,
+                            url = server.serverAddress,
+                            basic_auth_id = null,
+                            api_key_id = keyId
+                        )
+                    }
+                    is Authentication.Basic -> {
+                        database.basicAuthsQueries.insert(
+                            basic_id = null,
+                            username = authentication.username,
+                            password = authentication.password,
+                        )
+                        val basicId = database.basicAuthsQueries.lastInsertedRowId().executeAsOne()
+                        database.storedServersQueries.insert(
+                            server_id = server.uid,
+                            name = server.name,
+                            url = server.serverAddress,
+                            basic_auth_id = basicId,
+                            api_key_id = null
+                        )
+                    }
+                }
             }
         }
     }

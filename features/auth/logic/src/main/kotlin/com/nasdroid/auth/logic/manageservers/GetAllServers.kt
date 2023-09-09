@@ -1,6 +1,7 @@
 package com.nasdroid.auth.logic.manageservers
 
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
+import com.nasdroid.auth.logic.Server
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
@@ -17,7 +18,7 @@ class GetAllServers(
      */
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<List<Server>> {
-        return authenticatedServersStore.getAll()
+        return authenticatedServersStore.getAllServers()
             .mapLatest { servers ->
                 servers.map {
                     Server(

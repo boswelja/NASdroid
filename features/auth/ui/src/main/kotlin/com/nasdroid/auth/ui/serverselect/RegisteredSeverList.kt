@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.nasdroid.auth.logic.manageservers.Server
+import com.nasdroid.auth.logic.Server
 
 /**
  * Displays a list of "registered" servers, and an "add" button to add new servers.

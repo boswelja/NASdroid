@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.auth.logic.auth.LogIn
 import com.nasdroid.auth.logic.manageservers.GetAllServers
-import com.nasdroid.auth.logic.manageservers.Server
+import com.nasdroid.auth.logic.Server
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,10 +64,14 @@ class SelectServerViewModel(
     fun tryLogIn(server: Server) {
         _isLoading.value = true
         viewModelScope.launch {
-            logIn(server)
+            val result = logIn(server)
             // TODO handle failures
-            _events.emit(Event.LoginSuccess)
-            _isLoading.value = false
+            if (result.isSuccess) {
+                _events.emit(Event.LoginSuccess)
+                _isLoading.value = false
+            } else {
+                result.getOrThrow()
+            }
         }
     }
 
