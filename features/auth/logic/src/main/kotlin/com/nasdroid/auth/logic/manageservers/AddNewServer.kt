@@ -1,9 +1,10 @@
 package com.nasdroid.auth.logic.manageservers
 
-import com.nasdroid.auth.logic.internal.CreateApiKey
 import com.nasdroid.auth.logic.then
 import com.nasdroid.api.v2.system.SystemV2Api
-import com.nasdroid.auth.logic.Server
+import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
+import com.nasdroid.auth.data.serverstore.Authentication
+import com.nasdroid.auth.data.serverstore.Server
 import com.nasdroid.auth.logic.auth.TestServerAuthentication
 
 /**
@@ -11,9 +12,8 @@ import com.nasdroid.auth.logic.auth.TestServerAuthentication
  */
 class AddNewServer(
     private val systemV2Api: SystemV2Api,
-    private val createApiKey: CreateApiKey,
     private val testServerAuthentication: TestServerAuthentication,
-    private val storeNewServer: StoreNewServer,
+    private val authenticatedServersStore: AuthenticatedServersStore,
 ) {
 
     /**
@@ -27,21 +27,20 @@ class AddNewServer(
     ): Result<Unit> =
         testServerAuthentication(serverAddress, username, password)
             .then {
-                createApiKey(
-                    serverAddress = serverAddress,
-                    username = username,
-                    password = password,
-                    keyName = "NASdroid for TrueNAS"
+                val actualName = serverName.ifBlank {
+                    val systemInfo = systemV2Api.getSystemInfo()
+                    systemInfo.systemProduct
+                }
+                val uid = systemV2Api.getHostId()
+                storeNewServer(
+                    server = Server(
+                        uid = uid,
+                        name = actualName,
+                        serverAddress = serverAddress
+                    ),
+                    Authentication.Basic(username, password)
                 )
             }
-            .then { apiKey ->
-                invoke(
-                    serverName = serverName,
-                    serverAddress = serverAddress,
-                    token = apiKey
-                )
-            }
-
 
     /**
      * Adds a server with the given [token].
@@ -60,11 +59,21 @@ class AddNewServer(
                 val uid = systemV2Api.getHostId()
                 storeNewServer(
                     server = Server(
-                        id = uid,
+                        uid = uid,
                         name = actualName,
-                        url = serverAddress
+                        serverAddress = serverAddress
                     ),
-                    token = token,
+                    Authentication.ApiKey(token)
                 )
             }
+
+    private suspend fun storeNewServer(
+        server: Server,
+        authentication: Authentication,
+    ): Result<Unit> = runCatching {
+        authenticatedServersStore.add(
+            server,
+            authentication
+        )
+    }
 }

@@ -3,8 +3,6 @@ package com.nasdroid.auth.logic
 import com.nasdroid.auth.data.AuthDataModule
 import com.nasdroid.auth.logic.auth.LogIn
 import com.nasdroid.auth.logic.auth.LogOut
-import com.nasdroid.auth.logic.internal.CreateApiKey
-import com.nasdroid.auth.logic.manageservers.StoreNewServer
 import com.nasdroid.auth.logic.manageservers.AddNewServer
 import com.nasdroid.auth.logic.manageservers.GetAllServers
 import org.koin.core.context.loadKoinModules
@@ -22,7 +20,4 @@ val AuthLogicModule = module {
 
     factoryOf(::AddNewServer)
     factoryOf(::GetAllServers)
-    factoryOf(::StoreNewServer)
-
-    factoryOf(::CreateApiKey)
 }
