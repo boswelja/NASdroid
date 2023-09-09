@@ -1,6 +1,5 @@
 package com.nasdroid.auth.logic.auth
 
-import com.nasdroid.auth.logic.internal.TestServerToken
 import com.nasdroid.auth.logic.Server
 import io.mockk.coEvery
 import io.mockk.every

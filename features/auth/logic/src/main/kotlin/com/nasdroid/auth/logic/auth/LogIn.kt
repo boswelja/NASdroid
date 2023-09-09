@@ -4,7 +4,6 @@ import com.nasdroid.api.v2.ApiStateProvider
 import com.nasdroid.api.v2.Authorization
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 import com.nasdroid.auth.data.serverstore.Authentication
-import com.nasdroid.auth.logic.internal.TestServerToken
 import com.nasdroid.auth.logic.Server
 
 /**
@@ -17,7 +16,7 @@ class LogIn(
 
     /**
      * Attempts to authenticate with the given [Server]. If the stored token does not work, an error
-     * is returned. See [TestServerToken] for key testing criteria.
+     * is returned.
      */
     suspend operator fun invoke(server: Server) : Result<Unit> = runCatching {
         val authentication = authenticatedServersStore.getAuthentication(server.id)

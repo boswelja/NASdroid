@@ -1,10 +1,10 @@
 package com.nasdroid.auth.logic.manageservers
 
 import com.nasdroid.auth.logic.internal.CreateApiKey
-import com.nasdroid.auth.logic.internal.TestServerToken
 import com.nasdroid.auth.logic.then
 import com.nasdroid.api.v2.system.SystemV2Api
 import com.nasdroid.auth.logic.Server
+import com.nasdroid.auth.logic.auth.TestServerAuthentication
 
 /**
  * Creates a token for and stores a new server. See [invoke] for details.
@@ -12,7 +12,7 @@ import com.nasdroid.auth.logic.Server
 class AddNewServer(
     private val systemV2Api: SystemV2Api,
     private val createApiKey: CreateApiKey,
-    private val testServerToken: TestServerToken,
+    private val testServerAuthentication: TestServerAuthentication,
     private val storeNewServer: StoreNewServer,
 ) {
 
@@ -25,18 +25,22 @@ class AddNewServer(
         username: String,
         password: String
     ): Result<Unit> =
-        createApiKey(
-            serverAddress = serverAddress,
-            username = username,
-            password = password,
-            keyName = "NASdroid for TrueNAS"
-        ).then { apiKey ->
-            invoke(
-                serverName = serverName,
-                serverAddress = serverAddress,
-                token = apiKey
-            )
-        }
+        testServerAuthentication(serverAddress, username, password)
+            .then {
+                createApiKey(
+                    serverAddress = serverAddress,
+                    username = username,
+                    password = password,
+                    keyName = "NASdroid for TrueNAS"
+                )
+            }
+            .then { apiKey ->
+                invoke(
+                    serverName = serverName,
+                    serverAddress = serverAddress,
+                    token = apiKey
+                )
+            }
 
 
     /**
@@ -47,7 +51,7 @@ class AddNewServer(
         serverAddress: String,
         token: String
     ): Result<Unit> =
-        testServerToken(serverAddress, token)
+        testServerAuthentication(serverAddress, token)
             .then {
                 val actualName = serverName.ifBlank {
                     val systemInfo = systemV2Api.getSystemInfo()
