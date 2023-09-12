@@ -4,6 +4,8 @@ import com.nasdroid.data.configuration.DashboardEntry
 import com.nasdroid.api.v2.reporting.ReportingGraphData
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
+import kotlinx.datetime.Clock
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Requests data from the server about a list of [DashboardEntry]. See [invoke] for details.
@@ -43,7 +45,8 @@ class GetReportingDataForEntries(
                 }
             }
         }
-        return reportingV2Api.getGraphData(reportingGraphsToQuery)
+        val now = Clock.System.now()
+        return reportingV2Api.getGraphData(reportingGraphsToQuery, start = now.minus(10.seconds), end = now)
     }
 
     companion object {
