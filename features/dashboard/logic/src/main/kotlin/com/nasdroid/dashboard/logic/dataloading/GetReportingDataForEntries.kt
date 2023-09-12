@@ -46,7 +46,9 @@ class GetReportingDataForEntries(
             }
         }
         val now = Clock.System.now()
-        return reportingV2Api.getGraphData(reportingGraphsToQuery, start = now.minus(10.seconds), end = now)
+        // Reporting seems to refresh every 15 seconds, so there should be some data within the last
+        // 15 seconds. 20 to be safe.
+        return reportingV2Api.getGraphData(reportingGraphsToQuery, start = now.minus(20.seconds), end = now)
     }
 
     companion object {
