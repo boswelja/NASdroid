@@ -40,7 +40,7 @@ class GetDashboardData(
         val serverId = systemV2Api.getHostId()
         val flow = configuration.getVisibleEntries(serverId)
             .flatMapLatest { entries ->
-                repeatingFlow(10.seconds) {
+                repeatingFlow(15.seconds) {
                     val graphs = getReportingDataForEntries(entries)
                     val systemInformation = systemV2Api.getSystemInfo()
 
@@ -51,7 +51,6 @@ class GetDashboardData(
         emitAll(flow)
     }
 
-    @OptIn(ExperimentalTime::class)
     private fun <T> repeatingFlow(interval: Duration, producer: suspend () -> T): Flow<T> = flow {
         while (coroutineContext.isActive) {
             val callTime = measureTime {

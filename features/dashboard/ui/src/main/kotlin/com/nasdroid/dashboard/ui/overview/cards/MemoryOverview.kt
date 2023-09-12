@@ -58,11 +58,13 @@ fun MemoryOverview(
         ) {
             MemoryUtilisationLabel(
                 name = "Used",
-                usage = data.memoryUsed.formatToString()
+                usage = data.memoryUsed.formatToString(),
+                horizontalAlignment = Alignment.Start,
             )
             MemoryUtilisationLabel(
                 name = stringResource(R.string.memory_usage_free),
-                usage = data.memoryFree.formatToString()
+                usage = data.memoryFree.formatToString(),
+                horizontalAlignment = Alignment.End,
             )
         }
         Spacer(Modifier.height(4.dp))
@@ -88,13 +90,14 @@ fun MemoryOverview(
 fun MemoryUtilisationLabel(
     name: String,
     usage: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
 ) {
     Column(
         modifier = Modifier
             .semantics(mergeDescendants = true) {}
             .then(modifier),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = horizontalAlignment
     ) {
         Text(
             text = name,
