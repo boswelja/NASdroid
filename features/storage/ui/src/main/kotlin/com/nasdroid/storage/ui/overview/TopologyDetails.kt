@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nasdroid.api.v2.pool.Topology
 import com.nasdroid.api.v2.pool.VDev
-import com.nasdroid.storage.R
+import com.nasdroid.storage.ui.R
 
 /**
  * Displays information about a given [Topology].

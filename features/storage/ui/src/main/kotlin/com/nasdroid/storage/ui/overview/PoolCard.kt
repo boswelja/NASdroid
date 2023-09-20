@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.api.v2.pool.Pool
 import com.nasdroid.api.v2.pool.Scan
 import com.nasdroid.api.v2.pool.Topology
-import com.nasdroid.storage.R
+import com.nasdroid.storage.ui.R
 import kotlinx.datetime.Clock
 
 /**
