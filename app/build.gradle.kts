@@ -62,7 +62,7 @@ dependencies {
     implementation(projects.features.auth.ui)
     implementation(projects.features.dashboard.ui)
     implementation(projects.features.reporting)
-    implementation(projects.features.storage)
+    implementation(projects.features.storage.ui)
 
     implementation(libs.androidx.lifecycle.runtime)
 

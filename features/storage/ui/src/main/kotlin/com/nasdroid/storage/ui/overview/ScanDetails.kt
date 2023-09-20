@@ -26,7 +26,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.nasdroid.api.v2.pool.Scan
-import com.nasdroid.storage.R
+import com.nasdroid.storage.ui.R
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDateTime
