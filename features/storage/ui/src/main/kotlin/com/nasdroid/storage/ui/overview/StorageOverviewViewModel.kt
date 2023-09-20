@@ -3,7 +3,7 @@ package com.nasdroid.storage.ui.overview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.api.v2.pool.Pool
-import com.nasdroid.api.v2.pool.PoolV2Api
+import com.nasdroid.storage.logic.pool.GetPools
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
  * Fetches and exposes data used for displaying a list of storage pools.
  */
 class StorageOverviewViewModel(
-    private val poolV2Api: PoolV2Api
+    private val getPools: GetPools
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -39,7 +39,7 @@ class StorageOverviewViewModel(
     fun refresh() {
         _isLoading.value = true
         viewModelScope.launch {
-            val pools = poolV2Api.getPools()
+            val pools = getPools()
             _pools.emit(pools)
             _isLoading.value = false
         }
