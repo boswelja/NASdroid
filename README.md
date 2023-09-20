@@ -16,9 +16,9 @@ Features correspond to the menu items you see in the TrueNAS SCALE web interface
 
 | Feature         | Status          |
 |-----------------|-----------------|
-| Dashboard       | [In progress](https://github.com/users/boswelja/projects/2)     |
-| Storage         | [In progress](https://github.com/users/boswelja/projects/3)     |
-| Apps            | [In progress](https://github.com/users/boswelja/projects/4)     |
+| Dashboard       | In progress     |
+| Storage         | In progress     |
+| Apps            | In progress     |
 | Reporting       | In progress     |
 | Datasets        | Not yet started |
 | Shares          | Not yet started |
