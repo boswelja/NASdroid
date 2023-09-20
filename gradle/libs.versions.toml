@@ -30,7 +30,7 @@ kotlinx-coroutines = "1.7.3"
 kotlinx-datetime = "0.4.1"
 kotlinx-serialization-formats = "1.6.0"
 
-koin = "3.4.3"
+koin = "3.5.0"
 koin-compose = "3.5.0"
 
 vico = "1.12.0"
