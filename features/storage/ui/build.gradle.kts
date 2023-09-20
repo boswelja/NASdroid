@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nasdroid.storage"
+    namespace = "com.nasdroid.storage.ui"
 
     buildTypes {
         release {
