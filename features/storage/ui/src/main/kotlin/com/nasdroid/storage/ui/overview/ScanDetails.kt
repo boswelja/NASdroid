@@ -27,6 +27,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.nasdroid.api.v2.pool.Scan
 import com.nasdroid.storage.ui.R
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDateTime
@@ -60,7 +61,7 @@ fun ScanDetails(
             },
             overlineText = {
                 Text(stringResource(
-                    R.string.scan_started_on, scan.startTime.toLocalDateTime(
+                    R.string.scan_started_on, Instant.fromEpochMilliseconds(scan.startTime).toLocalDateTime(
                     TimeZone.currentSystemDefault()).format()))
             },
             headlineText = {
@@ -81,8 +82,13 @@ fun ScanDetails(
                 }
             },
             overlineText = {
-                Text(stringResource(R.string.scan_finished_on, scan.endTime!!.toLocalDateTime(
-                    TimeZone.currentSystemDefault()).format()))
+                Text(
+                    stringResource(
+                        R.string.scan_finished_on,
+                        Instant.fromEpochMilliseconds(scan.endTime!!).toLocalDateTime(TimeZone.currentSystemDefault())
+                            .format()
+                    )
+                )
             },
             headlineText = {
                 Text(stringResource(R.string.scan_finished, scan.function))

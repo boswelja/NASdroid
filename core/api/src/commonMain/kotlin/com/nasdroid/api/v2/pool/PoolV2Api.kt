@@ -1,6 +1,7 @@
 package com.nasdroid.api.v2.pool
 
-import kotlinx.datetime.Instant
+import com.nasdroid.api.v2.core.UnwrappingDateSerializer
+import com.nasdroid.api.v2.pool.Pool.Autotrim
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -139,8 +140,9 @@ data class Scan(
     val bytesProcessed: Long,
     @SerialName("bytes_to_process")
     val bytesToProcess: Long,
+    @Serializable(with = UnwrappingDateSerializer::class)
     @SerialName("end_time")
-    val endTime: Instant?,
+    val endTime: Long?,
     @SerialName("errors")
     val errors: Int,
     @SerialName("function")
@@ -149,8 +151,9 @@ data class Scan(
     val pause: String?,
     @SerialName("percentage")
     val percentage: Double,
+    @Serializable(with = UnwrappingDateSerializer::class)
     @SerialName("start_time")
-    val startTime: Instant,
+    val startTime: Long,
     @SerialName("state")
     val state: String,
     @SerialName("total_secs_left")

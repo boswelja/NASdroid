@@ -7,7 +7,7 @@ import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
 
 /**
- * A Koin module to inject the storage dependency graph. This depends on the API module.
+ * A Koin module to inject the storage UI dependency graph. This depends on the storage logic module.
  */
 val StorageUiModule = module {
     loadKoinModules(StorageLogicModule)

@@ -149,7 +149,7 @@ fun PoolCardPreview() {
                 function = "SCRUB",
                 pause = null,
                 percentage = 100.0,
-                startTime = Clock.System.now(),
+                startTime = Clock.System.now().toEpochMilliseconds(),
                 state = "COMPLETED",
                 totalSecsLeft = null,
             ),
