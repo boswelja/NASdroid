@@ -1,19 +1,25 @@
 package com.nasdroid.storage.ui.pools.overview
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,73 +42,85 @@ fun PoolCard(
     ElevatedCard(modifier) {
         Column(
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            PoolOverview(
-                name = pool.poolName,
-                allocatedBytes = pool.usedCapacity.toLong(CapacityUnit.BYTE),
+            Text(
+                text = pool.poolName,
+                style = MaterialTheme.typography.titleLarge,
+            )
+            StorageUseSummary(
+                usedBytes = pool.usedCapacity.toLong(CapacityUnit.BYTE),
                 totalBytes = pool.totalCapacity.toLong(CapacityUnit.BYTE),
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.height(8.dp))
-            ListItem(
-                headlineContent = { Text("Topology") },
-                leadingContent = {
-                    if (pool.topologyHealthy) {
-                        Icon(Icons.Default.CheckCircle, contentDescription = "Healthy")
-                    } else {
-                        Icon(Icons.Default.Cancel, contentDescription = "There's a problem")
-                    }
-                }
-            )
-            ListItem(
-                headlineContent = { Text("ZFS") },
-                leadingContent = {
-                    if (pool.zfsHealthy) {
-                        Icon(Icons.Default.CheckCircle, contentDescription = "Healthy")
-                    } else {
-                        Icon(Icons.Default.Cancel, contentDescription = "There's a problem")
-                    }
-                }
-            )
-            ListItem(
-                headlineContent = { Text("Disks") },
-                leadingContent = {
-                    if (pool.disksHealthy) {
-                        Icon(Icons.Default.CheckCircle, contentDescription = "Healthy")
-                    } else {
-                        Icon(Icons.Default.Cancel, contentDescription = "There's a problem")
-                    }
-                }
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                PoolHealthItem(
+                    label = { Text("Topology") },
+                    healthStatus = pool.topologyHealth
+                )
+                PoolHealthItem(
+                    label = { Text("ZFS") },
+                    healthStatus = pool.zfsHealth
+                )
+                PoolHealthItem(
+                    label = { Text("Disks") },
+                    healthStatus = pool.disksHealth
+                )
+            }
+            FilledTonalButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text("See Details")
+            }
         }
     }
 }
 
-/**
- * Displays basic details about a pool, such as the pool name & storage usage.
- *
- * @param name The human-readable name of the pool.
- * @param allocatedBytes The number of bytes with data allocated in the pool.
- * @param totalBytes The total number of bytes in the pool.
- * @param modifier [Modifier].
- */
 @Composable
-fun PoolOverview(
-    name: String,
-    allocatedBytes: Long,
-    totalBytes: Long,
-    modifier: Modifier = Modifier
+fun PoolHealthItem(
+    label: @Composable () -> Unit,
+    healthStatus: PoolOverview.HealthStatus,
+    modifier: Modifier = Modifier,
 ) {
-    Column(modifier) {
-        Text(
-            text = name,
-            style = MaterialTheme.typography.titleLarge,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        StorageUseSummary(
-            usedBytes = allocatedBytes,
-            totalBytes = totalBytes,
-            modifier = Modifier.fillMaxWidth()
-        )
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (healthStatus.isHealthy) {
+            Icon(
+                Icons.Default.CheckCircle,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary
+            )
+        } else {
+            Icon(
+                Icons.Default.Cancel,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            ProvideTextStyle(MaterialTheme.typography.bodyLarge) {
+                label()
+            }
+            ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+                if (healthStatus.isHealthy) {
+                    Text(
+                        text = "Healthy",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    Text(
+                        text = healthStatus.unhealthyReason ?: "There's a problem",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -115,10 +133,10 @@ fun PoolCardPreview() {
             poolName = "MyPool",
             totalCapacity = 1.terabytes,
             usedCapacity = 400.gigabytes,
-            topologyHealthy = false,
-            usageHealthy = true,
-            zfsHealthy = true,
-            disksHealthy = true
+            topologyHealth = PoolOverview.HealthStatus(false, "Disk 1 offline"),
+            usageHealth = PoolOverview.HealthStatus(true, null),
+            zfsHealth = PoolOverview.HealthStatus(true, null),
+            disksHealth = PoolOverview.HealthStatus(true, null)
         )
     )
 }

@@ -25,10 +25,10 @@ class GetPoolOverviews(
                 poolName = pool.name,
                 totalCapacity = pool.size.bytes,
                 usedCapacity = pool.allocated.bytes,
-                topologyHealthy = pool.topology.isHealthy(),
-                usageHealthy = pool.healthy,
-                zfsHealthy = pool.scan.errors <= 0,
-                disksHealthy = true, // TODO
+                topologyHealth = PoolOverview.HealthStatus(pool.topology.isHealthy(), null), // TODO Reason
+                usageHealth = PoolOverview.HealthStatus(pool.healthy, null),
+                zfsHealth = PoolOverview.HealthStatus(pool.scan.errors <= 0, null),
+                disksHealth = PoolOverview.HealthStatus(true, null), // TODO
             )
         }
     }
@@ -49,8 +49,13 @@ data class PoolOverview(
     val poolName: String,
     val totalCapacity: Capacity,
     val usedCapacity: Capacity,
-    val topologyHealthy: Boolean,
-    val usageHealthy: Boolean,
-    val zfsHealthy: Boolean,
-    val disksHealthy: Boolean,
-)
+    val topologyHealth: HealthStatus,
+    val usageHealth: HealthStatus,
+    val zfsHealth: HealthStatus,
+    val disksHealth: HealthStatus,
+) {
+    data class HealthStatus(
+        val isHealthy: Boolean,
+        val unhealthyReason: String?
+    )
+}

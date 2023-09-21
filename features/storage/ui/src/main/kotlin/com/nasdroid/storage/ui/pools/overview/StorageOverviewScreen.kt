@@ -34,7 +34,7 @@ fun StorageOverviewScreen(
 }
 
 /**
- * Displays a list of [PoolOverview]s.
+ * Displays a list of [PoolUsage]s.
  */
 @Composable
 fun PoolsList(
