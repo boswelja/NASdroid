@@ -1,4 +1,4 @@
-package com.nasdroid.storage.ui.overview
+package com.nasdroid.storage.ui.pools.overview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

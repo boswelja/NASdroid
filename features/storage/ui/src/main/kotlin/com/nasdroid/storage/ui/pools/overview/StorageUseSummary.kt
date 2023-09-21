@@ -1,4 +1,4 @@
-package com.nasdroid.storage.ui.overview
+package com.nasdroid.storage.ui.pools.overview
 
 import android.text.format.Formatter.formatFileSize
 import androidx.compose.foundation.layout.Arrangement

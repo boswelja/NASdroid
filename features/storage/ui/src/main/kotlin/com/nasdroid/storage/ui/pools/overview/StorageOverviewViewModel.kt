@@ -1,4 +1,4 @@
-package com.nasdroid.storage.ui.overview
+package com.nasdroid.storage.ui.pools.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
