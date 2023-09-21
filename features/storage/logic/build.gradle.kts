@@ -40,6 +40,7 @@ detekt {
 
 dependencies {
     api(projects.core.api)
+    api(projects.core.capacity)
 
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)

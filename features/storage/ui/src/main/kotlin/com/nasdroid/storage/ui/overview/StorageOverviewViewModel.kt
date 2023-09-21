@@ -2,8 +2,8 @@ package com.nasdroid.storage.ui.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nasdroid.api.v2.pool.Pool
-import com.nasdroid.storage.logic.pool.GetPools
+import com.nasdroid.storage.logic.pool.GetPoolOverviews
+import com.nasdroid.storage.logic.pool.PoolOverview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
  * Fetches and exposes data used for displaying a list of storage pools.
  */
 class StorageOverviewViewModel(
-    private val getPools: GetPools
+    private val getPoolOverviews: GetPoolOverviews
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -22,12 +22,12 @@ class StorageOverviewViewModel(
      */
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _pools = MutableStateFlow<List<Pool>>(emptyList())
+    private val _pools = MutableStateFlow<List<PoolOverview>>(emptyList())
 
     /**
-     * A list of [Pool]s to display.
+     * A list of [PoolOverview]s to display.
      */
-    val pools: StateFlow<List<Pool>> = _pools
+    val pools: StateFlow<List<PoolOverview>> = _pools
 
     init {
         refresh()
@@ -39,8 +39,8 @@ class StorageOverviewViewModel(
     fun refresh() {
         _isLoading.value = true
         viewModelScope.launch {
-            val pools = getPools()
-            _pools.emit(pools)
+            val pools = getPoolOverviews()
+            _pools.emit(pools.getOrThrow()) // TODO error handling
             _isLoading.value = false
         }
     }
