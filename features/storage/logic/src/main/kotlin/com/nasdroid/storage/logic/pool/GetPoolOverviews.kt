@@ -2,6 +2,7 @@ package com.nasdroid.storage.logic.pool
 
 import com.nasdroid.api.v2.pool.Pool
 import com.nasdroid.api.v2.pool.PoolV2Api
+import com.nasdroid.api.v2.pool.Topology
 import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.bytes
 
@@ -24,12 +25,22 @@ class GetPoolOverviews(
                 poolName = pool.name,
                 totalCapacity = pool.size.bytes,
                 usedCapacity = pool.allocated.bytes,
-                topologyHealthy = true, // TODO
+                topologyHealthy = pool.topology.isHealthy(),
                 usageHealthy = pool.healthy,
-                zfsHealthy = true, // TODO
+                zfsHealthy = pool.scan.errors <= 0,
                 disksHealthy = true, // TODO
             )
         }
+    }
+
+    private fun Topology.isHealthy(): Boolean {
+        // TODO This should ideally be a separate use case
+        return data.all { it.status == "ONLINE" } &&
+                special.all { it.status == "ONLINE" } &&
+                cache.all { it.status == "ONLINE" } &&
+                log.all { it.status == "ONLINE" } &&
+                spare.all { it.status == "ONLINE" } &&
+                dedup.all { it.status == "ONLINE" }
     }
 }
 

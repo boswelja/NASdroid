@@ -5,7 +5,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,12 +34,44 @@ fun PoolCard(
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(modifier) {
-        Column {
+        Column(
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+        ) {
             PoolOverview(
                 name = pool.poolName,
                 allocatedBytes = pool.usedCapacity.toLong(CapacityUnit.BYTE),
                 totalBytes = pool.totalCapacity.toLong(CapacityUnit.BYTE),
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+            )
+            Spacer(Modifier.height(8.dp))
+            ListItem(
+                headlineContent = { Text("Topology") },
+                leadingContent = {
+                    if (pool.topologyHealthy) {
+                        Icon(Icons.Default.CheckCircle, contentDescription = "Healthy")
+                    } else {
+                        Icon(Icons.Default.Cancel, contentDescription = "There's a problem")
+                    }
+                }
+            )
+            ListItem(
+                headlineContent = { Text("ZFS") },
+                leadingContent = {
+                    if (pool.zfsHealthy) {
+                        Icon(Icons.Default.CheckCircle, contentDescription = "Healthy")
+                    } else {
+                        Icon(Icons.Default.Cancel, contentDescription = "There's a problem")
+                    }
+                }
+            )
+            ListItem(
+                headlineContent = { Text("Disks") },
+                leadingContent = {
+                    if (pool.disksHealthy) {
+                        Icon(Icons.Default.CheckCircle, contentDescription = "Healthy")
+                    } else {
+                        Icon(Icons.Default.Cancel, contentDescription = "There's a problem")
+                    }
+                }
             )
         }
     }
