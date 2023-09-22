@@ -43,6 +43,23 @@ import com.nasdroid.ui.navigation.drawer.ModalNavigationDrawerLayout
 import com.nasdroid.ui.navigation.drawer.PermanentNavigationDrawerLayout
 import kotlinx.coroutines.launch
 
+private val BottomNavDestinations = listOf(
+    TopLevelDestination.Dashboard,
+    TopLevelDestination.Storage,
+    TopLevelDestination.Shares,
+    TopLevelDestination.Apps,
+    TopLevelDestination.Network
+)
+
+private val StartNavRailDestinations = listOf(
+    TopLevelDestination.Dashboard,
+    TopLevelDestination.Storage,
+    TopLevelDestination.Shares,
+    TopLevelDestination.Apps,
+    TopLevelDestination.Network,
+    TopLevelDestination.Reporting
+)
+
 /**
  * Orchestrates all top-level navigation components. The navigation components displayed depend on
  * [windowSizeClass].
@@ -51,7 +68,6 @@ import kotlinx.coroutines.launch
 fun TopLevelNavigation(
     windowSizeClass: WindowSizeClass,
     selectedDestination: TopLevelDestination?,
-    destinations: List<TopLevelDestination>,
     navigateTo: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
     navigationVisible: Boolean = true,
@@ -63,7 +79,7 @@ fun TopLevelNavigation(
         WindowWidthSizeClass.Compact -> {
             ModalNavigationDrawer(
                 selectedDestination = selectedDestination,
-                destinations = destinations,
+                destinations = BottomNavDestinations,
                 navigateTo = navigateTo,
                 navigationVisible = navigationVisible,
                 canNavigateBack = canNavigateBack,
@@ -75,7 +91,7 @@ fun TopLevelNavigation(
         WindowWidthSizeClass.Medium -> {
             NavigationRail(
                 selectedDestination = selectedDestination,
-                destinations = destinations,
+                destinations = StartNavRailDestinations,
                 navigateTo = navigateTo,
                 navigationVisible = navigationVisible,
                 canNavigateBack = canNavigateBack,
@@ -177,7 +193,6 @@ fun ModalNavigationDrawer(
  * @param navigateBack Called when the user navigates back.
  * @param content The screen content. The provided PaddingValues come from [Scaffold].
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationRail(
     selectedDestination: TopLevelDestination?,

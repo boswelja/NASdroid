@@ -73,7 +73,6 @@ fun MainScreen(
     TopLevelNavigation(
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
-        destinations = destinations,
         navigateTo = {
             navController.navigate(it.getRoute()) {
                 val currentRoute = requireNotNull(currentBackstackEntry?.destination?.route)
