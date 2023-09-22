@@ -48,7 +48,7 @@ fun AuthTypeSelector(
             SegmentedButton(
                 selected = isSelected,
                 onClick = { onAuthTypeChange(authType) },
-                shape = SegmentedButtonDefaults.shape(position = index, count = AuthTypes.size),
+                shape = SegmentedButtonDefaults.itemShape(index = index, count = AuthTypes.size),
                 icon = {
                     AnimatedContent(
                         targetState = isSelected,

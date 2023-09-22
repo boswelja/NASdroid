@@ -23,8 +23,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PlainTooltipBox
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults.rememberPlainTooltipPositionProvider
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
@@ -93,19 +96,29 @@ internal fun DashboardCardOrderControls(
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.End) {
-        PlainTooltipBox(tooltip = { Text("Move up") }) {
+        TooltipBox(
+            positionProvider = rememberPlainTooltipPositionProvider(),
+            tooltip = {
+                PlainTooltip { Text("Move up") }
+            },
+            state = rememberTooltipState()
+        ) {
             IconButton(
                 onClick = editControls.onMoveUp,
-                modifier = Modifier.tooltipTrigger(),
                 enabled = editControls.canMoveUp
             ) {
                 Icon(imageVector = Icons.Default.MoveUp, contentDescription = "Move up")
             }
         }
-        PlainTooltipBox(tooltip = { Text("Move down") }) {
+        TooltipBox(
+            positionProvider = rememberPlainTooltipPositionProvider(),
+            tooltip = {
+                PlainTooltip { Text("Move down") }
+            },
+            state = rememberTooltipState()
+        ) {
             IconButton(
                 onClick = editControls.onMoveDown,
-                modifier = Modifier.tooltipTrigger(),
                 enabled = editControls.canMoveDown
             ) {
                 Icon(imageVector = Icons.Default.MoveDown, contentDescription = "Move down")
