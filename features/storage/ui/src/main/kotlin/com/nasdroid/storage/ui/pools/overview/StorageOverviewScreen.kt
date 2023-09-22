@@ -1,4 +1,4 @@
-package com.nasdroid.storage.ui.overview
+package com.nasdroid.storage.ui.pools.overview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nasdroid.api.v2.pool.Pool
+import com.nasdroid.storage.logic.pool.PoolOverview
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -34,11 +34,11 @@ fun StorageOverviewScreen(
 }
 
 /**
- * Displays a list of [Pool]s.
+ * Displays a list of [PoolUsage]s.
  */
 @Composable
 fun PoolsList(
-    pools: List<Pool>,
+    pools: List<PoolOverview>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
