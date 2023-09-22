@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -205,32 +204,46 @@ fun NavigationRail(
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val menuHost = rememberMenuHost()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val coroutineScope = rememberCoroutineScope()
 
     ProvideMenuHost(menuHost = menuHost) {
-        Row(modifier) {
-            AnimatedVisibility(
-                visible = navigationVisible,
-                enter = slideInHorizontally(),
-                exit = slideOutHorizontally { -it/2 }
-            ) {
-                StartNavigationRail(
-                    destinations = destinations,
-                    selectedDestination = selectedDestination,
-                    onDestinationClick = navigateTo
+        ModalNavigationDrawerLayout(
+            drawerState = drawerState,
+            selectedDestination = selectedDestination,
+            gesturesEnabled = navigationVisible,
+            navigateTo = navigateTo
+        ) {
+            Row(modifier) {
+                AnimatedVisibility(
+                    visible = navigationVisible,
+                    enter = slideInHorizontally(),
+                    exit = slideOutHorizontally { -it/2 }
+                ) {
+                    StartNavigationRail(
+                        destinations = destinations,
+                        selectedDestination = selectedDestination,
+                        onDestinationClick = navigateTo,
+                        onNavigationClick = {
+                            coroutineScope.launch {
+                                drawerState.open()
+                            }
+                        }
+                    )
+                }
+                Scaffold(
+                    topBar = {
+                        if (navigationVisible || canNavigateBack) {
+                            com.nasdroid.ui.navigation.bars.TopAppBar(
+                                title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
+                                navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
+                                onNavigationClick = navigateBack
+                            )
+                        }
+                    },
+                    content = content
                 )
             }
-            Scaffold(
-                topBar = {
-                    if (navigationVisible || canNavigateBack) {
-                        com.nasdroid.ui.navigation.bars.TopAppBar(
-                            title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
-                            navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
-                            onNavigationClick = navigateBack
-                        )
-                    }
-                },
-                content = content
-            )
         }
     }
 }
@@ -247,7 +260,6 @@ fun NavigationRail(
  * @param navigateBack Called when the user navigates back.
  * @param content The screen content. The provided PaddingValues come from [Scaffold].
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermanentNavigationDrawer(
     selectedDestination: TopLevelDestination?,
@@ -264,6 +276,7 @@ fun PermanentNavigationDrawer(
         PermanentNavigationDrawerLayout(
             selectedDestination = selectedDestination,
             navigateTo = navigateTo,
+            navigationVisible = navigationVisible,
             modifier = modifier,
         ) {
             Scaffold(

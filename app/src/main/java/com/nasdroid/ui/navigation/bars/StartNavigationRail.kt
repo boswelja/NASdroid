@@ -1,7 +1,10 @@
 package com.nasdroid.ui.navigation.bars
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
@@ -15,9 +18,17 @@ fun StartNavigationRail(
     destinations: List<TopLevelDestination>,
     selectedDestination: TopLevelDestination?,
     onDestinationClick: (TopLevelDestination) -> Unit,
+    onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    NavigationRail(modifier = modifier) {
+    NavigationRail(
+        modifier = modifier,
+        header = {
+            IconButton(onClick = onNavigationClick) {
+                Icon(Icons.Default.Menu, contentDescription = null)
+            }
+        }
+    ) {
         Spacer(Modifier.weight(1f))
         destinations.forEach { destination ->
             NavigationRailItem(
