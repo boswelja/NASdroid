@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItemDefaults
@@ -16,15 +15,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nasdroid.ui.navigation.TopLevelDestination2
+import com.nasdroid.ui.navigation.TopLevelDestination
 import kotlinx.coroutines.launch
 
 /**
  * A Modal navigation drawer with a top app bar to control its state and display the current
- * destination. This displays all [TopLevelDestination2]s.
+ * destination. This displays all [TopLevelDestination]s.
  *
  * @param drawerState The [DrawerState] for the modal drawer.
- * @param selectedDestination The currently selected [TopLevelDestination2], or null if nothing is
+ * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
  * selected.
  * @param navigateTo Called when the user navigates to a new destination.
  * @param modifier [Modifier].
@@ -34,8 +33,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ModalNavigationDrawerLayout(
     drawerState: DrawerState,
-    selectedDestination: TopLevelDestination2?,
-    navigateTo: (TopLevelDestination2) -> Unit,
+    selectedDestination: TopLevelDestination?,
+    navigateTo: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
     gesturesEnabled: Boolean = true,
     content: @Composable () -> Unit
@@ -65,15 +64,15 @@ fun ModalNavigationDrawerLayout(
 
 @Composable
 internal fun TopLevelModalDrawerSheet(
-    selectedDestination: TopLevelDestination2?,
-    onClick: (TopLevelDestination2) -> Unit,
+    selectedDestination: TopLevelDestination?,
+    onClick: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ModalDrawerSheet(
         modifier = modifier
     ) {
         Spacer(Modifier.height(12.dp))
-        TopLevelDestination2.entries.forEach { destination ->
+        TopLevelDestination.entries.forEach { destination ->
             TopLevelDrawerItem(
                 destination = destination,
                 onClick = {

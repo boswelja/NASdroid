@@ -16,12 +16,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nasdroid.ui.navigation.TopLevelDestination2
+import com.nasdroid.ui.navigation.TopLevelDestination
 
 /**
  * A Permanent Navigation Drawer with a top app bar to allow navigating back.
  *
- * @param selectedDestination The currently selected [TopLevelDestination2], or null if nothing is
+ * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
  * selected.
  * @param navigateTo Called when the user navigates to a new destination.
  * @param modifier [Modifier].
@@ -30,8 +30,8 @@ import com.nasdroid.ui.navigation.TopLevelDestination2
  */
 @Composable
 fun PermanentNavigationDrawerLayout(
-    selectedDestination: TopLevelDestination2?,
-    navigateTo: (TopLevelDestination2) -> Unit,
+    selectedDestination: TopLevelDestination?,
+    navigateTo: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
     navigationVisible: Boolean = true,
     content: @Composable () -> Unit,
@@ -56,15 +56,15 @@ fun PermanentNavigationDrawerLayout(
 
 @Composable
 internal fun TopLevelPermanentDrawerSheet(
-    selectedDestination: TopLevelDestination2?,
-    onClick: (TopLevelDestination2) -> Unit,
+    selectedDestination: TopLevelDestination?,
+    onClick: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     PermanentDrawerSheet(
         modifier = modifier
     ) {
         Spacer(Modifier.height(12.dp))
-        TopLevelDestination2.entries.forEach { destination ->
+        TopLevelDestination.entries.forEach { destination ->
             TopLevelDrawerItem(
                 destination = destination,
                 onClick = { onClick(destination) },
