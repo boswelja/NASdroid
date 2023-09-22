@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.AppRegistration
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Inventory
-import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -112,7 +112,7 @@ internal fun AppsTabRow(
 enum class TabItem(@StringRes val labelRes: Int, val icon: ImageVector) {
     INSTALLED_APPS(R.string.tab_installed_apps, icon = Icons.Default.Apps),
     AVAILABLE_APPS(R.string.tab_available_apps, icon = Icons.Default.AppRegistration),
-    MANAGE_CATALOGS(R.string.tab_manage_catalogs, icon = Icons.Default.ListAlt),
+    MANAGE_CATALOGS(R.string.tab_manage_catalogs, icon = Icons.AutoMirrored.Filled.ListAlt),
     MANAGE_DOCKER_IMAGES(R.string.tab_manage_docker, icon = Icons.Default.Inventory),
 }
 
