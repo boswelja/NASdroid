@@ -85,3 +85,60 @@ enum class TopLevelDestination(
         route = "system_settings"
     ),
 }
+
+/**
+ * Describes a top-level navigation destination. These will appear in the main navigation component.
+ *
+ * @property icon The [ImageVector] to use as the items icon.
+ * @property labelRes A string resource pointing to the items label. The label should be at most 1-2
+ * words that describe the destination.
+ */
+enum class TopLevelDestination2(
+    val icon: ImageVector,
+    @StringRes val labelRes: Int,
+) {
+    Dashboard(
+        icon = Icons.Default.Dashboard,
+        labelRes = R.string.feature_dashboard,
+    ),
+    Storage(
+        icon = Icons.Default.Storage,
+        labelRes = R.string.feature_storage,
+    ),
+    Datasets(
+        icon = Icons.Default.Dataset,
+        labelRes = R.string.feature_datasets,
+    ),
+    Shares(
+        icon = Icons.Default.FolderShared,
+        labelRes = R.string.feature_shares,
+    ),
+    DataProtection(
+        icon = Icons.Default.Security,
+        labelRes = R.string.feature_data_protection,
+    ),
+    Network(
+        icon = Icons.Default.Lan,
+        labelRes = R.string.feature_network,
+    ),
+    Credentials(
+        icon = Icons.Default.Key,
+        labelRes = R.string.feature_credentials,
+    ),
+    Virtualization(
+        icon = Icons.Default.Computer,
+        labelRes = R.string.feature_virtualization,
+    ),
+    Apps(
+        icon = Icons.Default.Apps,
+        labelRes = R.string.feature_apps,
+    ),
+    Reporting(
+        icon = Icons.Default.Analytics,
+        labelRes = R.string.feature_reporting,
+    ),
+    SystemSettings(
+        icon = Icons.Default.Settings,
+        labelRes = R.string.feature_system_settings,
+    ),
+}

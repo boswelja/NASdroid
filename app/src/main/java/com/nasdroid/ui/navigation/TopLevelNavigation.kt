@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.filled.Menu
@@ -53,6 +52,7 @@ import com.nasdroid.core.menuprovider.MenuItem
 import com.nasdroid.core.menuprovider.ProvideMenuHost
 import com.nasdroid.core.menuprovider.ProvideMenuItems
 import com.nasdroid.core.menuprovider.rememberMenuHost
+import com.nasdroid.ui.navigation.bars.NavigateBackButton
 import kotlinx.coroutines.launch
 
 /**
@@ -355,16 +355,6 @@ internal fun MenuItem(
             imageVector = menuItem.imageVector,
             contentDescription = menuItem.label
         )
-    }
-}
-
-@Composable
-internal fun NavigateBackButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    IconButton(onClick = onClick, modifier = modifier) {
-        Icon(Icons.Default.ArrowBack, contentDescription = "Navigate back")
     }
 }
 
