@@ -314,7 +314,7 @@ internal fun MenuItem(
 @Preview(device = "spec:width=411dp,height=891dp")
 @Composable
 fun ModalNavigationDrawerPreview() {
-    val destinations = TopLevelDestination.entries
+    val destinations = BottomNavDestinations
     var selectedDestination by remember {
         mutableStateOf(destinations.first())
     }
@@ -348,7 +348,7 @@ fun ModalNavigationDrawerPreview() {
 @Preview(device = "spec:width=673dp,height=841dp")
 @Composable
 fun NavigationRailPreview() {
-    val destinations = TopLevelDestination.entries
+    val destinations = StartNavRailDestinations
     var selectedDestination by remember {
         mutableStateOf(destinations.first())
     }
