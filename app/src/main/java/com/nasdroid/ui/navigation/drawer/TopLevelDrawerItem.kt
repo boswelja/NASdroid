@@ -8,6 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.nasdroid.ui.navigation.TopLevelDestination
 
+/**
+ * An opinionated Material3 [NavigationDrawerItem] that displays a [TopLevelDestination].
+ */
 @Composable
 fun TopLevelDrawerItem(
     destination: TopLevelDestination,

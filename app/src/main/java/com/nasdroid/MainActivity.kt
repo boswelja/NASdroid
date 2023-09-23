@@ -145,7 +145,7 @@ fun MainNavHost(
     }
 }
 
-fun TopLevelDestination.getRoute(): String {
+internal fun TopLevelDestination.getRoute(): String {
     return when (this) {
         TopLevelDestination.Dashboard -> "dashboard"
         TopLevelDestination.Storage -> "storage"
