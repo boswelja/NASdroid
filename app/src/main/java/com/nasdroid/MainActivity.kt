@@ -60,22 +60,21 @@ fun MainScreen(
     val selectedDestination by remember {
         derivedStateOf {
             val currentRoute = currentBackstackEntry?.destination?.parent?.route
-            destinations.firstOrNull { it.route == currentRoute }
+            destinations.firstOrNull { it.getRoute() == currentRoute }
         }
     }
     val isNavigationVisible by remember {
         derivedStateOf {
             val currentRoute = currentBackstackEntry?.destination?.parent?.route
-            destinations.any { it.route == currentRoute }
+            destinations.any { it.getRoute() == currentRoute }
         }
     }
 
     TopLevelNavigation(
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
-        destinations = destinations,
         navigateTo = {
-            navController.navigate(it.route) {
+            navController.navigate(it.getRoute()) {
                 val currentRoute = requireNotNull(currentBackstackEntry?.destination?.route)
                 popUpTo(currentRoute) {
                     inclusive = true
@@ -117,7 +116,7 @@ fun MainNavHost(
             navController,
             "auth",
             onLoginSuccess = {
-                navController.navigate(TopLevelDestination.Dashboard.route) {
+                navController.navigate(TopLevelDestination.Dashboard.getRoute()) {
                     popUpTo("auth") {
                         inclusive = true
                     }
@@ -130,18 +129,34 @@ fun MainNavHost(
 
         destinations.forEach { destination ->
             when (destination) {
-                TopLevelDestination.Dashboard -> dashboardGraph(destination.route, modifier, contentPadding)
-                TopLevelDestination.Storage -> storageGraph(destination.route, modifier, contentPadding)
+                TopLevelDestination.Dashboard -> dashboardGraph(destination.getRoute(), modifier, contentPadding)
+                TopLevelDestination.Storage -> storageGraph(destination.getRoute(), modifier, contentPadding)
                 TopLevelDestination.Datasets -> {}
                 TopLevelDestination.Shares -> {}
                 TopLevelDestination.DataProtection -> {}
                 TopLevelDestination.Network -> {}
                 TopLevelDestination.Credentials -> {}
                 TopLevelDestination.Virtualization -> {}
-                TopLevelDestination.Apps -> appsGraph(navController, destination.route, modifier, contentPadding)
-                TopLevelDestination.Reporting -> reportingGraph(destination.route, modifier, contentPadding)
+                TopLevelDestination.Apps -> appsGraph(navController, destination.getRoute(), modifier, contentPadding)
+                TopLevelDestination.Reporting -> reportingGraph(destination.getRoute(), modifier, contentPadding)
                 TopLevelDestination.SystemSettings -> {}
             }
         }
+    }
+}
+
+internal fun TopLevelDestination.getRoute(): String {
+    return when (this) {
+        TopLevelDestination.Dashboard -> "dashboard"
+        TopLevelDestination.Storage -> "storage"
+        TopLevelDestination.Datasets -> "datasets"
+        TopLevelDestination.Shares -> "shares"
+        TopLevelDestination.DataProtection -> "data_protection"
+        TopLevelDestination.Network -> "network"
+        TopLevelDestination.Credentials -> "credentials"
+        TopLevelDestination.Virtualization -> "virtualization"
+        TopLevelDestination.Apps -> "apps"
+        TopLevelDestination.Reporting -> "reporting"
+        TopLevelDestination.SystemSettings -> "system_settings"
     }
 }
