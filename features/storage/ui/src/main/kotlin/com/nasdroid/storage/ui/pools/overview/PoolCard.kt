@@ -35,6 +35,7 @@ import com.nasdroid.storage.logic.pool.PoolOverview
 @Composable
 fun PoolCard(
     pool: PoolOverview,
+    onShowDetails: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(modifier) {
@@ -68,7 +69,7 @@ fun PoolCard(
                 )
             }
             FilledTonalButton(
-                onClick = { /*TODO*/ },
+                onClick = onShowDetails,
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text("See Details")
@@ -138,6 +139,7 @@ fun PoolCardPreview() {
             usageHealth = PoolOverview.HealthStatus(true, null),
             zfsHealth = PoolOverview.HealthStatus(true, null),
             disksHealth = PoolOverview.HealthStatus(true, null)
-        )
+        ),
+        onShowDetails = {}
     )
 }
