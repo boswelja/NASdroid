@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -76,6 +77,8 @@ fun TopLevelNavigation(
 ) {
     when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
+            // Compact width suggests we don't have room for any navigation on the sides, so we keep
+            // it collapsed
             ModalNavigationDrawer(
                 selectedDestination = selectedDestination,
                 destinations = BottomNavDestinations,
@@ -88,18 +91,34 @@ fun TopLevelNavigation(
             )
         }
         WindowWidthSizeClass.Medium -> {
-            NavigationRail(
-                selectedDestination = selectedDestination,
-                destinations = StartNavRailDestinations,
-                navigateTo = navigateTo,
-                navigationVisible = navigationVisible,
-                canNavigateBack = canNavigateBack,
-                navigateBack = navigateBack,
-                content = content,
-                modifier = modifier,
-            )
+            // Medium width suggests we can fit a navigation rail
+            if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact) {
+                // But if we don't have enough height, all our rail destinations won't fit
+                ModalNavigationDrawer(
+                    selectedDestination = selectedDestination,
+                    destinations = BottomNavDestinations,
+                    navigateTo = navigateTo,
+                    navigationVisible = navigationVisible,
+                    canNavigateBack = canNavigateBack,
+                    navigateBack = navigateBack,
+                    content = content,
+                    modifier = modifier,
+                )
+            } else {
+                NavigationRail(
+                    selectedDestination = selectedDestination,
+                    destinations = StartNavRailDestinations,
+                    navigateTo = navigateTo,
+                    navigationVisible = navigationVisible,
+                    canNavigateBack = canNavigateBack,
+                    navigateBack = navigateBack,
+                    content = content,
+                    modifier = modifier,
+                )
+            }
         }
         WindowWidthSizeClass.Expanded -> {
+            // Expanded width suggests there is enough space for a permanent navigation drawer
             PermanentNavigationDrawer(
                 selectedDestination = selectedDestination,
                 navigateTo = navigateTo,
