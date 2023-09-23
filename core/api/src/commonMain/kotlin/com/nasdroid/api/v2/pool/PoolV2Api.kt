@@ -15,6 +15,11 @@ interface PoolV2Api {
      * Get a list of [Pool]s on the system.
      */
     suspend fun getPools(): List<Pool>
+
+    /**
+     * Get details about a single [Pool].
+     */
+    suspend fun getPool(id: Int): Pool
 }
 
 /**

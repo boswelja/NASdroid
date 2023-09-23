@@ -11,4 +11,9 @@ internal class PoolV2ApiImpl(
         val response = httpClient.get("pool")
         return response.body()
     }
+
+    override suspend fun getPool(id: Int): Pool {
+        val response = httpClient.get("pool/id/$id")
+        return response.body()
+    }
 }
