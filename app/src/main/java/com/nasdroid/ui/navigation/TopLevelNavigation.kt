@@ -148,6 +148,7 @@ fun ModalNavigationDrawer(
             drawerState = drawerState,
             selectedDestination = selectedDestination,
             navigateTo = navigateTo,
+            gesturesEnabled = navigationVisible,
             modifier = modifier,
         ) {
             Scaffold(
@@ -167,11 +168,13 @@ fun ModalNavigationDrawer(
                     }
                 },
                 bottomBar = {
-                    BottomNavigationBar(
-                        destinations = destinations,
-                        selectedDestination = selectedDestination,
-                        onDestinationClick = navigateTo
-                    )
+                    if (navigationVisible) {
+                        BottomNavigationBar(
+                            destinations = destinations,
+                            selectedDestination = selectedDestination,
+                            onDestinationClick = navigateTo
+                        )
+                    }
                 },
                 content = content
             )
