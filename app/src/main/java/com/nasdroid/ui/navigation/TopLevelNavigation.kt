@@ -64,6 +64,7 @@ private val StartNavRailDestinations = listOf(
  * Orchestrates all top-level navigation components. The navigation components displayed depend on
  * [windowSizeClass].
  */
+@Suppress("LongMethod")
 @Composable
 fun TopLevelNavigation(
     windowSizeClass: WindowSizeClass,
@@ -119,15 +120,29 @@ fun TopLevelNavigation(
         }
         WindowWidthSizeClass.Expanded -> {
             // Expanded width suggests there is enough space for a permanent navigation drawer
-            PermanentNavigationDrawer(
-                selectedDestination = selectedDestination,
-                navigateTo = navigateTo,
-                navigationVisible = navigationVisible,
-                canNavigateBack = canNavigateBack,
-                navigateBack = navigateBack,
-                content = content,
-                modifier = modifier,
-            )
+            if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded) {
+                // But we only want to take up all that space if we are sure it's a big screen
+                PermanentNavigationDrawer(
+                    selectedDestination = selectedDestination,
+                    navigateTo = navigateTo,
+                    navigationVisible = navigationVisible,
+                    canNavigateBack = canNavigateBack,
+                    navigateBack = navigateBack,
+                    content = content,
+                    modifier = modifier,
+                )
+            } else {
+                NavigationRail(
+                    selectedDestination = selectedDestination,
+                    destinations = StartNavRailDestinations,
+                    navigateTo = navigateTo,
+                    navigationVisible = navigationVisible,
+                    canNavigateBack = canNavigateBack,
+                    navigateBack = navigateBack,
+                    content = content,
+                    modifier = modifier,
+                )
+            }
         }
     }
 }
