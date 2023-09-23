@@ -132,6 +132,7 @@ fun MainNavHost(
                 TopLevelDestination.Dashboard -> dashboardGraph(destination.getRoute(), modifier, contentPadding)
                 TopLevelDestination.Storage -> storageGraph(
                     windowSizeClass = windowSizeClass,
+                    navController = navController,
                     route = destination.getRoute(),
                     modifier = modifier,
                     contentPadding = contentPadding
