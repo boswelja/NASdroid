@@ -1,4 +1,4 @@
-package com.nasdroid.ui.navigation.bars
+package com.nasdroid.ui.navigation.bar
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.icons.Icons
@@ -13,6 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.nasdroid.ui.navigation.TopLevelDestination
 
+/**
+ * An opinionated Material3 [NavigationRail] that displays the provided list of
+ * [TopLevelDestination]s.
+ */
 @Composable
 fun StartNavigationRail(
     destinations: List<TopLevelDestination>,

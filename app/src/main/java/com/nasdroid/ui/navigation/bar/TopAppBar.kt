@@ -1,4 +1,4 @@
-package com.nasdroid.ui.navigation.bars
+package com.nasdroid.ui.navigation.bar
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.material.icons.Icons
@@ -13,12 +13,9 @@ import com.nasdroid.core.menuprovider.LocalMenuHost
 import com.nasdroid.core.menuprovider.MenuHost
 import com.nasdroid.ui.navigation.MenuItem
 
-enum class NavigationMode {
-    None,
-    Back,
-    Drawer
-}
-
+/**
+ * An opinionated Material3 TopAppBar optimized for NASdroid.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
@@ -64,4 +61,13 @@ internal fun NavigateBackButton(
     IconButton(onClick = onClick, modifier = modifier) {
         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Navigate back")
     }
+}
+
+/**
+ * Describes all possible modes for the [TopAppBar] navigation icon.
+ */
+enum class NavigationMode {
+    None,
+    Back,
+    Drawer
 }

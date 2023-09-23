@@ -35,9 +35,9 @@ import com.nasdroid.core.menuprovider.MenuItem
 import com.nasdroid.core.menuprovider.ProvideMenuHost
 import com.nasdroid.core.menuprovider.ProvideMenuItems
 import com.nasdroid.core.menuprovider.rememberMenuHost
-import com.nasdroid.ui.navigation.bars.BottomNavigationBar
-import com.nasdroid.ui.navigation.bars.NavigationMode
-import com.nasdroid.ui.navigation.bars.StartNavigationRail
+import com.nasdroid.ui.navigation.bar.BottomNavigationBar
+import com.nasdroid.ui.navigation.bar.NavigationMode
+import com.nasdroid.ui.navigation.bar.StartNavigationRail
 import com.nasdroid.ui.navigation.drawer.ModalNavigationDrawerLayout
 import com.nasdroid.ui.navigation.drawer.PermanentNavigationDrawerLayout
 import kotlinx.coroutines.launch
@@ -154,7 +154,7 @@ fun ModalNavigationDrawer(
             Scaffold(
                 topBar = {
                     if (canNavigateBack || navigationVisible) {
-                        com.nasdroid.ui.navigation.bars.TopAppBar(
+                        com.nasdroid.ui.navigation.bar.TopAppBar(
                             title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
                             navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.Drawer,
                             onNavigationClick = {
@@ -237,7 +237,7 @@ fun NavigationRail(
                 Scaffold(
                     topBar = {
                         if (navigationVisible || canNavigateBack) {
-                            com.nasdroid.ui.navigation.bars.TopAppBar(
+                            com.nasdroid.ui.navigation.bar.TopAppBar(
                                 title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
                                 navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
                                 onNavigationClick = navigateBack
@@ -285,7 +285,7 @@ fun PermanentNavigationDrawer(
             Scaffold(
                 topBar = {
                     if (navigationVisible || canNavigateBack) {
-                        com.nasdroid.ui.navigation.bars.TopAppBar(
+                        com.nasdroid.ui.navigation.bar.TopAppBar(
                             title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
                             navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
                             onNavigationClick = navigateBack

@@ -1,4 +1,4 @@
-package com.nasdroid.ui.navigation.bars
+package com.nasdroid.ui.navigation.bar
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -9,6 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.nasdroid.ui.navigation.TopLevelDestination
 
+/**
+ * An opinionated Material3 [NavigationBar] that displays the provided list of
+ * [TopLevelDestination]s.
+ */
 @Composable
 fun BottomNavigationBar(
     destinations: List<TopLevelDestination>,
