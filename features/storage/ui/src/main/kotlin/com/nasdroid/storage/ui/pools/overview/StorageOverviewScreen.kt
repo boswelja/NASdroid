@@ -18,6 +18,7 @@ import org.koin.androidx.compose.koinViewModel
  */
 @Composable
 fun StorageOverviewScreen(
+    onShowDetails: (poolId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: StorageOverviewViewModel = koinViewModel(),
@@ -27,6 +28,7 @@ fun StorageOverviewScreen(
     val pools by viewModel.pools.collectAsState()
 
     PoolsList(
+        onShowDetails = onShowDetails,
         pools = pools,
         modifier = modifier,
         contentPadding = contentPadding,
@@ -34,10 +36,11 @@ fun StorageOverviewScreen(
 }
 
 /**
- * Displays a list of [PoolUsage]s.
+ * Displays a list of [PoolOverview]s.
  */
 @Composable
 fun PoolsList(
+    onShowDetails: (poolId: Int) -> Unit,
     pools: List<PoolOverview>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -53,6 +56,7 @@ fun PoolsList(
         ) { pool ->
             PoolCard(
                 pool = pool,
+                onShowDetails = { onShowDetails(pool.id) },
                 modifier = Modifier.fillMaxWidth()
             )
         }

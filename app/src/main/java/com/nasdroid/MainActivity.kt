@@ -130,7 +130,12 @@ fun MainNavHost(
         destinations.forEach { destination ->
             when (destination) {
                 TopLevelDestination.Dashboard -> dashboardGraph(destination.getRoute(), modifier, contentPadding)
-                TopLevelDestination.Storage -> storageGraph(destination.getRoute(), modifier, contentPadding)
+                TopLevelDestination.Storage -> storageGraph(
+                    windowSizeClass = windowSizeClass,
+                    route = destination.getRoute(),
+                    modifier = modifier,
+                    contentPadding = contentPadding
+                )
                 TopLevelDestination.Datasets -> {}
                 TopLevelDestination.Shares -> {}
                 TopLevelDestination.DataProtection -> {}
