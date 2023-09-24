@@ -46,6 +46,7 @@ interface PoolV2Api {
  * @property size The total size of the pool in bytes.
  * @property sizeStr [size] but a string.
  * @property status The pool status. For example, 'ONLINE'.
+ * @property statusCode The code for the current pool status, if issues are present.
  * @property statusDetail Reasoning for the current status.
  * @property topology [Topology].
  * @property warning Whether this pool has an active warning.
@@ -59,9 +60,9 @@ data class Pool(
     @SerialName("autotrim")
     val autotrim: Autotrim,
     @SerialName("encrypt")
-    val encrypt: Int,
+    val encrypt: Int?,
     @SerialName("encryptkey")
-    val encryptKey: String,
+    val encryptKey: String?,
     @SerialName("encryptkey_path")
     val encryptKeyPath: String?,
     @SerialName("fragmentation")
@@ -81,7 +82,7 @@ data class Pool(
     @SerialName("id")
     val id: Int,
     @SerialName("is_decrypted")
-    val isDecrypted: Boolean,
+    val isDecrypted: Boolean?,
     @SerialName("name")
     val name: String,
     @SerialName("path")
@@ -99,7 +100,9 @@ data class Pool(
     @SerialName("topology")
     val topology: Topology,
     @SerialName("warning")
-    val warning: Boolean
+    val warning: Boolean,
+    @SerialName("status_code")
+    val statusCode: String?,
 ) {
     /**
      * Describes a pools Autotrim configuration.
