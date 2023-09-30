@@ -14,7 +14,7 @@ interface ApiStateProvider {
     /**
      * An [Authorization] to use for each request. This cannot be null when making API calls.
      */
-    var authorization: com.nasdroid.api.v2.Authorization?
+    var authorization: Authorization?
 }
 
 /**
@@ -28,17 +28,17 @@ sealed class Authorization {
      * @property username The username for auth.
      * @property password The password for auth.
      */
-    data class Basic(val username: String, val password: String) : com.nasdroid.api.v2.Authorization()
+    data class Basic(val username: String, val password: String) : Authorization()
 
     /**
      * Authorization via API key.
      *
      * @property apiKey The API key to use for authorization
      */
-    data class ApiKey(val apiKey: String) : com.nasdroid.api.v2.Authorization()
+    data class ApiKey(val apiKey: String) : Authorization()
 }
 
-internal class InMemoryApiStateProvider : com.nasdroid.api.v2.ApiStateProvider {
+internal class InMemoryApiStateProvider : ApiStateProvider {
     override var serverAddress: String? = null
         set(value) {
             if (field != value) {
@@ -51,5 +51,5 @@ internal class InMemoryApiStateProvider : com.nasdroid.api.v2.ApiStateProvider {
             }
         }
 
-    override var authorization: com.nasdroid.api.v2.Authorization? = null
+    override var authorization: Authorization? = null
 }
