@@ -17,6 +17,7 @@ compose-icons = "1.5.1"
 compose-material3 = "1.2.0-alpha08"
 compose-ui = "1.6.0-alpha06"
 accompanist = "0.33.1-alpha"
+menuprovider = "1.0.3"
 
 sqldelight = "2.0.0"
 
@@ -62,6 +63,7 @@ compose-icons = { group = "androidx.compose.material", name = "material-icons-ex
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
 compose-material3-windowsizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "compose-material3" }
 accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
+compose-menuprovider = { module = "io.github.boswelja.menuprovider:material3", version.ref = "menuprovider" }
 
 sqldelight-driver-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqldelight" }
 sqldelight-extensions-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }

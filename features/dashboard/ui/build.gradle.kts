@@ -39,12 +39,11 @@ detekt {
 }
 
 dependencies {
-    implementation(projects.core.composeMenuprovider)
-
     implementation(projects.features.dashboard.logic)
 
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
+    implementation(libs.compose.menuprovider)
     debugImplementation(libs.bundles.compose.tooling)
 
     implementation(libs.koin.android)

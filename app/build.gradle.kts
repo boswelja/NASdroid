@@ -56,7 +56,6 @@ detekt {
 
 dependencies {
     implementation(projects.core.api)
-    implementation(projects.core.composeMenuprovider)
 
     implementation(projects.features.apps.ui)
     implementation(projects.features.auth.ui)
@@ -71,6 +70,7 @@ dependencies {
     // Compose
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
+    implementation(libs.compose.menuprovider)
     debugImplementation(libs.bundles.compose.tooling)
     androidTestImplementation(libs.compose.ui.test.junit4)
 

@@ -18,8 +18,6 @@ core:capacity:
   - core/capacity/**
 core:compose-logviewer:
   - core/compose-logviewer/**
-core:compose-menuprovider:
-  - core/compose-menuprovider/**
 core:compose-urllauncher:
   - core/compose-urllauncher/**
 
