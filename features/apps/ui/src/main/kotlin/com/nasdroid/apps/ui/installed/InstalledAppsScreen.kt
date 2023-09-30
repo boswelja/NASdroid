@@ -26,11 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.boswelja.menuprovider.MenuItem
+import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.apps.ui.R
 import com.nasdroid.apps.ui.installed.item.ApplicationOverviewItem
 import com.nasdroid.apps.ui.installed.item.InstalledAppAction
-import com.nasdroid.core.menuprovider.MenuItem
-import com.nasdroid.core.menuprovider.ProvideMenuItems
 import com.nasdroid.core.urllauncher.rememberUrlLauncher
 import org.koin.androidx.compose.getViewModel
 

@@ -32,10 +32,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.nasdroid.core.menuprovider.MenuItem
-import com.nasdroid.core.menuprovider.ProvideMenuHost
-import com.nasdroid.core.menuprovider.ProvideMenuItems
-import com.nasdroid.core.menuprovider.rememberMenuHost
+import com.boswelja.menuprovider.MenuItem
+import com.boswelja.menuprovider.ProvideMenuHost
+import com.boswelja.menuprovider.ProvideMenuItems
+import com.boswelja.menuprovider.rememberMenuHost
 import com.nasdroid.ui.navigation.bar.BottomNavigationBar
 import com.nasdroid.ui.navigation.bar.NavigationMode
 import com.nasdroid.ui.navigation.bar.StartNavigationRail

@@ -18,8 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.nasdroid.core.menuprovider.MenuItem
-import com.nasdroid.core.menuprovider.ProvideMenuItems
+import com.boswelja.menuprovider.MenuItem
+import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.dashboard.logic.dataloading.DashboardData
 import com.nasdroid.dashboard.ui.overview.cards.CpuOverview
 import com.nasdroid.dashboard.ui.overview.cards.MemoryOverview
