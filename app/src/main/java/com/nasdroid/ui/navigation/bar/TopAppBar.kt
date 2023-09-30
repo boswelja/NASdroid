@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.boswelja.menuprovider.LocalMenuHost
 import com.boswelja.menuprovider.MenuHost
-import com.nasdroid.ui.navigation.MenuItem
+import com.boswelja.menuprovider.material3.TopAppBarMenuItems
 
 /**
  * An opinionated Material3 TopAppBar optimized for NASdroid.
@@ -45,9 +45,9 @@ fun TopAppBar(
             }
         },
         actions = {
-            menuHost.menuItems.forEach { menuItem ->
-                MenuItem(menuItem)
-            }
+            TopAppBarMenuItems(
+                menuHost = menuHost
+            )
         },
         modifier = modifier,
     )

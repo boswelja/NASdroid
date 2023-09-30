@@ -332,19 +332,6 @@ fun PermanentNavigationDrawer(
     }
 }
 
-@Composable
-internal fun MenuItem(
-    menuItem: MenuItem,
-    modifier: Modifier = Modifier
-) {
-    IconButton(onClick = menuItem.onClick, modifier = modifier) {
-        Icon(
-            imageVector = menuItem.imageVector,
-            contentDescription = menuItem.label
-        )
-    }
-}
-
 @Preview(device = "spec:width=411dp,height=891dp")
 @Composable
 fun ModalNavigationDrawerPreview() {
