@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.apikey
 
+import com.nasdroid.api.exception.HttpNotOkException
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -16,11 +17,15 @@ interface ApiKeyV2Api {
      * @param limit The maximum number of API keys to retrieve.
      * @param offset The number of API keys to skip before taking [limit] keys.
      * @param sort The sorting method for keys.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getAll(limit: Int?, offset: Int?, sort: String?): List<ApiKey>
 
     /**
      * Create a new API key with the given name.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun create(name: String, allowItems: List<AllowRule>): NewApiKey
 
@@ -28,22 +33,30 @@ interface ApiKeyV2Api {
      * Delete an API key with the given ID.
      *
      * @return Whether the API key was deleted successfully.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun delete(id: Int): Boolean
 
     /**
      * Get an API key with the given ID.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun get(id: Int): ApiKey
 
     /**
      * Update the name of the API key with the given ID.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun update(id: Int, updatedDetails: UpdateApiKey): ApiKey
 
     /**
      * Regenerate the API key with the given ID.
      * @return The new generated key.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun reset(id: Int): NewApiKey
 }
@@ -54,6 +67,8 @@ interface ApiKeyV2Api {
  *
  * @property name The name of the API key. This is visible to and adjustable by the user.
  * @property allowList The list of [AllowRule]s for the API key.
+ *
+ * @throws HttpNotOkException
  */
 @Serializable
 data class UpdateApiKey(
@@ -68,6 +83,8 @@ data class UpdateApiKey(
  * @property name The name the user has given the API key.
  * @property createdAt When this API key was created.
  * @property allowList A list of [AllowRule]s for this key.
+ *
+ * @throws HttpNotOkException
  */
 @Serializable
 data class ApiKey(
@@ -89,6 +106,8 @@ data class ApiKey(
  * @property createdAt When this API key was created.
  * @property allowList A list of [AllowRule]s for this key.
  * @property key The newly created API key.
+ *
+ * @throws HttpNotOkException
  */
 @Serializable
 data class NewApiKey(
@@ -109,6 +128,8 @@ data class NewApiKey(
  *
  * @property method The request method type this API key can access. For example, 'GET', 'POST', '*".
  * @property resource The resource name this API key can access. For example, '/system/info', '*'.
+ *
+ * @throws HttpNotOkException
  */
 @Serializable
 data class AllowRule(

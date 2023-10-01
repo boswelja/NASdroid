@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.pool
 
+import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.core.UnwrappingDateSerializer
 import com.nasdroid.api.v2.pool.Pool.Autotrim
 import kotlinx.serialization.SerialName
@@ -13,11 +14,15 @@ interface PoolV2Api {
 
     /**
      * Get a list of [Pool]s on the system.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getPools(): List<Pool>
 
     /**
      * Get details about a single [Pool].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getPool(id: Int): Pool
 }

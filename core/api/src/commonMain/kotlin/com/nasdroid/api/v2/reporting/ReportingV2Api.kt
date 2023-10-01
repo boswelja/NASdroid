@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.reporting
 
+import com.nasdroid.api.exception.HttpNotOkException
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -12,16 +13,22 @@ interface ReportingV2Api {
 
     /**
      * Get the configured reporting database settings.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getReportingDatabaseSettings(): ReportingConfig
 
     /**
      * Update the reporting database with new settings.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun setReportingDatabaseSettings(newConfig: ReportingConfig)
 
     /**
      * Clear the reporting database.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun clearReportingDatabase()
 
@@ -31,6 +38,8 @@ interface ReportingV2Api {
      * @param limit The maximum number of graphs to retrieve.
      * @param offset The number of graphs to skip before taking [limit] keys.
      * @param sort The sorting method for graphs.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getReportingGraphs(
         limit: Int?,
@@ -46,6 +55,8 @@ interface ReportingV2Api {
      * @param page The page number of the data we want.
      *
      * @return A list the same size as [graphs], containing [ReportingGraphData].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getGraphData(graphs: List<RequestedGraph>, unit: Units, page: Int): List<ReportingGraphData>
 
@@ -57,6 +68,8 @@ interface ReportingV2Api {
      * @param end The approximate ending point of the data we are interested in.
      *
      * @return A list the same size as [graphs], containing [ReportingGraphData].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getGraphData(graphs: List<RequestedGraph>, start: Instant, end: Instant): List<ReportingGraphData>
 
@@ -66,6 +79,8 @@ interface ReportingV2Api {
      * @param graphs The list of [RequestedGraph]s to retrieve data for.
      *
      * @return A list the same size as [graphs], containing [ReportingGraphData].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getGraphData(graphs: List<RequestedGraph>): List<ReportingGraphData>
 }

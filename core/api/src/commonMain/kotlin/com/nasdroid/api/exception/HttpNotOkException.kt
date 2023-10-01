@@ -3,7 +3,8 @@ package com.nasdroid.api.exception
 import java.io.IOException
 
 /**
- * Thrown when an HTTP request returns a non-OK code.
+ * Thrown when an HTTP request returns a non-OK code. See [RedirectResponseException],
+ * [ClientRequestException] and [ServerResponseException] for specific subclasses.
  *
  * @property code The non-200 HTTP status code.
  * @property description A human-readable description of the HTTP status.

@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.auth
 
+import com.nasdroid.api.exception.HttpNotOkException
 import kotlin.time.Duration
 
 /**
@@ -10,16 +11,22 @@ interface AuthV2Api {
 
     /**
      * Verifies the given username/password combination is valid.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun checkPassword(username: String, password: String): Boolean
 
     /**
      * Verifies the given username/password combination is valid.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun checkUser(username: String, password: String): Boolean
 
     /**
      * Generates a new session token.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun generateToken(
         username: String,
@@ -30,11 +37,15 @@ interface AuthV2Api {
 
     /**
      * Terminates the session with the given ID.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun terminateSession(sessionId: String)
 
     /**
      * Checks whether two-factor-authentication is required to connect to the server.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun isTwoFactorEnabled(): Boolean
 }
