@@ -1,10 +1,12 @@
 package com.nasdroid.auth.logic.auth
 
+import com.nasdroid.api.ApiStateProvider
+
 /**
  * Signs out the current user. See [invoke] for details.
  */
 class LogOut(
-    private val apiStateProvider: com.nasdroid.api.v2.ApiStateProvider,
+    private val apiStateProvider: ApiStateProvider,
 ) {
 
     /**

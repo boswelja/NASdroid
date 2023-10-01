@@ -1,5 +1,8 @@
 package com.nasdroid.api.v2
 
+import com.nasdroid.api.ApiStateProvider
+import com.nasdroid.api.InMemoryApiStateProvider
+import com.nasdroid.api.getHttpClient
 import com.nasdroid.api.v2.apikey.ApiKeyV2Api
 import com.nasdroid.api.v2.apikey.ApiKeyV2ApiImpl
 import com.nasdroid.api.v2.auth.AuthV2Api

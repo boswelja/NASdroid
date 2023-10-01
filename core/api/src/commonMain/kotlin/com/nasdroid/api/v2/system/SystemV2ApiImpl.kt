@@ -1,6 +1,6 @@
 package com.nasdroid.api.v2.system
 
-import com.nasdroid.api.v2.HttpsNotOkException
+import com.nasdroid.api.exception.HttpNotOkException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -36,7 +36,7 @@ internal class SystemV2ApiImpl(
     override suspend fun getSystemInfo(): SystemInfo {
         val response = httpClient.get("system/info")
         if (response.status != HttpStatusCode.OK) {
-            throw HttpsNotOkException(response.status.value, response.status.description)
+            throw HttpNotOkException(response.status.value, response.status.description)
         }
         return response.body()
     }
