@@ -1,4 +1,4 @@
-package com.nasdroid.api.v2
+package com.nasdroid.api
 
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.JsonElement

@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.chart.release
 
+import com.nasdroid.api.exception.HttpNotOkException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -11,6 +12,8 @@ interface ChartReleaseV2Api {
 
     /**
      * Get a list of all chart releases available on the system.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getChartReleases(): List<ChartRelease>
 
@@ -18,6 +21,8 @@ interface ChartReleaseV2Api {
      * Create a new chart release on the system. This is equivalent to installing an application.
      *
      * @return An ID for a running job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun createChartRelease(newRelease: CreateChartRelease): Int
 
@@ -26,16 +31,22 @@ interface ChartReleaseV2Api {
      *
      * @param id The ID of the chart to delete.
      * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun deleteChartRelease(id: String): Int
 
     /**
      * Retrieves details of a single [ChartRelease] with the given ID.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getChartRelease(id: String): ChartRelease
 
     /**
      * Updates the details for the chart release whose ID matches the given [ChartRelease.id].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun updateChartRelease(newChartData: ChartRelease)
 
@@ -43,6 +54,8 @@ interface ChartReleaseV2Api {
      * Scales [releaseName] to [replicaCount] instances.
      *
      * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun scale(releaseName: String, replicaCount: Int): Int
 
@@ -50,16 +63,22 @@ interface ChartReleaseV2Api {
      * Roll back a release to a specified version.
      *
      * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun rollbackRelease(releaseName: String, options: RollbackOptions): Int
 
     /**
      * Gets the available log choices for the given release.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getPodLogChoices(releaseName: String): PodLogChoices
 
     /**
      * Exports logs for a container in a pod for the given release.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getPodLogs(releaseName: String, podLogsOptions: PodLogsOptions): List<String>
 
@@ -67,11 +86,15 @@ interface ChartReleaseV2Api {
      * Deletes the release with the given ID.
      *
      * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun deleteRelease(id: String, deleteUnusedImages: Boolean): Int
 
     /**
      * Gets an [UpgradeSummary] for an intended upgrade.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getUpgradeSummary(releaseName: String, targetVersion: String? = null): UpgradeSummary
 
@@ -79,6 +102,8 @@ interface ChartReleaseV2Api {
      * Upgrades a release to the specified version.
      *
      * @return An ID for running a job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun upgrade(releaseName: String, targetVersion: String): Int
 }

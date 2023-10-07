@@ -1,7 +1,7 @@
 package com.nasdroid.auth.logic.manageservers
 
-import com.nasdroid.api.v2.ApiStateProvider
-import com.nasdroid.api.v2.Authorization
+import com.nasdroid.api.ApiStateProvider
+import com.nasdroid.api.Authorization
 import com.nasdroid.auth.logic.then
 import com.nasdroid.api.v2.system.SystemV2Api
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore

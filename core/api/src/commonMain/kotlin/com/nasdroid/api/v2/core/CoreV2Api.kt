@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.core
 
+import com.nasdroid.api.exception.HttpNotOkException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
@@ -28,6 +29,8 @@ interface CoreV2Api {
      * on the system.
      *
      * @return A job ID to monitor status with. TODO Job system
+     *
+     * @throws HttpNotOkException
      */
     suspend fun bulkCallMethod(
         method: String,
@@ -37,11 +40,15 @@ interface CoreV2Api {
 
     /**
      * Set up `middlewared` for remote debugging.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun debug(engine: DebugEngine, options: DebugOptions)
 
     /**
      * Get whether `middlewared` is currently in debug mode.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getDebugModeEnabled(): Boolean
 
@@ -50,6 +57,8 @@ interface CoreV2Api {
      * Non-buffered downloads will allow job to write to pipe as soon as download URL is requested,
      * job will stay blocked meanwhile. Buffered downloads must wait for job to complete before
      * requesting download URL, job's pipe output will be buffered to ramfs.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getDownloadInfo(
         method: String,
@@ -62,11 +71,15 @@ interface CoreV2Api {
 
     /**
      * Get all long-running jobs.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getAllJobs(): List<Job<Any>>
 
     /**
      * Gets information about the job with the given ID.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun <T : Any> getJob(id: Int, type: KClass<T>): Job<T>
 
@@ -74,6 +87,8 @@ interface CoreV2Api {
 
     /**
      * Aborts the job with the given ID.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun abortJob(id: Int)
 
@@ -82,11 +97,15 @@ interface CoreV2Api {
 
     /**
      * Ping the system.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun ping()
 
     /**
      * Send an ICMP echo request to [hostName] and will wait up to [timeout] seconds for a reply.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun pingRemote(type: PingType, hostName: String, timeout: Int)
 }

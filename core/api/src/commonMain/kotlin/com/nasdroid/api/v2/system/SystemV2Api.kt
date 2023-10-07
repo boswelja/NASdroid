@@ -1,6 +1,7 @@
 package com.nasdroid.api.v2.system
 
-import com.nasdroid.api.v2.TimestampUnwrapper
+import com.nasdroid.api.TimestampUnwrapper
+import com.nasdroid.api.exception.HttpNotOkException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -13,16 +14,22 @@ interface SystemV2Api {
 
     /**
      * Get a unique identifier that will be reset on each system reboot.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getBootId(): String
 
     /**
      * Get the environment in which product is running.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getEnvironment(): Environment
 
     /**
      * Get whether the given feature is enabled.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun isFeatureEnabled(featureName: String): Boolean
 
@@ -30,61 +37,85 @@ interface SystemV2Api {
      * Get a hex string that is generated based on the contents of the /etc/hostid file. This is a
      * permanent value that persists across reboots/upgrades and can be used as a unique identifier
      * for the machine.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getHostId(): String
 
     /**
      * Get basic system information.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getSystemInfo(): SystemInfo
 
     /**
      * Get whether the system is currently running a stable build.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun isStable(): Boolean
 
     /**
      * Update license file.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun updateLicense(license: String)
 
     /**
      * Get the name of the product the system is using. FOr example, "TrueNAS".
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getProductName(): String
 
     /**
-     * Get the type of product the system is using. For example, "SCALE"
+     * Get the type of product the system is using. For example, "SCALE".
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getProductType(): String
 
     /**
      * Get whether the system is booted and ready to use.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun isReady(): Boolean
 
     /**
      * Reboot the system.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun reboot()
 
     /**
      * Shutdown the system.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun shutdown()
 
     /**
      * Get the current system state.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getState(): State
 
     /**
      * Get the version of the product this system is using. For example, "TrueNAS-SCALE-22.12.2".
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getVersion(): String
 
     /**
      * Get a shortened version of the product this system is using. For example, "22.12.2".
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getShortVersion(): String
 }

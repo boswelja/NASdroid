@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.catalog
 
+import com.nasdroid.api.exception.HttpNotOkException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -11,59 +12,76 @@ interface CatalogV2Api {
 
     /**
      * Retrieves a list of configured [Catalog]s on the system.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getCatalogs(): List<Catalog>
 
     /**
      * Creates a new catalog on the system.
      *
-     * @return An ID for a running job. TODO Job system.
+     * @return An ID for a running job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun createCatalog(newCatalog: NewCatalog): Int
 
     /**
      * Get a catalog details by its [Catalog.id].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getCatalog(id: String): Catalog
 
     /**
      * Starts a job to retrieve items for a catalog by its [Catalog.id].
      *
-     * @return An ID for a running job. See
-     * [com.nasdroid.api.v2.core.CoreV2Api.getJob]. The Job returns [CatalogItems].
+     * @return An ID for a running job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob]. The Job
+     * returns [CatalogItems].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions = GetCatalogItemsOptions()): Int
 
     /**
      * Delete a catalog by its [Catalog.id].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun deleteCatalog(id: String)
 
     /**
      * Updates information for a catalog. It is expected that a catalog with the same ID already
      * exists.
+     *
+     * @throws HttpNotOkException
      */
     suspend fun updateCatalog(updatedCatalog: Catalog)
 
     /**
      * Updates the system item cache for all catalogs.
      *
-     * @return An ID for a running job. See
-     * [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     * @return An ID for a running job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun syncAll(): Int
 
     /**
      * Updates the system item cache for the catalog with the given ID.
      *
-     * @return An ID for a running job. TODO Job system.
+     * @return An ID for a running job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun syncCatalog(id: String): Int
 
     /**
      * Checks whether the configuration for the catalog with the given ID is valid.
      *
-     * @return An ID for a running job. TODO Job system.
+     * @return An ID for a running job. See [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
      */
     suspend fun validateCatalog(id: String): Int
 }
