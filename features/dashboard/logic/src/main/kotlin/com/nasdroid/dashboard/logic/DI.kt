@@ -14,6 +14,8 @@ import com.nasdroid.dashboard.logic.dataloading.cpu.GetCpuSpecs
 import com.nasdroid.dashboard.logic.dataloading.cpu.GetCpuUsageData
 import com.nasdroid.dashboard.logic.dataloading.memory.GetMemorySpecs
 import com.nasdroid.dashboard.logic.dataloading.memory.GetMemoryUsageData
+import com.nasdroid.dashboard.logic.dataloading.network.GetNetworkConfiguration
+import com.nasdroid.dashboard.logic.dataloading.network.GetNetworkUsageData
 import com.nasdroid.data.dashboardDataModule
 import org.koin.core.context.loadKoinModules
 import org.koin.core.module.dsl.factoryOf
@@ -31,6 +33,9 @@ val dashboardBusinessModule = module {
 
     factoryOf(::GetMemorySpecs)
     factoryOf(::GetMemoryUsageData)
+
+    factoryOf(::GetNetworkConfiguration)
+    factoryOf(::GetNetworkUsageData)
 
     factoryOf(::ExtractCpuUsageData)
     factoryOf(::ExtractDashboardData)
