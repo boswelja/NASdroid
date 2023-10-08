@@ -51,8 +51,8 @@ class GetMemoryUsageData(
 /**
  * Describes the state of system memory utilisation.
  *
- * @property free The [Capacity] of free memory.
  * @property used The [Capacity] of memory actively in use.
+ * @property free The [Capacity] of free memory.
  * @property cached The [Capacity] of memory that is used for cache.
  */
 data class MemoryUsageData(
