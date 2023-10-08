@@ -8,6 +8,7 @@ import kotlin.math.roundToInt
  * Takes data received from the server and maps it to a [DashboardData.CpuData]. See [invoke] for
  * details.
  */
+@Deprecated("Switch to GetCpuUsageData")
 class ExtractCpuUsageData {
 
     /**

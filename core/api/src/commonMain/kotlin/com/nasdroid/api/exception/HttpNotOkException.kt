@@ -15,7 +15,23 @@ open class HttpNotOkException(
     val code: Int,
     val description: String,
     cause: Throwable? = null
-) : IOException(description, cause)
+) : IOException(description, cause) {
+    override fun equals(other: Any?): Boolean {
+        return if (other is HttpNotOkException) {
+            code == other.code &&
+                    description == other.description &&
+                    cause == other.cause
+        } else {
+            super.equals(other)
+        }
+    }
+
+    override fun hashCode(): Int {
+        var result = code
+        result = 31 * result + description.hashCode()
+        return result
+    }
+}
 
 /**
  * Thrown when an HTTP request returns a redirect-related response code.

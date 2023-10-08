@@ -8,6 +8,7 @@ import com.nasdroid.capacity.Capacity.Companion.bytes
  * Takes data received from the server and maps it to a [DashboardData.MemoryData]. See [invoke] for
  * details.
  */
+@Deprecated("Switch to GetMemoryUsageData")
 class ExtractMemoryUsageData {
 
     /**
@@ -23,11 +24,13 @@ class ExtractMemoryUsageData {
         memoryGraph: ReportingGraphData,
         uid: Long,
     ): DashboardData.MemoryData {
+        val freeIndex = memoryGraph.legend.indexOf("free")
+        val usedIndex = memoryGraph.legend.indexOf("used")
         val memoryData = memoryGraph.data.last { !it.contains(null) } as List<Double>
         return DashboardData.MemoryData(
             uid = uid,
-            memoryUsed = memoryData[0].toLong().bytes,
-            memoryFree = memoryData[1].toLong().bytes,
+            memoryUsed = memoryData[usedIndex].toLong().bytes,
+            memoryFree = memoryData[freeIndex].toLong().bytes,
             isEcc = systemInformation.eccMemory
         )
     }

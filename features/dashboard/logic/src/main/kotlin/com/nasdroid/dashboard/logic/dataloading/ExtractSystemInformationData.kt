@@ -9,6 +9,7 @@ import kotlinx.datetime.toLocalDateTime
  * Takes data received from the server and maps it to a [DashboardData.SystemInformationData]. See
  * [invoke] for details.
  */
+@Deprecated("Switch to GetSystemInformation")
 class ExtractSystemInformationData {
 
     /**
