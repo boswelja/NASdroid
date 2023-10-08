@@ -10,6 +10,8 @@ import com.nasdroid.dashboard.logic.dataloading.ExtractNetworkUsageData
 import com.nasdroid.dashboard.logic.dataloading.ExtractSystemInformationData
 import com.nasdroid.dashboard.logic.dataloading.GetDashboardData
 import com.nasdroid.dashboard.logic.dataloading.GetReportingDataForEntries
+import com.nasdroid.dashboard.logic.dataloading.cpu.GetCpuSpecs
+import com.nasdroid.dashboard.logic.dataloading.cpu.GetCpuUsageData
 import com.nasdroid.data.dashboardDataModule
 import org.koin.core.context.loadKoinModules
 import org.koin.core.module.dsl.factoryOf
@@ -21,6 +23,9 @@ import org.koin.dsl.module
  */
 val dashboardBusinessModule = module {
     loadKoinModules(dashboardDataModule)
+
+    factoryOf(::GetCpuSpecs)
+    factoryOf(::GetCpuUsageData)
 
     factoryOf(::ExtractCpuUsageData)
     factoryOf(::ExtractDashboardData)
