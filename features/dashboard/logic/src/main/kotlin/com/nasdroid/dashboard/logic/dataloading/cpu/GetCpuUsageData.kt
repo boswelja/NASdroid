@@ -2,16 +2,9 @@ package com.nasdroid.dashboard.logic.dataloading.cpu
 
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
-import kotlin.coroutines.coroutineContext
 import kotlin.math.roundToInt
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.measureTime
 
 /**
  * Retrieves CPU-related data from the server. See [invoke] for details.
@@ -19,6 +12,11 @@ import kotlin.time.measureTime
 class GetCpuUsageData(
     private val reportingV2Api: ReportingV2Api,
 ) {
+
+    /**
+     * Returns a [Result] that contains either [CpuUsageData], or an exception if the request
+     * failed.
+     */
     suspend operator fun invoke(): Result<CpuUsageData> = runCatching {
         val now = Clock.System.now()
         val (usageGraph, temperatureGraph) = reportingV2Api.getGraphData(
@@ -57,15 +55,6 @@ class GetCpuUsageData(
             utilisation = avgUsage.toFloat(),
             temp = temp
         )
-    }
-
-    private fun <T> repeatingFlow(interval: Duration, producer: suspend () -> T): Flow<T> = flow {
-        while (coroutineContext.isActive) {
-            val callTime = measureTime {
-                emit(producer())
-            }
-            delay((interval - callTime).coerceAtLeast(Duration.ZERO))
-        }
     }
 
     companion object {
