@@ -2,13 +2,9 @@ package com.nasdroid.dashboard.logic.dataloading.cpu
 
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
-import com.nasdroid.dashboard.logic.dataloading.DashboardData
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
 import kotlin.coroutines.coroutineContext
@@ -18,30 +14,12 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTime
 
 /**
- * Retrieves CPU-related data from the server.
+ * Retrieves CPU-related data from the server. See [invoke] for details.
  */
 class GetCpuUsageData(
-    private val getCpuSpecs: GetCpuSpecs,
     private val reportingV2Api: ReportingV2Api,
 ) {
-    @OptIn(ExperimentalCoroutinesApi::class)
-    suspend operator fun invoke(): Flow<Result<CpuData>> = flow {
-        emit(getCpuSpecs())
-    }
-        .flatMapLatest {
-            it.fold(
-                onSuccess = {
-                    repeatingFlow(15.seconds) {
-                        invoke(it)
-                    }
-                },
-                onFailure = {
-                    flowOf(Result.failure(it))
-                }
-            )
-        }
-
-    suspend operator fun invoke(cpuSpecs: CpuSpecs): Result<CpuData> = runCatching {
+    suspend operator fun invoke(): Result<CpuUsageData> = runCatching {
         val now = Clock.System.now()
         val (usageGraph, temperatureGraph) = reportingV2Api.getGraphData(
             graphs = listOf(
@@ -75,10 +53,7 @@ class GetCpuUsageData(
                 }
             }
             .roundToInt()
-        CpuData(
-            model = cpuSpecs.model,
-            physicalCores = cpuSpecs.physicalCores,
-            totalCores = cpuSpecs.totalCores,
+        CpuUsageData(
             utilisation = avgUsage.toFloat(),
             temp = temp
         )
@@ -102,17 +77,11 @@ class GetCpuUsageData(
 /**
  * Describes the CPU in the system.
  *
- * @property model The name of the CPU. E.g. "Intel(R) Xeon(R) CPU E5-2680".
- * @property physicalCores The total number of cores the CPU has.
- * @property totalCores The total number of threads the CPU has.
  * @property utilisation The current CPU utilisation. The value will always be between 0 and 1.
  * @property temp The CPU temperature in celsius. This is usually measured by the hottest
  * core.
  */
-data class CpuData(
-    val model: String,
-    val physicalCores: Int,
-    val totalCores: Int,
+data class CpuUsageData(
     val utilisation: Float,
     val temp: Int,
 )

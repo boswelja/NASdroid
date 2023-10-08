@@ -1,16 +1,10 @@
-package com.nasdroid.dashboard.logic.dataloading
+package com.nasdroid.dashboard.logic.dataloading.cpu
 
-import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.exception.ServerResponseException
 import com.nasdroid.api.v2.reporting.ReportingGraphData
 import com.nasdroid.api.v2.reporting.ReportingV2Api
-import com.nasdroid.dashboard.logic.dataloading.cpu.CpuData
-import com.nasdroid.dashboard.logic.dataloading.cpu.CpuSpecs
-import com.nasdroid.dashboard.logic.dataloading.cpu.GetCpuSpecs
-import com.nasdroid.dashboard.logic.dataloading.cpu.GetCpuUsageData
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -19,40 +13,24 @@ import kotlin.test.assertTrue
 
 class GetCpuUsageDataTest {
 
-    private lateinit var mockCpuSpecs: GetCpuSpecs
     private lateinit var mockReportingApi: ReportingV2Api
 
     private lateinit var getCpuUsageData: GetCpuUsageData
 
     @BeforeTest
     fun setUp() {
-        mockCpuSpecs = mockk()
         mockReportingApi = mockk()
 
-        getCpuUsageData = GetCpuUsageData(mockCpuSpecs, mockReportingApi)
-    }
-
-    @Test
-    fun `when cpu specs fail, error is returned`() = runTest {
-        coEvery { mockCpuSpecs() } returns Result.failure(HttpNotOkException(418, "I'm a teapot"))
-
-        val result = getCpuUsageData().first()
-
-        assertTrue(result.isFailure)
-        assertEquals(
-            HttpNotOkException(418, "I'm a teapot"),
-            result.exceptionOrNull()
-        )
+        getCpuUsageData = GetCpuUsageData(mockReportingApi)
     }
 
     @Test
     fun `when reporting throws, error is returned`() = runTest {
-        coEvery { mockCpuSpecs() } returns Result.success(CpuSpecs("Ampere", 128, 80))
         coEvery {
             mockReportingApi.getGraphData(graphs = any(), start = any(), end = any())
         } throws ServerResponseException(500, "Internal server error")
 
-        val result = getCpuUsageData().first()
+        val result = getCpuUsageData()
 
         assertTrue(result.isFailure)
         assertEquals(
@@ -68,14 +46,11 @@ class GetCpuUsageDataTest {
             realTemperatureData
         )
 
-        val result = getCpuUsageData(CpuSpecs("Ampere", 80, 128))
+        val result = getCpuUsageData()
 
         assertTrue(result.isSuccess)
         assertEquals(
-            CpuData(
-                model = "Ampere",
-                physicalCores = 80,
-                totalCores = 128,
+            CpuUsageData(
                 utilisation = ((100 - 98.33899) / 100).toFloat(),
                 temp = 28
             ),
