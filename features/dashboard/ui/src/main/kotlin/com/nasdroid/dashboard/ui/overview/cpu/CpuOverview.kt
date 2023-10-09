@@ -1,4 +1,4 @@
-package com.nasdroid.dashboard.ui.overview.cards
+package com.nasdroid.dashboard.ui.overview.cpu
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background

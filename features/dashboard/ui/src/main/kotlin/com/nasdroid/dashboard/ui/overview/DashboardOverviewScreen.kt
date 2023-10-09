@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.dashboard.logic.dataloading.DashboardData
-import com.nasdroid.dashboard.ui.overview.cards.CpuOverview
+import com.nasdroid.dashboard.ui.overview.cpu.CpuOverview
 import com.nasdroid.dashboard.ui.overview.cards.MemoryOverview
 import com.nasdroid.dashboard.ui.overview.cards.NetworkOverview
 import com.nasdroid.dashboard.ui.overview.cards.SystemInformationOverview
