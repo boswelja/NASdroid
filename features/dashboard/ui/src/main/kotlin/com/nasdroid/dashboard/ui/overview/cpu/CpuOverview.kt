@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,9 +27,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nasdroid.dashboard.logic.dataloading.DashboardData
+import com.nasdroid.dashboard.logic.dataloading.cpu.CpuSpecs
+import com.nasdroid.dashboard.logic.dataloading.cpu.CpuUsageData
 import com.nasdroid.dashboard.ui.overview.cards.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.R
+import org.koin.androidx.compose.koinViewModel
 import java.text.NumberFormat
 
 /**
@@ -36,39 +40,68 @@ import java.text.NumberFormat
  */
 @Composable
 fun CpuOverview(
-    data: DashboardData.CpuData,
+    modifier: Modifier = Modifier,
+    viewModel: CpuOverviewViewModel = koinViewModel(),
+) {
+    val specs by viewModel.cpuSpecs.collectAsState()
+    val utilisation by viewModel.cpuUsageData.collectAsState()
+
+    val error by remember(specs, utilisation) {
+        derivedStateOf { specs?.exceptionOrNull() ?: utilisation?.exceptionOrNull() }
+    }
+
+    CpuOverview(specs = specs?.getOrNull(), utilisation = utilisation?.getOrNull(), modifier = modifier)
+
+    if (error != null) {
+        Box(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .width(IntrinsicSize.Min)
+                .background(MaterialTheme.colorScheme.errorContainer)
+        ) {
+            Text(text = "Something went wrong")
+        }
+    }
+}
+
+@Composable
+internal fun CpuOverview(
+    specs: CpuSpecs?,
+    utilisation: CpuUsageData?,
     modifier: Modifier = Modifier
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.height(IntrinsicSize.Min).then(modifier)
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .then(modifier)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CpuUsageBar(
-                usage = data.utilisation,
+                usage = utilisation?.utilisation ?: 0f,
                 modifier = Modifier
                     .width(48.dp)
                     .weight(1f)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(data.utilisation.formattedPercent())
+            Text(utilisation?.utilisation?.formattedPercent().orEmpty())
         }
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_name_label)) },
-                content = { Text(data.name) }
+                content = { Text(specs?.model.orEmpty()) }
             )
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
-                content = { Text(stringResource(R.string.cpu_cores_threads_count, data.cores, data.threads)) }
+                content = { Text(stringResource(R.string.cpu_cores_threads_count, specs?.physicalCores ?: 0, specs?.totalCores ?: 0)) }
             )
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_temp_label)) },
-                content = { Text(stringResource(R.string.cpu_temperature_celsius, data.tempCelsius)) }
+                content = { Text(stringResource(R.string.cpu_temperature_celsius, utilisation?.temp ?: 0)) }
             )
         }
     }
@@ -121,15 +154,18 @@ private fun Float.formattedPercent(): String {
 fun CpuOverviewPreview() {
     MaterialTheme {
         CpuOverview(
-            data = DashboardData.CpuData(
-                name = "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
-                cores = 28,
-                threads = 56,
-                tempCelsius = 31,
-                utilisation = 0.43f,
-                uid = 0
+            specs = CpuSpecs(
+                model = "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+                physicalCores = 28,
+                totalCores = 56,
             ),
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            utilisation = CpuUsageData(
+                utilisation = 0.43f,
+                temp = 31,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         )
     }
 }

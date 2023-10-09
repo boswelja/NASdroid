@@ -139,7 +139,7 @@ fun OverviewCard(
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
-                CpuOverview(data = data)
+                CpuOverview()
             }
         }
         is DashboardData.MemoryData -> {
