@@ -31,6 +31,7 @@ import com.nasdroid.dashboard.logic.dataloading.cpu.CpuSpecs
 import com.nasdroid.dashboard.logic.dataloading.cpu.CpuUsageData
 import com.nasdroid.dashboard.ui.overview.cards.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.R
+import com.nasdroid.dashboard.ui.overview.skeleton
 import org.koin.androidx.compose.koinViewModel
 import java.text.NumberFormat
 
@@ -57,7 +58,10 @@ fun CpuOverview(
             modifier = Modifier
                 .height(IntrinsicSize.Min)
                 .width(IntrinsicSize.Min)
-                .background(MaterialTheme.colorScheme.errorContainer)
+                .background(
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    shape = MaterialTheme.shapes.medium
+                )
         ) {
             Text(text = "Something went wrong")
         }
@@ -84,24 +88,31 @@ internal fun CpuOverview(
                 modifier = Modifier
                     .width(48.dp)
                     .weight(1f)
+                    .skeleton(utilisation == null)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(utilisation?.utilisation?.formattedPercent().orEmpty())
+            Text(
+                text = utilisation?.utilisation?.formattedPercent() ?: "50%",
+                modifier = Modifier.skeleton(utilisation == null)
+            )
         }
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_name_label)) },
-                content = { Text(specs?.model.orEmpty()) }
+                content = { Text(specs?.model ?: "CPU Model") },
+                modifier = Modifier.skeleton(specs == null)
             )
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
-                content = { Text(stringResource(R.string.cpu_cores_threads_count, specs?.physicalCores ?: 0, specs?.totalCores ?: 0)) }
+                content = { Text(stringResource(R.string.cpu_cores_threads_count, specs?.physicalCores ?: 0, specs?.totalCores ?: 0)) },
+                modifier = Modifier.skeleton(specs == null)
             )
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_temp_label)) },
-                content = { Text(stringResource(R.string.cpu_temperature_celsius, utilisation?.temp ?: 0)) }
+                content = { Text(stringResource(R.string.cpu_temperature_celsius, utilisation?.temp ?: 0)) },
+                modifier = Modifier.skeleton(specs == null)
             )
         }
     }
@@ -119,9 +130,9 @@ fun CpuUsageBar(
     val animatedUsageFloat by animateFloatAsState(targetValue = usage, label = "CPU usage animation")
     Box(
         modifier = Modifier
-            .then(modifier)
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.surfaceVariant),
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .then(modifier),
         contentAlignment = Alignment.BottomCenter
     ) {
         Box(
