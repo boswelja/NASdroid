@@ -21,12 +21,12 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.dashboard.logic.dataloading.DashboardData
-import com.nasdroid.dashboard.ui.overview.cards.CpuOverview
-import com.nasdroid.dashboard.ui.overview.cards.MemoryOverview
-import com.nasdroid.dashboard.ui.overview.cards.NetworkOverview
-import com.nasdroid.dashboard.ui.overview.cards.SystemInformationOverview
-import com.nasdroid.dashboard.ui.overview.cards.common.DashboardCard
-import com.nasdroid.dashboard.ui.overview.cards.common.DashboardCardEditControls
+import com.nasdroid.dashboard.ui.overview.cpu.CpuOverview
+import com.nasdroid.dashboard.ui.overview.memory.MemoryOverview
+import com.nasdroid.dashboard.ui.overview.network.NetworkOverview
+import com.nasdroid.dashboard.ui.overview.system.SystemInformationOverview
+import com.nasdroid.dashboard.ui.overview.common.DashboardCard
+import com.nasdroid.dashboard.ui.overview.common.DashboardCardEditControls
 import com.nasdroid.dashboard.ui.R
 import org.koin.androidx.compose.getViewModel
 
@@ -139,7 +139,7 @@ fun OverviewCard(
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
-                CpuOverview(data = data)
+                CpuOverview()
             }
         }
         is DashboardData.MemoryData -> {
@@ -150,7 +150,7 @@ fun OverviewCard(
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
-                MemoryOverview(data = data)
+                MemoryOverview()
             }
         }
         is DashboardData.NetworkUsageData -> {
@@ -161,10 +161,7 @@ fun OverviewCard(
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
-                NetworkOverview(
-                    data = data,
-                    modifier = modifier,
-                )
+                NetworkOverview()
             }
         }
         is DashboardData.SystemInformationData -> {
@@ -175,10 +172,7 @@ fun OverviewCard(
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
-                SystemInformationOverview(
-                    data = data,
-                    modifier = modifier,
-                )
+                SystemInformationOverview()
             }
         }
     }

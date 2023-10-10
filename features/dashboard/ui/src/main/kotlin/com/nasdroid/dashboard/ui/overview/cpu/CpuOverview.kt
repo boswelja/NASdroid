@@ -1,4 +1,4 @@
-package com.nasdroid.dashboard.ui.overview.cards
+package com.nasdroid.dashboard.ui.overview.cpu
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,9 +27,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nasdroid.dashboard.logic.dataloading.DashboardData
-import com.nasdroid.dashboard.ui.overview.cards.common.OverviewItemListItem
+import com.nasdroid.dashboard.logic.dataloading.cpu.CpuSpecs
+import com.nasdroid.dashboard.logic.dataloading.cpu.CpuUsageData
+import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.R
+import com.nasdroid.dashboard.ui.overview.skeleton
+import org.koin.androidx.compose.koinViewModel
 import java.text.NumberFormat
 
 /**
@@ -36,39 +41,86 @@ import java.text.NumberFormat
  */
 @Composable
 fun CpuOverview(
-    data: DashboardData.CpuData,
+    modifier: Modifier = Modifier,
+    viewModel: CpuOverviewViewModel = koinViewModel(),
+) {
+    val specs by viewModel.cpuSpecs.collectAsState()
+    val utilisation by viewModel.cpuUsageData.collectAsState()
+
+    val error by remember(specs, utilisation) {
+        derivedStateOf { specs?.exceptionOrNull() ?: utilisation?.exceptionOrNull() }
+    }
+
+    CpuOverview(specs = specs?.getOrNull(), utilisation = utilisation?.getOrNull(), modifier = modifier)
+
+    if (error != null) {
+        Box(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .width(IntrinsicSize.Min)
+                .background(
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    shape = MaterialTheme.shapes.medium
+                )
+        ) {
+            Text(text = "Something went wrong")
+        }
+    }
+}
+
+@Composable
+internal fun CpuOverview(
+    specs: CpuSpecs?,
+    utilisation: CpuUsageData?,
     modifier: Modifier = Modifier
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.height(IntrinsicSize.Min).then(modifier)
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .then(modifier)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CpuUsageBar(
-                usage = data.utilisation,
+                usage = utilisation?.utilisation ?: 0f,
                 modifier = Modifier
                     .width(48.dp)
                     .weight(1f)
+                    .skeleton(utilisation == null)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(data.utilisation.formattedPercent())
+            Text(
+                text = utilisation?.utilisation?.formattedPercent() ?: "50%",
+                modifier = Modifier.skeleton(utilisation == null)
+            )
         }
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_name_label)) },
-                content = { Text(data.name) }
+                content = { Text(specs?.model ?: "CPU Model") },
+                modifier = Modifier.skeleton(specs == null)
             )
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
-                content = { Text(stringResource(R.string.cpu_cores_threads_count, data.cores, data.threads)) }
+                content = {
+                    Text(
+                        text = stringResource(
+                            R.string.cpu_cores_threads_count,
+                            specs?.physicalCores ?: 0,
+                            specs?.totalCores ?: 0
+                        )
+                    )
+                },
+                modifier = Modifier.skeleton(specs == null)
             )
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_temp_label)) },
-                content = { Text(stringResource(R.string.cpu_temperature_celsius, data.tempCelsius)) }
+                content = { Text(stringResource(R.string.cpu_temperature_celsius, utilisation?.temp ?: 0)) },
+                modifier = Modifier.skeleton(specs == null)
             )
         }
     }
@@ -86,9 +138,9 @@ fun CpuUsageBar(
     val animatedUsageFloat by animateFloatAsState(targetValue = usage, label = "CPU usage animation")
     Box(
         modifier = Modifier
-            .then(modifier)
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.surfaceVariant),
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .then(modifier),
         contentAlignment = Alignment.BottomCenter
     ) {
         Box(
@@ -121,15 +173,18 @@ private fun Float.formattedPercent(): String {
 fun CpuOverviewPreview() {
     MaterialTheme {
         CpuOverview(
-            data = DashboardData.CpuData(
-                name = "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
-                cores = 28,
-                threads = 56,
-                tempCelsius = 31,
-                utilisation = 0.43f,
-                uid = 0
+            specs = CpuSpecs(
+                model = "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+                physicalCores = 28,
+                totalCores = 56,
             ),
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            utilisation = CpuUsageData(
+                utilisation = 0.43f,
+                temp = 31,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         )
     }
 }

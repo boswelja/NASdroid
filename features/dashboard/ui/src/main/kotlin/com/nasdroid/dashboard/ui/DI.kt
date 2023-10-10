@@ -2,6 +2,10 @@ package com.nasdroid.dashboard.ui
 
 import com.nasdroid.dashboard.logic.dashboardBusinessModule
 import com.nasdroid.dashboard.ui.overview.OverviewViewModel
+import com.nasdroid.dashboard.ui.overview.cpu.CpuOverviewViewModel
+import com.nasdroid.dashboard.ui.overview.memory.MemoryOverviewViewModel
+import com.nasdroid.dashboard.ui.overview.network.NetworkOverviewViewModel
+import com.nasdroid.dashboard.ui.overview.system.SystemInformationOverviewViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
@@ -11,5 +15,11 @@ import org.koin.dsl.module
  */
 val DashboardModule = module {
     loadKoinModules(dashboardBusinessModule)
+
+    viewModelOf(::CpuOverviewViewModel)
+    viewModelOf(::MemoryOverviewViewModel)
+    viewModelOf(::NetworkOverviewViewModel)
+    viewModelOf(::SystemInformationOverviewViewModel)
+
     viewModelOf(::OverviewViewModel)
 }
