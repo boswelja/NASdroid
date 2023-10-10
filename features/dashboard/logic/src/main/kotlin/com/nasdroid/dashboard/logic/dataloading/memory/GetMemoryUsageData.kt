@@ -5,6 +5,7 @@ import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.bytes
+import com.nasdroid.capacity.CapacityUnit
 import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds
 
@@ -59,4 +60,19 @@ data class MemoryUsageData(
     val used: Capacity,
     val free: Capacity,
     val cached: Capacity,
-)
+) {
+    /**
+     * The total capacity of the system memory, as measured by the sum of all parts.
+     */
+    val total: Capacity = used + free + cached
+
+    /**
+     * The allocated memory capacity, as measured by the sum of [used] and [free].
+     */
+    val allocated: Capacity = used + cached
+
+    /**
+     * The percent of total memory that is allocated, as measured by all parts.
+     */
+    val allocatedPercent: Float = (allocated.toLong(CapacityUnit.BYTE) / total.toDouble(CapacityUnit.BYTE)).toFloat()
+}

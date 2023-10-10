@@ -1,19 +1,26 @@
-package com.nasdroid.dashboard.ui.overview.cards
+package com.nasdroid.dashboard.ui.overview.memory
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,16 +32,53 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.gigabytes
 import com.nasdroid.capacity.CapacityUnit
-import com.nasdroid.dashboard.logic.dataloading.DashboardData
+import com.nasdroid.dashboard.logic.dataloading.memory.MemorySpecs
+import com.nasdroid.dashboard.logic.dataloading.memory.MemoryUsageData
 import com.nasdroid.dashboard.ui.overview.cards.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.R
+import com.nasdroid.dashboard.ui.overview.skeleton
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * A Card displaying the given system memory information.
  */
 @Composable
 fun MemoryOverview(
-    data: DashboardData.MemoryData,
+    modifier: Modifier = Modifier,
+    viewModel: MemoryOverviewViewModel = koinViewModel()
+) {
+    val specs by viewModel.memorySpecs.collectAsState()
+    val utilisation by viewModel.memoryUsageData.collectAsState()
+
+    val error by remember(specs, utilisation) {
+        derivedStateOf { specs?.exceptionOrNull() ?: utilisation?.exceptionOrNull() }
+    }
+
+    MemoryOverview(
+        specs = specs?.getOrNull(),
+        utilisation = utilisation?.getOrNull(),
+        modifier = modifier
+    )
+
+    if (error != null) {
+        Box(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .width(IntrinsicSize.Min)
+                .background(
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    shape = MaterialTheme.shapes.medium
+                )
+        ) {
+            Text(text = "Something went wrong")
+        }
+    }
+}
+
+@Composable
+internal fun MemoryOverview(
+    specs: MemorySpecs?,
+    utilisation: MemoryUsageData?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -42,15 +86,17 @@ fun MemoryOverview(
     ) {
         OverviewItemListItem(
             labelContent = {
-                if (data.isEcc) {
+                if (specs?.isEcc == true) {
                     Text(stringResource(R.string.memory_total_ecc_label))
                 } else {
                     Text(stringResource(R.string.memory_total_label))
                 }
-            }
-        ) {
-            Text((data.memoryUsed + data.memoryFree).formatToString())
-        }
+            },
+            content = {
+                Text((specs?.totalCapacity ?: 1.gigabytes).formatToString())
+            },
+            modifier = Modifier.skeleton(specs == null)
+        )
         Spacer(Modifier.height(8.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -58,22 +104,25 @@ fun MemoryOverview(
         ) {
             MemoryUtilisationLabel(
                 name = "Used",
-                usage = data.memoryUsed.formatToString(),
+                usage = (utilisation?.used ?: 1.gigabytes).formatToString(),
                 horizontalAlignment = Alignment.Start,
+                modifier = Modifier.skeleton(utilisation == null)
             )
             MemoryUtilisationLabel(
                 name = stringResource(R.string.memory_usage_free),
-                usage = data.memoryFree.formatToString(),
+                usage = (utilisation?.free ?: 1.gigabytes).formatToString(),
                 horizontalAlignment = Alignment.End,
+                modifier = Modifier.skeleton(utilisation == null)
             )
         }
         Spacer(Modifier.height(4.dp))
         LinearProgressIndicator(
-            progress = data.usedPercent,
+            progress = utilisation?.allocatedPercent ?: 0.5f,
             modifier = Modifier
                 .height(24.dp)
                 .fillMaxWidth()
                 .clip(CircleShape)
+                .skeleton(utilisation == null)
         )
     }
 }
@@ -85,6 +134,7 @@ fun MemoryOverview(
  * @param name The name of the component utilising memory. For example, "Free"
  * @param usage The human-readable usage. For example, "64 GB"
  * @param modifier [Modifier].
+ * @param horizontalAlignment The alignment of the label content.
  */
 @Composable
 fun MemoryUtilisationLabel(
@@ -127,13 +177,18 @@ fun Capacity.formatToString(): String {
 fun MemoryCardPreview() {
     MaterialTheme {
         MemoryOverview(
-            data = DashboardData.MemoryData(
-                memoryUsed = 51.1.gigabytes,
-                memoryFree = 128.gigabytes - 51.1.gigabytes,
+            specs = MemorySpecs(
                 isEcc = true,
-                uid = 0
+                totalCapacity = 128.gigabytes
             ),
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            utilisation = MemoryUsageData(
+                used = 51.1.gigabytes,
+                free = 128.gigabytes - 52.1.gigabytes,
+                cached = 1.gigabytes,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         )
     }
 }
