@@ -1,6 +1,5 @@
 package com.nasdroid.dashboard.logic.configuration
 
-import com.nasdroid.dashboard.logic.dataloading.DashboardData
 import com.nasdroid.data.configuration.DashboardConfiguration
 import com.nasdroid.data.configuration.DashboardEntry
 import com.nasdroid.api.v2.system.SystemV2Api
@@ -14,7 +13,7 @@ class SaveDashboardOrder(
 ) {
 
     /**
-     * Saves the order of the list of [DashboardData] to the database configuration store.
+     * Saves the order of the list of [DashboardItem]s to the database configuration store.
      */
     suspend operator fun invoke(data: List<DashboardItem>) {
         val hostId = systemV2Api.getHostId()

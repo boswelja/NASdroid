@@ -7,7 +7,6 @@ import com.nasdroid.dashboard.logic.configuration.GetDashboardItems
 import com.nasdroid.dashboard.logic.configuration.InitializeDashboard
 import com.nasdroid.dashboard.logic.configuration.ReorderDashboardItems
 import com.nasdroid.dashboard.logic.configuration.SaveDashboardOrder
-import com.nasdroid.dashboard.logic.dataloading.DashboardData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +21,7 @@ class OverviewViewModel(
     private val initializeDashboard: InitializeDashboard,
     private val reorderDashboardItems: ReorderDashboardItems,
     private val saveDashboardOrder: SaveDashboardOrder,
-    private val getDashboardItems: GetDashboardItems,
+    getDashboardItems: GetDashboardItems,
 ) : ViewModel() {
 
     private val _editingList = MutableStateFlow<List<DashboardItem>?>(null)
@@ -38,7 +37,7 @@ class OverviewViewModel(
         )
 
     /**
-     * A List of [DashboardData]. The list is ordered by the users configured display order. If the
+     * A List of [DashboardItem]s. The list is ordered by the users configured display order. If the
      * value is null, data is still loading.
      */
     val dashboardData: StateFlow<Result<List<DashboardItem>>?> = getDashboardItems()

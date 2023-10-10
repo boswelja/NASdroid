@@ -4,13 +4,6 @@ import com.nasdroid.dashboard.logic.configuration.GetDashboardItems
 import com.nasdroid.dashboard.logic.configuration.InitializeDashboard
 import com.nasdroid.dashboard.logic.configuration.ReorderDashboardItems
 import com.nasdroid.dashboard.logic.configuration.SaveDashboardOrder
-import com.nasdroid.dashboard.logic.dataloading.ExtractCpuUsageData
-import com.nasdroid.dashboard.logic.dataloading.ExtractDashboardData
-import com.nasdroid.dashboard.logic.dataloading.ExtractMemoryUsageData
-import com.nasdroid.dashboard.logic.dataloading.ExtractNetworkUsageData
-import com.nasdroid.dashboard.logic.dataloading.ExtractSystemInformationData
-import com.nasdroid.dashboard.logic.dataloading.GetDashboardData
-import com.nasdroid.dashboard.logic.dataloading.GetReportingDataForEntries
 import com.nasdroid.dashboard.logic.dataloading.cpu.GetCpuSpecs
 import com.nasdroid.dashboard.logic.dataloading.cpu.GetCpuUsageData
 import com.nasdroid.dashboard.logic.dataloading.memory.GetMemorySpecs
@@ -40,14 +33,6 @@ val dashboardBusinessModule = module {
     factoryOf(::GetNetworkUsageData)
 
     factoryOf(::GetSystemInformation)
-
-    factoryOf(::ExtractCpuUsageData)
-    factoryOf(::ExtractDashboardData)
-    factoryOf(::ExtractMemoryUsageData)
-    factoryOf(::ExtractNetworkUsageData)
-    factoryOf(::ExtractSystemInformationData)
-    factoryOf(::GetDashboardData)
-    factoryOf(::GetReportingDataForEntries)
 
     factoryOf(::GetDashboardItems)
     factoryOf(::InitializeDashboard)

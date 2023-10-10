@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.dashboard.logic.configuration.DashboardItem
-import com.nasdroid.dashboard.logic.dataloading.DashboardData
 import com.nasdroid.dashboard.ui.overview.cpu.CpuOverview
 import com.nasdroid.dashboard.ui.overview.memory.MemoryOverview
 import com.nasdroid.dashboard.ui.overview.network.NetworkOverview
@@ -120,7 +119,7 @@ fun DashboardOverviewList(
 }
 
 /**
- * A convenience Composable that takes a generic [DashboardData] and renders the appropriate card
+ * A convenience Composable that takes a generic [DashboardItem] and displays the appropriate card
  * with details.
  */
 @Composable
