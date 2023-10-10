@@ -2,8 +2,6 @@ package com.nasdroid.dashboard.ui.overview.memory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nasdroid.dashboard.logic.dataloading.cpu.CpuSpecs
-import com.nasdroid.dashboard.logic.dataloading.cpu.CpuUsageData
 import com.nasdroid.dashboard.logic.dataloading.memory.GetMemorySpecs
 import com.nasdroid.dashboard.logic.dataloading.memory.GetMemoryUsageData
 import com.nasdroid.dashboard.logic.dataloading.memory.MemorySpecs
