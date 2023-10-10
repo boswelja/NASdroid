@@ -76,6 +76,8 @@ private suspend fun ResponseException.toHttpNotOkException(): HttpNotOkException
         response.body<JsonObject>().getValue("message").toString()
     } catch (_: JsonConvertException) {
         message ?: response.status.description
+    } catch (_: NoSuchElementException) {
+        message ?: response.status.description
     }
     return when (this) {
         is RedirectResponseException -> com.nasdroid.api.exception.RedirectResponseException(
