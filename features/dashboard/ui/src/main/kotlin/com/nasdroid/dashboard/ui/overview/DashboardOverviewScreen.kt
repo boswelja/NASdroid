@@ -24,9 +24,9 @@ import com.nasdroid.dashboard.logic.dataloading.DashboardData
 import com.nasdroid.dashboard.ui.overview.cpu.CpuOverview
 import com.nasdroid.dashboard.ui.overview.memory.MemoryOverview
 import com.nasdroid.dashboard.ui.overview.network.NetworkOverview
-import com.nasdroid.dashboard.ui.overview.cards.SystemInformationOverview
-import com.nasdroid.dashboard.ui.overview.cards.common.DashboardCard
-import com.nasdroid.dashboard.ui.overview.cards.common.DashboardCardEditControls
+import com.nasdroid.dashboard.ui.overview.system.SystemInformationOverview
+import com.nasdroid.dashboard.ui.overview.common.DashboardCard
+import com.nasdroid.dashboard.ui.overview.common.DashboardCardEditControls
 import com.nasdroid.dashboard.ui.R
 import org.koin.androidx.compose.getViewModel
 
@@ -172,10 +172,7 @@ fun OverviewCard(
                 cardEditControls = cardEditControls,
                 modifier = modifier
             ) {
-                SystemInformationOverview(
-                    data = data,
-                    modifier = modifier,
-                )
+                SystemInformationOverview()
             }
         }
     }

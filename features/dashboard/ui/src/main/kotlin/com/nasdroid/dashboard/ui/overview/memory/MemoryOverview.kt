@@ -34,7 +34,7 @@ import com.nasdroid.capacity.Capacity.Companion.gigabytes
 import com.nasdroid.capacity.CapacityUnit
 import com.nasdroid.dashboard.logic.dataloading.memory.MemorySpecs
 import com.nasdroid.dashboard.logic.dataloading.memory.MemoryUsageData
-import com.nasdroid.dashboard.ui.overview.cards.common.OverviewItemListItem
+import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.skeleton
 import org.koin.androidx.compose.koinViewModel

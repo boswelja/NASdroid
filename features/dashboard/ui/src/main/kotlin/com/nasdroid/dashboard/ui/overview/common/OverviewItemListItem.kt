@@ -1,4 +1,4 @@
-package com.nasdroid.dashboard.ui.overview.cards.common
+package com.nasdroid.dashboard.ui.overview.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

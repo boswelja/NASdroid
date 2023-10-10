@@ -23,7 +23,7 @@ import com.nasdroid.capacity.Capacity.Companion.bytes
 import com.nasdroid.capacity.CapacityUnit
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkConfiguration
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkUsageData
-import com.nasdroid.dashboard.ui.overview.cards.common.OverviewItemListItem
+import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.overview.skeleton
 import org.koin.androidx.compose.koinViewModel
 

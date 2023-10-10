@@ -32,7 +32,7 @@ class NetworkOverviewViewModel(
 ) : ViewModel() {
 
     /**
-     * Flows the network configuration for the system.
+     * Flows the network configuration for the system. A null value indicates data is still loading.
      */
     val networkConfiguration: StateFlow<Result<NetworkConfiguration>?> = flow {
         emit(getNetworkConfiguration())

@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nasdroid.dashboard.logic.dataloading.cpu.CpuSpecs
 import com.nasdroid.dashboard.logic.dataloading.cpu.CpuUsageData
-import com.nasdroid.dashboard.ui.overview.cards.common.OverviewItemListItem
+import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.skeleton
 import org.koin.androidx.compose.koinViewModel
