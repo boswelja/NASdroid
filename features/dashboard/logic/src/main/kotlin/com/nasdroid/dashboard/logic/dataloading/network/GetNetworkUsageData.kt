@@ -21,6 +21,7 @@ class GetNetworkUsageData(
      */
     suspend operator fun invoke(adapters: List<String>): Result<NetworkUsageData> {
         return try {
+            if (adapters.isEmpty()) return Result.success(NetworkUsageData(emptyList()))
             val now = Clock.System.now()
             val adapterGraphs = reportingV2Api.getGraphData(
                 graphs = adapters.map { RequestedGraph(INTERFACE_GRAPH_NAME, it) },
