@@ -1,7 +1,8 @@
 package com.nasdroid.dashboard.logic
 
+import com.nasdroid.dashboard.logic.configuration.GetDashboardItems
 import com.nasdroid.dashboard.logic.configuration.InitializeDashboard
-import com.nasdroid.dashboard.logic.configuration.ReorderDashboardData
+import com.nasdroid.dashboard.logic.configuration.ReorderDashboardItems
 import com.nasdroid.dashboard.logic.configuration.SaveDashboardOrder
 import com.nasdroid.dashboard.logic.dataloading.ExtractCpuUsageData
 import com.nasdroid.dashboard.logic.dataloading.ExtractDashboardData
@@ -48,7 +49,8 @@ val dashboardBusinessModule = module {
     factoryOf(::GetDashboardData)
     factoryOf(::GetReportingDataForEntries)
 
+    factoryOf(::GetDashboardItems)
     factoryOf(::InitializeDashboard)
-    factoryOf(::ReorderDashboardData)
+    factoryOf(::ReorderDashboardItems)
     factoryOf(::SaveDashboardOrder)
 }

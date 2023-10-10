@@ -16,13 +16,13 @@ import kotlinx.datetime.LocalDateTime
 import kotlin.coroutines.coroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
 /**
  * Flows a list of [DashboardData], accounting for the users preferred item order and visibility.
  * See [invoke] for details.
  */
+@Deprecated("Switch to GetDashboardItems")
 class GetDashboardData(
     private val configuration: DashboardConfiguration,
     private val systemV2Api: SystemV2Api,

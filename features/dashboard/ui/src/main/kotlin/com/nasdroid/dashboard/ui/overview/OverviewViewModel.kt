@@ -3,7 +3,7 @@ package com.nasdroid.dashboard.ui.overview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.dashboard.logic.configuration.InitializeDashboard
-import com.nasdroid.dashboard.logic.configuration.ReorderDashboardData
+import com.nasdroid.dashboard.logic.configuration.ReorderDashboardItems
 import com.nasdroid.dashboard.logic.configuration.SaveDashboardOrder
 import com.nasdroid.dashboard.logic.dataloading.DashboardData
 import com.nasdroid.dashboard.logic.dataloading.GetDashboardData
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 class OverviewViewModel(
     private val initializeDashboard: InitializeDashboard,
     private val getDashboardData: GetDashboardData,
-    private val reorderDashboardData: ReorderDashboardData,
+    private val reorderDashboardItems: ReorderDashboardItems,
     private val saveDashboardOrder: SaveDashboardOrder,
 ) : ViewModel() {
 
@@ -70,12 +70,12 @@ class OverviewViewModel(
     }
 
     /**
-     * Moves the entry at the specified position to a new position. See [ReorderDashboardData] for
+     * Moves the entry at the specified position to a new position. See [ReorderDashboardItems] for
      * details.
      */
     fun moveDashboardEntry(from: Int, to: Int) {
         _editingList.update { editingList ->
-            editingList?.let { reorderDashboardData(it, from, to) }
+            editingList?.let { reorderDashboardItems(it, from, to) }
         }
         viewModelScope.launch {
             _editingList.value?.let {

@@ -10,6 +10,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * Requests data from the server about a list of [DashboardEntry]. See [invoke] for details.
  */
+@Deprecated("Switch to GetDashboardItems")
 class GetReportingDataForEntries(
     private val reportingV2Api: ReportingV2Api
 ) {
