@@ -106,7 +106,15 @@ internal fun CpuOverview(
             )
             OverviewItemListItem(
                 labelContent = { Text(stringResource(R.string.cpu_cores_threads_label)) },
-                content = { Text(stringResource(R.string.cpu_cores_threads_count, specs?.physicalCores ?: 0, specs?.totalCores ?: 0)) },
+                content = {
+                    Text(
+                        text = stringResource(
+                            R.string.cpu_cores_threads_count,
+                            specs?.physicalCores ?: 0,
+                            specs?.totalCores ?: 0
+                        )
+                    )
+                },
                 modifier = Modifier.skeleton(specs == null)
             )
             OverviewItemListItem(
