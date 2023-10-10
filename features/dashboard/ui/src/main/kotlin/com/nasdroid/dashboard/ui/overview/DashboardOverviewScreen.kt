@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
+import com.nasdroid.dashboard.logic.configuration.DashboardItem
 import com.nasdroid.dashboard.logic.dataloading.DashboardData
 import com.nasdroid.dashboard.ui.overview.cpu.CpuOverview
 import com.nasdroid.dashboard.ui.overview.memory.MemoryOverview
@@ -45,7 +46,7 @@ fun DashboardOverviewScreen(
     val isEditing by remember(editingItems) {
         derivedStateOf { editingItems != null }
     }
-    items?.let {
+    items?.getOrNull()?.let {
         ProvideMenuItems(
             if (isEditing) {
                 MenuItem(
@@ -80,7 +81,7 @@ fun DashboardOverviewScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DashboardOverviewList(
-    items: List<DashboardData>,
+    items: List<DashboardItem>,
     isEditing: Boolean,
     onMoveItem: (from: Int, to: Int) -> Unit,
     onStartEditing: () -> Unit,
@@ -94,7 +95,7 @@ fun DashboardOverviewList(
     ) {
         itemsIndexed(
             items = items,
-            key = { _, data -> data.uid }
+            key = { _, data -> data.id }
         ) { index, data ->
             OverviewCard(
                 data = data,
@@ -124,14 +125,14 @@ fun DashboardOverviewList(
  */
 @Composable
 fun OverviewCard(
-    data: DashboardData,
+    data: DashboardItem,
     cardEditControls: DashboardCardEditControls,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onLongClick: (() -> Unit)? = null,
 ) {
-    when (data) {
-        is DashboardData.CpuData -> {
+    when (data.type) {
+        DashboardItem.Type.Cpu -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.cpu_card_title)) },
                 onClick = onClick,
@@ -142,7 +143,7 @@ fun OverviewCard(
                 CpuOverview()
             }
         }
-        is DashboardData.MemoryData -> {
+        DashboardItem.Type.Memory -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.memory_card_title)) },
                 onClick = onClick,
@@ -153,7 +154,7 @@ fun OverviewCard(
                 MemoryOverview()
             }
         }
-        is DashboardData.NetworkUsageData -> {
+        DashboardItem.Type.Network -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.network_card_title)) },
                 onClick = onClick,
@@ -164,7 +165,7 @@ fun OverviewCard(
                 NetworkOverview()
             }
         }
-        is DashboardData.SystemInformationData -> {
+        DashboardItem.Type.SystemInformation -> {
             DashboardCard(
                 title = { Text(stringResource(R.string.system_info_card_title)) },
                 onClick = onClick,
