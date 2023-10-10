@@ -1,6 +1,5 @@
 package com.nasdroid.dashboard.logic.configuration
 
-import com.nasdroid.dashboard.logic.dataloading.DashboardData
 import com.nasdroid.data.configuration.DashboardConfiguration
 import com.nasdroid.data.configuration.DashboardEntry
 import com.nasdroid.api.v2.system.SystemV2Api
@@ -14,19 +13,20 @@ class SaveDashboardOrder(
 ) {
 
     /**
-     * Saves the order of the list of [DashboardData] to the database configuration store.
+     * Saves the order of the list of [DashboardItem]s to the database configuration store.
      */
-    suspend operator fun invoke(data: List<DashboardData>) {
+    suspend operator fun invoke(data: List<DashboardItem>) {
+        val hostId = systemV2Api.getHostId()
         val entries = data.mapIndexed { index, dashboardData ->
             DashboardEntry(
-                uid = dashboardData.uid,
-                type = when (dashboardData) {
-                    is DashboardData.CpuData -> DashboardEntry.Type.CPU
-                    is DashboardData.MemoryData -> DashboardEntry.Type.MEMORY
-                    is DashboardData.NetworkUsageData -> DashboardEntry.Type.NETWORK
-                    is DashboardData.SystemInformationData -> DashboardEntry.Type.SYSTEM_INFORMATION
+                uid = dashboardData.id,
+                type = when (dashboardData.type) {
+                    DashboardItem.Type.SystemInformation -> DashboardEntry.Type.SYSTEM_INFORMATION
+                    DashboardItem.Type.Cpu -> DashboardEntry.Type.CPU
+                    DashboardItem.Type.Memory -> DashboardEntry.Type.MEMORY
+                    DashboardItem.Type.Network -> DashboardEntry.Type.NETWORK
                 },
-                serverId = systemV2Api.getHostId(),
+                serverId = hostId,
                 isVisible = true,
                 priority = index
             )

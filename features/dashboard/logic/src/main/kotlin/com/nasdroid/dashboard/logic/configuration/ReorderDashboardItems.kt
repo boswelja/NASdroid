@@ -1,11 +1,9 @@
 package com.nasdroid.dashboard.logic.configuration
 
-import com.nasdroid.dashboard.logic.dataloading.DashboardData
-
 /**
  * Moves an entry in the dashboard from one position to another. See [invoke] for details.
  */
-class ReorderDashboardData {
+class ReorderDashboardItems {
 
     /**
      * Relocates the entry with the given type to a new position, based on the given priority.
@@ -23,7 +21,7 @@ class ReorderDashboardData {
      * 4 - CPU
      * ```
      */
-    operator fun invoke(items: List<DashboardData>, fromPosition: Int, toPosition: Int): List<DashboardData> {
+    operator fun invoke(items: List<DashboardItem>, fromPosition: Int, toPosition: Int): List<DashboardItem> {
         val workingList = items.toMutableList()
         val target = workingList.removeAt(fromPosition)
         workingList.add(toPosition, target)
