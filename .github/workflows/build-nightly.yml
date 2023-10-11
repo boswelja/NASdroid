@@ -8,6 +8,7 @@ on:
 jobs:
   build_nightly:
     runs-on: ubuntu-latest
+    environment: nightly
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -18,13 +19,17 @@ jobs:
           java-version: 17
           distribution: temurin
 
+      - name: Prepare signing keystore
+        uses: mobiledevops/secret-to-file-action@v1
+        with:
+          base64-encoded-secret: ${{ secrets.KEYSTORE_CONTENT }}
+          filename: ${{ secrets.ORG_GRADLE_PROJECT_STOREFILEPATH }}
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2.7.0
 
       - name: Build
         run: ./gradlew assembleRelease
-
-      # TODO Sign release for signature stability
 
       - name: Upload nightly
         uses: actions/upload-artifact@v3
