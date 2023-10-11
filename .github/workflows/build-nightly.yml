@@ -39,5 +39,6 @@ jobs:
       - name: Upload nightly
         uses: actions/upload-artifact@v3
         with:
-          name: nasdroid-nightly.apk
+          name: nasdroid-nightly
           path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
