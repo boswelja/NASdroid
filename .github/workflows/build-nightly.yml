@@ -23,7 +23,7 @@ jobs:
         uses: mobiledevops/secret-to-file-action@v1
         with:
           base64-encoded-secret: ${{ secrets.KEYSTORE_CONTENT }}
-          filename: ${{ secrets.KEYSTORE_PATH }}
+          filename: "keystore.jks"
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2.7.0
@@ -31,7 +31,7 @@ jobs:
       - name: Build
         run: ./gradlew assembleRelease
         env:
-          ORG_GRADLE_PROJECT_storeFilePath: ${{ secrets.KEYSTORE_PATH }}
+          ORG_GRADLE_PROJECT_storeFilePath: "../keystore.jks"
           ORG_GRADLE_PROJECT_storePass: ${{ secrets.KEYSTORE_PASSWORD }}
           ORG_GRADLE_PROJECT_key: ${{ secrets.KEY_ALIAS }}
           ORG_GRADLE_PROJECT_keyPass: ${{ secrets.KEY_PASSWORD }}
