@@ -16,8 +16,27 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        register("release") {
+            val storeFilePath: String? by project
+            val storePass: String? by project
+            val key: String? by project
+            val keyPass: String? by project
+            this.storeFile = storeFilePath?.let { file(it) }
+            this.storePassword = storePass
+            this.keyAlias = key
+            this.keyPassword = keyPass
+        }
+    }
+
     buildTypes {
         release {
+            // Only apply release config in CI, otherwise we need to configure it when running release builds.
+            signingConfig = if (System.getenv("CI") == "true") {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -26,6 +45,7 @@ android {
             )
         }
     }
+
     buildFeatures.compose = true
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
