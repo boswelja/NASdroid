@@ -23,13 +23,18 @@ jobs:
         uses: mobiledevops/secret-to-file-action@v1
         with:
           base64-encoded-secret: ${{ secrets.KEYSTORE_CONTENT }}
-          filename: ${{ secrets.ORG_GRADLE_PROJECT_STOREFILEPATH }}
+          filename: ${{ secrets.KEYSTORE_PATH }}
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2.7.0
 
       - name: Build
         run: ./gradlew assembleRelease
+        env:
+          ORG_GRADLE_PROJECT_storeFilePath: ${{ secrets.KEYSTORE_PATH }}
+          ORG_GRADLE_PROJECT_storePass: ${{ secrets.KEYSTORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_key: ${{ secrets.KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_keyPass: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload nightly
         uses: actions/upload-artifact@v3
