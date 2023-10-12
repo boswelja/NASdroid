@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -54,23 +55,33 @@ fun MemoryOverview(
         derivedStateOf { specs?.exceptionOrNull() ?: utilisation?.exceptionOrNull() }
     }
 
-    MemoryOverview(
-        specs = specs?.getOrNull(),
-        utilisation = utilisation?.getOrNull(),
-        modifier = modifier
-    )
+    Box(
+        Modifier
+            .height(IntrinsicSize.Min)
+            .width(IntrinsicSize.Max)
+    ) {
+        MemoryOverview(
+            specs = specs?.getOrNull(),
+            utilisation = utilisation?.getOrNull(),
+            modifier = modifier
+        )
 
-    if (error != null) {
-        Box(
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .width(IntrinsicSize.Min)
-                .background(
-                    color = MaterialTheme.colorScheme.errorContainer,
-                    shape = MaterialTheme.shapes.medium
+        if (error != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = MaterialTheme.colorScheme.errorContainer,
+                        shape = MaterialTheme.shapes.medium
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Something went wrong",
+                    modifier = Modifier.padding(8.dp),
+                    style = MaterialTheme.typography.bodyMedium
                 )
-        ) {
-            Text(text = "Something went wrong")
+            }
         }
     }
 }
