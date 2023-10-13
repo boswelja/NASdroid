@@ -3,10 +3,7 @@ package com.nasdroid.auth.ui.addserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.auth.logic.manageservers.AddNewServer
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -24,24 +21,6 @@ class AddServerViewModel(
      * loading state.
      */
     val isLoading: StateFlow<Boolean> = _isLoading
-
-    private val _events = MutableSharedFlow<Event?>(
-        replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
-
-    /**
-     * Flows [Event]s coming from the ViewModel. If the value is null, there is no event to handle.
-     * Note it is up to the collector to clear any existing events via [clearPendingEvent].
-     */
-    val events: SharedFlow<Event?> = _events
-
-    /**
-     * Clears any existing [Event] from [events].
-     */
-    fun clearPendingEvent() {
-        _events.tryEmit(null)
-    }
 
     /**
      * Try to authenticate via username/password. This will verify the credentials, and try to create
@@ -93,17 +72,5 @@ class AddServerViewModel(
             )
             _isLoading.value = false
         }
-    }
-
-    /**
-     * Describes various events that the ViewModel may emit.
-     */
-    enum class Event {
-        LoginSuccess,
-        LoginFailedKeyInvalid,
-        LoginFailedKeyAlreadyExists,
-        LoginFailedUsernameOrPasswordInvalid,
-        LoginFailedServerNotFound,
-        LoginFailedNotHttps
     }
 }
