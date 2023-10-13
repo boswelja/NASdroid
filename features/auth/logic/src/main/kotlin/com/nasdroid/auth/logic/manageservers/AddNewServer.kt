@@ -67,7 +67,7 @@ class AddNewServer(
             }
             val actualName = serverName.ifBlank {
                 val systemInfo = systemV2Api.getSystemInfo()
-                systemInfo.systemProduct
+                systemInfo.hostName
             }
             val uid = systemV2Api.getHostId()
             authenticatedServersStore.add(
