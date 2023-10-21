@@ -1,4 +1,4 @@
-package com.nasdroid.auth.ui.addserver
+package com.nasdroid.auth.ui.register.addserver
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

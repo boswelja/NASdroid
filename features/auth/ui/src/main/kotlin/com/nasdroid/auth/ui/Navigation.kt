@@ -7,7 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.nasdroid.auth.ui.addserver.AddServerScreen
+import com.nasdroid.auth.ui.register.addserver.AddServerScreen
 import com.nasdroid.auth.ui.serverselect.SelectServerScreen
 
 /**
@@ -25,22 +25,22 @@ fun NavGraphBuilder.authNavigation(
         startDestination = "picker",
         route = route
     ) {
-        composable("login") {
-            AddServerScreen(
-                onLoginSuccess = onLoginSuccess,
-                modifier = modifier,
-                contentPadding = contentPadding
-            )
-        }
         composable("picker") {
             SelectServerScreen(
                 onLoginSuccess = onLoginSuccess,
                 onAddServer = {
-                    navController.navigate("login")
+                    navController.navigate("add_server")
                 },
                 modifier = modifier,
                 contentPadding = contentPadding,
                 windowSizeClass = windowSizeClass,
+            )
+        }
+        composable("add_server") {
+            AddServerScreen(
+                onLoginSuccess = onLoginSuccess,
+                modifier = modifier,
+                contentPadding = contentPadding
             )
         }
     }
