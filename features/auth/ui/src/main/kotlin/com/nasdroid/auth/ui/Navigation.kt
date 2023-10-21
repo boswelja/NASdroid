@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.nasdroid.auth.ui.register.addserver.AddServerScreen
+import com.nasdroid.auth.ui.register.find.FindServerScreen
 import com.nasdroid.auth.ui.serverselect.SelectServerScreen
 
 /**
@@ -34,6 +35,15 @@ fun NavGraphBuilder.authNavigation(
                 modifier = modifier,
                 contentPadding = contentPadding,
                 windowSizeClass = windowSizeClass,
+            )
+        }
+        composable("find_server") {
+            FindServerScreen(
+                onServerFound = {
+
+                },
+                modifier = modifier,
+                contentPadding = contentPadding,
             )
         }
         composable("add_server") {
