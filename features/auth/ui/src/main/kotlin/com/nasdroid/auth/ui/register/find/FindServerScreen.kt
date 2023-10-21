@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -32,6 +33,9 @@ fun FindServerScreen(
             serverAddress = address,
             onServerAddressChange = onAddressChange
         )
+        Button(onClick = { onServerFound(address) }) {
+            Text(text = "Connect")
+        }
     }
 }
 
