@@ -13,6 +13,7 @@ import com.nasdroid.auth.ui.register.addserver.AddServerScreen
 import com.nasdroid.auth.ui.register.auth.AuthServerScreen
 import com.nasdroid.auth.ui.register.find.FindServerScreen
 import com.nasdroid.auth.ui.serverselect.SelectServerScreen
+import java.net.URLEncoder
 
 /**
  * Registers a nested navigation graph for the Auth feature.
@@ -43,7 +44,7 @@ fun NavGraphBuilder.authNavigation(
         composable("find_server") {
             FindServerScreen(
                 onServerFound = {
-                    navController.navigate("auth_server/$it")
+                    navController.navigate("auth_server/${URLEncoder.encode(it, "UTF-8")}")
                 },
                 modifier = modifier,
                 contentPadding = contentPadding,

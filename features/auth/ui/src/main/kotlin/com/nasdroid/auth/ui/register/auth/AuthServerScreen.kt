@@ -20,12 +20,14 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AuthServerScreen(
     onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
+    contentPadding: PaddingValues = PaddingValues(),
+    viewModel: AuthServerViewModel = koinViewModel()
 ) {
     val (apiKey, onApiKeyChange) = rememberSaveable {
         mutableStateOf("")
