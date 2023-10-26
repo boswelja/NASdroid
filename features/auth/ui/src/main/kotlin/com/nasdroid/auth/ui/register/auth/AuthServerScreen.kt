@@ -39,7 +39,7 @@ fun AuthServerScreen(
 }
 
 @Composable
-fun ApiKeyFields(
+internal fun ApiKeyFields(
     apiKey: String,
     onApiKeyChange: (String) -> Unit,
     onDone: () -> Unit,
@@ -72,7 +72,7 @@ fun ApiKeyFields(
 }
 
 @Composable
-fun LoginButton(
+internal fun LoginButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     loading: Boolean = false,
