@@ -51,36 +51,30 @@ fun AuthServerByBasic(
     }
     val canLogIn by remember(username, password) { derivedStateOf { username.isNotBlank() && password.isNotBlank() } }
 
-    Column(modifier) {
-        // TODO This is just a temporary title. It should be a proper TopAppBar with a back button.
-        Text(
-            text = "Log In",
-            style = MaterialTheme.typography.displayMedium
-        )
-        Column(
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center
+    ) {
+        BasicAuthFields(
+            username = username,
+            onUsernameChange = onUsernameChange,
+            password = password,
+            onPasswordChange = onPasswordChange,
+            onDone = {
+                if (canLogIn) onLoginWithBasic(username, password)
+            },
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .weight(1f),
-            verticalArrangement = Arrangement.Center
-        ) {
-            BasicAuthFields(
-                username = username,
-                onUsernameChange = onUsernameChange,
-                password = password,
-                onPasswordChange = onPasswordChange,
-                onDone = {
-                    if (canLogIn) onLoginWithBasic(username, password)
-                }
-            )
-            Spacer(Modifier.height(16.dp))
-            LoginButton(
-                onClick = { if (canLogIn) onLoginWithBasic(username, password) },
-                enabled = canLogIn,
-                modifier = Modifier
-                    .widthIn(max = 480.dp)
-                    .fillMaxWidth()
-            )
-        }
+                .widthIn(max = 480.dp)
+                .fillMaxWidth()
+        )
+        Spacer(Modifier.height(16.dp))
+        LoginButton(
+            onClick = { if (canLogIn) onLoginWithBasic(username, password) },
+            enabled = canLogIn,
+            modifier = Modifier
+                .widthIn(max = 480.dp)
+                .fillMaxWidth()
+        )
     }
 }
 

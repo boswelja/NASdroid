@@ -1,6 +1,5 @@
 package com.nasdroid.auth.ui.register.auth
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -17,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -36,37 +33,27 @@ fun AuthServerByKey(
     }
     val canLogIn by remember(apiKey) { derivedStateOf { apiKey.isNotBlank() } }
 
-    Column(modifier) {
-        // TODO This is just a temporary title. It should be a proper TopAppBar with a back button.
-        Text(
-            text = "Log In",
-            style = MaterialTheme.typography.displayMedium
-        )
-        Column(
+    Column(
+        modifier = modifier
+    ) {
+        ApiKeyFields(
+            apiKey = apiKey,
+            onApiKeyChange = onApiKeyChange,
+            onDone = {
+                if (canLogIn) onLoginWithKey(apiKey)
+            },
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .weight(1f),
-            verticalArrangement = Arrangement.Center
-        ) {
-            ApiKeyFields(
-                apiKey = apiKey,
-                onApiKeyChange = onApiKeyChange,
-                onDone = {
-                    if (canLogIn) onLoginWithKey(apiKey)
-                },
-                modifier = Modifier
-                    .widthIn(max = 480.dp)
-                    .fillMaxWidth()
-            )
-            Spacer(Modifier.height(16.dp))
-            LoginButton(
-                onClick = { onLoginWithKey(apiKey) },
-                enabled = canLogIn,
-                modifier = Modifier
-                    .widthIn(max = 480.dp)
-                    .fillMaxWidth()
-            )
-        }
+                .widthIn(max = 480.dp)
+                .fillMaxWidth()
+        )
+        Spacer(Modifier.height(16.dp))
+        LoginButton(
+            onClick = { onLoginWithKey(apiKey) },
+            enabled = canLogIn,
+            modifier = Modifier
+                .widthIn(max = 480.dp)
+                .fillMaxWidth()
+        )
     }
 }
 
