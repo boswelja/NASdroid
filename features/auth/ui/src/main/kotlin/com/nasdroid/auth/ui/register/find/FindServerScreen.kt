@@ -103,7 +103,7 @@ internal fun ServerAddressField(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Uri,
             autoCorrect = false,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Done
         ),
         singleLine = true,
         enabled = enabled,
