@@ -1,7 +1,6 @@
 package com.nasdroid.auth.ui.register.find
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -39,12 +38,10 @@ fun FindServerScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
-    Box {
-        FindServerByAddress(
-            onServerAddressChange = onServerFound,
-            modifier = modifier.padding(contentPadding)
-        )
-    }
+    FindServerByAddress(
+        onServerAddressChange = onServerFound,
+        modifier = modifier.padding(contentPadding)
+    )
 }
 
 @Composable
