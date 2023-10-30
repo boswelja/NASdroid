@@ -11,9 +11,10 @@
     <string name="invalid_key_auth">The API key you entered is invalid</string>
     <string name="invalid_server_address">Unable to reach the server</string>
 
-    <string name="server_label">Server Address</string>
+    <string name="server_label">Server address</string>
     <string name="username_label">Username</string>
     <string name="password_label">Password</string>
     <string name="api_key_label">API Key</string>
     <string name="log_in">Log In</string>
+    <string name="connect_server">Connect</string>
 </resources>
