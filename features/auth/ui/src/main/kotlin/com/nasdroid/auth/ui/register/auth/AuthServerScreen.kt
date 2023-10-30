@@ -3,6 +3,7 @@ package com.nasdroid.auth.ui.register.auth
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -25,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,12 +50,55 @@ fun AuthServerScreen(
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: AuthServerViewModel = koinViewModel()
 ) {
+    AuthServerByKey(
+        onLoginWithKey = {
+            viewModel.testCredentials(it)
+        },
+        modifier = modifier.padding(contentPadding)
+    )
+}
+
+@Composable
+internal fun AuthServerByKey(
+    onLoginWithKey: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val (apiKey, onApiKeyChange) = rememberSaveable {
         mutableStateOf("")
     }
-    Column(modifier.padding(contentPadding)) {
-        ApiKeyFields(apiKey = apiKey, onApiKeyChange = onApiKeyChange, onDone = onLoginSuccess)
-        LoginButton(onClick = onLoginSuccess)
+    val canLogIn by remember(apiKey) { derivedStateOf { apiKey.isNotBlank() } }
+
+    Column(modifier) {
+        // TODO This is just a temporary title. It should be a proper TopAppBar with a back button.
+        Text(
+            text = "Log In",
+            style = MaterialTheme.typography.displayMedium
+        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .weight(1f),
+            verticalArrangement = Arrangement.Center
+        ) {
+            ApiKeyFields(
+                apiKey = apiKey,
+                onApiKeyChange = onApiKeyChange,
+                onDone = {
+                    if (canLogIn) onLoginWithKey(apiKey)
+                },
+                modifier = Modifier
+                    .widthIn(max = 480.dp)
+                    .fillMaxWidth()
+            )
+            Spacer(Modifier.height(16.dp))
+            LoginButton(
+                onClick = { onLoginWithKey(apiKey) },
+                enabled = canLogIn,
+                modifier = Modifier
+                    .widthIn(max = 480.dp)
+                    .fillMaxWidth()
+            )
+        }
     }
 }
 

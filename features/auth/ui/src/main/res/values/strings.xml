@@ -17,4 +17,7 @@
     <string name="api_key_label">API Key</string>
     <string name="log_in">Log In</string>
     <string name="connect_server">Connect</string>
+
+    <string name="no_like_api_key">Don\'t want to use an API key?</string>
+    <string name="switch_basic_auth">Use a username and password instead</string>
 </resources>
