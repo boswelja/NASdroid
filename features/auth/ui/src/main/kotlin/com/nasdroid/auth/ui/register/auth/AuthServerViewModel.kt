@@ -3,14 +3,19 @@ package com.nasdroid.auth.ui.register.auth
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nasdroid.auth.logic.auth.TestServerAuthentication
+import com.nasdroid.auth.logic.manageservers.AddNewServer
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class AuthServerViewModel(
-    private val testServerAuthentication: TestServerAuthentication,
+    private val addNewServer: AddNewServer,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val serverAddress = savedStateHandle.get<String>("address")!!
+    private val _loginState = MutableStateFlow<LoginState?>(null)
+
+    val loginState: StateFlow<LoginState?> = _loginState
 
     /**
      * Try to authenticate via username/password. This will verify the credentials, and try to create
@@ -19,15 +24,25 @@ class AuthServerViewModel(
      * @param username The username to authenticate with.
      * @param password The password to authenticate with.
      */
-    fun testCredentials(
+    fun logIn(
         username: String,
         password: String
     ) {
         viewModelScope.launch {
-            testServerAuthentication(
-                serverUrl = serverAddress,
+            _loginState.value = LoginState.Loading
+            val result = addNewServer(
+                serverName = "",
+                serverAddress = serverAddress,
                 username = username,
                 password = password
+            )
+            _loginState.value = result.fold(
+                onSuccess = {
+                    LoginState.Success
+                },
+                onFailure = {
+                    LoginState.FailedInvalidCredentials
+                }
             )
         }
     }
@@ -37,14 +52,30 @@ class AuthServerViewModel(
      *
      * @param apiKey The API key to try authenticate with.
      */
-    fun testCredentials(
+    fun logIn(
         apiKey: String
     ) {
         viewModelScope.launch {
-            testServerAuthentication(
-                serverUrl = serverAddress,
-                apiKey = apiKey
+            _loginState.value = LoginState.Loading
+            val result = addNewServer(
+                serverName = "",
+                serverAddress = serverAddress,
+                token = apiKey
+            )
+            _loginState.value = result.fold(
+                onSuccess = {
+                    LoginState.Success
+                },
+                onFailure = {
+                    LoginState.FailedInvalidCredentials
+                }
             )
         }
     }
+}
+
+enum class LoginState {
+    Loading,
+    Success,
+    FailedInvalidCredentials,
 }
