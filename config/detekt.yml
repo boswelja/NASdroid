@@ -65,7 +65,7 @@ comments:
     active: true
     ignoreAnnotated:
       - 'Preview'
-      - 'PreviewScreenSize'
+      - 'PreviewScreenSizes'
       - 'PreviewFontScale'
       - 'PreviewLightDark'
       - 'PreviewDynamicColors'
