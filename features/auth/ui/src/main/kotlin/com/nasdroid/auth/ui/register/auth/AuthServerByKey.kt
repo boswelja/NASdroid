@@ -39,12 +39,13 @@ import com.nasdroid.auth.ui.R
 @Composable
 fun AuthServerByKey(
     onLoginWithKey: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     val (apiKey, onApiKeyChange) = rememberSaveable {
         mutableStateOf("")
     }
-    val canLogIn by remember(apiKey) { derivedStateOf { apiKey.isNotBlank() } }
+    val canLogIn by remember(apiKey, enabled) { derivedStateOf { enabled && apiKey.isNotBlank() } }
 
     Column(
         modifier = modifier
@@ -55,6 +56,7 @@ fun AuthServerByKey(
             onDone = {
                 if (canLogIn) onLoginWithKey(apiKey)
             },
+            enabled = enabled,
             modifier = Modifier
                 .widthIn(max = 480.dp)
                 .fillMaxWidth()

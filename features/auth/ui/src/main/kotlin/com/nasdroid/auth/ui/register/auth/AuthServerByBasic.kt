@@ -52,7 +52,8 @@ import com.nasdroid.auth.ui.R
 @Composable
 fun AuthServerByBasic(
     onLoginWithBasic: (String, String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     val (username, onUsernameChange) = rememberSaveable {
         mutableStateOf("")
@@ -60,7 +61,9 @@ fun AuthServerByBasic(
     val (password, onPasswordChange) = rememberSaveable {
         mutableStateOf("")
     }
-    val canLogIn by remember(username, password) { derivedStateOf { username.isNotBlank() && password.isNotBlank() } }
+    val canLogIn by remember(username, password, enabled) {
+        derivedStateOf { enabled && username.isNotBlank() && password.isNotBlank() }
+    }
 
     Column(
         modifier = modifier,
@@ -74,6 +77,7 @@ fun AuthServerByBasic(
             onDone = {
                 if (canLogIn) onLoginWithBasic(username, password)
             },
+            enabled = enabled,
             modifier = Modifier
                 .widthIn(max = 480.dp)
                 .fillMaxWidth()

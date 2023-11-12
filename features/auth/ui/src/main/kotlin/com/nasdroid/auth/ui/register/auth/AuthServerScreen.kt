@@ -65,6 +65,7 @@ fun AuthServerScreen(
             label = "Auth Mode",
             transitionSpec = { fadeIn() togetherWith fadeOut() }
         ) {
+            val acceptingInput = loginState != LoginState.Loading && loginState != LoginState.Success
             Column(
                 verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.Bottom),
                 modifier = Modifier.fillMaxSize()
@@ -72,13 +73,15 @@ fun AuthServerScreen(
                 when (it) {
                     AuthMode.ApiKey -> {
                         AuthServerByKey(
-                            onLoginWithKey = viewModel::logIn
+                            onLoginWithKey = viewModel::logIn,
+                            enabled = acceptingInput
                         )
                         SwitchToBasicAuth(onClick = { authMode = AuthMode.Basic })
                     }
                     AuthMode.Basic -> {
                         AuthServerByBasic(
-                            onLoginWithBasic = viewModel::logIn
+                            onLoginWithBasic = viewModel::logIn,
+                            enabled = acceptingInput
                         )
                         SwitchToApiKey(onClick = { authMode = AuthMode.ApiKey })
                     }
