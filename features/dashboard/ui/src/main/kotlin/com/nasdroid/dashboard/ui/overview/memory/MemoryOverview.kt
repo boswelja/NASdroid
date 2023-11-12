@@ -128,12 +128,12 @@ internal fun MemoryOverview(
         }
         Spacer(Modifier.height(4.dp))
         LinearProgressIndicator(
-            progress = utilisation?.allocatedPercent ?: 0.5f,
+            progress = { utilisation?.allocatedPercent ?: 0.5f },
             modifier = Modifier
                 .height(24.dp)
                 .fillMaxWidth()
                 .clip(CircleShape)
-                .skeleton(utilisation == null)
+                .skeleton(utilisation == null),
         )
     }
 }
