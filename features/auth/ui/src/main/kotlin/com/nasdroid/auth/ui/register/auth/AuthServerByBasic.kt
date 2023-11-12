@@ -16,6 +16,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Password
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
@@ -128,6 +130,9 @@ internal fun BasicAuthFields(
                 capitalization = KeyboardCapitalization.None,
                 imeAction = ImeAction.Next
             ),
+            leadingIcon = {
+                Icon(Icons.Default.Person, null)
+            },
             singleLine = true,
             enabled = enabled,
             modifier = Modifier.fillMaxWidth()
@@ -160,6 +165,9 @@ internal fun BasicAuthFields(
                         Icon(Icons.Default.VisibilityOff, null)
                     }
                 }
+            },
+            leadingIcon = {
+                Icon(Icons.Default.Password, null)
             },
             modifier = Modifier.fillMaxWidth()
         )

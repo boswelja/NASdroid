@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
@@ -110,6 +111,9 @@ internal fun ApiKeyFields(
                     Icon(Icons.Default.VisibilityOff, null)
                 }
             }
+        },
+        leadingIcon = {
+            Icon(Icons.Default.Key, null)
         },
         modifier = modifier
     )
