@@ -11,6 +11,7 @@ logic:
   - features/*/logic/**
 ui-ux:
   - features/*/ui/**
+  - core/design
 
 core:api:
   - core/api/**
@@ -20,6 +21,8 @@ core:compose-logviewer:
   - core/compose-logviewer/**
 core:compose-urllauncher:
   - core/compose-urllauncher/**
+core:design:
+  - core/design
 
 features:apps:
   - features/apps/**
