@@ -22,11 +22,11 @@ import androidx.navigation.compose.rememberNavController
 import com.nasdroid.apps.ui.appsGraph
 import com.nasdroid.auth.ui.authNavigation
 import com.nasdroid.dashboard.ui.dashboardGraph
+import com.nasdroid.design.NasDroidTheme
 import com.nasdroid.reporting.reportingGraph
 import com.nasdroid.storage.ui.storageGraph
 import com.nasdroid.ui.navigation.TopLevelDestination
 import com.nasdroid.ui.navigation.TopLevelNavigation
-import com.nasdroid.ui.theme.NasDroidTheme
 
 /**
  * The main entrypoint of the app. See [MainScreen] for content.

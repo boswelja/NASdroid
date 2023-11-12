@@ -30,6 +30,7 @@ include(
     ":core:capacity",
     ":core:compose-logviewer",
     ":core:compose-urllauncher",
+    ":core:design",
     ":features:apps:logic",
     ":features:apps:ui",
     ":features:auth:data",
