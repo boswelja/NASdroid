@@ -16,7 +16,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,6 +39,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 
@@ -89,6 +94,9 @@ internal fun BasicAuthFields(
     enabled: Boolean = true,
     error: Boolean = false,
 ) {
+    var isPasswordHidden by rememberSaveable {
+        mutableStateOf(true)
+    }
     Column(modifier) {
         AnimatedVisibility(
             visible = error,
@@ -129,7 +137,6 @@ internal fun BasicAuthFields(
             value = password,
             onValueChange = onPasswordChange,
             label = { Text(stringResource(R.string.password_label)) },
-            visualTransformation = remember { PasswordVisualTransformation() },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -140,6 +147,20 @@ internal fun BasicAuthFields(
             },
             singleLine = true,
             enabled = enabled,
+            visualTransformation = if (isPasswordHidden) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
+            },
+            trailingIcon = {
+                IconButton(onClick = { isPasswordHidden = !isPasswordHidden }) {
+                    if (isPasswordHidden) {
+                        Icon(Icons.Default.Visibility, null)
+                    } else {
+                        Icon(Icons.Default.VisibilityOff, null)
+                    }
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         )
     }
