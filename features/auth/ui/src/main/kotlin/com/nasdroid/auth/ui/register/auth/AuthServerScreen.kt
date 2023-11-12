@@ -4,24 +4,22 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -59,46 +57,84 @@ fun AuthServerScreen(
             text = "Log In",
             style = MaterialTheme.typography.displayMedium
         )
-        Spacer(Modifier.weight(1f))
         AnimatedContent(
             targetState = authMode,
             label = "Auth Mode",
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
             transitionSpec = { fadeIn() togetherWith fadeOut() }
         ) {
-            when (it) {
-                AuthMode.ApiKey -> {
-                    AuthServerByKey(
-                        onLoginWithKey = { apiKey ->
-                            viewModel.logIn(apiKey)
-                        }
-                    )
-                }
-                AuthMode.Basic -> {
-                    AuthServerByBasic(
-                        onLoginWithBasic = { username, password ->
-                            viewModel.logIn(username, password)
-                        }
-                    )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.Bottom),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                when (it) {
+                    AuthMode.ApiKey -> {
+                        AuthServerByKey(
+                            onLoginWithKey = viewModel::logIn
+                        )
+                        SwitchToBasicAuth(onClick = { authMode = AuthMode.Basic })
+                    }
+                    AuthMode.Basic -> {
+                        AuthServerByBasic(
+                            onLoginWithBasic = viewModel::logIn
+                        )
+                        SwitchToApiKey(onClick = { authMode = AuthMode.ApiKey })
+                    }
                 }
             }
         }
+    }
+}
 
-        CompositionLocalProvider(
-            LocalContentColor provides MaterialTheme.colorScheme.onSecondaryContainer
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Info, contentDescription = null)
-                Spacer(Modifier.width(8.dp))
-                Text(stringResource(R.string.no_like_api_key))
+@Composable
+internal fun SwitchToBasicAuth(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier) {
+        Icon(
+            Icons.Default.Info,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 2.dp)
+        )
+        Column {
+            Text(
+                text = stringResource(R.string.no_like_api_key),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+            TextButton(
+                onClick = onClick
+            ) {
+                Text(stringResource(R.string.switch_basic_auth))
             }
         }
+    }
+}
 
-        TextButton(
-            onClick = { authMode = AuthMode.Basic }
-        ) {
-            Text(stringResource(R.string.switch_basic_auth))
+@Composable
+internal fun SwitchToApiKey(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier) {
+        Icon(
+            Icons.Default.Info,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 2.dp)
+        )
+        Column {
+            Text(
+                text = stringResource(R.string.basic_auth_warning),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+            TextButton(
+                onClick = onClick
+            ) {
+                Text(stringResource(R.string.switch_api_key))
+            }
         }
     }
 }

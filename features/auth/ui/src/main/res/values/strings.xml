@@ -18,6 +18,9 @@
     <string name="log_in">Log In</string>
     <string name="connect_server">Connect</string>
 
-    <string name="no_like_api_key">Don\'t want to use an API key?</string>
-    <string name="switch_basic_auth">Use a username and password instead</string>
+    <string name="no_like_api_key">Your password will be stored securely in-app. Don\'t want to use an API key?</string>
+    <string name="switch_basic_auth">Use a username and password</string>
+    
+    <string name="basic_auth_warning">Your password will be stored securely in-app. We recommend using an API key for added control.</string>
+    <string name="switch_api_key">Use an API key</string>
 </resources>
