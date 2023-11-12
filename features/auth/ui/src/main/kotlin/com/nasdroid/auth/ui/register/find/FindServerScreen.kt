@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
@@ -72,6 +73,9 @@ internal fun FindServerByAddress(
             ServerAddressField(
                 serverAddress = address,
                 onServerAddressChange = onAddressChange,
+                onKeyboardAction = {
+                    if (canConnect) onServerAddressChange(address)
+                },
                 modifier = Modifier
                     .widthIn(max = 480.dp)
                     .fillMaxWidth()
@@ -94,6 +98,7 @@ internal fun FindServerByAddress(
 internal fun ServerAddressField(
     serverAddress: String,
     onServerAddressChange: (String) -> Unit,
+    onKeyboardAction: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     error: Boolean = false
@@ -108,6 +113,7 @@ internal fun ServerAddressField(
             autoCorrect = false,
             imeAction = ImeAction.Done
         ),
+        keyboardActions = KeyboardActions { onKeyboardAction() },
         singleLine = true,
         enabled = enabled,
         isError = error,
