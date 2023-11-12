@@ -6,17 +6,17 @@ ksp = "1.9.20-1.0.14"
 
 androidx-core = "1.12.0"
 androidx-browser = "1.6.0"
-androidx-lifecycle = "2.7.0-alpha02"
-androidx-navigation = "2.7.3"
-androidx-window = "1.2.0-beta03"
+androidx-lifecycle = "2.7.0-beta01"
+androidx-navigation = "2.7.5"
+androidx-window = "1.2.0-rc01"
 
-activity-compose = "1.8.0-beta01"
-compose-animation = "1.6.0-alpha06"
+activity-compose = "1.8.0"
+compose-animation = "1.6.0-alpha08"
 compose-compiler = "1.5.4"
-compose-foundation = "1.6.0-alpha06"
-compose-icons = "1.5.1"
-compose-material3 = "1.2.0-alpha08"
-compose-ui = "1.6.0-alpha06"
+compose-foundation = "1.6.0-alpha08"
+compose-icons = "1.5.4"
+compose-material3 = "1.2.0-alpha10"
+compose-ui = "1.6.0-alpha08"
 accompanist = "0.33.2-alpha"
 menuprovider = "1.0.3"
 
@@ -24,7 +24,7 @@ sqldelight = "2.0.0"
 
 coil = "2.5.0"
 
-room = "2.6.0-rc01"
+room = "2.6.0"
 
 ktor = "2.3.5"
 

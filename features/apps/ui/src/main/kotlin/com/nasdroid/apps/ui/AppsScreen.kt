@@ -12,10 +12,8 @@ import androidx.compose.material.icons.filled.AppRegistration
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material3.Icon
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -81,15 +79,8 @@ internal fun AppsTabRow(
     val selectedIndex by remember(selectedTab) {
         derivedStateOf { TabItem.entries.indexOf(selectedTab) }
     }
-    TabRow(
+    PrimaryTabRow(
         selectedTabIndex = selectedIndex,
-        indicator = { tabPositions ->
-            if (selectedIndex < tabPositions.size) {
-                TabRowDefaults.PrimaryIndicator(
-                    Modifier.tabIndicatorOffset(tabPositions[selectedIndex])
-                )
-            }
-        },
         modifier = modifier
     ) {
         TabItem.entries.forEach {

@@ -55,11 +55,11 @@ fun StorageUseSummary(
         }
         Spacer(Modifier.height(8.dp))
         LinearProgressIndicator(
+            progress = { progress },
             modifier = Modifier
                 .height(24.dp)
                 .fillMaxWidth(),
-            progress = progress,
-            strokeCap = StrokeCap.Round
+            strokeCap = StrokeCap.Round,
         )
     }
 }
