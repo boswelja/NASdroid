@@ -45,6 +45,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 
+/**
+ * An opinionated set of Composables that asks the user for a username and password, and submits
+ * them via [onLoginWithBasic] when they are done.
+ */
 @Composable
 fun AuthServerByBasic(
     onLoginWithBasic: (String, String) -> Unit,

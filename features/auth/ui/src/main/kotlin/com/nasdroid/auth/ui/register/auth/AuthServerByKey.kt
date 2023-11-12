@@ -32,6 +32,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 
+/**
+ * An opinionated set of Composables that asks the user for an API key, and submits it via
+ * [onLoginWithKey] when they are done.
+ */
 @Composable
 fun AuthServerByKey(
     onLoginWithKey: (String) -> Unit,

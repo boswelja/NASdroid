@@ -33,6 +33,9 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * A screen that allows the user to authenticate with a server they have already selected.
+ */
 @Composable
 fun AuthServerScreen(
     onLoginSuccess: () -> Unit,
@@ -159,7 +162,17 @@ internal fun LoginButton(
     }
 }
 
+/**
+ * Describes all available modes of authentication.
+ */
 enum class AuthMode {
+    /**
+     * Authentication via an API key.
+     */
     ApiKey,
+
+    /**
+     * Authentication via a username and password.
+     */
     Basic
 }

@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Provides data and responds to events for the server authentication screen.
+ */
 class AuthServerViewModel(
     private val addNewServer: AddNewServer,
     savedStateHandle: SavedStateHandle
@@ -15,6 +18,10 @@ class AuthServerViewModel(
     private val serverAddress = savedStateHandle.get<String>("address")!!
     private val _loginState = MutableStateFlow<LoginState?>(null)
 
+    /**
+     * The current state of the login process. Can be any of [LoginState], or null. A null value
+     * means the user has yet to take any action.
+     */
     val loginState: StateFlow<LoginState?> = _loginState
 
     /**
@@ -74,6 +81,9 @@ class AuthServerViewModel(
     }
 }
 
+/**
+ * Describes all possible states for the login screen.
+ */
 enum class LoginState {
     Loading,
     Success,

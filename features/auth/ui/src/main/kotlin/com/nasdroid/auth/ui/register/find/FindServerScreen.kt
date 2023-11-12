@@ -32,6 +32,9 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 
+/**
+ * A screen that allows the user to quickly find and connect to their TrueNAS server.
+ */
 @Composable
 fun FindServerScreen(
     onServerFound: (address: String) -> Unit,
@@ -110,7 +113,9 @@ internal fun ServerAddressField(
         isError = error,
         supportingText = if (error) {{
             Text(stringResource(R.string.invalid_server_address))
-        }} else null,
+        }} else {
+            null
+        },
         modifier = modifier
     )
 }
