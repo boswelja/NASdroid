@@ -26,7 +26,7 @@ coil = "2.5.0"
 
 room = "2.6.0"
 
-ktor = "2.3.5"
+ktor = "2.3.6"
 
 kotlinx-coroutines = "1.7.3"
 kotlinx-datetime = "0.4.1"
