@@ -3,6 +3,7 @@ package com.nasdroid.dashboard.logic.dataloading.network
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
+import com.nasdroid.capacity.Capacity.Companion.kilobytes
 import com.nasdroid.capacity.Capacity.Companion.megabytes
 import com.nasdroid.capacity.CapacityUnit
 import kotlinx.datetime.Clock
@@ -35,8 +36,8 @@ class GetNetworkUsageData(
                 NetworkUsageData.AdapterUtilisation(
                     name = graph.identifier!!,
                     // TODO These aren't technically the right unit names
-                    receivedBits = data[receivedIndex].megabytes.toLong(CapacityUnit.BYTE),
-                    sentBits = data[sentIndex].megabytes.toLong(CapacityUnit.BYTE)
+                    receivedBits = data[receivedIndex].kilobytes.toLong(CapacityUnit.BYTE),
+                    sentBits = data[sentIndex].kilobytes.toLong(CapacityUnit.BYTE)
                 )
             }
             Result.success(
