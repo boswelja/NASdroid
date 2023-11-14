@@ -121,8 +121,6 @@ data class ReportingConfig(
  * @property identifiers A list of identifiers. If this is not empty, there will be multiple sets of
  * data for this graph. These should be displayed as separate graphs, and each identifier should be
  * inserted into the title.
- * @property stacked TODO
- * @property stackedShowTotal TODO
  */
 @Serializable
 data class ReportingGraph(
@@ -134,10 +132,6 @@ data class ReportingGraph(
     val verticalLabel: String,
     @SerialName("identifiers")
     val identifiers: List<String>?,
-    @SerialName("stacked")
-    val stacked: Boolean,
-    @SerialName("stacked_show_total")
-    val stackedShowTotal: Boolean,
 )
 
 /**
@@ -166,7 +160,7 @@ data class ReportingGraphData(
     @SerialName("end")
     val end: Long,
     @SerialName("step")
-    val step: Int,
+    val step: Int?,
     @SerialName("legend")
     val legend: List<String>,
     @SerialName("aggregations")
@@ -185,11 +179,11 @@ data class ReportingGraphData(
     @Serializable
     data class Aggregations(
         @SerialName("min")
-        val min: List<Double?>,
+        val min: Map<String, Double?>,
         @SerialName("max")
-        val max: List<Double?>,
+        val max: Map<String, Double?>,
         @SerialName("mean")
-        val mean: List<Double?>,
+        val mean: Map<String, Double?>,
     )
 }
 

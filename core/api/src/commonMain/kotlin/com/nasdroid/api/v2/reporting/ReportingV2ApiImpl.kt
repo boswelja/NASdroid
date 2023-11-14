@@ -34,7 +34,7 @@ internal class ReportingV2ApiImpl(
         offset: Int?,
         sort: String?
     ): List<ReportingGraph> {
-        val response = client.get("reporting/graphs") {
+        val response = client.get("reporting/netdata_graphs") {
             parameter("limit", limit)
             parameter("offset", offset)
             parameter("sort", sort)
@@ -47,7 +47,7 @@ internal class ReportingV2ApiImpl(
         unit: Units,
         page: Int
     ): List<ReportingGraphData> {
-        val response = client.post("reporting/get_data") {
+        val response = client.post("reporting/netdata_get_data") {
             setBody(
                 ReportingGraphDataRequestDto(
                     graphs = graphs,
@@ -68,7 +68,7 @@ internal class ReportingV2ApiImpl(
         start: Instant,
         end: Instant
     ): List<ReportingGraphData> {
-        val response = client.post("reporting/get_data") {
+        val response = client.post("reporting/netdata_get_data") {
             setBody(
                 ReportingGraphDataRequestDto(
                     graphs = graphs,
@@ -85,7 +85,7 @@ internal class ReportingV2ApiImpl(
     }
 
     override suspend fun getGraphData(graphs: List<RequestedGraph>): List<ReportingGraphData> {
-        val response = client.post("reporting/get_data") {
+        val response = client.post("reporting/netdata_get_data") {
             setBody(
                 ReportingGraphDataRequestDto(
                     graphs = graphs,
@@ -101,7 +101,7 @@ internal class ReportingV2ApiImpl(
 internal data class ReportingGraphDataRequestDto(
     @SerialName("graphs")
     val graphs: List<RequestedGraph>,
-    @SerialName("reporting_query")
+    @SerialName("reporting_query_netdata")
     val reportingQuery: ReportingQuery,
 ) {
     @Serializable

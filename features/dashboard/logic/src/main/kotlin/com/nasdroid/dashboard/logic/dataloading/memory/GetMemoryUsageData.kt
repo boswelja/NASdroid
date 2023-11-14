@@ -5,6 +5,7 @@ import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.bytes
+import com.nasdroid.capacity.Capacity.Companion.megabytes
 import com.nasdroid.capacity.CapacityUnit
 import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds
@@ -34,9 +35,9 @@ class GetMemoryUsageData(
             val memoryData = graph.data.last { !it.contains(null) } as List<Double>
             Result.success(
                 MemoryUsageData(
-                    used = memoryData[usedIndex].toLong().bytes,
-                    free = memoryData[freeIndex].toLong().bytes,
-                    cached = memoryData[cachedIndex].toLong().bytes
+                    used = memoryData[usedIndex].megabytes,
+                    free = memoryData[freeIndex].megabytes,
+                    cached = memoryData[cachedIndex].megabytes
                 )
             )
         } catch (e: HttpNotOkException) {
