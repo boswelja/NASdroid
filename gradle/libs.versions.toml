@@ -35,7 +35,7 @@ kotlinx-serialization-formats = "1.6.1"
 koin = "3.5.0"
 koin-compose = "3.5.0"
 
-vico = "1.12.0"
+vico = "1.13.0"
 
 turbine = "1.0.0"
 
