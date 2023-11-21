@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
     implementation(libs.compose.menuprovider)
+    implementation(libs.vico)
     debugImplementation(libs.bundles.compose.tooling)
 
     implementation(libs.koin.android)
