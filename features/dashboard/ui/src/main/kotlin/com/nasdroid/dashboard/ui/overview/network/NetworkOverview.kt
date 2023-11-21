@@ -20,12 +20,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nasdroid.capacity.Capacity.Companion.bytes
 import com.nasdroid.capacity.CapacityUnit
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkConfiguration
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkUsageData
+import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.overview.skeleton
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -131,7 +134,7 @@ internal fun AdapterInfo(
             modifier = Modifier.skeleton(adapterConfig == null)
         )
         OverviewItemListItem(
-            labelContent = { Text("Address") },
+            labelContent = { Text(stringResource(R.string.network_address_label)) },
             content = {
                 Text(adapterConfig?.address ?: "None")
             },
@@ -145,19 +148,20 @@ internal fun AdapterInfo(
                 )
             }
             ProvideChartStyle(m3ChartStyle()) {
+                val context = LocalContext.current
                 Chart(
                     chart = columnChart(mergeMode = ColumnChart.MergeMode.Grouped),
                     model = chartModel,
                     startAxis = rememberStartAxis(
-                        title = "Mbit/s",
+                        title = stringResource(R.string.network_data_rate_unit),
                         titleComponent = textComponent(color = LocalContentColor.current)
                     ),
                     bottomAxis = rememberBottomAxis(
                         valueFormatter = { value, _ ->
                             if (value == 0f) {
-                                "Sent"
+                                context.getString(R.string.network_outgoing_label)
                             } else {
-                                "Received"
+                                context.getString(R.string.network_incoming_label)
                             }
                         }
                     )
