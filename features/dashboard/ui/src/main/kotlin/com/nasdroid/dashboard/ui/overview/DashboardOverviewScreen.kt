@@ -1,11 +1,11 @@
 package com.nasdroid.dashboard.ui.overview
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.dashboard.logic.configuration.DashboardItem
+import com.nasdroid.dashboard.ui.R
+import com.nasdroid.dashboard.ui.overview.common.DashboardCard
+import com.nasdroid.dashboard.ui.overview.common.DashboardCardEditControls
 import com.nasdroid.dashboard.ui.overview.cpu.CpuOverview
 import com.nasdroid.dashboard.ui.overview.memory.MemoryOverview
 import com.nasdroid.dashboard.ui.overview.network.NetworkOverview
 import com.nasdroid.dashboard.ui.overview.system.SystemInformationOverview
-import com.nasdroid.dashboard.ui.overview.common.DashboardCard
-import com.nasdroid.dashboard.ui.overview.common.DashboardCardEditControls
-import com.nasdroid.dashboard.ui.R
 import org.koin.androidx.compose.getViewModel
 
 /**
@@ -77,7 +77,6 @@ fun DashboardOverviewScreen(
 /**
  * Displays the given dashboard items, with toggleable editing support.
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DashboardOverviewList(
     items: List<DashboardItem>,
@@ -87,10 +86,12 @@ fun DashboardOverviewList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
-    LazyColumn(
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Adaptive(280.dp),
         modifier = modifier,
         contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalItemSpacing = 8.dp,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         itemsIndexed(
             items = items,
