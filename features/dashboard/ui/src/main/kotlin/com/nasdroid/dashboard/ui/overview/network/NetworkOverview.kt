@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +32,10 @@ import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.column.columnChart
+import com.patrykandpatrick.vico.compose.component.textComponent
 import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
-import com.patrykandpatrick.vico.core.component.text.textComponent
+import com.patrykandpatrick.vico.core.chart.column.ColumnChart
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import org.koin.androidx.compose.koinViewModel
 
@@ -56,7 +57,7 @@ fun NetworkOverview(
     Box(
         Modifier
             .height(IntrinsicSize.Min)
-            .width(IntrinsicSize.Max)
+            .fillMaxWidth()
     ) {
         NetworkOverview(
             configuration = configuration?.getOrNull(),
@@ -98,8 +99,18 @@ internal fun NetworkOverview(
             val adapterUtilisation = remember(adapterData, utilisation) {
                 utilisation?.adapterUtilisation?.firstOrNull { it.name == adapterData.name }
             }
-            if (index > 0) HorizontalDivider(Modifier.padding(vertical = 8.dp).fillMaxWidth())
-            AdapterInfo(adapterConfig = adapterData, adapterUtilisation = adapterUtilisation)
+            if (index > 0) {
+                HorizontalDivider(
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxWidth()
+                )
+            }
+            AdapterInfo(
+                adapterConfig = adapterData,
+                adapterUtilisation = adapterUtilisation,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
@@ -130,16 +141,16 @@ internal fun AdapterInfo(
             val chartModel = remember {
                 entryModelOf(
                     adapterUtilisation.sentBits.bytes.toDouble(CapacityUnit.MEGABYTE),
-                    adapterUtilisation.receivedBits.bytes.toDouble(CapacityUnit.MEGABYTE),
+                    adapterUtilisation.receivedBits.bytes.toDouble(CapacityUnit.MEGABYTE)
                 )
             }
             ProvideChartStyle(m3ChartStyle()) {
                 Chart(
-                    chart = columnChart(),
+                    chart = columnChart(mergeMode = ColumnChart.MergeMode.Grouped),
                     model = chartModel,
                     startAxis = rememberStartAxis(
                         title = "Mbit/s",
-                        titleComponent = textComponent()
+                        titleComponent = textComponent(color = LocalContentColor.current)
                     ),
                     bottomAxis = rememberBottomAxis(
                         valueFormatter = { value, _ ->
