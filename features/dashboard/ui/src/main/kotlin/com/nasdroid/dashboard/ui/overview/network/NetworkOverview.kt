@@ -6,10 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,14 +20,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nasdroid.capacity.Capacity.Companion.bytes
 import com.nasdroid.capacity.CapacityUnit
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkConfiguration
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkUsageData
+import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.overview.skeleton
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.column.columnChart
+import com.patrykandpatrick.vico.compose.component.textComponent
+import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
+import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.core.chart.column.ColumnChart
+import com.patrykandpatrick.vico.core.entry.entryModelOf
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -47,7 +60,7 @@ fun NetworkOverview(
     Box(
         Modifier
             .height(IntrinsicSize.Min)
-            .width(IntrinsicSize.Max)
+            .fillMaxWidth()
     ) {
         NetworkOverview(
             configuration = configuration?.getOrNull(),
@@ -89,8 +102,18 @@ internal fun NetworkOverview(
             val adapterUtilisation = remember(adapterData, utilisation) {
                 utilisation?.adapterUtilisation?.firstOrNull { it.name == adapterData.name }
             }
-            if (index > 0) HorizontalDivider(Modifier.padding(vertical = 8.dp))
-            AdapterInfo(adapterConfig = adapterData, adapterUtilisation = adapterUtilisation)
+            if (index > 0) {
+                HorizontalDivider(
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxWidth()
+                )
+            }
+            AdapterInfo(
+                adapterConfig = adapterData,
+                adapterUtilisation = adapterUtilisation,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
@@ -111,26 +134,40 @@ internal fun AdapterInfo(
             modifier = Modifier.skeleton(adapterConfig == null)
         )
         OverviewItemListItem(
-            labelContent = { Text("Address") },
+            labelContent = { Text(stringResource(R.string.network_address_label)) },
             content = {
                 Text(adapterConfig?.address ?: "None")
             },
             modifier = Modifier.skeleton(adapterConfig == null)
         )
-        OverviewItemListItem(
-            labelContent = { Text("Upload") },
-            content = {
-                Text("%.2fMB".format(adapterUtilisation?.sentBits?.bytes?.toDouble(CapacityUnit.MEBIBYTE)))
-            },
-            modifier = Modifier.skeleton(adapterUtilisation == null)
-        )
-        OverviewItemListItem(
-            labelContent = { Text("Download") },
-            content = {
-                Text("%.2fMB".format(adapterUtilisation?.receivedBits?.bytes?.toDouble(CapacityUnit.MEBIBYTE)))
-            },
-            modifier = Modifier.skeleton(adapterUtilisation == null)
-        )
+        adapterUtilisation?.let {
+            val chartModel = remember {
+                entryModelOf(
+                    adapterUtilisation.sentBits.bytes.toDouble(CapacityUnit.MEGABYTE),
+                    adapterUtilisation.receivedBits.bytes.toDouble(CapacityUnit.MEGABYTE)
+                )
+            }
+            ProvideChartStyle(m3ChartStyle()) {
+                val context = LocalContext.current
+                Chart(
+                    chart = columnChart(mergeMode = ColumnChart.MergeMode.Grouped),
+                    model = chartModel,
+                    startAxis = rememberStartAxis(
+                        title = stringResource(R.string.network_data_rate_unit),
+                        titleComponent = textComponent(color = LocalContentColor.current)
+                    ),
+                    bottomAxis = rememberBottomAxis(
+                        valueFormatter = { value, _ ->
+                            if (value == 0f) {
+                                context.getString(R.string.network_outgoing_label)
+                            } else {
+                                context.getString(R.string.network_incoming_label)
+                            }
+                        }
+                    )
+                )
+            }
+        }
     }
 }
 
@@ -155,11 +192,11 @@ fun NetworkOverviewPreview() {
                 NetworkUsageData.AdapterUtilisation(
                     name = "adapter1",
                     sentBits = 99999999,
-                    receivedBits = 10000
+                    receivedBits = 10000000
                 ),
                 NetworkUsageData.AdapterUtilisation(
                     name = "adapter2",
-                    sentBits = 10000,
+                    sentBits = 10000000,
                     receivedBits = 99999999
                 )
             )
