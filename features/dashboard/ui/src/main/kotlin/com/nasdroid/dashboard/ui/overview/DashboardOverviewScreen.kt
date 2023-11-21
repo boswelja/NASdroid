@@ -112,7 +112,6 @@ fun DashboardOverviewList(
                 onLongClick = onStartEditing,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .animateItemPlacement()
             )
         }
     }
