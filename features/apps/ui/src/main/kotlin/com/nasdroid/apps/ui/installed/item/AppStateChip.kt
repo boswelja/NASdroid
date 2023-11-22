@@ -19,7 +19,11 @@ internal fun AppStateChip(
 ) {
     Surface(
         shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.secondaryContainer,
+        color = when (state) {
+            InstalledApplication.State.DEPLOYING -> MaterialTheme.colorScheme.primaryContainer
+            InstalledApplication.State.ACTIVE -> MaterialTheme.colorScheme.secondaryContainer
+            InstalledApplication.State.STOPPED -> MaterialTheme.colorScheme.tertiaryContainer
+        },
         modifier = modifier
     ) {
         when (state) {
@@ -32,7 +36,7 @@ internal fun AppStateChip(
             }
             InstalledApplication.State.ACTIVE -> {
                 Text(
-                    text = "Active",
+                    text = "Running",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
