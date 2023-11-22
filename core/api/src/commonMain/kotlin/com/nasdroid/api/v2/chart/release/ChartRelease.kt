@@ -98,7 +98,7 @@ data class ChartRelease(
         @SerialName("sources")
         val sources: List<String>?,
         @SerialName("keywords")
-        val keywords: List<String>?
+        val keywords: List<String>?,
     ) {
         @Serializable
         data class Maintainer(
@@ -115,11 +115,13 @@ data class ChartRelease(
             @SerialName("title")
             val title: String?,
             @SerialName("truecharts.org/SCALE-support")
-            val truechartsOrgSCALESupport: String?,
+            val truechartsOrgScaleSupport: String?,
             @SerialName("truecharts.org/catagories")
-            val truechartsOrgcatagories: String?,
+            val truechartsOrgCategories: String?,
+            @SerialName("truecharts.org/category")
+            val truechartsOrgCategory: String?,
             @SerialName("truecharts.org/grade")
-            val truechartsOrggrade: String?
+            val truechartsOrgGrade: String?
         )
 
         @Serializable
