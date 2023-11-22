@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.nasdroid.apps.ui.available.AvailableAppsScreen
 import com.nasdroid.apps.ui.installed.InstalledAppsScreen
 import com.nasdroid.apps.ui.installed.logs.LogsScreen
 
@@ -29,6 +30,12 @@ fun NavGraphBuilder.appsGraph(
                 onShowLogs = {
                     navController.navigate("logs/$it")
                 },
+                modifier = modifier,
+                contentPadding = contentPadding,
+            )
+        }
+        composable("discover") {
+            AvailableAppsScreen(
                 modifier = modifier,
                 contentPadding = contentPadding,
             )
