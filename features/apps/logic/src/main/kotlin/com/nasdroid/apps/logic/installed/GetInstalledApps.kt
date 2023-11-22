@@ -1,5 +1,6 @@
 package com.nasdroid.apps.logic.installed
 
+import com.nasdroid.api.v2.chart.release.ChartRelease
 import com.nasdroid.api.v2.chart.release.ChartReleaseV2Api
 
 /**
@@ -23,10 +24,9 @@ class GetInstalledApps(
                     catalog = chartRelease.catalog,
                     train = chartRelease.catalogTrain,
                     state = when (chartRelease.status) {
-                        "ACTIVE" -> InstalledApplication.State.ACTIVE
-                        "STOPPED" -> InstalledApplication.State.STOPPED
-                        "DEPLOYING" -> InstalledApplication.State.DEPLOYING
-                        else -> error("Unhandled state: ${chartRelease.status}")
+                        ChartRelease.Status.ACTIVE -> InstalledApplication.State.ACTIVE
+                        ChartRelease.Status.STOPPED -> InstalledApplication.State.STOPPED
+                        ChartRelease.Status.DEPLOYING -> InstalledApplication.State.DEPLOYING
                     },
                     updateAvailable = chartRelease.updateAvailable,
                     webPortalUrl = chartRelease.portals?.let { portals ->
