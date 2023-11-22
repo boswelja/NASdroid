@@ -4,7 +4,8 @@ NASdroid is an unofficial Android client for [TrueNAS](https://www.truenas.com/)
 
 ## Releases
 
-Watch this space for release information! In the meantime, you can always compile the app yourself.
+You can get nightly builds from [our CI runs](https://github.com/boswelja/NASdroid/actions/workflows/build-nightly.yml).
+Stay tuned for alpha, beta and stable releases!
 
 ## Screenshots
 
@@ -16,7 +17,7 @@ Features correspond to the menu items you see in the TrueNAS SCALE web interface
 
 | Feature         | Status          |
 |-----------------|-----------------|
-| Dashboard       | In progress     |
+| Dashboard       | Available       |
 | Storage         | In progress     |
 | Apps            | In progress     |
 | Reporting       | In progress     |
