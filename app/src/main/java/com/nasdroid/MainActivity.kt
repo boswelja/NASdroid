@@ -91,7 +91,7 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
-            contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
             windowSizeClass = windowSizeClass,
         )
     }
