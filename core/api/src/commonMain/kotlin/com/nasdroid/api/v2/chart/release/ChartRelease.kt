@@ -1,7 +1,6 @@
 @file:Suppress("UndocumentedPublicClass", "UndocumentedPublicProperty") // Yeah, no.
 package com.nasdroid.api.v2.chart.release
 
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
@@ -33,7 +32,7 @@ data class ChartRelease(
     @SerialName("dataset")
     val dataset: String,
     @SerialName("status")
-    val status: String,
+    val status: Status,
     @SerialName("used_ports")
     val usedPorts: List<UsedPort>,
     @SerialName("pod_status")
@@ -51,6 +50,16 @@ data class ChartRelease(
     @SerialName("hooks")
     val hooks: List<Hook>?
 ) {
+    @Serializable
+    enum class Status {
+        @SerialName("DEPLOYING")
+        DEPLOYING,
+        @SerialName("ACTIVE")
+        ACTIVE,
+        @SerialName("STOPPED")
+        STOPPED
+    }
+
     @Serializable
     data class Info(
         @SerialName("first_deployed")
@@ -153,7 +162,6 @@ data class ChartRelease(
         val available: Int
     )
 
-    @OptIn(InternalSerializationApi::class)
     @Serializable(with = PortalsSerializer::class)
     sealed class Portals {
         abstract val webPortal: List<String>?
@@ -207,7 +215,8 @@ data class ChartRelease(
     }
 }
 
-internal object PortalsSerializer : JsonContentPolymorphicSerializer<ChartRelease.Portals>(ChartRelease.Portals::class) {
+internal object PortalsSerializer :
+    JsonContentPolymorphicSerializer<ChartRelease.Portals>(ChartRelease.Portals::class) {
     override fun selectDeserializer(element: JsonElement) = when {
         "Web Portal" in element.jsonObject -> ChartRelease.Portals.BadWebPortal.serializer()
         else -> ChartRelease.Portals.WebPortal.serializer()
