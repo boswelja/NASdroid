@@ -14,25 +14,27 @@ class GetInstalledApps(
      */
     suspend operator fun invoke(): List<InstalledApplication> {
         val releaseDtos = chartReleaseV2Api.getChartReleases()
-        return releaseDtos.map { chartRelease ->
-            InstalledApplication(
-                name = chartRelease.id,
-                version = chartRelease.humanVersion,
-                iconUrl = chartRelease.chartMetadata.icon,
-                catalog = chartRelease.catalog,
-                train = chartRelease.catalogTrain,
-                state = when (chartRelease.status) {
-                    "ACTIVE" -> InstalledApplication.State.ACTIVE
-                    "STOPPED" -> InstalledApplication.State.STOPPED
-                    "DEPLOYING" -> InstalledApplication.State.DEPLOYING
-                    else -> error("Unhandled state: ${chartRelease.status}")
-                },
-                updateAvailable = chartRelease.updateAvailable,
-                webPortalUrl = chartRelease.portals?.let { portals ->
-                    portals.open?.firstOrNull() ?: portals.webPortal?.firstOrNull()
-                }
-            )
-        }
+        return releaseDtos
+            .map { chartRelease ->
+                InstalledApplication(
+                    name = chartRelease.id,
+                    version = chartRelease.humanVersion,
+                    iconUrl = chartRelease.chartMetadata.icon,
+                    catalog = chartRelease.catalog,
+                    train = chartRelease.catalogTrain,
+                    state = when (chartRelease.status) {
+                        "ACTIVE" -> InstalledApplication.State.ACTIVE
+                        "STOPPED" -> InstalledApplication.State.STOPPED
+                        "DEPLOYING" -> InstalledApplication.State.DEPLOYING
+                        else -> error("Unhandled state: ${chartRelease.status}")
+                    },
+                    updateAvailable = chartRelease.updateAvailable,
+                    webPortalUrl = chartRelease.portals?.let { portals ->
+                        portals.open?.firstOrNull() ?: portals.webPortal?.firstOrNull()
+                    }
+                )
+            }
+            .sortedBy { it.name }
     }
 }
 
