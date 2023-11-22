@@ -137,9 +137,8 @@ fun OverviewCard(
                 onClick = onClick,
                 onLongClick = onLongClick,
                 cardEditControls = cardEditControls,
-                modifier = modifier
             ) {
-                CpuOverview()
+                CpuOverview(modifier = modifier)
             }
         }
         DashboardItem.Type.Memory -> {
@@ -148,9 +147,8 @@ fun OverviewCard(
                 onClick = onClick,
                 onLongClick = onLongClick,
                 cardEditControls = cardEditControls,
-                modifier = modifier
             ) {
-                MemoryOverview()
+                MemoryOverview(modifier = modifier)
             }
         }
         DashboardItem.Type.Network -> {
@@ -159,9 +157,8 @@ fun OverviewCard(
                 onClick = onClick,
                 onLongClick = onLongClick,
                 cardEditControls = cardEditControls,
-                modifier = modifier
             ) {
-                NetworkOverview()
+                NetworkOverview(modifier = modifier)
             }
         }
         DashboardItem.Type.SystemInformation -> {
@@ -170,9 +167,8 @@ fun OverviewCard(
                 onClick = onClick,
                 onLongClick = onLongClick,
                 cardEditControls = cardEditControls,
-                modifier = modifier
             ) {
-                SystemInformationOverview()
+                SystemInformationOverview(modifier = modifier)
             }
         }
     }
