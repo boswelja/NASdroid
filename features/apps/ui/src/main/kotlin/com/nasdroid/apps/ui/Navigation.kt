@@ -27,8 +27,8 @@ fun NavGraphBuilder.appsGraph(
     ) {
         composable("installed") {
             InstalledAppsScreen(
-                onShowLogs = {
-                    navController.navigate("logs/$it")
+                onNavigate = {
+                    navController.navigate(it)
                 },
                 modifier = modifier,
                 contentPadding = contentPadding,
