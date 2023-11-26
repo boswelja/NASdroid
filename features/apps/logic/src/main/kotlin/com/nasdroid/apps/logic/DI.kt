@@ -4,6 +4,7 @@ import com.nasdroid.apps.logic.available.GetAllAvailableApps
 import com.nasdroid.apps.logic.available.GetAvailableApps as GetAvailableAppsLegacy
 import com.nasdroid.apps.logic.available.InstallApplication
 import com.nasdroid.apps.logic.discover.GetAvailableApps
+import com.nasdroid.apps.logic.discover.GetSimilarApps
 import com.nasdroid.apps.logic.installed.DeleteApp
 import com.nasdroid.apps.logic.installed.GetAppLogs
 import com.nasdroid.apps.logic.installed.GetInstalledApps
@@ -23,6 +24,7 @@ val AppsLogicModule = module {
     factoryOf(::InstallApplication)
 
     factoryOf(::GetAvailableApps)
+    factoryOf(::GetSimilarApps)
 
     factoryOf(::DeleteApp)
     factoryOf(::GetAppLogs)
