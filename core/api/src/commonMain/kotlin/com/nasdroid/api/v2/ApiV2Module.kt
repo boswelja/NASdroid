@@ -5,6 +5,8 @@ import com.nasdroid.api.InMemoryApiStateProvider
 import com.nasdroid.api.getHttpClient
 import com.nasdroid.api.v2.apikey.ApiKeyV2Api
 import com.nasdroid.api.v2.apikey.ApiKeyV2ApiImpl
+import com.nasdroid.api.v2.app.AppV2Api
+import com.nasdroid.api.v2.app.AppV2ApiImpl
 import com.nasdroid.api.v2.auth.AuthV2Api
 import com.nasdroid.api.v2.auth.AuthV2ApiImpl
 import com.nasdroid.api.v2.catalog.CatalogV2Api
@@ -34,6 +36,7 @@ val ApiV2Module = module {
     singleOf(::getHttpClient)
 
     singleOf(::ApiKeyV2ApiImpl) bind ApiKeyV2Api::class
+    singleOf(::AppV2ApiImpl) bind AppV2Api::class
     singleOf(::AuthV2ApiImpl) bind AuthV2Api::class
     singleOf(::CatalogV2ApiImpl) bind CatalogV2Api::class
     singleOf(::ChartReleaseV2ApiImpl) bind ChartReleaseV2Api::class
