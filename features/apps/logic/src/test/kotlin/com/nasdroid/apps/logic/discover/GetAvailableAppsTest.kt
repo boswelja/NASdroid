@@ -81,6 +81,7 @@ class GetAvailableAppsTest {
     }
 
     companion object {
+        @Suppress("MaxLineLength")
         private val MockApiResponse = listOf(
             ApiAvailableApp(
                 catalog = "TRUECHARTS",
@@ -92,7 +93,7 @@ class GetAvailableAppsTest {
                 healthy = true,
                 healthyError = null,
                 homeUrl = "https://truecharts.org/charts/enterprise/vaultwarden",
-                location = "/mnt/Storage/ix-applications/catalogs/github_com_truecharts_catalog_main/enterprise/vaultwarden",
+                location = "/mnt/ix-applications/catalogs/github_com_truecharts_catalog_main/enterprise/vaultwarden",
                 latestVersion = "23.0.11",
                 latestAppVersion = "1.30.1",
                 latestHumanVersion = "1.30.1_23.0.11",
@@ -122,7 +123,7 @@ class GetAvailableAppsTest {
                 healthy = true,
                 healthyError = null,
                 homeUrl = "https://github.com/searxng/searxng",
-                location = "/mnt/Storage/ix-applications/catalogs/github_com_truenas_charts_git_master/community/searxng",
+                location = "/mnt/ix-applications/catalogs/github_com_truenas_charts_git_master/community/searxng",
                 latestVersion = "1.2.0",
                 latestAppVersion = "2023.11.23",
                 latestHumanVersion = "2023.11.23_1.2.0",
@@ -153,7 +154,7 @@ class GetAvailableAppsTest {
                 healthy = true,
                 healthyError = null,
                 homeUrl = "https://photoprism.app/",
-                location = "/mnt/Storage/ix-applications/catalogs/github_com_truenas_charts_git_master/charts/photoprism",
+                location = "/mnt/ix-applications/catalogs/github_com_truenas_charts_git_master/charts/photoprism",
                 latestVersion = "1.0.32",
                 latestAppVersion = "231021",
                 latestHumanVersion = "231021_1.0.32",
