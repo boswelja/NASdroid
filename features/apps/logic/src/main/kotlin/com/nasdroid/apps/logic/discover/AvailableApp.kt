@@ -8,6 +8,7 @@ import kotlinx.datetime.Instant
  * @property id The ID of the app. Unique within the [catalogName] providing the app.
  * @property title The human-readable title of the app.
  * @property description A brief, human-readable description of the app.
+ * @property iconUrl The URL for the app icon.
  * @property version The latest app version.
  * @property catalogName The name of the catalog that provides this app.
  * @property catalogTrain The train in the catalog that provides this app.
