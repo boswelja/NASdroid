@@ -1,5 +1,6 @@
 package com.nasdroid.apps.logic.discover
 
+import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.app.AppV2Api
 import com.nasdroid.apps.logic.discover.AvailableApp.Companion.toSanitizedModel
 import kotlinx.datetime.TimeZone
@@ -26,12 +27,16 @@ class GetAvailableApps(
         sortMode: SortMode,
         excludedCatalogs: List<String>
     ): Result<List<SortedApps>> {
-        val availableApps = appV2Api.getAvailable()
-            .filterNot { excludedCatalogs.contains(it.catalog) }
-            .filter {
-                it.title.contains(searchQuery, ignoreCase = true) ||
-                        it.description.contains(searchQuery, ignoreCase = true)
-            }
+        val availableApps = try {
+            appV2Api.getAvailable()
+                .filterNot { excludedCatalogs.contains(it.catalog) }
+                .filter {
+                    it.title.contains(searchQuery, ignoreCase = true) ||
+                            it.description.contains(searchQuery, ignoreCase = true)
+                }
+        } catch (e: HttpNotOkException) {
+            return Result.failure(e)
+        }
 
         val sortedApps = when (sortMode) {
             SortMode.Category -> {
@@ -62,7 +67,7 @@ class GetAvailableApps(
             SortMode.CatalogName -> {
                 availableApps
                     .map { it.toSanitizedModel() }
-                    .groupBy { it.catalogName.first().toString() }
+                    .groupBy { it.catalogName }
                     .map { (category, apps) -> SortedApps(category, apps) }
                     .sortedBy { it.groupTitle }
             }
