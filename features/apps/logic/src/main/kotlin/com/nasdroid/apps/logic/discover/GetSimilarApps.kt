@@ -1,5 +1,6 @@
 package com.nasdroid.apps.logic.discover
 
+import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.app.AppV2Api
 import com.nasdroid.apps.logic.discover.AvailableApp.Companion.toSanitizedModel
 
@@ -19,8 +20,12 @@ class GetSimilarApps(
      * looking for.
      */
     suspend operator fun invoke(appId: String, catalogName: String, catalogTrain: String): Result<List<AvailableApp>> {
-        val result = appV2Api.getSimilarTo(appId, catalogName, catalogTrain)
-            .map { it.toSanitizedModel() }
-        return Result.success(result)
+        return try {
+            val result = appV2Api.getSimilarTo(appId, catalogName, catalogTrain)
+                .map { it.toSanitizedModel() }
+            Result.success(result)
+        } catch (e: HttpNotOkException) {
+            Result.failure(e)
+        }
     }
 }
