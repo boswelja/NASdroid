@@ -1,8 +1,9 @@
 package com.nasdroid.apps.logic
 
 import com.nasdroid.apps.logic.available.GetAllAvailableApps
-import com.nasdroid.apps.logic.available.GetAvailableApps
+import com.nasdroid.apps.logic.available.GetAvailableApps as GetAvailableAppsLegacy
 import com.nasdroid.apps.logic.available.InstallApplication
+import com.nasdroid.apps.logic.discover.GetAvailableApps
 import com.nasdroid.apps.logic.installed.DeleteApp
 import com.nasdroid.apps.logic.installed.GetAppLogs
 import com.nasdroid.apps.logic.installed.GetInstalledApps
@@ -18,8 +19,10 @@ import org.koin.dsl.module
  */
 val AppsLogicModule = module {
     factoryOf(::GetAllAvailableApps)
-    factoryOf(::GetAvailableApps)
+    factoryOf(::GetAvailableAppsLegacy)
     factoryOf(::InstallApplication)
+
+    factoryOf(::GetAvailableApps)
 
     factoryOf(::DeleteApp)
     factoryOf(::GetAppLogs)
