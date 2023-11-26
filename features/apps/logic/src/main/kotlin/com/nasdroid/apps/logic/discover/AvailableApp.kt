@@ -18,6 +18,7 @@ data class AvailableApp(
     val id: String,
     val title: String,
     val description: String,
+    val iconUrl: String,
     val version: String,
     val catalogName: String,
     val catalogTrain: String,
@@ -30,6 +31,9 @@ data class AvailableApp(
                 id = name,
                 title = title,
                 description = description,
+                iconUrl = requireNotNull(iconUrl) {
+                    "An icon is required for applications, but one wasn't found in\n$this"
+                },
                 version = latestAppVersion,
                 catalogName = catalog,
                 catalogTrain = train,
