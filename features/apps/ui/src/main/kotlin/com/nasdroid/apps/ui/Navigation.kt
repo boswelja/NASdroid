@@ -8,7 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.nasdroid.apps.ui.available.AvailableAppsScreen
+import com.nasdroid.apps.ui.discover.DiscoverAppsScreen
 import com.nasdroid.apps.ui.installed.InstalledAppsScreen
 import com.nasdroid.apps.ui.installed.logs.LogsScreen
 
@@ -35,7 +35,7 @@ fun NavGraphBuilder.appsGraph(
             )
         }
         composable("discover") {
-            AvailableAppsScreen(
+            DiscoverAppsScreen(
                 modifier = modifier,
                 contentPadding = contentPadding,
             )
