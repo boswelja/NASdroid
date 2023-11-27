@@ -29,6 +29,7 @@ class GetAvailableApps(
     ): Result<List<SortedApps>> {
         val availableApps = try {
             appV2Api.getAvailable()
+                .filter { !it.categories.contains("generic") }
                 .filterNot { excludedCatalogs.contains(it.catalog) }
                 .filter {
                     it.title.contains(searchQuery, ignoreCase = true) ||

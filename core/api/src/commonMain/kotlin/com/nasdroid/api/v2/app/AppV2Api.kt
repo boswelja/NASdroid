@@ -119,9 +119,9 @@ data class AvailableApp(
     @SerialName("sources")
     val sources: List<String>,
     @SerialName("icon_url")
-    val iconUrl: String,
+    val iconUrl: String?,
     @SerialName("versions")
-    val versions: String?,
+    val versions: Map<String, String>?,
 ) {
 
     /**
