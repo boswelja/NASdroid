@@ -20,7 +20,7 @@ compose-ui = "1.6.0-beta01"
 accompanist = "0.33.2-alpha"
 menuprovider = "1.0.3"
 
-sqldelight = "2.0.0"
+sqldelight = "2.0.1"
 
 coil = "2.5.0"
 
