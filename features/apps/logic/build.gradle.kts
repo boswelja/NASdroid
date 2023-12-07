@@ -36,6 +36,7 @@ detekt {
 
 dependencies {
     api(libs.kotlinx.coroutines)
+    api(libs.kotlinx.datetime)
 
     implementation(projects.core.api)
 
