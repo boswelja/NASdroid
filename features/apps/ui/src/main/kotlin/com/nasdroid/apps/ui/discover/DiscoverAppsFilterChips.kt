@@ -18,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -161,7 +160,7 @@ fun SortModeChip(
 }
 
 /**
- * An opinionated [InputChip] used to show the user has included the specified category in their
+ * An opinionated [FilterChip] used to show the user has included the specified category in their
  * filter.
  */
 @Composable
@@ -170,7 +169,7 @@ fun SelectedCategoryChip(
     onRemove: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    InputChip(
+    FilterChip(
         selected = true,
         onClick = onRemove,
         label = { Text(categoryName) },
