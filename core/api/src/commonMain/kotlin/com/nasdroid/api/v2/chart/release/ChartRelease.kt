@@ -95,13 +95,13 @@ data class ChartRelease(
         @SerialName("appVersion")
         val appVersion: String,
         @SerialName("annotations")
-        val annotations: Annotations,
+        val annotations: Map<String, String>,
         @SerialName("kubeVersion")
         val kubeVersion: String,
         @SerialName("dependencies")
         val dependencies: List<Dependency>,
         @SerialName("type")
-        val type: String,
+        val type: String?,
         @SerialName("latest_chart_version")
         val latestChartVersion: String,
         @SerialName("sources")
@@ -117,20 +117,6 @@ data class ChartRelease(
             val email: String,
             @SerialName("url")
             val url: String
-        )
-
-        @Serializable
-        data class Annotations(
-            @SerialName("title")
-            val title: String?,
-            @SerialName("truecharts.org/SCALE-support")
-            val truechartsOrgScaleSupport: String?,
-            @SerialName("truecharts.org/catagories")
-            val truechartsOrgCategories: String?,
-            @SerialName("truecharts.org/category")
-            val truechartsOrgCategory: String?,
-            @SerialName("truecharts.org/grade")
-            val truechartsOrgGrade: String?
         )
 
         @Serializable
