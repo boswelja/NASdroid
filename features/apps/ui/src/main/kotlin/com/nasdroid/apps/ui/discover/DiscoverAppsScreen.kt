@@ -39,6 +39,9 @@ fun DiscoverAppsScreen(
 ) {
     val layoutDirection = LocalLayoutDirection.current
     val availableAppGroups by viewModel.availableApps.collectAsState()
+    val catalogFiltering by viewModel.catalogFilter.collectAsState()
+    val selectedCategories by viewModel.selectedCategories.collectAsState()
+    val sortMode by viewModel.sortMode.collectAsState()
     val cellPadding = PaddingValues(
         start = contentPadding.calculateStartPadding(layoutDirection),
         end = contentPadding.calculateEndPadding(layoutDirection)
@@ -51,6 +54,32 @@ fun DiscoverAppsScreen(
         ),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        item {
+            LazyRow(
+                contentPadding = cellPadding,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                item {
+                    FilterSettingsChip(onClick = { /*TODO*/ })
+                }
+                item {
+                    SortModeChip(sortMode = sortMode, onSortModeChange = viewModel::setSortMode)
+                }
+                items(catalogFiltering.toList()) { (catalogName, selected) -> // TODO toList isn't great for performance
+                    CatalogChip(
+                        catalogName = catalogName,
+                        selected = selected,
+                        onSelect = { viewModel.toggleCatalogFiltered(catalogName) }
+                    )
+                }
+                items(selectedCategories) { category ->
+                    SelectedCategoryChip(
+                        categoryName = category,
+                        onRemove = { viewModel.removeSelectedCategory(category) }
+                    )
+                }
+            }
+        }
         items(availableAppGroups) { appGroup ->
             Text(
                 text = appGroup.groupTitle,
