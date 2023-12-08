@@ -10,6 +10,8 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -29,6 +31,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.discover.SortMode
 import com.nasdroid.apps.ui.R
+
+/**
+ * An opinionated [AssistChip] used to launch a more detailed filter configuration.
+ */
+@Composable
+fun FilterSettingsChip(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    AssistChip(
+        onClick = onClick,
+        label = {
+            Icon(Icons.Default.Tune, null)
+        },
+        modifier = modifier,
+        enabled = enabled,
+    )
+}
 
 /**
  * An opinionated [FilterChip] designed to show catalogs as a single toggle-able chip.
@@ -133,6 +154,14 @@ private fun SortMode.label(): String {
 
 @Preview(showBackground = true)
 @Composable
+fun FilterSettingsChipPreview() {
+    MaterialTheme {
+        FilterSettingsChip(onClick = { })
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
 fun CatalogChipPreview() {
     MaterialTheme {
         var selected by remember {
@@ -146,7 +175,7 @@ fun CatalogChipPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun SortModeChipPreview() {
     MaterialTheme {
