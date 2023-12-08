@@ -57,7 +57,7 @@ class DiscoverAppsViewModel(
         catalogFilter,
         selectedCategories
     ) { searchText, sortMode, catalogFilter, selectedCategories ->
-        getAvailableApps(searchText, sortMode, catalogFilter.filterNot { it.value }.keys.toList())
+        getAvailableApps(searchText, sortMode, catalogFilter.filterNot { it.value }.keys.toList(), selectedCategories)
     }
         .mapLatest { it.getOrThrow() }
         .catch {
