@@ -3,14 +3,12 @@ package com.nasdroid.apps.ui.discover
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,12 +38,14 @@ fun CatalogChip(
     catalogName: String,
     selected: Boolean,
     onSelect: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     FilterChip(
         selected = selected,
         onClick = onSelect,
         label = { Text(catalogName) },
+        enabled = enabled,
         leadingIcon = {
             AnimatedVisibility(
                 visible = selected,
@@ -71,7 +71,8 @@ fun CatalogChip(
 fun SortModeChip(
     sortMode: SortMode,
     onSortModeChange: (SortMode) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     var pickerExpanded by remember {
         mutableStateOf(false)
@@ -82,27 +83,22 @@ fun SortModeChip(
     ) {
         FilterChip(
             selected = true,
-            onClick = { pickerExpanded = true },
+            onClick = { pickerExpanded = !pickerExpanded },
+            enabled = enabled,
             label = {
-                AnimatedContent(
-                    targetState = sortMode,
-                    label = "Sort mode title",
-                    transitionSpec = {
-                        expandHorizontally(
-                            expandFrom = Alignment.Start
-                        ) + fadeIn() togetherWith shrinkHorizontally(
-                            shrinkTowards = Alignment.Start
-                        ) + fadeOut()
-                    }
-                ) {
-                    Text(it.label())
-                }
+                Text(sortMode.label())
             },
             leadingIcon = {
                 Icon(Icons.AutoMirrored.Filled.Sort, null)
             },
             trailingIcon = {
-                Icon(Icons.Default.ArrowDropDown, null)
+                AnimatedContent(targetState = pickerExpanded, label = "Dropdown Indicator") {
+                    if (it) {
+                        Icon(Icons.Default.ArrowDropUp, null)
+                    } else {
+                        Icon(Icons.Default.ArrowDropDown, null)
+                    }
+                }
             },
             modifier = Modifier
                 .menuAnchor()
