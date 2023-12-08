@@ -10,6 +10,7 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.DropdownMenuItem
@@ -17,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -110,14 +112,26 @@ fun SortModeChip(
                 Text(sortMode.label())
             },
             leadingIcon = {
-                Icon(Icons.AutoMirrored.Filled.Sort, null)
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Sort,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
             },
             trailingIcon = {
                 AnimatedContent(targetState = pickerExpanded, label = "Dropdown Indicator") {
                     if (it) {
-                        Icon(Icons.Default.ArrowDropUp, null)
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropUp,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
                     } else {
-                        Icon(Icons.Default.ArrowDropDown, null)
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
                     }
                 }
             },
@@ -140,6 +154,31 @@ fun SortModeChip(
             }
         }
     }
+}
+
+/**
+ * An opinionated [InputChip] used to show the user has included the specified category in their
+ * filter.
+ */
+@Composable
+fun SelectedCategoryChip(
+    categoryName: String,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    InputChip(
+        selected = true,
+        onClick = onRemove,
+        label = { Text(categoryName) },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+        },
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -185,6 +224,17 @@ fun SortModeChipPreview() {
         SortModeChip(
             sortMode = sortMode,
             onSortModeChange = { sortMode = it }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SelectedCategoryChipPreview() {
+    MaterialTheme {
+        SelectedCategoryChip(
+            categoryName = "Monitoring",
+            onRemove = { }
         )
     }
 }
