@@ -25,4 +25,9 @@
     <string name="log_options_save">Load Logs</string>
 
     <string name="upgrade_options_version">Target Version</string>
+
+    <string name="discover_filter_sort_category">Category</string>
+    <string name="discover_filter_sort_name">App Name</string>
+    <string name="discover_filter_sort_catalog">Catalog Name</string>
+    <string name="discover_filter_sort_updated">Updated Date</string>
 </resources>
