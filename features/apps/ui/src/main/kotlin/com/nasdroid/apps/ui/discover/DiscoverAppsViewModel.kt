@@ -38,7 +38,7 @@ class DiscoverAppsViewModel(
      */
     @OptIn(ExperimentalCoroutinesApi::class)
     val availableApps: StateFlow<List<SortedApps>> = combine(searchText, sortMode) { searchText, sortMode ->
-        getAvailableApps(searchText, sortMode, emptyList())
+        getAvailableApps(searchText, sortMode, emptyList(), emptyList())
     }
         .mapLatest { it.getOrThrow() }
         .catch {

@@ -20,21 +20,25 @@ class GetAvailableApps(
      * @param searchQuery A search query the user has entered. This is checked against app titles
      * and descriptions in a case-insensitive fashion.
      * @param sortMode The desired sorting mode for the items. See [SortMode].
-     * @param excludedCatalogs A list of catalogs whose apps should be excluded from the result.
+     * @param filteredCatalogs A list of catalogs whose apps should be included from the result.
+     * An empty list means all catalogs will be returned. Note this is not different from a list
+     * containing all catalogs.
+     * @param filteredCategories A list of categories whose apps should be returned in the result.
+     * An empty list means all categories will be returned. Note this is not different from a list
+     * containing all categories.
      */
     suspend operator fun invoke(
         searchQuery: String,
         sortMode: SortMode,
-        excludedCatalogs: List<String>
+        filteredCatalogs: List<String>,
+        filteredCategories: List<String>,
     ): Result<List<SortedApps>> {
         val availableApps = try {
             appV2Api.getAvailable()
                 .filter { !it.categories.contains("generic") }
-                .filterNot { excludedCatalogs.contains(it.catalog) }
-                .filter {
-                    it.title.contains(searchQuery, ignoreCase = true) ||
-                            it.description.contains(searchQuery, ignoreCase = true)
-                }
+                .filterByCatalogs(filteredCatalogs)
+                .filterByCategories(filteredCategories)
+                .filterBySearch(searchQuery)
         } catch (e: HttpNotOkException) {
             return Result.failure(e)
         }
@@ -86,6 +90,39 @@ class GetAvailableApps(
         }
 
         return Result.success(sortedApps)
+    }
+
+    private fun List<com.nasdroid.api.v2.app.AvailableApp>.filterByCatalogs(
+        catalogs: List<String>
+    ): List<com.nasdroid.api.v2.app.AvailableApp> {
+        return if (catalogs.isNotEmpty()) {
+            filter { catalogs.contains(it.catalog) }
+        } else {
+            this
+        }
+    }
+
+    private fun List<com.nasdroid.api.v2.app.AvailableApp>.filterByCategories(
+        categories: List<String>
+    ): List<com.nasdroid.api.v2.app.AvailableApp> {
+        return if (categories.isNotEmpty()) {
+            filter { app -> app.categories.any { categories.contains(it) } }
+        } else {
+            this
+        }
+    }
+
+    private fun List<com.nasdroid.api.v2.app.AvailableApp>.filterBySearch(
+        searchQuery: String
+    ): List<com.nasdroid.api.v2.app.AvailableApp> {
+        return if (searchQuery.isNotEmpty()) {
+            filter {
+                it.title.contains(searchQuery, ignoreCase = true) ||
+                        it.description.contains(searchQuery, ignoreCase = true)
+            }
+        } else {
+            this
+        }
     }
 }
 

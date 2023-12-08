@@ -30,7 +30,7 @@ class GetAvailableAppsTest {
         val exception = HttpNotOkException(418, "I'm a teapot")
         coEvery { mockAppV2Api.getAvailable() } throws exception
 
-        val result = getAvailableApps("", SortMode.CatalogName, emptyList())
+        val result = getAvailableApps("", SortMode.CatalogName, emptyList(), emptyList())
 
         assertTrue(result.isFailure)
         assertEquals(exception, result.exceptionOrNull())
@@ -40,7 +40,7 @@ class GetAvailableAppsTest {
     fun `when SortMode Category, success is returned`() = runTest {
         coEvery { mockAppV2Api.getAvailable() } returns MockApiResponse
 
-        val result = getAvailableApps("", SortMode.Category, emptyList())
+        val result = getAvailableApps("", SortMode.Category, emptyList(), emptyList())
 
         assertTrue(result.isSuccess)
         assertEquals(MockExpectedResultByCategory, result.getOrNull())
@@ -50,7 +50,7 @@ class GetAvailableAppsTest {
     fun `when SortMode Name, success is returned`() = runTest {
         coEvery { mockAppV2Api.getAvailable() } returns MockApiResponse
 
-        val result = getAvailableApps("", SortMode.AppName, emptyList())
+        val result = getAvailableApps("", SortMode.AppName, emptyList(), emptyList())
 
         assertTrue(result.isSuccess)
         assertEquals(MockExpectedResultByName, result.getOrNull())
@@ -60,7 +60,7 @@ class GetAvailableAppsTest {
     fun `when SortMode Catalog, success is returned`() = runTest {
         coEvery { mockAppV2Api.getAvailable() } returns MockApiResponse
 
-        val result = getAvailableApps("", SortMode.CatalogName, emptyList())
+        val result = getAvailableApps("", SortMode.CatalogName, emptyList(), emptyList())
 
         assertTrue(result.isSuccess)
         assertEquals(MockExpectedResultByCatalog, result.getOrNull())
@@ -70,7 +70,7 @@ class GetAvailableAppsTest {
     fun `when searching, success is returned`() = runTest {
         coEvery { mockAppV2Api.getAvailable() } returns MockApiResponse
 
-        val result = getAvailableApps("SearXNG", SortMode.Category, emptyList())
+        val result = getAvailableApps("SearXNG", SortMode.Category, emptyList(), emptyList())
 
         assertTrue(result.isSuccess)
         // SearXNG is in the productivity category, so we can drop all categories except that
