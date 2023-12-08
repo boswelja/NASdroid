@@ -46,7 +46,11 @@ fun FilterSettingsChip(
     AssistChip(
         onClick = onClick,
         label = {
-            Icon(Icons.Default.Tune, null)
+            Icon(
+                imageVector = Icons.Default.Tune,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
         },
         modifier = modifier,
         enabled = enabled,
@@ -101,12 +105,12 @@ fun SortModeChip(
         mutableStateOf(false)
     }
     ExposedDropdownMenuBox(
-        expanded = false,
+        expanded = pickerExpanded,
         onExpandedChange = { pickerExpanded = !pickerExpanded }
     ) {
         FilterChip(
             selected = true,
-            onClick = { pickerExpanded = !pickerExpanded },
+            onClick = { pickerExpanded = true },
             enabled = enabled,
             label = {
                 Text(sortMode.label())
