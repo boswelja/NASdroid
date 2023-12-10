@@ -18,11 +18,17 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -36,6 +42,7 @@ import org.koin.androidx.compose.koinViewModel
 /**
  * A screen that allows the user to find and install new apps on their system.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscoverAppsScreen(
     modifier: Modifier = Modifier,
@@ -44,6 +51,12 @@ fun DiscoverAppsScreen(
 ) {
     val isFilterLoading by viewModel.isFilterLoading.collectAsState()
     val isAppListLoading by viewModel.isAppListLoading.collectAsState()
+    val availableAppGroups by viewModel.availableApps.collectAsState()
+    val catalogFiltering by viewModel.catalogFilter.collectAsState()
+    val selectedCategories by viewModel.selectedCategories.collectAsState()
+    val sortMode by viewModel.sortMode.collectAsState()
+
+    var isFilterSettingsVisible by rememberSaveable { mutableStateOf(false) }
     AnimatedContent(
         targetState = isFilterLoading || isAppListLoading,
         label = ""
@@ -53,10 +66,6 @@ fun DiscoverAppsScreen(
             ) { CircularProgressIndicator() }
         } else {
             val layoutDirection = LocalLayoutDirection.current
-            val availableAppGroups by viewModel.availableApps.collectAsState()
-            val catalogFiltering by viewModel.catalogFilter.collectAsState()
-            val selectedCategories by viewModel.selectedCategories.collectAsState()
-            val sortMode by viewModel.sortMode.collectAsState()
             val cellPadding = PaddingValues(
                 start = contentPadding.calculateStartPadding(layoutDirection),
                 end = contentPadding.calculateEndPadding(layoutDirection)
@@ -71,7 +80,7 @@ fun DiscoverAppsScreen(
             ) {
                 item {
                     FilterChipRow(
-                        onFilterSettingsClick = { /* TODO */ },
+                        onFilterSettingsClick = { isFilterSettingsVisible = true },
                         onSortModeChange = viewModel::setSortMode,
                         sortMode = sortMode,
                         onCatalogFilterChange = { catalogName, _ -> viewModel.toggleCatalogFiltered(catalogName) },
@@ -98,9 +107,33 @@ fun DiscoverAppsScreen(
             }
         }
     }
+
+    if (isFilterSettingsVisible) {
+        val categories by viewModel.availableCategories.collectAsState()
+        ModalBottomSheet(
+            onDismissRequest = { isFilterSettingsVisible = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        ) {
+            FilterSettings(
+                sortMode = sortMode,
+                onSortModeChange = viewModel::setSortMode,
+                categories = categories,
+                selectedCategories = selectedCategories,
+                onCategorySelectedChange = { category, selected ->
+                    if (selected) {
+                        viewModel.addCategoryToFilter(category)
+                    } else {
+                        viewModel.removeSelectedCategory(category)
+                    }
+                },
+                catalogs = catalogFiltering,
+                onCatalogSelectedChange = { catalog, _ -> viewModel.toggleCatalogFiltered(catalog) },
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            )
+        }
+    }
 }
 
-@Suppress("LongParameterList") // Unfortunately there's not much we can do here.
 @Composable
 internal fun FilterChipRow(
     onFilterSettingsClick: () -> Unit,

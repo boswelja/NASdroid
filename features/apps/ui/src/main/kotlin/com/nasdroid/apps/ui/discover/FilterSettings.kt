@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.automirrored.filled.Sort
@@ -61,7 +63,7 @@ fun FilterSettings(
     onSortModeChange: (SortMode) -> Unit,
     categories: List<String>,
     selectedCategories: List<String>,
-    onSelectedCategoriesChange: (List<String>) -> Unit,
+    onCategorySelectedChange: (String, Boolean) -> Unit,
     catalogs: Map<String, Boolean>,
     onCatalogSelectedChange: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -76,7 +78,8 @@ fun FilterSettings(
             .padding(
                 top = contentPadding.calculateTopPadding(),
                 bottom = contentPadding.calculateBottomPadding()
-            ),
+            )
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         SortModeSelector(
@@ -94,13 +97,7 @@ fun FilterSettings(
         CategorySelector(
             categories = categories,
             selectedCategories = selectedCategories,
-            onCategorySelectChange = { category, selected ->
-                if (selected) {
-                    onSelectedCategoriesChange(selectedCategories - category)
-                } else {
-                    onSelectedCategoriesChange(selectedCategories + category)
-                }
-            },
+            onCategorySelectChange = onCategorySelectedChange,
             modifier = Modifier.padding(cellPadding),
         )
     }
@@ -125,7 +122,7 @@ internal fun SortModeSelector(
             items(SortMode.entries) {
                 FilterChip(
                     selected = it == sortMode,
-                    onClick = { onSortModeChange(sortMode) },
+                    onClick = { onSortModeChange(it) },
                     label = it.label(),
                 )
             }
@@ -173,7 +170,7 @@ internal fun CategorySelector(
     var searchTerm by rememberSaveable {
         mutableStateOf("")
     }
-    val filteredCategories = remember(categories, searchTerm) {
+    val filteredCategories = remember(categories, searchTerm, showAll) {
         if (searchTerm.isBlank()) {
             if (showAll) {
                 categories
@@ -221,7 +218,7 @@ internal fun CategorySelector(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 filteredCategories.forEach {
-                    val selected = remember {
+                    val selected = remember(selectedCategories) {
                         selectedCategories.contains(it)
                     }
                     FilterChip(
@@ -452,7 +449,7 @@ fun FilterSettingsPreview() {
                 "Productivity",
                 "AI"
             ),
-            onSelectedCategoriesChange = { },
+            onCategorySelectedChange = { _, _ -> },
             catalogs = mapOf(
                 "TrueNAS" to true,
                 "TrueCharts" to true,
