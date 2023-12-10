@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
@@ -39,8 +39,8 @@ fun AvailableAppCard(
     app: AvailableApp,
     modifier: Modifier = Modifier
 ) {
-    ElevatedCard(modifier) {
-        Row(Modifier.padding(horizontal = 12.dp, vertical = 12.dp)) {
+    Card(modifier) {
+        Row(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Column {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -61,7 +61,7 @@ fun AvailableAppCard(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(12.dp))
             Column {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -77,6 +77,7 @@ fun AvailableAppCard(
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
+                Spacer(Modifier.height(2.dp))
                 Text(
                     text = app.description,
                     overflow = TextOverflow.Ellipsis,
@@ -110,6 +111,7 @@ fun AvailableAppCardPreview() {
                 lastUpdated = Instant.DISTANT_FUTURE
             ),
             modifier = Modifier
+                .padding(16.dp)
                 .height(128.dp)
                 .width(300.dp)
         )
