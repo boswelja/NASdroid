@@ -57,6 +57,9 @@ fun MainScreen(
     val destinations = remember {
         TopLevelDestination.entries
     }
+    val canNavigateBack = remember(navController, currentBackstackEntry) {
+        navController.previousBackStackEntry != null
+    }
     val selectedDestination by remember {
         derivedStateOf {
             val currentRoute = currentBackstackEntry?.destination?.parent?.route
@@ -82,8 +85,8 @@ fun MainScreen(
             }
         },
         navigationVisible = isNavigationVisible,
-        canNavigateBack = navController.previousBackStackEntry != null,
-        navigateBack = navController::navigateUp
+        canNavigateBack = canNavigateBack,
+        navigateBack = navController::popBackStack
     ) {
         MainNavHost(
             navController = navController,
