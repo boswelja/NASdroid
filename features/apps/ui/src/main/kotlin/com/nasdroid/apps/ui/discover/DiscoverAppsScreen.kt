@@ -1,6 +1,8 @@
 package com.nasdroid.apps.ui.discover
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -15,11 +17,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
@@ -38,50 +42,60 @@ fun DiscoverAppsScreen(
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: DiscoverAppsViewModel = koinViewModel()
 ) {
-    val layoutDirection = LocalLayoutDirection.current
-    val availableAppGroups by viewModel.availableApps.collectAsState()
-    val catalogFiltering by viewModel.catalogFilter.collectAsState()
-    val selectedCategories by viewModel.selectedCategories.collectAsState()
-    val sortMode by viewModel.sortMode.collectAsState()
-    val cellPadding = PaddingValues(
-        start = contentPadding.calculateStartPadding(layoutDirection),
-        end = contentPadding.calculateEndPadding(layoutDirection)
-    )
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(
-            top = contentPadding.calculateTopPadding(),
-            bottom = contentPadding.calculateBottomPadding()
-        ),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item {
-            FilterChipRow(
-                onFilterSettingsClick = { /* TODO */ },
-                onSortModeChange = viewModel::setSortMode,
-                sortMode = sortMode,
-                onCatalogFilterChange = { catalogName, _ ->
-                    viewModel.toggleCatalogFiltered(catalogName)
-                },
-                catalogFilters = catalogFiltering,
-                onRemoveSelectedCategory = viewModel::removeSelectedCategory,
-                selectedCategories = selectedCategories,
-                contentPadding = cellPadding
+    val isFilterLoading by viewModel.isFilterLoading.collectAsState()
+    val isAppListLoading by viewModel.isAppListLoading.collectAsState()
+    AnimatedContent(
+        targetState = isFilterLoading || isAppListLoading,
+        label = ""
+    ) { isLoading ->
+        if (isLoading) {
+            Box(modifier = modifier, contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator() }
+        } else {
+            val layoutDirection = LocalLayoutDirection.current
+            val availableAppGroups by viewModel.availableApps.collectAsState()
+            val catalogFiltering by viewModel.catalogFilter.collectAsState()
+            val selectedCategories by viewModel.selectedCategories.collectAsState()
+            val sortMode by viewModel.sortMode.collectAsState()
+            val cellPadding = PaddingValues(
+                start = contentPadding.calculateStartPadding(layoutDirection),
+                end = contentPadding.calculateEndPadding(layoutDirection)
             )
-        }
-        items(availableAppGroups) { appGroup ->
-            Text(
-                text = appGroup.groupTitle,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(cellPadding)
-            )
-            Spacer(Modifier.height(4.dp))
-            LazyHorizontalAppList(
-                apps = appGroup.apps,
-                cellSize = DpSize(width = 300.dp, height = 120.dp),
-                contentPadding = cellPadding,
-                modifier = Modifier.fillMaxWidth()
-            )
+            LazyColumn(
+                modifier = modifier,
+                contentPadding = PaddingValues(
+                    top = contentPadding.calculateTopPadding(),
+                    bottom = contentPadding.calculateBottomPadding()
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    FilterChipRow(
+                        onFilterSettingsClick = { /* TODO */ },
+                        onSortModeChange = viewModel::setSortMode,
+                        sortMode = sortMode,
+                        onCatalogFilterChange = { catalogName, _ -> viewModel.toggleCatalogFiltered(catalogName) },
+                        catalogFilters = catalogFiltering,
+                        onRemoveSelectedCategory = viewModel::removeSelectedCategory,
+                        selectedCategories = selectedCategories,
+                        contentPadding = cellPadding
+                    )
+                }
+                items(availableAppGroups) { appGroup ->
+                    Text(
+                        text = appGroup.groupTitle,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(cellPadding)
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    LazyHorizontalAppList(
+                        apps = appGroup.apps,
+                        cellSize = DpSize(width = 300.dp, height = 120.dp),
+                        contentPadding = cellPadding,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
         }
     }
 }

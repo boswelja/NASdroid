@@ -8,6 +8,8 @@ import com.nasdroid.apps.logic.discover.GetAvailableCategories
 import com.nasdroid.apps.logic.discover.SortMode
 import com.nasdroid.apps.logic.discover.SortedApps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +32,9 @@ class DiscoverAppsViewModel(
     private val _sortMode = MutableStateFlow(SortMode.Category)
     private val _catalogsFiltered = MutableStateFlow(emptyMap<String, Boolean>())
     private val _selectedCategories = MutableStateFlow(emptyList<String>())
-    private val _availableeCategories = MutableStateFlow(emptyList<String>())
+    private val _availableCategories = MutableStateFlow(emptyList<String>())
+    private val _isFilterLoading = MutableStateFlow(false)
+    private val _isAppListLoading = MutableStateFlow(false)
 
     /**
      * Flows the test that [availableApps] is currently filtered by.
@@ -56,7 +60,17 @@ class DiscoverAppsViewModel(
     /**
      * Flows a list of all categories exposed by catalogs on the system.
      */
-    val availableCategories: StateFlow<List<String>> = _availableeCategories
+    val availableCategories: StateFlow<List<String>> = _availableCategories
+
+    /**
+     * Flows whether the filter is loading data.
+     */
+    val isFilterLoading: StateFlow<Boolean> = _isFilterLoading
+
+    /**
+     * Flows whether the app list is loading data.
+     */
+    val isAppListLoading: StateFlow<Boolean> = _isAppListLoading
 
     /**
      * Flows a list of all available apps to be displayed to the user.
@@ -68,7 +82,15 @@ class DiscoverAppsViewModel(
         catalogFilter,
         selectedCategories
     ) { searchText, sortMode, catalogFilter, selectedCategories ->
-        getAvailableApps(searchText, sortMode, catalogFilter.filter { it.value }.keys.toList(), selectedCategories)
+        _isAppListLoading.value = true
+        val apps = getAvailableApps(
+            searchQuery = searchText,
+            sortMode = sortMode,
+            filteredCatalogs = catalogFilter.filter { it.value }.keys.toList(),
+            filteredCategories = selectedCategories
+        )
+        _isAppListLoading.value = false
+        apps
     }
         .mapLatest { it.getOrThrow() }
         .catch {
@@ -81,8 +103,7 @@ class DiscoverAppsViewModel(
         )
 
     init {
-        refreshCatalogList()
-        refreshAvailableCategories()
+        refreshFilterData()
     }
 
     /**
@@ -126,23 +147,25 @@ class DiscoverAppsViewModel(
         }
     }
 
-    private fun refreshCatalogList() {
+    private fun refreshFilterData() {
         viewModelScope.launch {
-            val catalogs = getAvailableCatalogs()
-            // TODO handle errors
-            catalogs.getOrNull()?.let {
-                _catalogsFiltered.value = it.associateWith { true }
+            _isFilterLoading.value = true
+            val catalogUpdater = async {
+                val catalogs = getAvailableCatalogs()
+                // TODO handle errors
+                catalogs.getOrNull()?.let {
+                    _catalogsFiltered.value = it.associateWith { true }
+                }
             }
-        }
-    }
-
-    private fun refreshAvailableCategories() {
-        viewModelScope.launch {
-            val categories = getAvailableCategories()
-            // TODO handle errors
-            categories.getOrNull()?.let {
-                _availableeCategories.value = it
+            val categoriesUpdater = async {
+                val categories = getAvailableCategories()
+                // TODO handle errors
+                categories.getOrNull()?.let {
+                    _availableCategories.value = it
+                }
             }
+            awaitAll(catalogUpdater, categoriesUpdater)
+            _isFilterLoading.value = false
         }
     }
 }
