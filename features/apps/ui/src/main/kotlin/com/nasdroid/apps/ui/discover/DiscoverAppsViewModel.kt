@@ -3,6 +3,7 @@ package com.nasdroid.apps.ui.discover
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.apps.logic.discover.GetAvailableApps
+import com.nasdroid.apps.logic.discover.GetAvailableCatalogs
 import com.nasdroid.apps.logic.discover.SortMode
 import com.nasdroid.apps.logic.discover.SortedApps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,17 +15,19 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 /**
  * A ViewModel that provides all data and callbacks to provide an app discovery experience to users.
  */
 class DiscoverAppsViewModel(
-    private val getAvailableApps: GetAvailableApps
+    private val getAvailableApps: GetAvailableApps,
+    private val getAvailableCatalogs: GetAvailableCatalogs,
 ) : ViewModel() {
     private val _searchText = MutableStateFlow("")
     private val _sortMode = MutableStateFlow(SortMode.Category)
-    private val _catalogsFiltered = MutableStateFlow(mapOf("TrueNAS" to true))
-    private val _selectedCategories = MutableStateFlow(listOf("Monitoring"))
+    private val _catalogsFiltered = MutableStateFlow(emptyMap<String, Boolean>())
+    private val _selectedCategories = MutableStateFlow(emptyList<String>())
 
     /**
      * Flows the test that [availableApps] is currently filtered by.
@@ -69,6 +72,10 @@ class DiscoverAppsViewModel(
             emptyList()
         )
 
+    init {
+        refreshCatalogList()
+    }
+
     fun setSortMode(sortMode: SortMode) {
         _sortMode.value = sortMode
     }
@@ -86,6 +93,16 @@ class DiscoverAppsViewModel(
     fun removeSelectedCategory(category: String) {
         _selectedCategories.update {
             it - category
+        }
+    }
+
+    private fun refreshCatalogList() {
+        viewModelScope.launch {
+            val catalogs = getAvailableCatalogs()
+            // TODO handle errors
+            catalogs.getOrNull()?.let {
+                _catalogsFiltered.value = it.associateWith { true }
+            }
         }
     }
 }
