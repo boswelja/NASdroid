@@ -85,10 +85,17 @@ class DiscoverAppsViewModel(
         refreshAvailableCategories()
     }
 
+    /**
+     * Sets how [availableApps] should be sorted.
+     */
     fun setSortMode(sortMode: SortMode) {
         _sortMode.value = sortMode
     }
 
+    /**
+     * Toggles whether apps belonging to [catalogName] should be included in [availableApps]. Note
+     * that toggling all catalogs off is the same as toggling them all on.
+     */
     fun toggleCatalogFiltered(catalogName: String) {
         _catalogsFiltered.update {
             it.toMutableMap()
@@ -99,12 +106,20 @@ class DiscoverAppsViewModel(
         }
     }
 
+    /**
+     * Removes [category] from the list of categories that should be excluded from [availableApps].
+     * Note that removing all categories is the same as adding all categories.
+     */
     fun removeSelectedCategory(category: String) {
         _selectedCategories.update {
             it - category
         }
     }
 
+    /**
+     * Adds [category] to the list of categories that should be included in [availableApps]. Note
+     * that removing all categories is the same as adding all categories.
+     */
     fun addCategoryToFilter(category: String) {
         _selectedCategories.update {
             it + category
