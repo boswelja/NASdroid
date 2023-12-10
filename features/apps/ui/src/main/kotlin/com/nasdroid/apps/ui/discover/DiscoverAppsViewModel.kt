@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.apps.logic.discover.GetAvailableApps
 import com.nasdroid.apps.logic.discover.GetAvailableCatalogs
+import com.nasdroid.apps.logic.discover.GetAvailableCategories
 import com.nasdroid.apps.logic.discover.SortMode
 import com.nasdroid.apps.logic.discover.SortedApps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,11 +24,13 @@ import kotlinx.coroutines.launch
 class DiscoverAppsViewModel(
     private val getAvailableApps: GetAvailableApps,
     private val getAvailableCatalogs: GetAvailableCatalogs,
+    private val getAvailableCategories: GetAvailableCategories,
 ) : ViewModel() {
     private val _searchText = MutableStateFlow("")
     private val _sortMode = MutableStateFlow(SortMode.Category)
     private val _catalogsFiltered = MutableStateFlow(emptyMap<String, Boolean>())
     private val _selectedCategories = MutableStateFlow(emptyList<String>())
+    private val _availableeCategories = MutableStateFlow(emptyList<String>())
 
     /**
      * Flows the test that [availableApps] is currently filtered by.
@@ -49,6 +52,11 @@ class DiscoverAppsViewModel(
      * Flows a list of categories the user has selected to filter by.
      */
     val selectedCategories: StateFlow<List<String>> = _selectedCategories
+
+    /**
+     * Flows a list of all categories exposed by catalogs on the system.
+     */
+    val availableCategories: StateFlow<List<String>> = _availableeCategories
 
     /**
      * Flows a list of all available apps to be displayed to the user.
@@ -74,6 +82,7 @@ class DiscoverAppsViewModel(
 
     init {
         refreshCatalogList()
+        refreshAvailableCategories()
     }
 
     fun setSortMode(sortMode: SortMode) {
@@ -96,12 +105,28 @@ class DiscoverAppsViewModel(
         }
     }
 
+    fun addCategoryToFilter(category: String) {
+        _selectedCategories.update {
+            it + category
+        }
+    }
+
     private fun refreshCatalogList() {
         viewModelScope.launch {
             val catalogs = getAvailableCatalogs()
             // TODO handle errors
             catalogs.getOrNull()?.let {
                 _catalogsFiltered.value = it.associateWith { true }
+            }
+        }
+    }
+
+    private fun refreshAvailableCategories() {
+        viewModelScope.launch {
+            val categories = getAvailableCategories()
+            // TODO handle errors
+            categories.getOrNull()?.let {
+                _availableeCategories.value = it
             }
         }
     }
