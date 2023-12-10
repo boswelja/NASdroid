@@ -87,13 +87,13 @@ fun FilterSettings(
             onSortModeChange = onSortModeChange,
             contentPadding = cellPadding,
         )
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(cellPadding))
         CatalogSelector(
             catalogs = catalogs,
             onCatalogSelectedChange = onCatalogSelectedChange,
             modifier = Modifier.padding(cellPadding),
         )
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(cellPadding))
         CategorySelector(
             categories = categories,
             selectedCategories = selectedCategories,
