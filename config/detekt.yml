@@ -74,6 +74,14 @@ comments:
 
 complexity:
   active: true
+  LongMethod:
+    active: true
+    ignoreAnnotated:
+      - 'Preview'
+      - 'PreviewScreenSizes'
+      - 'PreviewFontScale'
+      - 'PreviewLightDark'
+      - 'PreviewDynamicColors'
   LongParameterList:
     active: true
     ignoreDefaultParameters: true
