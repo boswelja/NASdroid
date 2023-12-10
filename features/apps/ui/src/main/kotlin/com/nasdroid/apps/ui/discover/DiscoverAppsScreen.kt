@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.discover.AvailableApp
+import com.nasdroid.apps.logic.discover.SortMode
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -55,30 +56,18 @@ fun DiscoverAppsScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            LazyRow(
-                contentPadding = cellPadding,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                item {
-                    FilterSettingsChip(onClick = { /*TODO*/ })
-                }
-                item {
-                    SortModeChip(sortMode = sortMode, onSortModeChange = viewModel::setSortMode)
-                }
-                items(catalogFiltering.toList()) { (catalogName, selected) -> // TODO toList isn't great for performance
-                    CatalogChip(
-                        catalogName = catalogName,
-                        selected = selected,
-                        onSelect = { viewModel.toggleCatalogFiltered(catalogName) }
-                    )
-                }
-                items(selectedCategories) { category ->
-                    SelectedCategoryChip(
-                        categoryName = category,
-                        onRemove = { viewModel.removeSelectedCategory(category) }
-                    )
-                }
-            }
+            FilterChipRow(
+                onFilterSettingsClick = { /* TODO */ },
+                onSortModeChange = viewModel::setSortMode,
+                sortMode = sortMode,
+                onCatalogFilterChange = { catalogName, _ ->
+                    viewModel.toggleCatalogFiltered(catalogName)
+                },
+                catalogFilters = catalogFiltering,
+                onRemoveSelectedCategory = viewModel::removeSelectedCategory,
+                selectedCategories = selectedCategories,
+                contentPadding = cellPadding
+            )
         }
         items(availableAppGroups) { appGroup ->
             Text(
@@ -92,6 +81,46 @@ fun DiscoverAppsScreen(
                 cellSize = DpSize(width = 300.dp, height = 120.dp),
                 contentPadding = cellPadding,
                 modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Suppress("LongParameterList") // Unfortunately there's not much we can do here.
+@Composable
+internal fun FilterChipRow(
+    onFilterSettingsClick: () -> Unit,
+    onSortModeChange: (SortMode) -> Unit,
+    sortMode: SortMode,
+    onCatalogFilterChange: (String, Boolean) -> Unit,
+    catalogFilters: Map<String, Boolean>,
+    onRemoveSelectedCategory: (String) -> Unit,
+    selectedCategories: List<String>,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues()
+) {
+    LazyRow(
+        contentPadding = contentPadding,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+        item {
+            FilterSettingsChip(onClick = onFilterSettingsClick)
+        }
+        item {
+            SortModeChip(sortMode = sortMode, onSortModeChange = onSortModeChange)
+        }
+        items(catalogFilters.toList()) { (catalogName, selected) -> // TODO toList isn't great for performance
+            CatalogChip(
+                catalogName = catalogName,
+                selected = selected,
+                onSelect = { onCatalogFilterChange(catalogName, !selected) }
+            )
+        }
+        items(selectedCategories) { category ->
+            SelectedCategoryChip(
+                categoryName = category,
+                onRemove = { onRemoveSelectedCategory(category) }
             )
         }
     }
