@@ -54,6 +54,8 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.discover.SortMode
 import com.nasdroid.apps.ui.R
 
+private const val CATEGORIES_COLLAPSED_MAX_COUNT = 10
+
 /**
  * A Composable that gives the user more fine-grained control over their filter selection.
  */
@@ -170,23 +172,12 @@ internal fun CategorySelector(
     var searchTerm by rememberSaveable {
         mutableStateOf("")
     }
-    val filteredCategories = remember(categories, searchTerm, showAll) {
-        if (searchTerm.isBlank()) {
-            if (showAll) {
-                categories
-            } else {
-                (selectedCategories + categories).toSet().take(10)
-            }
-        } else {
-            if (showAll) {
-                categories.filter { it.contains(searchTerm, ignoreCase = true) }
-            } else {
-                (selectedCategories + categories).toSet()
-                    .filter { it.contains(searchTerm, ignoreCase = true) }
-                    .take(10)
-            }
-        }
-    }
+    val filteredCategories = produceCategoryList(
+        searchTerm = searchTerm,
+        showAll = showAll,
+        categories = categories,
+        selectedCategories = selectedCategories
+    )
 
     FilterCategory(
         label = "Categories",
@@ -241,6 +232,32 @@ internal fun CategorySelector(
                     Spacer(Modifier.width(8.dp))
                     Text("Show more")
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun produceCategoryList(
+    searchTerm: String,
+    showAll: Boolean,
+    categories: List<String>,
+    selectedCategories: List<String>,
+): List<String> {
+    return remember(categories, selectedCategories, searchTerm, showAll) {
+        if (searchTerm.isBlank()) {
+            if (showAll) {
+                categories
+            } else {
+                (selectedCategories + categories).toSet().take(CATEGORIES_COLLAPSED_MAX_COUNT)
+            }
+        } else {
+            if (showAll) {
+                categories.filter { it.contains(searchTerm, ignoreCase = true) }
+            } else {
+                (selectedCategories + categories).toSet()
+                    .filter { it.contains(searchTerm, ignoreCase = true) }
+                    .take(CATEGORIES_COLLAPSED_MAX_COUNT)
             }
         }
     }
