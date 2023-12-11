@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -50,8 +51,15 @@ fun LogViewer(
         val logParser = DefaultLogParser()
         derivedStateOf { logParser.parseLines(logContents) }
     }
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = lines.lastIndex
+    )
     ProvideTextStyle(value = LocalTextStyle.current.copy(fontFamily = fontFamily)) {
-        LazyColumn(modifier = modifier, contentPadding = contentPadding) {
+        LazyColumn(
+            modifier = modifier,
+            contentPadding = contentPadding,
+            state = listState
+        ) {
             items(
                 items = lines,
                 key = { it.hashCode() }
