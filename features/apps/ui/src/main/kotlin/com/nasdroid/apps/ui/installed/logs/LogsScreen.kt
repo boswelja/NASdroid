@@ -7,6 +7,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ModalBottomSheet
@@ -74,7 +75,8 @@ fun LogsScreen(
                     coroutineScope.launch {
                         logOptionPickerState.hide()
                     }
-                }
+                },
+                modifier = Modifier.padding(contentPadding)
             )
         }
     }
