@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -54,27 +55,30 @@ fun LogViewer(
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = lines.lastIndex
     )
-    ProvideTextStyle(value = LocalTextStyle.current.copy(fontFamily = fontFamily)) {
-        LazyColumn(
-            modifier = modifier,
-            contentPadding = contentPadding,
-            state = listState
-        ) {
-            items(
-                items = lines,
-                key = { it.hashCode() }
-            ) { logLine ->
-                LogText(
-                    logLine = logLine,
-                    logColors = logColors,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
+    SelectionContainer {
+        ProvideTextStyle(value = LocalTextStyle.current.copy(fontFamily = fontFamily)) {
+            LazyColumn(
+                modifier = modifier,
+                contentPadding = contentPadding,
+                state = listState
+            ) {
+                items(
+                    items = lines,
+                    key = { it.hashCode() }
+                ) { logLine ->
+                    LogText(
+                        logLine = logLine,
+                        logColors = logColors,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                }
             }
         }
     }
 }
 
 private const val TIMESTAMP_PRECISION = 12
+
 @Composable
 internal fun LogText(
     logLine: LogLine,
@@ -82,7 +86,7 @@ internal fun LogText(
     modifier: Modifier = Modifier
 ) {
     val logColor = when (logLine.level) {
-        LogLevel.Debug ->logColors.debug
+        LogLevel.Debug -> logColors.debug
         LogLevel.Info -> logColors.info
         LogLevel.Warning -> logColors.warn
         LogLevel.Error -> logColors.error
