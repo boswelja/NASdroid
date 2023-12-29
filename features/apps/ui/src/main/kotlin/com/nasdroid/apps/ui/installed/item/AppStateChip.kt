@@ -6,11 +6,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.installed.InstalledApplication
+import com.nasdroid.apps.ui.R
 
 @Composable
 internal fun AppStateChip(
@@ -29,21 +31,21 @@ internal fun AppStateChip(
         when (state) {
             InstalledApplication.State.STOPPED -> {
                 Text(
-                    text = "Stopped",
+                    text = stringResource(R.string.app_state_stopped),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
             InstalledApplication.State.ACTIVE -> {
                 Text(
-                    text = "Running",
+                    text = stringResource(R.string.app_state_running),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
             InstalledApplication.State.DEPLOYING -> {
                 Text(
-                    text = "Deploying",
+                    text = stringResource(R.string.app_state_deploying),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )

@@ -36,9 +36,7 @@ import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.apps.ui.R
 import com.nasdroid.apps.ui.installed.item.ApplicationOverviewItem
-import com.nasdroid.apps.ui.installed.item.InstalledAppAction
-import com.nasdroid.core.urllauncher.rememberUrlLauncher
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * A screen for displaying and allowing management of apps installed on the system.
@@ -48,10 +46,8 @@ fun InstalledAppsScreen(
     onNavigate: (route: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    viewModel: InstalledAppsViewModel = getViewModel()
+    viewModel: InstalledAppsViewModel = koinViewModel()
 ) {
-    val urlLauncher = rememberUrlLauncher()
-
     ProvideMenuItems(
         MenuItem(
             label = stringResource(R.string.menu_item_refresh),
@@ -79,21 +75,9 @@ fun InstalledAppsScreen(
                 ) { applicationOverview ->
                     ApplicationOverviewItem(
                         installedApplication = applicationOverview,
-                        onActionClicked = {
-                            when (it) {
-                                InstalledAppAction.UPGRADE -> TODO()
-                                InstalledAppAction.ROLL_BACK -> TODO()
-                                InstalledAppAction.EDIT -> TODO()
-                                InstalledAppAction.SHELL -> TODO()
-                                InstalledAppAction.LOGS -> onNavigate("logs/${applicationOverview.name}")
-                                InstalledAppAction.DELETE -> deletingApp = applicationOverview.name
-                                InstalledAppAction.START -> viewModel.start(applicationOverview.name)
-                                InstalledAppAction.STOP -> viewModel.stop(applicationOverview.name)
-                                InstalledAppAction.WEB_PORTAL -> applicationOverview.webPortalUrl?.let {
-                                    urlLauncher.launchUrl(it)
-                                }
-                            }
-                        }
+                        onClick = { /* TODO */ },
+                        onAppStartRequest = { viewModel.start(applicationOverview.name) },
+                        onAppStopRequest = { viewModel.stop(applicationOverview.name) },
                     )
                 }
             }
