@@ -1,4 +1,4 @@
-package com.nasdroid.apps.ui.installed.upgrade
+package com.nasdroid.apps.ui.installed.overview.upgrade
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog

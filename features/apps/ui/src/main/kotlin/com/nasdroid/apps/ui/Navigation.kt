@@ -1,6 +1,7 @@
 package com.nasdroid.apps.ui
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -10,12 +11,13 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.nasdroid.apps.ui.discover.DiscoverAppsScreen
 import com.nasdroid.apps.ui.installed.InstalledAppsScreen
-import com.nasdroid.apps.ui.installed.logs.LogsScreen
+import com.nasdroid.apps.ui.installed.overview.logs.LogsScreen
 
 /**
  * Registers a nested navigation graph for the Apps feature.
  */
 fun NavGraphBuilder.appsGraph(
+    windowSizeClass: WindowSizeClass,
     navController: NavController,
     route: String,
     modifier: Modifier = Modifier,
@@ -27,6 +29,7 @@ fun NavGraphBuilder.appsGraph(
     ) {
         composable("installed") {
             InstalledAppsScreen(
+                windowSizeClass = windowSizeClass,
                 onNavigate = {
                     navController.navigate(it)
                 },

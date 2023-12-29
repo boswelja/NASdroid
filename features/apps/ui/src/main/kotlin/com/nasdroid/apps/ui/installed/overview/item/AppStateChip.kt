@@ -1,4 +1,4 @@
-package com.nasdroid.apps.ui.installed.item
+package com.nasdroid.apps.ui.installed.overview.item
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme

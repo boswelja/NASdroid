@@ -1,4 +1,4 @@
-package com.nasdroid.apps.ui.installed.logs
+package com.nasdroid.apps.ui.installed.overview.logs
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

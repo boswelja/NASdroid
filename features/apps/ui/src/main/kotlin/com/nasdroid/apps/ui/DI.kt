@@ -2,8 +2,8 @@ package com.nasdroid.apps.ui
 
 import com.nasdroid.apps.logic.AppsLogicModule
 import com.nasdroid.apps.ui.discover.DiscoverAppsViewModel
-import com.nasdroid.apps.ui.installed.InstalledAppsViewModel
-import com.nasdroid.apps.ui.installed.logs.LogsViewModel
+import com.nasdroid.apps.ui.installed.overview.InstalledAppsOverviewViewModel
+import com.nasdroid.apps.ui.installed.overview.logs.LogsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
@@ -16,6 +16,6 @@ val AppsModule = module {
 
     viewModelOf(::DiscoverAppsViewModel)
 
-    viewModelOf(::InstalledAppsViewModel)
+    viewModelOf(::InstalledAppsOverviewViewModel)
     viewModelOf(::LogsViewModel)
 }
