@@ -44,7 +44,7 @@ import org.koin.androidx.compose.getViewModel
  * A screen for displaying and allowing management of apps installed on the system.
  */
 @Composable
-fun InstalledAppsScreen(
+fun InstalledAppsOverviewScreen(
     onNavigate: (route: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),

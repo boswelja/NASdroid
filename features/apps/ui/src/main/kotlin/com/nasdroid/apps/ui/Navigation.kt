@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.nasdroid.apps.ui.discover.DiscoverAppsScreen
-import com.nasdroid.apps.ui.installed.InstalledAppsScreen
+import com.nasdroid.apps.ui.installed.InstalledAppsOverviewScreen
 import com.nasdroid.apps.ui.installed.logs.LogsScreen
 
 /**
@@ -26,7 +26,7 @@ fun NavGraphBuilder.appsGraph(
         route = route
     ) {
         composable("installed") {
-            InstalledAppsScreen(
+            InstalledAppsOverviewScreen(
                 onNavigate = {
                     navController.navigate(it)
                 },
