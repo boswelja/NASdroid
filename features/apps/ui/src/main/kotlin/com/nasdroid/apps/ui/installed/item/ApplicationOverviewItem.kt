@@ -43,7 +43,7 @@ fun ApplicationOverviewItem(
         Row(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
