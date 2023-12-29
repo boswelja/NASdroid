@@ -1,4 +1,4 @@
-package com.nasdroid.apps.ui.installed.upgrade
+package com.nasdroid.apps.ui.installed.overview.upgrade
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable

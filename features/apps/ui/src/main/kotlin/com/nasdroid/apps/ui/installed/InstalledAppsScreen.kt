@@ -9,7 +9,12 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.nasdroid.apps.ui.installed.overview.InstalledAppsOverviewScreen
 
+/**
+ * An adaptive screen that will display [InstalledAppsOverviewScreen] on all screen sizes, and [TODO]
+ * on larger devices in a split view.
+ */
 @Composable
 fun InstalledAppsScreen(
     windowSizeClass: WindowSizeClass,

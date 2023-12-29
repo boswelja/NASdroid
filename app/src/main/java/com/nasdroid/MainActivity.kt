@@ -146,7 +146,13 @@ fun MainNavHost(
                 TopLevelDestination.Network -> {}
                 TopLevelDestination.Credentials -> {}
                 TopLevelDestination.Virtualization -> {}
-                TopLevelDestination.Apps -> appsGraph(navController, destination.getRoute(), modifier, contentPadding)
+                TopLevelDestination.Apps -> appsGraph(
+                    windowSizeClass = windowSizeClass,
+                    navController = navController,
+                    route = destination.getRoute(),
+                    modifier = modifier,
+                    contentPadding = contentPadding
+                )
                 TopLevelDestination.Reporting -> reportingGraph(destination.getRoute(), modifier, contentPadding)
                 TopLevelDestination.SystemSettings -> {}
             }

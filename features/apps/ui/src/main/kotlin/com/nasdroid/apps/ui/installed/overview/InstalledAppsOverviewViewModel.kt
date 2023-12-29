@@ -1,4 +1,4 @@
-package com.nasdroid.apps.ui.installed
+package com.nasdroid.apps.ui.installed.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 /**
  * Exposes data for and receives events from the "installed apps" screen.
  */
-class InstalledAppsViewModel(
+class InstalledAppsOverviewViewModel(
     private val getInstalledApps: GetInstalledApps,
     private val startApp: StartApp,
     private val stopApp: StopApp,

@@ -1,4 +1,4 @@
-package com.nasdroid.apps.ui.installed.logs
+package com.nasdroid.apps.ui.installed.overview.logs
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement

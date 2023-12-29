@@ -1,4 +1,4 @@
-package com.nasdroid.apps.ui.installed.upgrade
+package com.nasdroid.apps.ui.installed.overview.upgrade
 
 /**
  * Describes information about the state of an apps upgrade.

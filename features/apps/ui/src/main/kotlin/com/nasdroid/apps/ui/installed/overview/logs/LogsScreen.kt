@@ -1,4 +1,4 @@
-package com.nasdroid.apps.ui.installed.logs
+package com.nasdroid.apps.ui.installed.overview.logs
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
