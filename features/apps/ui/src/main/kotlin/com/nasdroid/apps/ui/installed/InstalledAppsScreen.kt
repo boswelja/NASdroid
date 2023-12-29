@@ -46,7 +46,6 @@ fun InstalledAppsScreen(
                 onNavigate = onNavigate,
                 modifier = Modifier
                     .weight(1f)
-                    .widthIn(max = 380.dp)
                     .fillMaxHeight(),
                 contentPadding = contentPadding,
             )
