@@ -23,10 +23,6 @@ internal fun AppInfoText(
             AppStateChip(state = installedApplication.state)
         }
         Text(
-            text = installedApplication.version,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Text(
             text = if (installedApplication.updateAvailable) {
                 "Update available"
             } else {
