@@ -60,10 +60,11 @@ fun InstalledAppsOverviewScreen(
 
     var deletingApp by rememberSaveable { mutableStateOf<String?>(null) }
 
-    Box(modifier) {
+    Box {
         LazyColumn(
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = modifier,
         ) {
             installedApps?.let { apps ->
                 items(
