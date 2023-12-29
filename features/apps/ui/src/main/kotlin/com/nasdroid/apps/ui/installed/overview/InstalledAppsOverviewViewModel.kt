@@ -2,7 +2,7 @@ package com.nasdroid.apps.ui.installed.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nasdroid.apps.logic.installed.InstalledApplication
+import com.nasdroid.apps.logic.installed.InstalledAppOverview
 import com.nasdroid.apps.logic.installed.DeleteApp
 import com.nasdroid.apps.logic.installed.GetInstalledApps
 import com.nasdroid.apps.logic.installed.StartApp
@@ -21,12 +21,12 @@ class InstalledAppsOverviewViewModel(
     private val deleteApp: DeleteApp,
 ) : ViewModel() {
 
-    private val _installedApps = MutableStateFlow<List<InstalledApplication>?>(null)
+    private val _installedApps = MutableStateFlow<List<InstalledAppOverview>?>(null)
 
     /**
-     * A list of [InstalledApplication]s representing all installed apps.
+     * A list of [InstalledAppOverview]s representing all installed apps.
      */
-    val installedApps: StateFlow<List<InstalledApplication>?> = _installedApps
+    val installedApps: StateFlow<List<InstalledAppOverview>?> = _installedApps
 
     init {
         refresh()

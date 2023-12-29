@@ -11,39 +11,39 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.nasdroid.apps.logic.installed.InstalledApplication
+import com.nasdroid.apps.logic.installed.InstalledAppOverview
 import com.nasdroid.apps.ui.R
 
 @Composable
 internal fun AppStateChip(
-    state: InstalledApplication.State,
+    state: InstalledAppOverview.State,
     modifier: Modifier = Modifier
 ) {
     Surface(
         shape = MaterialTheme.shapes.small,
         color = when (state) {
-            InstalledApplication.State.DEPLOYING -> MaterialTheme.colorScheme.primaryContainer
-            InstalledApplication.State.ACTIVE -> MaterialTheme.colorScheme.secondaryContainer
-            InstalledApplication.State.STOPPED -> MaterialTheme.colorScheme.tertiaryContainer
+            InstalledAppOverview.State.DEPLOYING -> MaterialTheme.colorScheme.primaryContainer
+            InstalledAppOverview.State.ACTIVE -> MaterialTheme.colorScheme.secondaryContainer
+            InstalledAppOverview.State.STOPPED -> MaterialTheme.colorScheme.tertiaryContainer
         },
         modifier = modifier
     ) {
         when (state) {
-            InstalledApplication.State.STOPPED -> {
+            InstalledAppOverview.State.STOPPED -> {
                 Text(
                     text = stringResource(R.string.app_state_stopped),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
-            InstalledApplication.State.ACTIVE -> {
+            InstalledAppOverview.State.ACTIVE -> {
                 Text(
                     text = stringResource(R.string.app_state_running),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
-            InstalledApplication.State.DEPLOYING -> {
+            InstalledAppOverview.State.DEPLOYING -> {
                 Text(
                     text = stringResource(R.string.app_state_deploying),
                     style = MaterialTheme.typography.labelMedium,
@@ -57,7 +57,7 @@ internal fun AppStateChip(
 @Preview(showBackground = true)
 @Composable
 fun AppStateChipPreview(
-    @PreviewParameter(provider = ApplicationStateProvider::class) state: InstalledApplication.State
+    @PreviewParameter(provider = ApplicationStateProvider::class) state: InstalledAppOverview.State
 ) {
     MaterialTheme {
         AppStateChip(
@@ -67,7 +67,7 @@ fun AppStateChipPreview(
     }
 }
 
-internal class ApplicationStateProvider : PreviewParameterProvider<InstalledApplication.State> {
-    override val values: Sequence<InstalledApplication.State> =
-        InstalledApplication.State.entries.asSequence()
+internal class ApplicationStateProvider : PreviewParameterProvider<InstalledAppOverview.State> {
+    override val values: Sequence<InstalledAppOverview.State> =
+        InstalledAppOverview.State.entries.asSequence()
 }
