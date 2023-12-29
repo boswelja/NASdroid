@@ -5,10 +5,16 @@ import com.nasdroid.api.v2.chart.release.ChartRelease
 import com.nasdroid.api.v2.chart.release.ChartReleaseV2Api
 import kotlinx.datetime.Instant
 
+/**
+ * Retrieves details about a single app installed on the system. See [invoke] for details.
+ */
 class GetInstalledApp(
     private val chartReleaseV2Api: ChartReleaseV2Api
 ) {
 
+    /**
+     * Get a single [InstalledAppDetails] for the app whose name matches [appName].
+     */
     suspend operator fun invoke(appName: String): Result<InstalledAppDetails> {
         return try {
             val chartRelease = chartReleaseV2Api.getChartRelease(appName)
