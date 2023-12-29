@@ -4,12 +4,12 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TextSnippet
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Terminal
-import androidx.compose.material.icons.filled.TextSnippet
 import androidx.compose.material.icons.filled.Upgrade
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -93,7 +93,7 @@ enum class AppControl(
     ),
     LOGS(
         titleRes = R.string.app_control_logs,
-        icon = Icons.Default.TextSnippet,
+        icon = Icons.AutoMirrored.Filled.TextSnippet,
         enabled = { it.state == InstalledApplication.State.ACTIVE }
     ),
     DELETE(
