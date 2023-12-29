@@ -72,7 +72,7 @@ fun InstalledAppsOverviewScreen(
                     key = { it.name }
                 ) { applicationOverview ->
                     ApplicationOverviewItem(
-                        installedApplication = applicationOverview,
+                        installedAppOverview = applicationOverview,
                         onClick = { /* TODO */ },
                         onAppStartRequest = { viewModel.start(applicationOverview.name) },
                         onAppStopRequest = { viewModel.stop(applicationOverview.name) },

@@ -24,15 +24,15 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
-import com.nasdroid.apps.logic.installed.InstalledApplication
+import com.nasdroid.apps.logic.installed.InstalledAppOverview
 import com.nasdroid.apps.ui.R
 
 /**
- * Displays information contained in the given [InstalledApplication] as a short, reusable list item.
+ * Displays information contained in the given [InstalledAppOverview] as a short, reusable list item.
  */
 @Composable
 fun ApplicationOverviewItem(
-    installedApplication: InstalledApplication,
+    installedAppOverview: InstalledAppOverview,
     onClick: () -> Unit,
     onAppStartRequest: () -> Unit,
     onAppStopRequest: () -> Unit,
@@ -49,7 +49,7 @@ fun ApplicationOverviewItem(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(installedApplication.iconUrl)
+                    .data(installedAppOverview.iconUrl)
                     .decoderFactory(SvgDecoder.Factory())
                     .crossfade(true)
                     .build(),
@@ -60,11 +60,11 @@ fun ApplicationOverviewItem(
                     .clip(MaterialTheme.shapes.small)
             )
             AppInfoText(
-                installedApplication = installedApplication,
+                installedAppOverview = installedAppOverview,
                 modifier = Modifier.weight(1f)
             )
             AppStateControls(
-                appState = installedApplication.state,
+                appState = installedAppOverview.state,
                 onStart = onAppStartRequest,
                 onStop = onAppStopRequest,
             )
@@ -74,16 +74,16 @@ fun ApplicationOverviewItem(
 
 @Composable
 internal fun AppInfoText(
-    installedApplication: InstalledApplication,
+    installedAppOverview: InstalledAppOverview,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
         Text(
-            text = installedApplication.name,
+            text = installedAppOverview.name,
             style = MaterialTheme.typography.titleMedium,
         )
         Text(
-            text = if (installedApplication.updateAvailable) {
+            text = if (installedAppOverview.updateAvailable) {
                 stringResource(R.string.app_update_available)
             } else {
                 stringResource(R.string.app_update_up_to_date)
@@ -95,7 +95,7 @@ internal fun AppInfoText(
 
 @Composable
 internal fun AppStateControls(
-    appState: InstalledApplication.State,
+    appState: InstalledAppOverview.State,
     onStart: () -> Unit,
     onStop: () -> Unit,
     modifier: Modifier = Modifier
@@ -109,18 +109,18 @@ internal fun AppStateControls(
         FilledTonalIconButton(
             onClick = {
                 when (appState) {
-                    InstalledApplication.State.DEPLOYING -> { /* no-op */ }
-                    InstalledApplication.State.ACTIVE -> onStop()
-                    InstalledApplication.State.STOPPED -> onStart()
+                    InstalledAppOverview.State.DEPLOYING -> { /* no-op */ }
+                    InstalledAppOverview.State.ACTIVE -> onStop()
+                    InstalledAppOverview.State.STOPPED -> onStart()
                 }
             },
             enabled = when (appState) {
-                InstalledApplication.State.DEPLOYING -> false
-                InstalledApplication.State.ACTIVE,
-                InstalledApplication.State.STOPPED -> true
+                InstalledAppOverview.State.DEPLOYING -> false
+                InstalledAppOverview.State.ACTIVE,
+                InstalledAppOverview.State.STOPPED -> true
             }
         ) {
-            if (appState == InstalledApplication.State.ACTIVE) {
+            if (appState == InstalledAppOverview.State.ACTIVE) {
                 Icon(Icons.Default.Stop, contentDescription = stringResource(R.string.app_control_stop))
             } else {
                 Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.app_control_start))
@@ -134,13 +134,13 @@ internal fun AppStateControls(
 fun ApplicationOverviewItemPreview() {
     MaterialTheme {
         ApplicationOverviewItem(
-            installedApplication = InstalledApplication(
+            installedAppOverview = InstalledAppOverview(
                 name = "Jellyfin",
                 version = "10.8.10_14.1.9",
                 iconUrl = "https://github.com/jellyfin/jellyfin-ux/blob/master/branding/SVG/icon-transparent.svg",
                 catalog = "Truenas",
                 train = "Community",
-                state = InstalledApplication.State.ACTIVE,
+                state = InstalledAppOverview.State.ACTIVE,
                 updateAvailable = false,
                 webPortalUrl = "http://my.jellyfin.local/"
             ),
