@@ -1,7 +1,9 @@
 package com.nasdroid.apps.ui.installed.logs
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -18,9 +20,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.installed.LogOptions
 import com.nasdroid.apps.logic.installed.SelectedLogOptions
 import com.nasdroid.apps.ui.R
@@ -42,7 +46,7 @@ fun LogOptionsPicker(
         mutableStateOf(options?.podsAndCharts?.get(selectedPod)?.firstOrNull().orEmpty())
     }
     val (maxLines, setMaxLines) = rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("500")
     }
 
     val contentValid by remember(selectedPod, selectedContainer, maxLines) {
@@ -51,7 +55,10 @@ fun LogOptionsPicker(
         }
     }
 
-    Column(modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         AnimatedVisibility(visible = options == null) {
             LinearProgressIndicator()
         }
@@ -59,19 +66,22 @@ fun LogOptionsPicker(
         PodPicker(
             podOptions = options?.podsAndCharts?.keys.orEmpty().toList(),
             selectedPod = selectedPod,
-            onPodSelected = setSelectedPod
+            onPodSelected = setSelectedPod,
+            modifier = Modifier.fillMaxWidth(),
         )
         ContainerPicker(
             containerOptions = options?.podsAndCharts?.get(selectedPod).orEmpty(),
             selectedContainer = selectedContainer,
-            onContainerSelected = setSelectedContainer
+            onContainerSelected = setSelectedContainer,
+            modifier = Modifier.fillMaxWidth(),
         )
         TextField(
             value = maxLines,
             onValueChange = setMaxLines,
             label = { Text(stringResource(R.string.log_options_max_lines)) },
             isError = maxLines.isEmpty(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth(),
         )
         Button(
             onClick = {
@@ -83,7 +93,8 @@ fun LogOptionsPicker(
                     )
                 )
             },
-            enabled = contentValid
+            enabled = contentValid,
+            modifier = Modifier.align(Alignment.End)
         ) {
             Text(stringResource(R.string.log_options_save))
         }
@@ -114,7 +125,7 @@ internal fun PodPicker(
             },
             label = { Text(stringResource(R.string.log_options_pod)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = modifier
+            modifier = modifier.menuAnchor()
         )
         ExposedDropdownMenu(
             expanded = podPickerExpanded,
@@ -159,7 +170,7 @@ internal fun ContainerPicker(
             },
             label = { Text(stringResource(R.string.log_options_container)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = modifier
+            modifier = modifier.menuAnchor()
         )
         ExposedDropdownMenu(
             expanded = containerPickerExpanded,
