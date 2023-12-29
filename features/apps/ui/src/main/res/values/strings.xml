@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tab_installed_apps">Installed</string>
-    <string name="tab_available_apps">Available</string>
-    <string name="tab_manage_catalogs">Catalogs</string>
-    <string name="tab_manage_docker">Docker Images</string>
-
     <string name="menu_item_refresh">Refresh</string>
 
     <string name="app_control_upgrade">Upgrade</string>
@@ -13,6 +8,15 @@
     <string name="app_control_shell">Shell</string>
     <string name="app_control_logs">Logs</string>
     <string name="app_control_delete">Delete</string>
+    <string name="app_control_start">Start</string>
+    <string name="app_control_stop">Stop</string>
+
+    <string name="app_state_stopped">Stopped</string>
+    <string name="app_state_deploying">Deploying</string>
+    <string name="app_state_running">Running</string>
+
+    <string name="app_update_up_to_date">Up to date</string>
+    <string name="app_update_available">Update available</string>
 
     <string name="app_delete_continue">Continue</string>
     <string name="app_delete_cancel">Cancel</string>
