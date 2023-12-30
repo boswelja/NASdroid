@@ -8,7 +8,6 @@ import com.nasdroid.apps.logic.installed.InstalledAppDetails
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 
@@ -25,9 +24,8 @@ class InstalledAppDetailsViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val appDetails: StateFlow<InstalledAppDetails?> = appName
-        .filterNotNull()
-        .mapLatest {
-            getInstalledApp(it).getOrThrow()
+        .mapLatest { appName ->
+            appName?.let { getInstalledApp(it).getOrNull() } // TODO handle errors
         }
         .stateIn(
             viewModelScope,
