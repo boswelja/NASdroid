@@ -66,14 +66,14 @@ class ReportingOverviewViewModel(
             val mappedGraphs = allGraphs
                 .filter { graph ->
                     // Filter out known invalid data
-                    !graph.title.contains(IdentifierMarker) || !graph.identifiers.isNullOrEmpty()
+                    !graph.title.contains(IDENTIFIER_MARKER) || !graph.identifiers.isNullOrEmpty()
                 }
                 .flatMap { graph ->
                     if (!graph.identifiers.isNullOrEmpty()) {
                         graph.identifiers!!.map { identifier ->
                             Graph(
                                 id = graph.name,
-                                title = graph.title.replace(IdentifierMarker, identifier),
+                                title = graph.title.replace(IDENTIFIER_MARKER, identifier),
                                 identifier = identifier,
                             )
                         }
@@ -126,7 +126,7 @@ class ReportingOverviewViewModel(
             "arcresult" to GraphType.ZFS
         )
 
-        private const val IdentifierMarker = "{identifier}"
+        private const val IDENTIFIER_MARKER = "{identifier}"
     }
 }
 

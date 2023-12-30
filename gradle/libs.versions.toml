@@ -48,7 +48,6 @@ androidx-browser = { group = "androidx.browser", name = "browser", version.ref =
 androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
 androidx-window = { group = "androidx.window", name = "window", version.ref = "androidx-window" }
-androidx-window-testing = { group = "androidx.window", name = "window-testing", version.ref = "androidx-window" }
 
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
