@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.nasdroid.apps.ui.discover.DiscoverAppsScreen
 import com.nasdroid.apps.ui.installed.InstalledAppsScreen
+import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsScreen
 import com.nasdroid.apps.ui.installed.overview.logs.LogsScreen
 
 /**
@@ -53,6 +54,20 @@ fun NavGraphBuilder.appsGraph(
             )
         ) {
             LogsScreen(
+                modifier = modifier,
+                contentPadding = contentPadding
+            )
+        }
+        composable(
+            route = "details/{appName}",
+            arguments = listOf(
+                navArgument("appName") {
+                    nullable = false
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            InstalledAppDetailsScreen(
                 modifier = modifier,
                 contentPadding = contentPadding
             )

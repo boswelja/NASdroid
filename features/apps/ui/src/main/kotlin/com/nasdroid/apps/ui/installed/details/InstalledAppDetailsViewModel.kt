@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.stateIn
  */
 class InstalledAppDetailsViewModel(
     private val getInstalledApp: GetInstalledApp,
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val appName: StateFlow<String?> = savedStateHandle.getStateFlow("appName", null)
+    val appName: StateFlow<String?> = savedStateHandle.getStateFlow("appName", null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val appDetails: StateFlow<InstalledAppDetails?> = appName
@@ -34,4 +34,8 @@ class InstalledAppDetailsViewModel(
             SharingStarted.Eagerly,
             null
         )
+
+    fun setAppName(appName: String) {
+        savedStateHandle["appName"] = appName
+    }
 }
