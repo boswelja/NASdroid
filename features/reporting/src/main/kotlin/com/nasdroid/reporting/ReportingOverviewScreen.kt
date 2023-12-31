@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,7 +46,6 @@ import com.patrykandpatrick.vico.core.entry.entriesOf
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportingOverviewScreen(
     modifier: Modifier = Modifier,
@@ -73,7 +71,7 @@ fun ReportingOverviewScreen(
                 ),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            GraphType.values().forEach { graphType ->
+            GraphType.entries.forEach { graphType ->
                 FilterChip(
                     selected = graphType == selectedType,
                     onClick = { viewModel.setSelectedType(graphType) },

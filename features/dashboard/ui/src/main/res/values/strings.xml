@@ -8,7 +8,6 @@
     <string name="cpu_cores_threads_count">%1d cores, %2d threads</string>
 
     <string name="system_info_card_title">System Information</string>
-    <string name="system_info_platform_label">Platform</string>
     <string name="system_info_hostname_label">Hostname</string>
     <string name="system_info_version_label">Version</string>
     <string name="system_info_uptime_label">Uptime</string>
@@ -16,8 +15,6 @@
     <string name="memory_card_title">Memory</string>
     <string name="memory_total_ecc_label">Total available (ECC)</string>
     <string name="memory_total_label">Total available</string>
-    <string name="memory_usage_services">Services</string>
-    <string name="memory_usage_zfs_cache">ZFS</string>
     <string name="memory_usage_free">Free</string>
 
     <string name="network_card_title">Network</string>

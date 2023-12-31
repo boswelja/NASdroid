@@ -38,7 +38,7 @@ fun OverviewItemListItem(
 
 @Preview(showBackground = true)
 @Composable
-fun OverviewItemListItem() {
+fun OverviewItemListItemPreview() {
     OverviewItemListItem(
         labelContent = { Text("Label") },
         content = { Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse et.") },

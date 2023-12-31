@@ -1,12 +1,10 @@
 package com.nasdroid.capacity
 
-import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.bytes
 import com.nasdroid.capacity.Capacity.Companion.gigabytes
 import com.nasdroid.capacity.Capacity.Companion.kibibytes
 import com.nasdroid.capacity.Capacity.Companion.tebibytes
 import com.nasdroid.capacity.Capacity.Companion.terabytes
-import com.nasdroid.capacity.CapacityUnit
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

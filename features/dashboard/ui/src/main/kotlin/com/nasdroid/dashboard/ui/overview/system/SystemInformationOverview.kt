@@ -38,7 +38,6 @@ import org.koin.androidx.compose.koinViewModel
 import kotlin.coroutines.coroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
 /**
@@ -137,7 +136,6 @@ fun LocalDateTime.collectElapsedSinceAsState(
     return timeElapsed
 }
 
-@OptIn(ExperimentalTime::class)
 private suspend fun repeatIndefinitely(interval: Duration, block: () -> Unit) {
     while (coroutineContext.isActive) {
         val execTime = measureTime(block)

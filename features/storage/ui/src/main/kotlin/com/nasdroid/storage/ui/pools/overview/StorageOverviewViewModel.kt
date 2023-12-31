@@ -25,7 +25,7 @@ class StorageOverviewViewModel(
     private val _pools = MutableStateFlow<List<PoolOverview>>(emptyList())
 
     /**
-     * A list of [PoolUsage]s to display.
+     * A list of [PoolOverview]s to display.
      */
     val pools: StateFlow<List<PoolOverview>> = _pools
 

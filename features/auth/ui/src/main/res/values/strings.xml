@@ -4,9 +4,6 @@
     <string name="auth_header_manager">droid</string>
     <string name="auth_header_label">for TrueNAS</string>
 
-    <string name="auth_type_basic">Basic</string>
-    <string name="auth_type_key">API Key</string>
-
     <string name="invalid_basic_auth">The username and/or password you entered are invalid</string>
     <string name="invalid_key_auth">The API key you entered is invalid</string>
     <string name="invalid_server_address">Unable to reach the server</string>
