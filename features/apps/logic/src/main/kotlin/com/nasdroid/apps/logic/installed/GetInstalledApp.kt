@@ -24,7 +24,7 @@ class GetInstalledApp(
                     iconUrl = chartRelease.chartMetadata.icon,
                     description = chartRelease.chartMetadata.description,
                     appVersion = chartRelease.chartMetadata.appVersion,
-                    chartVersion = chartRelease.chartMetadata.kubeVersion,
+                    chartVersion = chartRelease.chartMetadata.version,
                     lastUpdated = null, // TODO
                     sources = chartRelease.chartMetadata.sources.orEmpty(),
                     developer = null, // TODO
