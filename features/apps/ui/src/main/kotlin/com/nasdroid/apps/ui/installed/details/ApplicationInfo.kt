@@ -1,17 +1,29 @@
 package com.nasdroid.apps.ui.installed.details
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -25,34 +37,131 @@ fun ApplicationInfo(
     installedAppDetails: InstalledAppDetails,
     modifier: Modifier = Modifier
 ) {
-    val urlLauncher = rememberUrlLauncher()
-
-    Column(modifier) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(installedAppDetails.iconUrl)
-                .decoderFactory(SvgDecoder.Factory())
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier
-                .size(72.dp)
-                .align(Alignment.CenterHorizontally)
-                .clip(MaterialTheme.shapes.small)
-        )
-        Text("Name: ${installedAppDetails.name}")
-        Text("App Version: ${installedAppDetails.appVersion}")
-        Text("Chart Version: ${installedAppDetails.chartVersion}")
-        Text("Last Updated: N/A")
-        Text("Sources:")
-        installedAppDetails.sources.forEach { url ->
-            ClickableText(text = AnnotatedString(url)) {
-                urlLauncher.launchUrl(url)
+    var showSourcesModal by rememberSaveable {
+        mutableStateOf(false)
+    }
+    Card(modifier) {
+        Column(Modifier.fillMaxWidth()) {
+            val itemModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(installedAppDetails.iconUrl)
+                    .decoderFactory(SvgDecoder.Factory())
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(128.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .clip(MaterialTheme.shapes.small)
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            )
+            ApplicationInfoItem(
+                label = "Name",
+                text = installedAppDetails.name,
+                modifier = itemModifier
+            )
+            ApplicationInfoItem(
+                label = "App Version",
+                text = installedAppDetails.appVersion,
+                modifier = itemModifier
+            )
+            ApplicationInfoItem(
+                label = "Chart Version",
+                text = installedAppDetails.chartVersion,
+                modifier = itemModifier
+            )
+            ApplicationInfoItem(
+                label = "Catalog",
+                text = installedAppDetails.catalog,
+                modifier = itemModifier
+            )
+            ApplicationInfoItem(
+                label = "Train",
+                text = installedAppDetails.train,
+                modifier = itemModifier
+            )
+            TextButton(
+                onClick = { showSourcesModal = true },
+                modifier = Modifier.padding(horizontal = 4.dp)
+            ) {
+                Text("View Sources")
             }
         }
-        Text("Developer: N/A")
-        Text("Catalog: ${installedAppDetails.catalog}")
-        Text("Train: ${installedAppDetails.train}")
+    }
+
+    if (showSourcesModal) {
+        val urlLauncher = rememberUrlLauncher()
+        SourcesListModal(
+            sources = installedAppDetails.sources,
+            onSourceClick = { urlLauncher.launchUrl(it) },
+            onDismiss = { showSourcesModal = false }
+        )
+    }
+}
+
+@Composable
+internal fun ApplicationInfoItem(
+    label: String,
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun SourcesListModal(
+    sources: List<String>,
+    onSourceClick: (String) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        modifier = modifier,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    ) {
+        if (sources.isNotEmpty()) {
+            Text(
+                text = "Sources",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+            sources.forEach { url ->
+                ListItem(
+                    overlineContent = {
+                        Text(
+                            text = when {
+                                url.contains("github.com") -> "GitHub"
+                                url.contains("hub.docker.com") -> "Docker Hub"
+                                else -> "Unknown Host"
+                            }
+                        )
+                    },
+                    headlineContent = { Text(url) },
+                    modifier = Modifier.clickable { onSourceClick(url) }
+                )
+            }
+        } else {
+            Text(
+                text = "This app has no viewable sources",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+        Spacer(Modifier.height(16.dp))
     }
 }
 
