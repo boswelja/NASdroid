@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+/**
+ * Displays Markdown-formatted notes about an installed application.
+ */
 @Composable
 fun ApplicationNotes(
     note: String,

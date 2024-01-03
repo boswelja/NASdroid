@@ -18,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * A screen that displays detailed information about a single installed application.
+ */
 @Composable
 fun InstalledAppDetailsScreen(
     modifier: Modifier = Modifier,

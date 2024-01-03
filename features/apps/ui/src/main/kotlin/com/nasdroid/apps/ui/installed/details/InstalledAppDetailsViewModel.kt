@@ -21,12 +21,17 @@ class InstalledAppDetailsViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    /**
+     * The name of the application whose data is being displayed. Note the application name is a
+     * unique identifier set my the user.
+     */
     val appName: StateFlow<String?> = savedStateHandle.getStateFlow("appName", null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _installedAppDetails = appName
         .flatMapLatest {
             flow {
+                // We treat "null" as loading, so we want to reset the "loading" state first.
                 emit(null)
                 emit(it?.let { getInstalledApp(it).getOrNull() })
             }
@@ -37,6 +42,9 @@ class InstalledAppDetailsViewModel(
             null
         )
 
+    /**
+     * The [InstalledAppDetails] for the installed application, or null if data is still loading.
+     */
     val appDetails: StateFlow<InstalledAppDetails?> = _installedAppDetails
         .stateIn(
             viewModelScope,
@@ -44,6 +52,9 @@ class InstalledAppDetailsViewModel(
             null
         )
 
+    /**
+     * Set the name of the app whose details should be viewed.
+     */
     fun setAppName(appName: String) {
         savedStateHandle["appName"] = appName
     }
