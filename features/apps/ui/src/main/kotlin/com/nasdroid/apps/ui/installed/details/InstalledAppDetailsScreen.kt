@@ -29,8 +29,8 @@ fun InstalledAppDetailsScreen(
                 columns = StaggeredGridCells.Adaptive(300.dp),
                 modifier = modifier,
                 contentPadding = contentPadding,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalItemSpacing = 8.dp
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalItemSpacing = 16.dp
             ) {
                 item {
                     ApplicationInfo(installedAppDetails = it)

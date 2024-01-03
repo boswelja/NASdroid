@@ -48,63 +48,60 @@ fun ApplicationInfo(
     var showSourcesModal by rememberSaveable {
         mutableStateOf(false)
     }
-    Card(modifier) {
-        Column(Modifier.fillMaxWidth()) {
-            val itemModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(installedAppDetails.iconUrl)
-                    .decoderFactory(SvgDecoder.Factory())
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(128.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .clip(MaterialTheme.shapes.small)
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-            )
-            ApplicationInfoItem(
-                label = "Name",
-                text = installedAppDetails.name,
-                modifier = itemModifier
-            )
-            ApplicationInfoItem(
-                label = "App Version",
-                text = installedAppDetails.appVersion,
-                modifier = itemModifier
-            )
-            ApplicationInfoItem(
-                label = "Chart Version",
-                text = installedAppDetails.chartVersion,
-                modifier = itemModifier
-            )
-            TextButton(
-                onClick = { showSourcesModal = true },
-                modifier = Modifier.padding(horizontal = 4.dp)
-            ) {
-                Text("View Sources")
-            }
-            ApplicationInfoItem(
-                label = "Catalog",
-                text = installedAppDetails.catalog,
-                modifier = itemModifier
-            )
-            ApplicationInfoItem(
-                label = "Train",
-                text = installedAppDetails.train,
-                modifier = itemModifier
-            )
-            ApplicationControls(
-                onEditClick = { /* TODO */ },
-                onRollBackClick = { /* TODO */ },
-                onDeleteClick = { /* TODO */ },
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 12.dp)
-            )
+    Column(modifier) {
+        val itemModifier = Modifier.padding(vertical = 8.dp)
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(installedAppDetails.iconUrl)
+                .decoderFactory(SvgDecoder.Factory())
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            modifier = Modifier
+                .size(128.dp)
+                .align(Alignment.CenterHorizontally)
+                .clip(MaterialTheme.shapes.small)
+        )
+        ApplicationInfoItem(
+            label = "Name",
+            text = installedAppDetails.name,
+            modifier = itemModifier
+        )
+        ApplicationInfoItem(
+            label = "App Version",
+            text = installedAppDetails.appVersion,
+            modifier = itemModifier
+        )
+        ApplicationInfoItem(
+            label = "Chart Version",
+            text = installedAppDetails.chartVersion,
+            modifier = itemModifier
+        )
+        TextButton(
+            onClick = { showSourcesModal = true },
+            modifier = Modifier.padding(horizontal = 4.dp)
+        ) {
+            Text("View Sources")
         }
+        ApplicationInfoItem(
+            label = "Catalog",
+            text = installedAppDetails.catalog,
+            modifier = itemModifier
+        )
+        ApplicationInfoItem(
+            label = "Train",
+            text = installedAppDetails.train,
+            modifier = itemModifier
+        )
+        ApplicationControls(
+            onEditClick = { /* TODO */ },
+            onRollBackClick = { /* TODO */ },
+            onDeleteClick = { /* TODO */ },
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 12.dp)
+        )
     }
 
     if (showSourcesModal) {

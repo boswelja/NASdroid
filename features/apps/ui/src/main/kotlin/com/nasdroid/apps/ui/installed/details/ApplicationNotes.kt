@@ -17,15 +17,13 @@ fun ApplicationNotes(
     note: String,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-            Text(
-                text = "Notes",
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(note)
-        }
+    Column(modifier = modifier) {
+        Text(
+            text = "Notes",
+            style = MaterialTheme.typography.headlineMedium
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(note)
     }
 }
 
