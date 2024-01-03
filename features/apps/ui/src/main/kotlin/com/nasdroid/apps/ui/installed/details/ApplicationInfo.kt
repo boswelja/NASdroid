@@ -37,11 +37,12 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import com.nasdroid.apps.logic.installed.InstalledAppDetails
 import com.nasdroid.core.urllauncher.rememberUrlLauncher
 
 @Composable
 fun ApplicationInfo(
-    installedAppDetails: AppInfo,
+    installedAppDetails: InstalledAppDetails,
     modifier: Modifier = Modifier
 ) {
     var showSourcesModal by rememberSaveable {
@@ -86,15 +87,15 @@ fun ApplicationInfo(
             }
             ApplicationInfoItem(
                 label = "Catalog",
-                text = installedAppDetails.catalogName,
+                text = installedAppDetails.catalog,
                 modifier = itemModifier
             )
             ApplicationInfoItem(
                 label = "Train",
-                text = installedAppDetails.trainName,
+                text = installedAppDetails.train,
                 modifier = itemModifier
             )
-            ApplicationInfoControls(
+            ApplicationControls(
                 onEditClick = { /* TODO */ },
                 onRollBackClick = { /* TODO */ },
                 onDeleteClick = { /* TODO */ },
@@ -137,7 +138,7 @@ internal fun ApplicationInfoItem(
 }
 
 @Composable
-internal fun ApplicationInfoControls(
+internal fun ApplicationControls(
     onEditClick: () -> Unit,
     onRollBackClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -209,7 +210,7 @@ internal fun SourcesListModal(
 fun ApplicationInfoPreview() {
     MaterialTheme {
         ApplicationInfo(
-            installedAppDetails = AppInfo(
+            installedAppDetails = InstalledAppDetails(
                 name = "adguard-home",
                 iconUrl = "https://media.sys.truenas.net/apps/adguard-home/icons/icon.svg",
                 appVersion = "0.107.43",
@@ -219,8 +220,14 @@ fun ApplicationInfoPreview() {
                     "https://github.com/truenas/charts/tree/master/community/adguard-home",
                     "https://hub.docker.com/r/adguard/adguardhome"
                 ),
-                catalogName = "TrueNAS",
-                trainName = "community",
+                catalog = "TrueNAS",
+                train = "community",
+                developer = null,
+                lastUpdated = null,
+                state = InstalledAppDetails.State.ACTIVE,
+                notes = "",
+                updateAvailable = false,
+                webPortalUrl = "https://google.com/"
             ),
             modifier = Modifier.padding(16.dp)
         )

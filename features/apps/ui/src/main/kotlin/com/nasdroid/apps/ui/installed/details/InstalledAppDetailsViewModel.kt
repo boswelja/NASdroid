@@ -4,10 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.apps.logic.installed.GetInstalledApp
+import com.nasdroid.apps.logic.installed.InstalledAppDetails
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 
 /**
@@ -23,8 +25,11 @@ class InstalledAppDetailsViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _installedAppDetails = appName
-        .mapLatest {
-            it?.let { getInstalledApp(it).getOrNull() }
+        .flatMapLatest {
+            flow {
+                emit(null)
+                emit(it?.let { getInstalledApp(it).getOrNull() })
+            }
         }
         .stateIn(
             viewModelScope,
@@ -32,30 +37,7 @@ class InstalledAppDetailsViewModel(
             null
         )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val appDetails: StateFlow<AppInfo?> = _installedAppDetails
-        .mapLatest {
-            it?.let {
-                AppInfo(
-                    iconUrl = it.iconUrl,
-                    name = it.name,
-                    appVersion = it.appVersion,
-                    chartVersion = it.chartVersion,
-                    sources = it.sources,
-                    catalogName = it.catalog,
-                    trainName = it.train,
-                )
-            }
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            null
-        )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val appNotes: StateFlow<String?> = _installedAppDetails
-        .mapLatest { it?.notes }
+    val appDetails: StateFlow<InstalledAppDetails?> = _installedAppDetails
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
@@ -66,13 +48,3 @@ class InstalledAppDetailsViewModel(
         savedStateHandle["appName"] = appName
     }
 }
-
-data class AppInfo(
-    val iconUrl: String,
-    val name: String,
-    val appVersion: String,
-    val chartVersion: String,
-    val sources: List<String>,
-    val catalogName: String,
-    val trainName: String,
-)

@@ -19,7 +19,6 @@ fun InstalledAppDetailsScreen(
     viewModel: InstalledAppDetailsViewModel = koinViewModel()
 ) {
     val appDetails by viewModel.appDetails.collectAsState()
-    val appNotes by viewModel.appNotes.collectAsState()
 
     AnimatedContent(
         targetState = appDetails,
@@ -36,7 +35,7 @@ fun InstalledAppDetailsScreen(
                 item {
                     ApplicationInfo(installedAppDetails = it)
                 }
-                appNotes?.let {
+                it.notes?.let {
                     item {
                         ApplicationNotes(note = it)
                     }
