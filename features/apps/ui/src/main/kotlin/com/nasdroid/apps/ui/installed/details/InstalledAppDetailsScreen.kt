@@ -1,6 +1,7 @@
 package com.nasdroid.apps.ui.installed.details
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -18,6 +19,7 @@ fun InstalledAppDetailsScreen(
     viewModel: InstalledAppDetailsViewModel = koinViewModel()
 ) {
     val appDetails by viewModel.appDetails.collectAsState()
+    val appNotes by viewModel.appNotes.collectAsState()
 
     AnimatedContent(
         targetState = appDetails,
@@ -27,10 +29,17 @@ fun InstalledAppDetailsScreen(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Adaptive(300.dp),
                 modifier = modifier,
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalItemSpacing = 8.dp
             ) {
                 item {
                     ApplicationInfo(installedAppDetails = it)
+                }
+                appNotes?.let {
+                    item {
+                        ApplicationNotes(note = it)
+                    }
                 }
             }
         }

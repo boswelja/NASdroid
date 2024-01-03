@@ -1,17 +1,25 @@
 package com.nasdroid.apps.ui.installed.details
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -29,12 +37,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
-import com.nasdroid.apps.logic.installed.InstalledAppDetails
 import com.nasdroid.core.urllauncher.rememberUrlLauncher
 
 @Composable
 fun ApplicationInfo(
-    installedAppDetails: InstalledAppDetails,
+    installedAppDetails: AppInfo,
     modifier: Modifier = Modifier
 ) {
     var showSourcesModal by rememberSaveable {
@@ -71,22 +78,31 @@ fun ApplicationInfo(
                 text = installedAppDetails.chartVersion,
                 modifier = itemModifier
             )
-            ApplicationInfoItem(
-                label = "Catalog",
-                text = installedAppDetails.catalog,
-                modifier = itemModifier
-            )
-            ApplicationInfoItem(
-                label = "Train",
-                text = installedAppDetails.train,
-                modifier = itemModifier
-            )
             TextButton(
                 onClick = { showSourcesModal = true },
                 modifier = Modifier.padding(horizontal = 4.dp)
             ) {
                 Text("View Sources")
             }
+            ApplicationInfoItem(
+                label = "Catalog",
+                text = installedAppDetails.catalogName,
+                modifier = itemModifier
+            )
+            ApplicationInfoItem(
+                label = "Train",
+                text = installedAppDetails.trainName,
+                modifier = itemModifier
+            )
+            ApplicationInfoControls(
+                onEditClick = { /* TODO */ },
+                onRollBackClick = { /* TODO */ },
+                onDeleteClick = { /* TODO */ },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 12.dp)
+            )
         }
     }
 
@@ -117,6 +133,29 @@ internal fun ApplicationInfoItem(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface
         )
+    }
+}
+
+@Composable
+internal fun ApplicationInfoControls(
+    onEditClick: () -> Unit,
+    onRollBackClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        OutlinedIconButton(onClick = onEditClick) {
+            Icon(Icons.Default.Edit, "Edit")
+        }
+        OutlinedIconButton(onClick = onRollBackClick) {
+            Icon(Icons.Default.Restore, "Roll Back")
+        }
+        OutlinedIconButton(onClick = onDeleteClick) {
+            Icon(Icons.Default.Delete, "Delete")
+        }
     }
 }
 
@@ -170,29 +209,18 @@ internal fun SourcesListModal(
 fun ApplicationInfoPreview() {
     MaterialTheme {
         ApplicationInfo(
-            installedAppDetails = InstalledAppDetails(
+            installedAppDetails = AppInfo(
                 name = "adguard-home",
                 iconUrl = "https://media.sys.truenas.net/apps/adguard-home/icons/icon.svg",
-                description = "\n# Welcome to TrueNAS SCALE\n" +
-                        "Thank you for installing AdGuard Home App.\n\n\n" +
-                        "# Documentation\n" +
-                        "Documentation for this app can be found at https://www.truenas.com/docs.\n" +
-                        "# Bug reports\n" +
-                        "If you find a bug in this app, please file an issue at https://ixsystems.atlassian.net\n\n",
                 appVersion = "0.107.43",
                 chartVersion = "1.0.32",
-                lastUpdated = null,
                 sources = listOf(
                     "https://github.com/AdguardTeam/AdGuardHome",
                     "https://github.com/truenas/charts/tree/master/community/adguard-home",
                     "https://hub.docker.com/r/adguard/adguardhome"
                 ),
-                developer = null,
-                catalog = "TrueNAS",
-                train = "community",
-                state = InstalledAppDetails.State.ACTIVE,
-                updateAvailable = true,
-                webPortalUrl = "http://adguard.local/"
+                catalogName = "TrueNAS",
+                trainName = "community",
             ),
             modifier = Modifier.padding(16.dp)
         )
