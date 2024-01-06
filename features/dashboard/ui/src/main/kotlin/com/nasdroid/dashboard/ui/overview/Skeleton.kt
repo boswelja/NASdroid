@@ -2,7 +2,6 @@ package com.nasdroid.dashboard.ui.overview
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -11,6 +10,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * A simple implementation of [Material3 skeleton loaders](https://m3.material.io/styles/motion/transitions/transition-patterns#f7ff608a-087d-4a4e-9e83-f1af69184487).
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Modifier.skeleton(
     loading: Boolean,
-    color: Color = MaterialTheme.colorScheme.surface,
+    color: Color = MaterialThemeExt.colorScheme.surface,
     cornerRadius: CornerSize = CornerSize(8.dp)
 ): Modifier {
     val drawnColor by animateColorAsState(if (loading) color else color.copy(alpha = 0f), label = "skeleton")

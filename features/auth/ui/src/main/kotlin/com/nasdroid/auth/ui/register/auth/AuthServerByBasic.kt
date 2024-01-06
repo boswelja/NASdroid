@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -44,6 +43,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * An opinionated set of Composables that asks the user for a username and password, and submits
@@ -113,7 +113,7 @@ internal fun BasicAuthFields(
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.error) {
+            CompositionLocalProvider(LocalContentColor provides MaterialThemeExt.colorScheme.error) {
                 Row(
                     modifier = Modifier.padding(bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -122,8 +122,8 @@ internal fun BasicAuthFields(
                     Spacer(Modifier.width(4.dp))
                     Text(
                         text = stringResource(R.string.invalid_basic_auth),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.error
+                        style = MaterialThemeExt.typography.labelLarge,
+                        color = MaterialThemeExt.colorScheme.error
                     )
                 }
             }

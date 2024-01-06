@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
@@ -39,6 +38,7 @@ import coil.request.ImageRequest
 import com.nasdroid.apps.logic.installed.InstalledAppDetails
 import com.nasdroid.apps.ui.R
 import com.nasdroid.core.urllauncher.rememberUrlLauncher
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * Displays information to the user about the provided [InstalledAppDetails].
@@ -58,7 +58,7 @@ fun ApplicationInfo(
             modifier = Modifier
                 .size(128.dp)
                 .align(Alignment.CenterHorizontally)
-                .clip(MaterialTheme.shapes.medium)
+                .clip(MaterialThemeExt.shapes.medium)
         )
         ApplicationInfoItem(
             label = stringResource(R.string.app_info_name),
@@ -145,13 +145,13 @@ internal fun ApplicationInfoItem(
     Column(modifier) {
         Text(
             text = label,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = MaterialThemeExt.typography.labelMedium,
+            color = MaterialThemeExt.colorScheme.onSurfaceVariant
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface
+            style = MaterialThemeExt.typography.bodyLarge,
+            color = MaterialThemeExt.colorScheme.onSurface
         )
     }
 }
@@ -195,7 +195,7 @@ internal fun SourcesListModal(
         if (sources.isNotEmpty()) {
             Text(
                 text = stringResource(R.string.app_info_sources_header),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialThemeExt.typography.headlineMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
             sources.forEach { url ->
@@ -216,7 +216,7 @@ internal fun SourcesListModal(
         } else {
             Text(
                 text = stringResource(R.string.app_info_source_missing),
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialThemeExt.typography.bodyLarge,
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -227,7 +227,7 @@ internal fun SourcesListModal(
 @Preview(showBackground = true)
 @Composable
 fun ApplicationInfoPreview() {
-    MaterialTheme {
+    MaterialThemeExt {
         ApplicationInfo(
             installedAppDetails = InstalledAppDetails(
                 name = "adguard-home",

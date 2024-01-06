@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -34,6 +33,7 @@ import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuHost
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.boswelja.menuprovider.rememberMenuHost
+import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.ui.navigation.bar.BottomNavigationBar
 import com.nasdroid.ui.navigation.bar.NavigationMode
 import com.nasdroid.ui.navigation.bar.StartNavigationRail
@@ -359,7 +359,7 @@ fun ModalNavigationDrawerPreview() {
             Modifier
                 .padding(it)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
     }
 }
@@ -393,7 +393,7 @@ fun NavigationRailPreview() {
             Modifier
                 .padding(it)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
     }
 }
@@ -426,7 +426,7 @@ fun PermanentNavigationDrawerPreview() {
             Modifier
                 .padding(it)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
     }
 }

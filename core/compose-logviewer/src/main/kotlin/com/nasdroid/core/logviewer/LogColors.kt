@@ -1,3 +1,4 @@
+@file:Suppress("ForbiddenImport")
 package com.nasdroid.core.logviewer
 
 import androidx.compose.material3.LocalContentColor

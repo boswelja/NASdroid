@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -33,6 +32,7 @@ import com.nasdroid.dashboard.logic.dataloading.cpu.CpuUsageData
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.skeleton
+import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 import java.text.NumberFormat
 
@@ -64,15 +64,15 @@ fun CpuOverview(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = MaterialTheme.colorScheme.errorContainer,
-                        shape = MaterialTheme.shapes.medium
+                        color = MaterialThemeExt.colorScheme.errorContainer,
+                        shape = MaterialThemeExt.shapes.medium
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "Something went wrong",
                     modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialThemeExt.typography.bodyMedium
                 )
             }
         }
@@ -149,8 +149,8 @@ fun CpuUsageBar(
     val animatedUsageFloat by animateFloatAsState(targetValue = usage, label = "CPU usage animation")
     Box(
         modifier = Modifier
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clip(MaterialThemeExt.shapes.medium)
+            .background(MaterialThemeExt.colorScheme.surfaceVariant)
             .then(modifier),
         contentAlignment = Alignment.BottomCenter
     ) {
@@ -159,8 +159,8 @@ fun CpuUsageBar(
                 .fillMaxWidth()
                 .fillMaxHeight(animatedUsageFloat)
                 .background(
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = MaterialTheme.shapes.medium.copy(
+                    color = MaterialThemeExt.colorScheme.primary,
+                    shape = MaterialThemeExt.shapes.medium.copy(
                         bottomStart = ZeroCornerSize,
                         bottomEnd = ZeroCornerSize
                     )
@@ -182,7 +182,7 @@ private fun Float.formattedPercent(): String {
 @Preview(showBackground = true)
 @Composable
 fun CpuOverviewPreview() {
-    MaterialTheme {
+    MaterialThemeExt {
         CpuOverview(
             specs = CpuSpecs(
                 model = "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",

@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -31,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
+import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -58,7 +58,7 @@ fun AuthServerScreen(
         // TODO This is just a temporary title. It should be a proper TopAppBar with a back button.
         Text(
             text = "Log In",
-            style = MaterialTheme.typography.displayMedium
+            style = MaterialThemeExt.typography.displayMedium
         )
         AnimatedContent(
             targetState = authMode,
@@ -100,13 +100,13 @@ internal fun SwitchToBasicAuth(
         Icon(
             Icons.Default.Info,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = MaterialThemeExt.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 2.dp)
         )
         Column {
             Text(
                 text = stringResource(R.string.no_like_api_key),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialThemeExt.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 8.dp)
             )
             TextButton(
@@ -127,13 +127,13 @@ internal fun SwitchToApiKey(
         Icon(
             Icons.Default.Info,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = MaterialThemeExt.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 2.dp)
         )
         Column {
             Text(
                 text = stringResource(R.string.basic_auth_warning),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialThemeExt.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(start = 8.dp)
             )
             TextButton(

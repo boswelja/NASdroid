@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +27,7 @@ import com.nasdroid.dashboard.logic.dataloading.system.SystemInformation
 import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.overview.skeleton
+import com.nasdroid.design.MaterialThemeExt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
@@ -66,15 +66,15 @@ fun SystemInformationOverview(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = MaterialTheme.colorScheme.errorContainer,
-                        shape = MaterialTheme.shapes.medium
+                        color = MaterialThemeExt.colorScheme.errorContainer,
+                        shape = MaterialThemeExt.shapes.medium
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "Something went wrong",
                     modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialThemeExt.typography.bodyMedium
                 )
             }
         }

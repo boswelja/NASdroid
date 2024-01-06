@@ -22,7 +22,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
@@ -40,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * A generic Card used to display content in the Dashboard overview.
@@ -62,7 +62,7 @@ fun DashboardCard(
     ) {
         Column(Modifier.padding(DashboardCardDefaults.ContentPadding)) {
             CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleLarge,
+                LocalTextStyle provides MaterialThemeExt.typography.titleLarge,
                 content = title
             )
             Spacer(Modifier.height(DashboardCardDefaults.TitleContentSpacing))
@@ -134,7 +134,7 @@ fun DashboardCardPreview() {
     var index by remember { mutableIntStateOf(0) }
     val imaginaryItemCount = 3
 
-    MaterialTheme {
+    MaterialThemeExt {
         DashboardCard(
             title = { Text("Title") },
             modifier = Modifier.fillMaxWidth(),

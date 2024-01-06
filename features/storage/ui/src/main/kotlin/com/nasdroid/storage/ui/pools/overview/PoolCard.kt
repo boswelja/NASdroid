@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.capacity.Capacity.Companion.gigabytes
 import com.nasdroid.capacity.Capacity.Companion.terabytes
 import com.nasdroid.capacity.CapacityUnit
+import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.storage.logic.pool.PoolOverview
 
 /**
@@ -45,7 +45,7 @@ fun PoolCard(
         ) {
             Text(
                 text = pool.poolName,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialThemeExt.typography.titleLarge,
             )
             StorageUseSummary(
                 usedBytes = pool.usedCapacity.toLong(CapacityUnit.BYTE),
@@ -95,30 +95,30 @@ fun PoolHealthItem(
             Icon(
                 Icons.Default.CheckCircle,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary
+                tint = MaterialThemeExt.colorScheme.secondary
             )
         } else {
             Icon(
                 Icons.Default.Cancel,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
+                tint = MaterialThemeExt.colorScheme.error
             )
         }
         Spacer(modifier = Modifier.width(16.dp))
         Column {
-            ProvideTextStyle(MaterialTheme.typography.bodyLarge) {
+            ProvideTextStyle(MaterialThemeExt.typography.bodyLarge) {
                 label()
             }
-            ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+            ProvideTextStyle(MaterialThemeExt.typography.bodyMedium) {
                 if (healthStatus.isHealthy) {
                     Text(
                         text = "Healthy",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialThemeExt.colorScheme.onSurfaceVariant
                     )
                 } else {
                     Text(
                         text = healthStatus.unhealthyReason ?: "There's a problem",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialThemeExt.colorScheme.onSurfaceVariant
                     )
                 }
             }

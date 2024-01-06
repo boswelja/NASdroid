@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -19,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * Displays a labelled progress bar communicating an overview of storage capacity.
@@ -46,11 +46,11 @@ fun StorageUseSummary(
         ) {
             Text(
                 text = "${fileSizeString(bytes = usedBytes)} Used",
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialThemeExt.typography.labelLarge
             )
             Text(
                 text = "${fileSizeString(bytes = totalBytes)} Total",
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialThemeExt.typography.labelLarge
             )
         }
         Spacer(Modifier.height(8.dp))

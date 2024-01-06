@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -21,6 +20,7 @@ import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.logic.Server
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * Displays a list of "registered" servers, and an "add" button to add new servers.
@@ -74,7 +74,7 @@ fun RegisteredServerList(
 @PreviewLightDark
 @Composable
 fun RegisteredServerListPreview() {
-    MaterialTheme(
+    MaterialThemeExt(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
         RegisteredServerList(
