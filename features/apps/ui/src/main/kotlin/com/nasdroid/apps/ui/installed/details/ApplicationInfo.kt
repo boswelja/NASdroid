@@ -84,14 +84,9 @@ fun ApplicationInfo(
         ) {
             Text("View Sources")
         }
-        ApplicationInfoItem(
-            label = "Catalog",
-            text = installedAppDetails.catalog,
-            modifier = itemModifier
-        )
-        ApplicationInfoItem(
-            label = "Train",
-            text = installedAppDetails.train,
+        SourceCatalogDetails(
+            catalog = installedAppDetails.catalog,
+            train = installedAppDetails.train,
             modifier = itemModifier
         )
         ApplicationControls(
@@ -113,6 +108,19 @@ fun ApplicationInfo(
             onDismiss = { showSourcesModal = false }
         )
     }
+}
+
+@Composable
+internal fun SourceCatalogDetails(
+    catalog: String,
+    train: String,
+    modifier: Modifier = Modifier
+) {
+    ApplicationInfoItem(
+        label ="Catalog & train",
+        text ="$catalog \u2022 $train",
+        modifier = modifier
+    )
 }
 
 @Composable

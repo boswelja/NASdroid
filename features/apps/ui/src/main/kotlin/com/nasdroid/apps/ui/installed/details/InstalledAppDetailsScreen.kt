@@ -36,7 +36,7 @@ fun InstalledAppDetailsScreen(
     ) {
         if (it != null) {
             LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Adaptive(180.dp),
+                columns = StaggeredGridCells.Adaptive(240.dp),
                 modifier = modifier,
                 contentPadding = contentPadding,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
