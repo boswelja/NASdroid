@@ -42,6 +42,7 @@ import org.koin.androidx.compose.koinViewModel
  */
 @Composable
 fun InstalledAppsOverviewScreen(
+    onAppClick: (appName: String) -> Unit,
     onNavigate: (route: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -60,11 +61,10 @@ fun InstalledAppsOverviewScreen(
 
     var deletingApp by rememberSaveable { mutableStateOf<String?>(null) }
 
-    Box {
+    Box(modifier) {
         LazyColumn(
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = modifier,
         ) {
             installedApps?.let { apps ->
                 items(
@@ -73,7 +73,7 @@ fun InstalledAppsOverviewScreen(
                 ) { applicationOverview ->
                     ApplicationOverviewItem(
                         installedAppOverview = applicationOverview,
-                        onClick = { /* TODO */ },
+                        onClick = { onAppClick(applicationOverview.name) },
                         onAppStartRequest = { viewModel.start(applicationOverview.name) },
                         onAppStopRequest = { viewModel.stop(applicationOverview.name) },
                     )

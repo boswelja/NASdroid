@@ -4,6 +4,19 @@
 
     <string name="overview_details_pane_empty">Select an app on the left to see more details here</string>
 
+    <string name="app_info_name">Name</string>
+    <string name="app_info_app_version">App version</string>
+    <string name="app_info_chart_version">Chart version</string>
+    <string name="app_info_catalog_train">Catalog &amp; train</string>
+    <string name="app_info_view_sources">View sources</string>
+    <string name="app_info_notes_header">Notes</string>
+    <string name="app_info_sources_header">Sources</string>
+
+    <string name="app_info_source_github">GitHub</string>
+    <string name="app_info_source_docker">Docker Hub</string>
+    <string name="app_info_source_unknown">Unknown</string>
+    <string name="app_info_source_missing">This app has no viewable sources</string>
+
     <string name="app_control_upgrade">Upgrade</string>
     <string name="app_control_rollback">Roll back</string>
     <string name="app_control_edit">Edit</string>

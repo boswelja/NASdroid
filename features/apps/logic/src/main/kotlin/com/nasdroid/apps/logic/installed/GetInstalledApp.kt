@@ -22,9 +22,9 @@ class GetInstalledApp(
                 InstalledAppDetails(
                     name = chartRelease.id,
                     iconUrl = chartRelease.chartMetadata.icon,
-                    description = chartRelease.chartMetadata.description,
+                    notes = chartRelease.info.notes,
                     appVersion = chartRelease.chartMetadata.appVersion,
-                    chartVersion = chartRelease.chartMetadata.kubeVersion,
+                    chartVersion = chartRelease.chartMetadata.version,
                     lastUpdated = null, // TODO
                     sources = chartRelease.chartMetadata.sources.orEmpty(),
                     developer = null, // TODO
@@ -50,7 +50,7 @@ class GetInstalledApp(
  *
  * @property name The user-specified name given to the application.
  * @property iconUrl The URL of the application icon.
- * @property description A Markdown-formatted block of text used as short documentation for the app.
+ * @property notes A Markdown-formatted block of text used as short documentation for the app.
  * @property appVersion The version of the app that is installed in the container.
  * @property chartVersion The version of the container the app is installed in.
  * @property lastUpdated Indicates when the last update was installed, if possible.
@@ -65,7 +65,7 @@ class GetInstalledApp(
 data class InstalledAppDetails(
     val name: String,
     val iconUrl: String,
-    val description: String,
+    val notes: String?,
     val appVersion: String,
     val chartVersion: String,
     val lastUpdated: Instant?,
