@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_nightly:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     environment: nightly
     steps:
       - name: Checkout
