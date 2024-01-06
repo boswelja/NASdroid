@@ -53,17 +53,12 @@ fun ApplicationInfo(
     }
     Column(modifier) {
         val itemModifier = Modifier.padding(vertical = 8.dp)
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(installedAppDetails.iconUrl)
-                .decoderFactory(SvgDecoder.Factory())
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
+        AppIcon(
+            iconUrl = installedAppDetails.iconUrl,
             modifier = Modifier
                 .size(128.dp)
                 .align(Alignment.CenterHorizontally)
-                .clip(MaterialTheme.shapes.small)
+                .clip(MaterialTheme.shapes.medium)
         )
         ApplicationInfoItem(
             label = stringResource(R.string.app_info_name),
@@ -110,6 +105,22 @@ fun ApplicationInfo(
             onDismiss = { showSourcesModal = false }
         )
     }
+}
+
+@Composable
+internal fun AppIcon(
+    iconUrl: String,
+    modifier: Modifier = Modifier
+) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(iconUrl)
+            .decoderFactory(SvgDecoder.Factory())
+            .crossfade(true)
+            .build(),
+        contentDescription = null,
+        modifier = modifier
+    )
 }
 
 @Composable
