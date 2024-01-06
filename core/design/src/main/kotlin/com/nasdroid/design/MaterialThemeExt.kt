@@ -1,3 +1,4 @@
+@file:Suppress("ForbiddenImport")
 package com.nasdroid.design
 
 import androidx.compose.material3.ColorScheme
