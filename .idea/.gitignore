@@ -6,6 +6,7 @@
 /artifacts/
 /codeStyles/
 /appInsightsSettings.xml
+/discord.xml
 /compiler.xml
 /gradle.xml
 /kotlinc.xml
