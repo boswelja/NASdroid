@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -28,6 +27,7 @@ import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.nasdroid.apps.logic.discover.AvailableApp
+import com.nasdroid.design.MaterialThemeExt
 import kotlinx.datetime.Instant
 
 /**
@@ -52,12 +52,12 @@ fun AvailableAppCard(
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f)
-                        .clip(MaterialTheme.shapes.small)
+                        .clip(MaterialThemeExt.shapes.small)
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = app.catalogName,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialThemeExt.typography.labelSmall,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
@@ -70,18 +70,18 @@ fun AvailableAppCard(
                 ) {
                     Text(
                         text = app.title,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialThemeExt.typography.titleMedium
                     )
                     Text(
                         text = app.version,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialThemeExt.typography.bodySmall
                     )
                 }
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = app.description,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialThemeExt.typography.bodyMedium
                 )
             }
         }
@@ -92,7 +92,7 @@ fun AvailableAppCard(
 @PreviewFontScale
 @Composable
 fun AvailableAppCardPreview() {
-    MaterialTheme(
+    MaterialThemeExt(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
         AvailableAppCard(

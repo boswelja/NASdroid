@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -34,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.nasdroid.design.MaterialThemeExt
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberEndAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
@@ -124,7 +124,7 @@ fun GraphCard(
         Column(Modifier.padding(16.dp)) {
             Text(
                 text = graph.title,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialThemeExt.typography.titleMedium
             )
             ProvideChartStyle(style) {
                 Chart(
@@ -153,11 +153,11 @@ fun GraphCard(
                                 .size(12.dp)
                                 .background(
                                     color = color,
-                                    shape = MaterialTheme.shapes.extraSmall
+                                    shape = MaterialThemeExt.shapes.extraSmall
                                 )
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text(text = s, style = MaterialTheme.typography.labelLarge)
+                        Text(text = s, style = MaterialThemeExt.typography.labelLarge)
                     }
                 }
             }

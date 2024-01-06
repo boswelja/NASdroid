@@ -41,6 +41,7 @@ detekt {
 dependencies {
     implementation(projects.core.composeLogviewer)
     implementation(projects.core.composeUrllauncher)
+    implementation(projects.core.design)
 
     implementation(projects.features.apps.logic)
 

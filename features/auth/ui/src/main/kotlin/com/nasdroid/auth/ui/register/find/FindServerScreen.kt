@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -32,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * A screen that allows the user to quickly find and connect to their TrueNAS server.
@@ -62,7 +62,7 @@ internal fun FindServerByAddress(
         // TODO This is just a temporary title. It should be a proper TopAppBar with a back button.
         Text(
             text = "Add Server",
-            style = MaterialTheme.typography.displayMedium
+            style = MaterialThemeExt.typography.displayMedium
         )
         Column(
             modifier = Modifier

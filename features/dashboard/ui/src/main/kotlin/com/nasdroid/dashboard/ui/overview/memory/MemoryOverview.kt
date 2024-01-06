@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,6 +36,7 @@ import com.nasdroid.dashboard.logic.dataloading.memory.MemoryUsageData
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.skeleton
+import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -70,15 +70,15 @@ fun MemoryOverview(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = MaterialTheme.colorScheme.errorContainer,
-                        shape = MaterialTheme.shapes.medium
+                        color = MaterialThemeExt.colorScheme.errorContainer,
+                        shape = MaterialThemeExt.shapes.medium
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "Something went wrong",
                     modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialThemeExt.typography.bodyMedium
                 )
             }
         }
@@ -161,11 +161,11 @@ fun MemoryUtilisationLabel(
     ) {
         Text(
             text = name,
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialThemeExt.typography.labelMedium
         )
         Text(
             text = usage,
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialThemeExt.typography.labelLarge
         )
     }
 }
@@ -185,7 +185,7 @@ fun Capacity.formatToString(): String {
 @Preview(showBackground = true)
 @Composable
 fun MemoryCardPreview() {
-    MaterialTheme {
+    MaterialThemeExt {
         MemoryOverview(
             specs = MemorySpecs(
                 isEcc = true,

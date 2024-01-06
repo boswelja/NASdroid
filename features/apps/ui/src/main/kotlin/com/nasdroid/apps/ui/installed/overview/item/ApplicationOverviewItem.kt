@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +25,7 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.nasdroid.apps.logic.installed.InstalledAppOverview
 import com.nasdroid.apps.ui.R
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * Displays information contained in the given [InstalledAppOverview] as a short, reusable list item.
@@ -57,7 +57,7 @@ fun ApplicationOverviewItem(
                 modifier = Modifier
                     .size(48.dp)
                     .align(Alignment.Top)
-                    .clip(MaterialTheme.shapes.small)
+                    .clip(MaterialThemeExt.shapes.small)
             )
             AppInfoText(
                 installedAppOverview = installedAppOverview,
@@ -80,7 +80,7 @@ internal fun AppInfoText(
     Column(modifier) {
         Text(
             text = installedAppOverview.name,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialThemeExt.typography.titleMedium,
         )
         Text(
             text = if (installedAppOverview.updateAvailable) {
@@ -88,7 +88,7 @@ internal fun AppInfoText(
             } else {
                 stringResource(R.string.app_update_up_to_date)
             },
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialThemeExt.typography.bodyMedium,
         )
     }
 }
@@ -132,7 +132,7 @@ internal fun AppStateControls(
 @Preview
 @Composable
 fun ApplicationOverviewItemPreview() {
-    MaterialTheme {
+    MaterialThemeExt {
         ApplicationOverviewItem(
             installedAppOverview = InstalledAppOverview(
                 name = "Jellyfin",

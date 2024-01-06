@@ -34,7 +34,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.discover.SortMode
 import com.nasdroid.apps.ui.R
+import com.nasdroid.design.MaterialThemeExt
 
 private const val CATEGORIES_COLLAPSED_MAX_COUNT = 10
 
@@ -280,7 +280,7 @@ internal fun FilterCategory(
             Icon(icon, null)
             Text(
                 text = label,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialThemeExt.typography.titleMedium
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -330,7 +330,7 @@ private fun SortMode.label(): String {
 @Composable
 fun FilterSettingsPreview() {
     var sortMode by remember { mutableStateOf(SortMode.Category) }
-    MaterialTheme {
+    MaterialThemeExt {
         FilterSettings(
             sortMode = sortMode,
             onSortModeChange = { sortMode = it },

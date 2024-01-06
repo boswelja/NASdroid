@@ -40,6 +40,7 @@ detekt {
 
 dependencies {
     implementation(projects.core.api)
+    implementation(projects.core.design)
 
     implementation(libs.androidx.window)
 

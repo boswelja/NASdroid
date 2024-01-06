@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.installed.InstalledAppOverview
 import com.nasdroid.apps.ui.R
+import com.nasdroid.design.MaterialThemeExt
 
 @Composable
 internal fun AppStateChip(
@@ -20,11 +21,11 @@ internal fun AppStateChip(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        shape = MaterialTheme.shapes.small,
+        shape = MaterialThemeExt.shapes.small,
         color = when (state) {
-            InstalledAppOverview.State.DEPLOYING -> MaterialTheme.colorScheme.primaryContainer
-            InstalledAppOverview.State.ACTIVE -> MaterialTheme.colorScheme.secondaryContainer
-            InstalledAppOverview.State.STOPPED -> MaterialTheme.colorScheme.tertiaryContainer
+            InstalledAppOverview.State.DEPLOYING -> MaterialThemeExt.colorScheme.primaryContainer
+            InstalledAppOverview.State.ACTIVE -> MaterialThemeExt.colorScheme.secondaryContainer
+            InstalledAppOverview.State.STOPPED -> MaterialThemeExt.colorScheme.tertiaryContainer
         },
         modifier = modifier
     ) {
@@ -32,21 +33,21 @@ internal fun AppStateChip(
             InstalledAppOverview.State.STOPPED -> {
                 Text(
                     text = stringResource(R.string.app_state_stopped),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialThemeExt.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
             InstalledAppOverview.State.ACTIVE -> {
                 Text(
                     text = stringResource(R.string.app_state_running),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialThemeExt.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
             InstalledAppOverview.State.DEPLOYING -> {
                 Text(
                     text = stringResource(R.string.app_state_deploying),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialThemeExt.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }

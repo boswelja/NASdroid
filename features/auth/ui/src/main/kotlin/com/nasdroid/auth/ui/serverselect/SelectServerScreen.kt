@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -38,6 +37,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.logic.Server
+import com.nasdroid.design.MaterialThemeExt
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
@@ -275,7 +275,7 @@ fun SelectServerScreenPreview() {
         val size = DpSize(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
         WindowSizeClass.calculateFromSize(size)
     }
-    MaterialTheme(
+    MaterialThemeExt(
         colorScheme = if (isSystemInDarkTheme()) {
             dynamicDarkColorScheme(context)
         } else {
@@ -301,7 +301,7 @@ fun SelectServerScreenPreview() {
             windowSizeClass = windowSizeClass,
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+                .background(MaterialThemeExt.colorScheme.background),
             contentPadding = PaddingValues(16.dp)
         )
     }

@@ -46,6 +46,7 @@ detekt {
 }
 
 dependencies {
+    implementation(projects.core.design)
     implementation(projects.features.auth.logic)
 
     implementation(libs.androidx.window)

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -27,6 +26,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.nasdroid.auth.ui.R
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * Displays the application branding in the UI, including app name, a short description, and an
@@ -51,11 +51,11 @@ fun AppBranding(
                         append(stringResource(R.string.auth_header_manager))
                     }
                 },
-                style = MaterialTheme.typography.headlineLarge
+                style = MaterialThemeExt.typography.headlineLarge
             )
             Text(
                 text = stringResource(R.string.auth_header_label),
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialThemeExt.typography.labelLarge,
                 modifier = Modifier.padding(start = 4.dp)
             )
         }

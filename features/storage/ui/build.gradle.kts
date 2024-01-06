@@ -39,6 +39,7 @@ detekt {
 }
 
 dependencies {
+    implementation(projects.core.design)
     implementation(projects.features.storage.logic)
 
     implementation(libs.androidx.navigation)

@@ -18,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.discover.SortMode
 import com.nasdroid.apps.ui.R
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * An opinionated [AssistChip] used to launch a more detailed filter configuration.
@@ -197,7 +197,7 @@ private fun SortMode.label(): String {
 @Preview(showBackground = true)
 @Composable
 fun FilterSettingsChipPreview() {
-    MaterialTheme {
+    MaterialThemeExt {
         FilterSettingsChip(onClick = { })
     }
 }
@@ -205,7 +205,7 @@ fun FilterSettingsChipPreview() {
 @Preview(showBackground = true)
 @Composable
 fun CatalogChipPreview() {
-    MaterialTheme {
+    MaterialThemeExt {
         var selected by remember {
             mutableStateOf(true)
         }
@@ -220,7 +220,7 @@ fun CatalogChipPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SortModeChipPreview() {
-    MaterialTheme {
+    MaterialThemeExt {
         var sortMode by remember {
             mutableStateOf(SortMode.Category)
         }
@@ -234,7 +234,7 @@ fun SortModeChipPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SelectedCategoryChipPreview() {
-    MaterialTheme {
+    MaterialThemeExt {
         SelectedCategoryChip(
             categoryName = "Monitoring",
             onRemove = { }

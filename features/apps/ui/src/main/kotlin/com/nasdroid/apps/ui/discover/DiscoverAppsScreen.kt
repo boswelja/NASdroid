@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.discover.AvailableApp
 import com.nasdroid.apps.logic.discover.SortMode
+import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -93,7 +93,7 @@ fun DiscoverAppsScreen(
                 items(availableAppGroups) { appGroup ->
                     Text(
                         text = appGroup.groupTitle,
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialThemeExt.typography.titleLarge,
                         modifier = Modifier.padding(cellPadding)
                     )
                     Spacer(Modifier.height(4.dp))
