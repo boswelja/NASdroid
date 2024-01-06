@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.ui.navigation.TopLevelDestination
 
@@ -32,7 +33,13 @@ fun BottomNavigationBar(
                 selected = destination == selectedDestination,
                 onClick = { onDestinationClick(destination) },
                 icon = { Icon(imageVector = destination.icon, contentDescription = null) },
-                label = { Text(stringResource(destination.labelRes)) },
+                label = {
+                    Text(
+                        text = stringResource(destination.labelRes),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
                 alwaysShowLabel = true
             )
         }
