@@ -17,6 +17,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -29,6 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuHost
 import com.boswelja.menuprovider.ProvideMenuItems
@@ -79,6 +82,7 @@ fun TopLevelNavigation(
             // Compact width suggests we don't have room for any navigation on the sides, so we keep
             // it collapsed
             ModalNavigationDrawer(
+                windowSizeClass = windowSizeClass,
                 selectedDestination = selectedDestination,
                 destinations = BottomNavDestinations,
                 navigateTo = navigateTo,
@@ -94,6 +98,7 @@ fun TopLevelNavigation(
             if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact) {
                 // But if we don't have enough height, all our rail destinations won't fit
                 ModalNavigationDrawer(
+                    windowSizeClass = windowSizeClass,
                     selectedDestination = selectedDestination,
                     destinations = BottomNavDestinations,
                     navigateTo = navigateTo,
@@ -105,6 +110,7 @@ fun TopLevelNavigation(
                 )
             } else {
                 NavigationRail(
+                    windowSizeClass = windowSizeClass,
                     selectedDestination = selectedDestination,
                     destinations = StartNavRailDestinations,
                     navigateTo = navigateTo,
@@ -121,6 +127,7 @@ fun TopLevelNavigation(
             if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded) {
                 // But we only want to take up all that space if we are sure it's a big screen
                 PermanentNavigationDrawer(
+                    windowSizeClass = windowSizeClass,
                     selectedDestination = selectedDestination,
                     navigateTo = navigateTo,
                     navigationVisible = navigationVisible,
@@ -131,6 +138,7 @@ fun TopLevelNavigation(
                 )
             } else {
                 NavigationRail(
+                    windowSizeClass = windowSizeClass,
                     selectedDestination = selectedDestination,
                     destinations = StartNavRailDestinations,
                     navigateTo = navigateTo,
@@ -149,6 +157,7 @@ fun TopLevelNavigation(
  * A Modal navigation drawer with a top app bar to control its state and display the current
  * destination.
  *
+ * @param windowSizeClass [WindowSizeClass].
  * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
  * selected.
  * @param destinations A list of [TopLevelDestination]s that should be displayed.
@@ -162,6 +171,7 @@ fun TopLevelNavigation(
  */
 @Composable
 fun ModalNavigationDrawer(
+    windowSizeClass: WindowSizeClass,
     selectedDestination: TopLevelDestination?,
     destinations: List<TopLevelDestination>,
     navigateTo: (TopLevelDestination) -> Unit,
@@ -195,7 +205,8 @@ fun ModalNavigationDrawer(
                                 } else {
                                     coroutineScope.launch { drawerState.open() }
                                 }
-                            }
+                            },
+                            windowHeightSizeClass = windowSizeClass.heightSizeClass,
                         )
                     }
                 },
@@ -217,6 +228,7 @@ fun ModalNavigationDrawer(
 /**
  * A Navigation Rail with a top app bar to allow navigating back.
  *
+ * @param windowSizeClass [WindowSizeClass].
  * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
  * selected.
  * @param destinations A list of [TopLevelDestination]s that should be displayed.
@@ -229,6 +241,7 @@ fun ModalNavigationDrawer(
  */
 @Composable
 fun NavigationRail(
+    windowSizeClass: WindowSizeClass,
     selectedDestination: TopLevelDestination?,
     destinations: List<TopLevelDestination>,
     navigateTo: (TopLevelDestination) -> Unit,
@@ -272,7 +285,8 @@ fun NavigationRail(
                             com.nasdroid.ui.navigation.bar.TopAppBar(
                                 title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
                                 navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
-                                onNavigationClick = navigateBack
+                                onNavigationClick = navigateBack,
+                                windowHeightSizeClass = windowSizeClass.heightSizeClass
                             )
                         }
                     },
@@ -286,6 +300,7 @@ fun NavigationRail(
 /**
  * A Permanent Navigation Drawer with a top app bar to allow navigating back.
  *
+ * @param windowSizeClass [WindowSizeClass].
  * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
  * selected.
  * @param navigateTo Called when the user navigates to a new destination.
@@ -297,6 +312,7 @@ fun NavigationRail(
  */
 @Composable
 fun PermanentNavigationDrawer(
+    windowSizeClass: WindowSizeClass,
     selectedDestination: TopLevelDestination?,
     navigateTo: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
@@ -320,7 +336,8 @@ fun PermanentNavigationDrawer(
                         com.nasdroid.ui.navigation.bar.TopAppBar(
                             title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
                             navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
-                            onNavigationClick = navigateBack
+                            onNavigationClick = navigateBack,
+                            windowHeightSizeClass = windowSizeClass.heightSizeClass
                         )
                     }
                 },
@@ -330,6 +347,7 @@ fun PermanentNavigationDrawer(
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(device = "spec:width=411dp,height=891dp")
 @Composable
 fun ModalNavigationDrawerPreview() {
@@ -338,6 +356,7 @@ fun ModalNavigationDrawerPreview() {
         mutableStateOf(destinations.first())
     }
     ModalNavigationDrawer(
+        windowSizeClass = WindowSizeClass.calculateFromSize(DpSize(411.dp, 891.dp)),
         selectedDestination = selectedDestination,
         destinations = destinations,
         navigateTo = {
@@ -364,6 +383,7 @@ fun ModalNavigationDrawerPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(device = "spec:width=673dp,height=841dp")
 @Composable
 fun NavigationRailPreview() {
@@ -372,6 +392,7 @@ fun NavigationRailPreview() {
         mutableStateOf(destinations.first())
     }
     NavigationRail(
+        windowSizeClass = WindowSizeClass.calculateFromSize(DpSize(673.dp, 841.dp)),
         selectedDestination = selectedDestination,
         destinations = destinations,
         navigateTo = {
@@ -398,6 +419,7 @@ fun NavigationRailPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
 fun PermanentNavigationDrawerPreview() {
@@ -406,6 +428,7 @@ fun PermanentNavigationDrawerPreview() {
         mutableStateOf(destinations.first())
     }
     PermanentNavigationDrawer(
+        windowSizeClass = WindowSizeClass.calculateFromSize(DpSize(1280.dp, 800.dp)),
         selectedDestination = selectedDestination,
         navigateTo = {
             selectedDestination = it

@@ -7,6 +7,8 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.boswelja.menuprovider.LocalMenuHost
@@ -20,37 +22,53 @@ import com.boswelja.menuprovider.material3.TopAppBarMenuItems
 @Composable
 fun TopAppBar(
     title: @Composable () -> Unit,
+    windowHeightSizeClass: WindowHeightSizeClass,
     navigationMode: NavigationMode,
     onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier,
     menuHost: MenuHost = LocalMenuHost.current
 ) {
-    androidx.compose.material3.TopAppBar(
-        title = title,
-        navigationIcon = {
-            AnimatedContent(targetState = navigationMode, label = "Top App Bar Navigation Mode") {
-                when (it) {
-                    NavigationMode.None -> {}
-                    NavigationMode.Back -> {
-                        NavigateBackButton(onClick = onNavigationClick)
-                    }
-                    NavigationMode.Drawer -> {
-                        IconButton(
-                            onClick = onNavigationClick
-                        ) {
-                            Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
-                        }
+    val navigationIcon = @Composable {
+        AnimatedContent(targetState = navigationMode, label = "Top App Bar Navigation Mode") {
+            when (it) {
+                NavigationMode.None -> {}
+                NavigationMode.Back -> {
+                    NavigateBackButton(onClick = onNavigationClick)
+                }
+                NavigationMode.Drawer -> {
+                    IconButton(
+                        onClick = onNavigationClick
+                    ) {
+                        Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
                     }
                 }
             }
-        },
-        actions = {
-            TopAppBarMenuItems(
-                menuHost = menuHost
-            )
-        },
-        modifier = modifier,
-    )
+        }
+    }
+    if (windowHeightSizeClass < WindowHeightSizeClass.Medium) {
+        androidx.compose.material3.TopAppBar(
+            title = title,
+            navigationIcon = navigationIcon,
+            actions = {
+                TopAppBarMenuItems(
+                    menuHost = menuHost
+                )
+            },
+            modifier = modifier,
+        )
+    } else {
+        MediumTopAppBar(
+            title = title,
+            navigationIcon = navigationIcon,
+            actions = {
+                TopAppBarMenuItems(
+                    menuHost = menuHost
+                )
+            },
+            modifier = modifier,
+        )
+    }
+
 }
 
 @Composable
