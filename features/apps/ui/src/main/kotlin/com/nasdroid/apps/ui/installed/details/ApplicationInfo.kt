@@ -30,12 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.nasdroid.apps.logic.installed.InstalledAppDetails
+import com.nasdroid.apps.ui.R
 import com.nasdroid.core.urllauncher.rememberUrlLauncher
 
 /**
@@ -64,17 +66,17 @@ fun ApplicationInfo(
                 .clip(MaterialTheme.shapes.small)
         )
         ApplicationInfoItem(
-            label = "Name",
+            label = stringResource(R.string.app_info_name),
             text = installedAppDetails.name,
             modifier = itemModifier
         )
         ApplicationInfoItem(
-            label = "App Version",
+            label = stringResource(R.string.app_info_app_version),
             text = installedAppDetails.appVersion,
             modifier = itemModifier
         )
         ApplicationInfoItem(
-            label = "Chart Version",
+            label = stringResource(R.string.app_info_chart_version),
             text = installedAppDetails.chartVersion,
             modifier = itemModifier
         )
@@ -82,7 +84,7 @@ fun ApplicationInfo(
             onClick = { showSourcesModal = true },
             modifier = Modifier.padding(horizontal = 4.dp)
         ) {
-            Text("View Sources")
+            Text(stringResource(R.string.app_info_view_sources))
         }
         SourceCatalogDetails(
             catalog = installedAppDetails.catalog,
@@ -117,7 +119,7 @@ internal fun SourceCatalogDetails(
     modifier: Modifier = Modifier
 ) {
     ApplicationInfoItem(
-        label ="Catalog & train",
+        label = stringResource(R.string.app_info_catalog_train),
         text ="$catalog \u2022 $train",
         modifier = modifier
     )
@@ -155,13 +157,13 @@ internal fun ApplicationControls(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         OutlinedIconButton(onClick = onEditClick) {
-            Icon(Icons.Default.Edit, "Edit")
+            Icon(Icons.Default.Edit, stringResource(R.string.app_control_edit))
         }
         OutlinedIconButton(onClick = onRollBackClick) {
-            Icon(Icons.Default.Restore, "Roll Back")
+            Icon(Icons.Default.Restore, stringResource(R.string.app_control_rollback))
         }
         OutlinedIconButton(onClick = onDeleteClick) {
-            Icon(Icons.Default.Delete, "Delete")
+            Icon(Icons.Default.Delete, stringResource(R.string.app_control_delete))
         }
     }
 }
@@ -181,7 +183,7 @@ internal fun SourcesListModal(
     ) {
         if (sources.isNotEmpty()) {
             Text(
-                text = "Sources",
+                text = stringResource(R.string.app_info_sources_header),
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
@@ -190,9 +192,9 @@ internal fun SourcesListModal(
                     overlineContent = {
                         Text(
                             text = when {
-                                url.contains("github.com") -> "GitHub"
-                                url.contains("hub.docker.com") -> "Docker Hub"
-                                else -> "Unknown Host"
+                                url.contains("github.com") -> stringResource(R.string.app_info_source_github)
+                                url.contains("hub.docker.com") -> stringResource(R.string.app_info_source_docker)
+                                else -> stringResource(R.string.app_info_source_unknown)
                             }
                         )
                     },
@@ -202,7 +204,7 @@ internal fun SourcesListModal(
             }
         } else {
             Text(
-                text = "This app has no viewable sources",
+                text = stringResource(R.string.app_info_source_missing),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(16.dp)
             )
