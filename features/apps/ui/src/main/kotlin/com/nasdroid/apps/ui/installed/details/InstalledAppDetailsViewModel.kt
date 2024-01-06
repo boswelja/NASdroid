@@ -3,6 +3,7 @@ package com.nasdroid.apps.ui.installed.details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nasdroid.apps.logic.installed.DeleteApp
 import com.nasdroid.apps.logic.installed.GetInstalledApp
 import com.nasdroid.apps.logic.installed.InstalledAppDetails
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,14 +12,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * A ViewModel that provides all data and actions necessary for displaying details about an
  * application installed on the system.
  */
 class InstalledAppDetailsViewModel(
-    private val getInstalledApp: GetInstalledApp,
     private val savedStateHandle: SavedStateHandle,
+    private val getInstalledApp: GetInstalledApp,
+    private val deleteApp: DeleteApp,
 ) : ViewModel() {
 
     /**
@@ -55,7 +58,19 @@ class InstalledAppDetailsViewModel(
     /**
      * Set the name of the app whose details should be viewed.
      */
-    fun setAppName(appName: String) {
+    fun setAppName(appName: String?) {
         savedStateHandle["appName"] = appName
+    }
+
+    /**
+     * Attempts to delete the app whose name matches [appName].
+     *
+     * @param deleteUnusedImages Whether container images that are unused after the operation should
+     * be deleted.
+     */
+    fun tryDeleteApp(deleteUnusedImages: Boolean) {
+        viewModelScope.launch {
+            deleteApp(checkNotNull(appName.value), deleteUnusedImages)
+        }
     }
 }

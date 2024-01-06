@@ -46,6 +46,9 @@ import com.nasdroid.design.MaterialThemeExt
 @Composable
 fun ApplicationInfo(
     installedAppDetails: InstalledAppDetails,
+    onEditClick: () -> Unit,
+    onRollBackClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showSourcesModal by rememberSaveable {
@@ -87,9 +90,9 @@ fun ApplicationInfo(
             modifier = itemModifier
         )
         ApplicationControls(
-            onEditClick = { /* TODO */ },
-            onRollBackClick = { /* TODO */ },
-            onDeleteClick = { /* TODO */ },
+            onEditClick = onEditClick,
+            onRollBackClick = onRollBackClick,
+            onDeleteClick = onDeleteClick,
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(horizontal = 16.dp)
@@ -248,6 +251,9 @@ fun ApplicationInfoPreview() {
                 updateAvailable = false,
                 webPortalUrl = "https://google.com/"
             ),
+            onEditClick = { },
+            onRollBackClick = { },
+            onDeleteClick = { },
             modifier = Modifier.padding(16.dp)
         )
     }

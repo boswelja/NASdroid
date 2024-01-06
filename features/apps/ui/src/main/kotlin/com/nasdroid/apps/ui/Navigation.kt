@@ -68,6 +68,9 @@ fun NavGraphBuilder.appsGraph(
             )
         ) {
             InstalledAppDetailsScreen(
+                navigateUp = {
+                    navController.popBackStack()
+                },
                 modifier = modifier,
                 contentPadding = contentPadding
             )
