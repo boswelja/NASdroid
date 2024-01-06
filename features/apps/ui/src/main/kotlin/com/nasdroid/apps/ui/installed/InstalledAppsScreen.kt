@@ -66,6 +66,7 @@ fun InstalledAppsScreen(
             ) {
                 if (it) {
                     InstalledAppDetailsScreen(
+                        navigateUp = { detailsViewModel.setAppName(null) },
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = contentPadding,
                         viewModel = detailsViewModel
