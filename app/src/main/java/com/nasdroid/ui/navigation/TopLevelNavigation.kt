@@ -157,6 +157,7 @@ fun TopLevelNavigation(
  * A Modal navigation drawer with a top app bar to control its state and display the current
  * destination.
  *
+ * @param windowSizeClass [WindowSizeClass].
  * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
  * selected.
  * @param destinations A list of [TopLevelDestination]s that should be displayed.
@@ -227,6 +228,7 @@ fun ModalNavigationDrawer(
 /**
  * A Navigation Rail with a top app bar to allow navigating back.
  *
+ * @param windowSizeClass [WindowSizeClass].
  * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
  * selected.
  * @param destinations A list of [TopLevelDestination]s that should be displayed.
@@ -298,6 +300,7 @@ fun NavigationRail(
 /**
  * A Permanent Navigation Drawer with a top app bar to allow navigating back.
  *
+ * @param windowSizeClass [WindowSizeClass].
  * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
  * selected.
  * @param navigateTo Called when the user navigates to a new destination.
