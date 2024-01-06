@@ -24,8 +24,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.installed.InstalledAppDetails
+import com.nasdroid.apps.ui.R
 import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 
@@ -64,6 +66,9 @@ fun InstalledAppDetailsScreen(
     }
 }
 
+/**
+ * Displays the contents of [InstalledAppDetailsScreen], when there are app details to display.
+ */
 @Composable
 fun InstalledAppDetailsContent(
     installedAppDetails: InstalledAppDetails,
@@ -117,22 +122,22 @@ internal fun DeleteAppDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text("Continue")
+                Text(stringResource(R.string.app_delete_continue))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.app_delete_cancel))
             }
         },
         icon = {
             Icon(Icons.Default.Delete, null)
         },
         title = {
-            Text("Delete App")
+            Text(stringResource(R.string.app_delete_title))
         },
         text = {
-            Text("Are you sure you want to delete the app \"$appName\"?")
+            Text(stringResource(R.string.app_delete_text, appName))
         },
         modifier = modifier
     )
