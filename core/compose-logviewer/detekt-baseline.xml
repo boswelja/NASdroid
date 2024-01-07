@@ -2,9 +2,12 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>BooleanPropertyNaming:HctSolver.kt$HctSolver$var initialized = false</ID>
+    <ID>BooleanPropertyNaming:HctSolver.kt$HctSolver$var uncut = true</ID>
     <ID>BracesOnIfStatements:HctSolver.kt$HctSolver$else</ID>
     <ID>BracesOnIfStatements:ViewingConditions.kt$ViewingConditions.Companion$else</ID>
     <ID>BracesOnIfStatements:ViewingConditions.kt$ViewingConditions.Companion$if</ID>
+    <ID>CanBeNonNullable:HctSolver.kt$HctSolver$linrgb: DoubleArray?</ID>
     <ID>EndOfSentenceFormat:Cam16.kt$Cam16$ Chroma in CAM16 </ID>
     <ID>EndOfSentenceFormat:Cam16.kt$Cam16$ Hue in CAM16 </ID>
     <ID>EndOfSentenceFormat:Cam16.kt$Cam16$ Lightness coordinate in CAM16-UCS </ID>
@@ -430,7 +433,14 @@
     <ID>MagicNumber:ViewingConditions.kt$ViewingConditions.Companion$50.0</ID>
     <ID>MagicNumber:ViewingConditions.kt$ViewingConditions.Companion$92.0</ID>
     <ID>MaxLineLength:Cam16.kt$Cam16.Companion$if (atanDegrees &lt; 0) atanDegrees + 360.0 else if (atanDegrees &gt;= 360) atanDegrees - 360.0 else atanDegrees</ID>
+    <ID>NamedArguments:Cam16.kt$Cam16.Companion$Cam16(hue, c, j, q, m, s, jstar, astar, bstar)</ID>
+    <ID>NamedArguments:Cam16.kt$Cam16.Companion$fromXyzInViewingConditions(x, y, z, viewingConditions)</ID>
+    <ID>NamedArguments:HctSolver.kt$HctSolver$setCoordinate(left, midPlaneCoordinate, right, axis)</ID>
+    <ID>NamedArguments:ViewingConditions.kt$ViewingConditions.Companion$ViewingConditions(n, aw, nbb, nbb, c, f, rgbD, fl, fl.pow(0.25), z)</ID>
+    <ID>NamedArguments:ViewingConditions.kt$ViewingConditions.Companion$make( ColorUtils.whitePointD65(), 200.0 / PI * ColorUtils.yFromLstar(50.0) / 100f, lstar, 2.0, false )</ID>
     <ID>NestedBlockDepth:HctSolver.kt$HctSolver$private fun bisectToLimit(y: Double, targetHue: Double): DoubleArray</ID>
+    <ID>NoNameShadowing:MathUtils.kt$MathUtils$degrees</ID>
+    <ID>NoNameShadowing:ViewingConditions.kt$ViewingConditions.Companion$backgroundLstar</ID>
     <ID>ReturnCount:HctSolver.kt$HctSolver$fun solveToInt(hueDegrees: Double, chroma: Double, lstar: Double): Int</ID>
     <ID>ReturnCount:HctSolver.kt$HctSolver$private fun findResultByJ(hueRadians: Double, chroma: Double, y: Double): Int</ID>
     <ID>ReturnCount:MathUtils.kt$MathUtils$fun clampDouble(min: Double, max: Double, input: Double): Double</ID>
@@ -454,6 +464,7 @@
     <ID>UndocumentedPublicProperty:ViewingConditions.kt$ViewingConditions$val ncb: Double</ID>
     <ID>UndocumentedPublicProperty:ViewingConditions.kt$ViewingConditions$val rgbD: DoubleArray</ID>
     <ID>UndocumentedPublicProperty:ViewingConditions.kt$ViewingConditions$val z: Double</ID>
+    <ID>UnsafeCallOnNullableType:HctSolver.kt$HctSolver$linrgb!!</ID>
     <ID>UnusedPrivateProperty:HctSolver.kt$HctSolver$i</ID>
     <ID>WildcardImport:Cam16.kt$import kotlin.math.*</ID>
     <ID>WildcardImport:HctSolver.kt$import kotlin.math.*</ID>
