@@ -139,8 +139,6 @@ naming:
       - 'Composable'
   LambdaParameterNaming:
     active: true
-  NonBooleanPropertyPrefixedWithIs:
-    active: true
   VariableMaxLength:
     active: true
   VariableMinLength:
