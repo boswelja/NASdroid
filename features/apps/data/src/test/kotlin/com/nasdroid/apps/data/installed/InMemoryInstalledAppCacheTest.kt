@@ -101,4 +101,62 @@ class InMemoryInstalledAppCacheTest {
         // Assert that the app is no longer in the cache
         assertEquals(emptyList<CachedInstalledApp>(), installedAppCache.getInstalledApps("").first())
     }
+
+    @Test
+    fun `setState sets the state of the app in cache`() = runTest {
+        val apps = listOf(
+            CachedInstalledApp(
+                name = "Test App",
+                version = "1.0",
+                iconUrl = "icon url",
+                catalog = "catalog",
+                train = "train",
+                state = CachedInstalledApp.State.ACTIVE,
+                updateAvailable = true,
+                webPortalUrl = "https://google.com"
+            )
+        )
+        installedAppCache.submitInstalledApps(apps)
+
+        installedAppCache.getInstalledApps("").test {
+            assertEquals(apps, awaitItem())
+
+            val newState = CachedInstalledApp.State.STOPPED
+            apps.forEach {
+                installedAppCache.setState(it.name, newState)
+            }
+            val appsWithUpdatedStates = apps.map { it.copy(state = newState) }
+
+            assertEquals(appsWithUpdatedStates, awaitItem())
+        }
+    }
+
+    @Test
+    fun `setUpdateAvailable sets the updateAvailable of the app in cache`() = runTest {
+        val apps = listOf(
+            CachedInstalledApp(
+                name = "Test App",
+                version = "1.0",
+                iconUrl = "icon url",
+                catalog = "catalog",
+                train = "train",
+                state = CachedInstalledApp.State.ACTIVE,
+                updateAvailable = true,
+                webPortalUrl = "https://google.com"
+            )
+        )
+        installedAppCache.submitInstalledApps(apps)
+
+        installedAppCache.getInstalledApps("").test {
+            assertEquals(apps, awaitItem())
+
+            val newState = false
+            apps.forEach {
+                installedAppCache.setUpdateAvailable(it.name, newState)
+            }
+            val appsWithUpdatedStates = apps.map { it.copy(updateAvailable = newState) }
+
+            assertEquals(appsWithUpdatedStates, awaitItem())
+        }
+    }
 }

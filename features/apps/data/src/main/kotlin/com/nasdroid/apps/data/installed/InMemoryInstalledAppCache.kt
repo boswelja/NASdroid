@@ -72,4 +72,16 @@ class InMemoryInstalledAppCache(
             queries.deleteOne(appName)
         }
     }
+
+    override suspend fun setState(appName: String, state: CachedInstalledApp.State) {
+        withContext(Dispatchers.IO) {
+            queries.updateState(state = state.name, app_name = appName)
+        }
+    }
+
+    override suspend fun setUpdateAvailable(appName: String, updateAvailable: Boolean) {
+        withContext(Dispatchers.IO) {
+            queries.updateUpdateAvailable(update_available = updateAvailable, app_name = appName)
+        }
+    }
 }
