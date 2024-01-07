@@ -31,8 +31,8 @@ fun NavGraphBuilder.appsGraph(
         composable("installed") {
             InstalledAppsScreen(
                 windowSizeClass = windowSizeClass,
-                onNavigate = {
-                    navController.navigate(it)
+                onNavigate = { route ->
+                    navController.navigate(route)
                 },
                 modifier = modifier,
                 contentPadding = contentPadding,

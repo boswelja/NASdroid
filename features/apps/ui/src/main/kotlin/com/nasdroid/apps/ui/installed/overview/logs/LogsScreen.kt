@@ -47,10 +47,10 @@ fun LogsScreen(
         targetState = logs,
         label = "Log transition",
         transitionSpec = { fadeIn() togetherWith fadeOut() }
-    ) {
-        if (it != null) {
+    ) { currentLogs ->
+        if (currentLogs != null) {
             LogViewer(
-                logContents = it,
+                logContents = currentLogs,
                 modifier = modifier,
                 contentPadding = contentPadding
             )
@@ -74,8 +74,8 @@ fun LogsScreen(
             val logOptions by viewModel.getLogOptions().collectAsState(initial = null)
             LogOptionsPicker(
                 options = logOptions,
-                onLogOptionsSelected = {
-                    viewModel.setSelectedLogOptions(it)
+                onLogOptionsSelected = { selectedLogOptions ->
+                    viewModel.setSelectedLogOptions(selectedLogOptions)
                     coroutineScope.launch {
                         logOptionPickerState.hide()
                         isOptionPickerVisible = false

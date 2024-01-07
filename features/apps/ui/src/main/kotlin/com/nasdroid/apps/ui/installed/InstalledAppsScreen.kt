@@ -63,8 +63,8 @@ fun InstalledAppsScreen(
                 label = "Installed app details pane",
                 modifier = Modifier
                     .weight(1f)
-            ) {
-                if (it) {
+            ) { hasApp ->
+                if (hasApp) {
                     InstalledAppDetailsScreen(
                         navigateUp = { detailsViewModel.setAppName(null) },
                         modifier = Modifier.fillMaxSize(),

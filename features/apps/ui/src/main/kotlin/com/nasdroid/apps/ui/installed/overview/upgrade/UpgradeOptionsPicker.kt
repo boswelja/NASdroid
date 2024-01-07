@@ -60,7 +60,7 @@ internal fun ChangelogSection(
     changelog: String,
     modifier: Modifier = Modifier
 ) {
-    var changelogVisible by rememberSaveable {
+    var isChangelogVisible by rememberSaveable {
         mutableStateOf(false)
     }
     Column(modifier) {
@@ -70,12 +70,12 @@ internal fun ChangelogSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 36.dp)
-                .clickable { changelogVisible = !changelogVisible }
+                .clickable { isChangelogVisible = !isChangelogVisible }
         ) {
             Text("Changelog")
             Icon(Icons.Default.ExpandMore, contentDescription = null)
         }
-        AnimatedVisibility(visible = changelogVisible) {
+        AnimatedVisibility(visible = isChangelogVisible) {
             if (changelog.isEmpty()) {
                 Text("No Changelog")
             } else {
@@ -90,7 +90,7 @@ internal fun ImagesSection(
     imagesToBeUpdated: List<String>,
     modifier: Modifier = Modifier
 ) {
-    var imagesVisible by rememberSaveable {
+    var areImagesVisible by rememberSaveable {
         mutableStateOf(false)
     }
     Column(modifier) {
@@ -100,12 +100,12 @@ internal fun ImagesSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 36.dp)
-                .clickable { imagesVisible = !imagesVisible }
+                .clickable { areImagesVisible = !areImagesVisible }
         ) {
             Text("Images to be updated")
             Icon(Icons.Default.ExpandMore, contentDescription = null)
         }
-        AnimatedVisibility(visible = imagesVisible) {
+        AnimatedVisibility(visible = areImagesVisible) {
             if (imagesToBeUpdated.isEmpty()) {
                 Text("There are no images requiring upgrade")
             } else {
@@ -125,31 +125,31 @@ internal fun TargetVersionPicker(
     availableVersions: List<String>,
     modifier: Modifier = Modifier
 ) {
-    var versionPickerExpanded by remember { mutableStateOf(false) }
+    var isVersionPickerExpanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
-        expanded = versionPickerExpanded,
-        onExpandedChange = { versionPickerExpanded = !versionPickerExpanded }
+        expanded = isVersionPickerExpanded,
+        onExpandedChange = { isVersionPickerExpanded = !isVersionPickerExpanded }
     ) {
         TextField(
             readOnly = true,
             value = targetVersion,
             onValueChange = { },
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = versionPickerExpanded)
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isVersionPickerExpanded)
             },
             label = { Text(stringResource(R.string.upgrade_options_version)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
             modifier = modifier
         )
         ExposedDropdownMenu(
-            expanded = versionPickerExpanded,
-            onDismissRequest = { versionPickerExpanded = false }
+            expanded = isVersionPickerExpanded,
+            onDismissRequest = { isVersionPickerExpanded = false }
         ) {
             availableVersions.forEach { selectionOption ->
                 DropdownMenuItem(
                     onClick = {
                         onTargetVersionChanged(selectionOption)
-                        versionPickerExpanded = false
+                        isVersionPickerExpanded = false
                     },
                     text = {
                         Text(text = selectionOption)
@@ -177,7 +177,7 @@ fun UpgradeOptionsPickerPreview() {
         upgradeMetadata = UpgradeMetadata(
             availableVersions = availableVersions,
             changelog = "",
-            imagesToBeUpdated = listOf(),
+            imagesToBeUpdated = emptyList(),
             appName = "",
             currentVersion = "",
             iconUrl = "",

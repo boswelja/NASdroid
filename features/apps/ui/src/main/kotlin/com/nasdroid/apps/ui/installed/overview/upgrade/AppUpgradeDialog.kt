@@ -81,7 +81,7 @@ fun AppUpgradeDialogPreview() {
             "2.0.0"
         ),
         changelog = "",
-        imagesToBeUpdated = listOf()
+        imagesToBeUpdated = emptyList()
     )
     AppUpgradeDialog(
         metadata = metadata,

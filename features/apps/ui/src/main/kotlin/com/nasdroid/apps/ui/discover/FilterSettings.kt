@@ -121,11 +121,11 @@ internal fun SortModeSelector(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = contentPadding
         ) {
-            items(SortMode.entries) {
+            items(SortMode.entries) { mode ->
                 FilterChip(
-                    selected = it == sortMode,
-                    onClick = { onSortModeChange(it) },
-                    label = it.label(),
+                    selected = mode == sortMode,
+                    onClick = { onSortModeChange(mode) },
+                    label = mode.label(),
                 )
             }
         }
@@ -208,14 +208,14 @@ internal fun CategorySelector(
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                filteredCategories.forEach {
+                filteredCategories.forEach { category ->
                     val isSelected = remember(selectedCategories) {
-                        selectedCategories.contains(it)
+                        selectedCategories.contains(category)
                     }
                     FilterChip(
                         selected = isSelected,
-                        onClick = { onCategorySelectChange(it, !isSelected) },
-                        label = it,
+                        onClick = { onCategorySelectChange(category, !isSelected) },
+                        label = category,
                     )
                 }
             }
