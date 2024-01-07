@@ -1,0 +1,27 @@
+import kotlin.Boolean;
+
+CREATE TABLE cachedInstalledApps (
+    app_name TEXT NOT NULL PRIMARY KEY,
+    version TEXT NOT NULL,
+    icon_url TEXT NOT NULL,
+    catalog TEXT NOT NULL,
+    train TEXT NOT NULL,
+    state TEXT NOT NULL,
+    update_available INTEGER AS Boolean NOT NULL,
+    web_portal_url TEXT
+);
+
+deleteAll:
+DELETE FROM cachedInstalledApps;
+
+deleteOne:
+DELETE FROM cachedInstalledApps WHERE app_name = ?;
+
+insert:
+INSERT OR REPLACE INTO cachedInstalledApps VALUES ?;
+
+getAll:
+SELECT * FROM cachedInstalledApps;
+
+searchAll:
+SELECT * FROM cachedInstalledApps WHERE app_name LIKE ?;
