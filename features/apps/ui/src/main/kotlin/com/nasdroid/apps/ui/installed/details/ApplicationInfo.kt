@@ -51,7 +51,7 @@ fun ApplicationInfo(
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showSourcesModal by rememberSaveable {
+    var isShowSourcesModal by rememberSaveable {
         mutableStateOf(false)
     }
     Column(modifier) {
@@ -79,7 +79,7 @@ fun ApplicationInfo(
             modifier = itemModifier
         )
         TextButton(
-            onClick = { showSourcesModal = true },
+            onClick = { isShowSourcesModal = true },
             modifier = Modifier.padding(horizontal = 4.dp)
         ) {
             Text(stringResource(R.string.app_info_view_sources))
@@ -100,12 +100,12 @@ fun ApplicationInfo(
         )
     }
 
-    if (showSourcesModal) {
+    if (isShowSourcesModal) {
         val urlLauncher = rememberUrlLauncher()
         SourcesListModal(
             sources = installedAppDetails.sources,
             onSourceClick = { urlLauncher.launchUrl(it) },
-            onDismiss = { showSourcesModal = false }
+            onDismiss = { isShowSourcesModal = false }
         )
     }
 }

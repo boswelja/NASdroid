@@ -29,8 +29,8 @@ fun TopAppBar(
     menuHost: MenuHost = LocalMenuHost.current
 ) {
     val navigationIcon = @Composable {
-        AnimatedContent(targetState = navigationMode, label = "Top App Bar Navigation Mode") {
-            when (it) {
+        AnimatedContent(targetState = navigationMode, label = "Top App Bar Navigation Mode") { mode ->
+            when (mode) {
                 NavigationMode.None -> {}
                 NavigationMode.Back -> {
                     NavigateBackButton(onClick = onNavigationClick)

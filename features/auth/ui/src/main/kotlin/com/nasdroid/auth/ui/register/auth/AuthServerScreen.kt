@@ -98,7 +98,7 @@ internal fun SwitchToBasicAuth(
 ) {
     Row(modifier) {
         Icon(
-            Icons.Default.Info,
+            imageVector = Icons.Default.Info,
             contentDescription = null,
             tint = MaterialThemeExt.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 2.dp)
@@ -125,7 +125,7 @@ internal fun SwitchToApiKey(
 ) {
     Row(modifier) {
         Icon(
-            Icons.Default.Info,
+            imageVector = Icons.Default.Info,
             contentDescription = null,
             tint = MaterialThemeExt.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 2.dp)

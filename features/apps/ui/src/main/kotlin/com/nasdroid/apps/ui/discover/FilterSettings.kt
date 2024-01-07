@@ -166,7 +166,7 @@ internal fun CategorySelector(
     onCategorySelectChange: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showAll by rememberSaveable {
+    var isShowAll by rememberSaveable {
         mutableStateOf(false)
     }
     var searchTerm by rememberSaveable {
@@ -174,7 +174,7 @@ internal fun CategorySelector(
     }
     val filteredCategories = produceCategoryList(
         searchTerm = searchTerm,
-        showAll = showAll,
+        showAll = isShowAll,
         categories = categories,
         selectedCategories = selectedCategories
     )
@@ -209,21 +209,21 @@ internal fun CategorySelector(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 filteredCategories.forEach {
-                    val selected = remember(selectedCategories) {
+                    val isSelected = remember(selectedCategories) {
                         selectedCategories.contains(it)
                     }
                     FilterChip(
-                        selected = selected,
-                        onClick = { onCategorySelectChange(it, !selected) },
+                        selected = isSelected,
+                        onClick = { onCategorySelectChange(it, !isSelected) },
                         label = it,
                     )
                 }
             }
             TextButton(
-                onClick = { showAll = !showAll },
+                onClick = { isShowAll = !isShowAll },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                if (showAll) {
+                if (isShowAll) {
                     Icon(Icons.Default.ExpandLess, null)
                     Spacer(Modifier.width(8.dp))
                     Text("Show less")

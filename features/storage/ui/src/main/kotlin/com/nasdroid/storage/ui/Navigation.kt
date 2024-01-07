@@ -22,7 +22,7 @@ fun NavGraphBuilder.storageGraph(
     contentPadding: PaddingValues = PaddingValues()
 ) {
     navigation(startDestination = "poolsOverview", route = route) {
-        composable("poolsOverview") {
+        composable("poolsOverview") { _ ->
             StoragePoolsScreen(
                 onNavigate = { navController.navigate(it) },
                 windowSizeClass = windowSizeClass,

@@ -57,8 +57,8 @@ fun SelectServerScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(viewModel) {
-        viewModel.events.collectLatest {
-            when (it) {
+        viewModel.events.collectLatest { event ->
+            when (event) {
                 SelectServerViewModel.Event.LoginSuccess -> onLoginSuccess()
                 SelectServerViewModel.Event.LoginFailedTokenInvalid -> TODO()
                 SelectServerViewModel.Event.LoginFailedServerNotFound -> TODO()

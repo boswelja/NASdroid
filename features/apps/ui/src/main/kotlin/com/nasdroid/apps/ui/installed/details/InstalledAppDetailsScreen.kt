@@ -76,7 +76,7 @@ fun InstalledAppDetailsContent(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
-    var showDeleteDialog by rememberSaveable {
+    var isShowDeleteDialog by rememberSaveable {
         mutableStateOf(false)
     }
     LazyVerticalStaggeredGrid(
@@ -92,7 +92,7 @@ fun InstalledAppDetailsContent(
                 onEditClick = { /* TODO */ },
                 onRollBackClick = { /* TODO */ },
                 onDeleteClick = {
-                    showDeleteDialog = true
+                    isShowDeleteDialog = true
                 }
             )
         }
@@ -102,11 +102,11 @@ fun InstalledAppDetailsContent(
             }
         }
     }
-    if (showDeleteDialog) {
+    if (isShowDeleteDialog) {
         DeleteAppDialog(
             appName = installedAppDetails.name,
             onConfirm = onDeleteClick,
-            onDismiss = { showDeleteDialog = false }
+            onDismiss = { isShowDeleteDialog = false }
         )
     }
 }

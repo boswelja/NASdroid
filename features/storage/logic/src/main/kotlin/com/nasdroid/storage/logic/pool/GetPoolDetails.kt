@@ -41,14 +41,12 @@ class GetPoolDetails(
                     totalErrors = dto.scan.errors,
                     scheduledScrub = null, // TODO
                     isAutotrimEnabled = dto.autotrim.rawValue == "on",
-                    lastScan = if (dto.scan.endTime != null) {
+                    lastScan = dto.scan.endTime?.let { scanEndTime ->
                         PoolDetails.ZfsHealth.LastScan(
                             function = dto.scan.function,
-                            finishedAt = Instant.fromEpochMilliseconds(dto.scan.endTime!!),
+                            finishedAt = Instant.fromEpochMilliseconds(scanEndTime),
                             totalErrors = dto.scan.errors
                         )
-                    } else {
-                        null
                     }
                 ),
                 diskHealth = PoolDetails.DiskHealth( // TODO

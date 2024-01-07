@@ -76,8 +76,8 @@ fun MainScreen(
     TopLevelNavigation(
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
-        navigateTo = {
-            navController.navigate(it.getRoute()) {
+        navigateTo = { destination ->
+            navController.navigate(destination.getRoute()) {
                 val currentRoute = requireNotNull(currentBackstackEntry?.destination?.route)
                 popUpTo(currentRoute) {
                     inclusive = true
@@ -116,8 +116,8 @@ fun MainNavHost(
         startDestination = "auth"
     ) {
         authNavigation(
-            navController,
-            "auth",
+            navController = navController,
+            route = "auth",
             onLoginSuccess = {
                 navController.navigate(TopLevelDestination.Dashboard.getRoute()) {
                     popUpTo("auth") {

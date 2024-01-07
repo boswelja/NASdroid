@@ -365,7 +365,7 @@ fun ModalNavigationDrawerPreview() {
         navigationVisible = true,
         canNavigateBack = false,
         navigateBack = {}
-    ) {
+    ) { requiredPadding ->
         ProvideMenuItems(
             MenuItem(
                 label = "Edit",
@@ -376,7 +376,7 @@ fun ModalNavigationDrawerPreview() {
         )
         Box(
             Modifier
-                .padding(it)
+                .padding(requiredPadding)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
@@ -401,7 +401,7 @@ fun NavigationRailPreview() {
         navigationVisible = true,
         canNavigateBack = true,
         navigateBack = {}
-    ) {
+    ) { requiredPadding ->
         ProvideMenuItems(
             MenuItem(
                 label = "More",
@@ -412,7 +412,7 @@ fun NavigationRailPreview() {
         )
         Box(
             Modifier
-                .padding(it)
+                .padding(requiredPadding)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
@@ -436,7 +436,7 @@ fun PermanentNavigationDrawerPreview() {
         navigationVisible = true,
         canNavigateBack = true,
         navigateBack = {}
-    ) {
+    ) { requiredPadding ->
         ProvideMenuItems(
             MenuItem(
                 label = "Stop editing",
@@ -447,7 +447,7 @@ fun PermanentNavigationDrawerPreview() {
         )
         Box(
             Modifier
-                .padding(it)
+                .padding(requiredPadding)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )

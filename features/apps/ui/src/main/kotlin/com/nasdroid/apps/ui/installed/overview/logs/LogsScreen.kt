@@ -39,7 +39,7 @@ fun LogsScreen(
     val selectedLogOption by viewModel.selectedLogOptions.collectAsState()
     val logs by viewModel.logs.collectAsState()
 
-    var optionPickerVisible by rememberSaveable(selectedLogOption) {
+    var isOptionPickerVisible by rememberSaveable(selectedLogOption) {
         mutableStateOf(selectedLogOption == null)
     }
 
@@ -61,7 +61,7 @@ fun LogsScreen(
         }
     }
 
-    if (optionPickerVisible) {
+    if (isOptionPickerVisible) {
         val logOptionPickerState = rememberModalBottomSheetState(
             skipPartiallyExpanded = true,
             confirmValueChange = { false }
@@ -78,7 +78,7 @@ fun LogsScreen(
                     viewModel.setSelectedLogOptions(it)
                     coroutineScope.launch {
                         logOptionPickerState.hide()
-                        optionPickerVisible = false
+                        isOptionPickerVisible = false
                     }
                 },
                 modifier = Modifier.padding(contentPadding)

@@ -25,8 +25,8 @@ class GetDashboardItems(
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<Result<List<DashboardItem>>> = flow { emit(systemV2Api.getHostId()) }
         .flatMapLatest { dashboardConfiguration.getVisibleEntries(it) }
-        .mapLatest {
-            val newList = it.map { dashboardEntry ->
+        .mapLatest { dashboardEntries ->
+            val newList = dashboardEntries.map { dashboardEntry ->
                 DashboardItem(
                     id = dashboardEntry.uid,
                     type = when (dashboardEntry.type) {
