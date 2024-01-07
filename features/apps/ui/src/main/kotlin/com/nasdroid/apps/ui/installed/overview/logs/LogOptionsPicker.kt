@@ -49,7 +49,7 @@ fun LogOptionsPicker(
         mutableStateOf("500")
     }
 
-    val contentValid by remember(selectedPod, selectedContainer, maxLines) {
+    val isContentValid by remember(selectedPod, selectedContainer, maxLines) {
         derivedStateOf {
             selectedPod.isNotEmpty() && selectedContainer.isNotEmpty() && maxLines.isNotEmpty()
         }
@@ -93,7 +93,7 @@ fun LogOptionsPicker(
                     )
                 )
             },
-            enabled = contentValid,
+            enabled = isContentValid,
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(stringResource(R.string.log_options_save))
@@ -109,11 +109,11 @@ internal fun PodPicker(
     onPodSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var podPickerExpanded by remember { mutableStateOf(false) }
+    var isPodPickerExpanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = podPickerExpanded,
-        onExpandedChange = { podPickerExpanded = it }
+        expanded = isPodPickerExpanded,
+        onExpandedChange = { isPodPickerExpanded = it }
     ) {
         TextField(
             readOnly = true,
@@ -121,21 +121,21 @@ internal fun PodPicker(
             onValueChange = onPodSelected,
             enabled = podOptions.isNotEmpty(),
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = podPickerExpanded)
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isPodPickerExpanded)
             },
             label = { Text(stringResource(R.string.log_options_pod)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
             modifier = modifier.menuAnchor()
         )
         ExposedDropdownMenu(
-            expanded = podPickerExpanded,
-            onDismissRequest = { podPickerExpanded = false }
+            expanded = isPodPickerExpanded,
+            onDismissRequest = { isPodPickerExpanded = false }
         ) {
             podOptions.forEach { selectionOption ->
                 DropdownMenuItem(
                     onClick = {
                         onPodSelected(selectionOption)
-                        podPickerExpanded = false
+                        isPodPickerExpanded = false
                     },
                     text = {
                         Text(text = selectionOption)
@@ -154,11 +154,11 @@ internal fun ContainerPicker(
     onContainerSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var containerPickerExpanded by remember { mutableStateOf(false) }
+    var isContainerPickerExpanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = containerPickerExpanded,
-        onExpandedChange = { containerPickerExpanded = it }
+        expanded = isContainerPickerExpanded,
+        onExpandedChange = { isContainerPickerExpanded = it }
     ) {
         TextField(
             readOnly = true,
@@ -166,21 +166,21 @@ internal fun ContainerPicker(
             onValueChange = onContainerSelected,
             enabled = containerOptions.isNotEmpty(),
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = containerPickerExpanded)
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isContainerPickerExpanded)
             },
             label = { Text(stringResource(R.string.log_options_container)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
             modifier = modifier.menuAnchor()
         )
         ExposedDropdownMenu(
-            expanded = containerPickerExpanded,
-            onDismissRequest = { containerPickerExpanded = false }
+            expanded = isContainerPickerExpanded,
+            onDismissRequest = { isContainerPickerExpanded = false }
         ) {
             containerOptions.forEach { selectionOption ->
                 DropdownMenuItem(
                     onClick = {
                         onContainerSelected(selectionOption)
-                        containerPickerExpanded = false
+                        isContainerPickerExpanded = false
                     },
                     text = {
                         Text(text = selectionOption)

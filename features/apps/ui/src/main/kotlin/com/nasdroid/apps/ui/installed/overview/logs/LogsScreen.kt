@@ -22,7 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.nasdroid.core.logviewer.LogViewer
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * A screen to allow users to configure and display logs for an application.
@@ -32,14 +32,14 @@ import org.koin.androidx.compose.getViewModel
 fun LogsScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    viewModel: LogsViewModel = getViewModel()
+    viewModel: LogsViewModel = koinViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     val selectedLogOption by viewModel.selectedLogOptions.collectAsState()
     val logs by viewModel.logs.collectAsState()
 
-    var optionPickerVisible by rememberSaveable(selectedLogOption) {
+    var isOptionPickerVisible by rememberSaveable(selectedLogOption) {
         mutableStateOf(selectedLogOption == null)
     }
 
@@ -47,10 +47,10 @@ fun LogsScreen(
         targetState = logs,
         label = "Log transition",
         transitionSpec = { fadeIn() togetherWith fadeOut() }
-    ) {
-        if (it != null) {
+    ) { currentLogs ->
+        if (currentLogs != null) {
             LogViewer(
-                logContents = it,
+                logContents = currentLogs,
                 modifier = modifier,
                 contentPadding = contentPadding
             )
@@ -61,7 +61,7 @@ fun LogsScreen(
         }
     }
 
-    if (optionPickerVisible) {
+    if (isOptionPickerVisible) {
         val logOptionPickerState = rememberModalBottomSheetState(
             skipPartiallyExpanded = true,
             confirmValueChange = { false }
@@ -74,11 +74,11 @@ fun LogsScreen(
             val logOptions by viewModel.getLogOptions().collectAsState(initial = null)
             LogOptionsPicker(
                 options = logOptions,
-                onLogOptionsSelected = {
-                    viewModel.setSelectedLogOptions(it)
+                onLogOptionsSelected = { selectedLogOptions ->
+                    viewModel.setSelectedLogOptions(selectedLogOptions)
                     coroutineScope.launch {
                         logOptionPickerState.hide()
-                        optionPickerVisible = false
+                        isOptionPickerVisible = false
                     }
                 },
                 modifier = Modifier.padding(contentPadding)

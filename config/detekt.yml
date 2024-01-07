@@ -89,6 +89,8 @@ complexity:
     active: true
   NamedArguments:
     active: true
+    ignoreFunction:
+      - 'kotlinx.coroutines.flow.combine'
   NestedScopeFunctions:
     active: true
   ReplaceSafeCallChainWithRun:
@@ -120,6 +122,7 @@ naming:
   active: true
   BooleanPropertyNaming:
     active: true
+    allowedPattern: '^(is|has|are|can)'
   FunctionMaxLength:
     active: true
     maximumFunctionNameLength: 35
@@ -137,8 +140,6 @@ naming:
     ignoreAnnotated:
       - 'Composable'
   LambdaParameterNaming:
-    active: true
-  NonBooleanPropertyPrefixedWithIs:
     active: true
   VariableMaxLength:
     active: true

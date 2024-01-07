@@ -140,7 +140,7 @@ internal fun AdapterInfo(
             },
             modifier = Modifier.skeleton(adapterConfig == null)
         )
-        adapterUtilisation?.let {
+        if (adapterUtilisation != null) {
             val chartModel = remember {
                 entryModelOf(
                     adapterUtilisation.sentBits.bytes.toDouble(CapacityUnit.MEGABYTE),

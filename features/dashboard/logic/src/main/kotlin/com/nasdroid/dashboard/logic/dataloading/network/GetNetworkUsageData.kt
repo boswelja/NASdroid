@@ -29,11 +29,11 @@ class GetNetworkUsageData(
                 end = now,
             )
             val adapterUtilisations = adapterGraphs.map { graph ->
-                val data = (graph.data.filter { !it.contains(null) } as List<List<Double>>).last()
+                val data = (graph.data.filter { !it.contains(null) }.map { it.requireNoNulls() }).last()
                 val receivedIndex = graph.legend.indexOf("received")
                 val sentIndex = graph.legend.indexOf("sent")
                 NetworkUsageData.AdapterUtilisation(
-                    name = graph.identifier!!,
+                    name = requireNotNull(graph.identifier),
                     // TODO These aren't technically the right unit names
                     receivedBits = data[receivedIndex].kilobytes.toLong(CapacityUnit.BYTE),
                     sentBits = data[sentIndex].kilobytes.toLong(CapacityUnit.BYTE)

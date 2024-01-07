@@ -26,28 +26,28 @@ class GetInstalledApps(
             .onStart {
                 val releaseDtos = chartReleaseV2Api.getChartReleases()
                 installedAppCache.submitInstalledApps(
-                    releaseDtos.map {
+                    releaseDtos.map { installedApp ->
                         CachedInstalledApp(
-                            name = it.id,
-                            version = it.humanVersion,
-                            iconUrl = it.chartMetadata.icon,
-                            catalog = it.catalog,
-                            train = it.catalogTrain,
-                            state = when (it.status) {
+                            name = installedApp.id,
+                            version = installedApp.humanVersion,
+                            iconUrl = installedApp.chartMetadata.icon,
+                            catalog = installedApp.catalog,
+                            train = installedApp.catalogTrain,
+                            state = when (installedApp.status) {
                                 ChartRelease.Status.DEPLOYING -> CachedInstalledApp.State.DEPLOYING
                                 ChartRelease.Status.ACTIVE -> CachedInstalledApp.State.ACTIVE
                                 ChartRelease.Status.STOPPED -> CachedInstalledApp.State.STOPPED
                             },
-                            updateAvailable = it.updateAvailable,
-                            webPortalUrl = it.portals?.let { portals ->
+                            hasUpdateAvailable = installedApp.updateAvailable,
+                            webPortalUrl = installedApp.portals?.let { portals ->
                                 portals.open?.firstOrNull() ?: portals.webPortal?.firstOrNull()
                             }
                         )
                     }
                 )
             }
-            .mapLatest {
-                it.map { cachedApp ->
+            .mapLatest { cachedInstalledApps ->
+                cachedInstalledApps.map { cachedApp ->
                     InstalledAppOverview(
                         name = cachedApp.name,
                         version = cachedApp.version,
@@ -59,7 +59,7 @@ class GetInstalledApps(
                             CachedInstalledApp.State.STOPPED -> InstalledAppOverview.State.STOPPED
                             CachedInstalledApp.State.DEPLOYING -> InstalledAppOverview.State.DEPLOYING
                         },
-                        updateAvailable = cachedApp.updateAvailable,
+                        hasUpdateAvailable = cachedApp.hasUpdateAvailable,
                         webPortalUrl = cachedApp.webPortalUrl
                     )
                 }.sortedBy { app -> app.name }
@@ -76,7 +76,7 @@ class GetInstalledApps(
  * @property catalog The catalog this application was installed from.
  * @property train The catalog train this application was installed from.
  * @property state The current state of the application.
- * @property updateAvailable Whether the application has an update available.
+ * @property hasUpdateAvailable Whether the application has an update available.
  * @property webPortalUrl The URL to the applications web interface, if any.
  */
 data class InstalledAppOverview(
@@ -86,7 +86,7 @@ data class InstalledAppOverview(
     val catalog: String,
     val train: String,
     val state: State,
-    val updateAvailable: Boolean,
+    val hasUpdateAvailable: Boolean,
     val webPortalUrl: String?
 ) {
     /**

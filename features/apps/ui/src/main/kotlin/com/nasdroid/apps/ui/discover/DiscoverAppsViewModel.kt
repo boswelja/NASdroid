@@ -118,8 +118,8 @@ class DiscoverAppsViewModel(
      * that toggling all catalogs off is the same as toggling them all on.
      */
     fun toggleCatalogFiltered(catalogName: String) {
-        _catalogsFiltered.update {
-            it.toMutableMap()
+        _catalogsFiltered.update { currentFilteredCatalogs ->
+            currentFilteredCatalogs.toMutableMap()
                 .apply {
                     set(catalogName, !getOrDefault(catalogName, false))
                 }

@@ -1,5 +1,6 @@
 package com.nasdroid.storage.logic.pool
 
+import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.pool.Pool
 import com.nasdroid.api.v2.pool.PoolV2Api
 import com.nasdroid.api.v2.pool.Topology
@@ -16,20 +17,24 @@ class GetPoolOverviews(
     /**
      * Retrieves a list of [Pool]s from the server.
      */
-    suspend operator fun invoke(): Result<List<PoolOverview>> = runCatching {
-        val pools = poolV2Api.getPools()
-
-        pools.map { pool ->
-            PoolOverview(
-                id = pool.id,
-                poolName = pool.name,
-                totalCapacity = pool.size.bytes,
-                usedCapacity = pool.allocated.bytes,
-                topologyHealth = PoolOverview.HealthStatus(pool.topology.isHealthy(), null), // TODO Reason
-                usageHealth = PoolOverview.HealthStatus(pool.healthy, null),
-                zfsHealth = PoolOverview.HealthStatus(pool.scan.errors <= 0, null),
-                disksHealth = PoolOverview.HealthStatus(true, null), // TODO
-            )
+    suspend operator fun invoke(): Result<List<PoolOverview>> {
+        return try {
+            val pools = poolV2Api.getPools()
+            val result = pools.map { pool ->
+                PoolOverview(
+                    id = pool.id,
+                    poolName = pool.name,
+                    totalCapacity = pool.size.bytes,
+                    usedCapacity = pool.allocated.bytes,
+                    topologyHealth = PoolOverview.HealthStatus(pool.topology.isHealthy(), null), // TODO Reason
+                    usageHealth = PoolOverview.HealthStatus(pool.healthy, null),
+                    zfsHealth = PoolOverview.HealthStatus(pool.scan.errors <= 0, null),
+                    disksHealth = PoolOverview.HealthStatus(true, null), // TODO
+                )
+            }
+            Result.success(result)
+        } catch (e: HttpNotOkException) {
+            Result.failure(e)
         }
     }
 

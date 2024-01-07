@@ -121,11 +121,11 @@ internal fun SortModeSelector(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = contentPadding
         ) {
-            items(SortMode.entries) {
+            items(SortMode.entries) { mode ->
                 FilterChip(
-                    selected = it == sortMode,
-                    onClick = { onSortModeChange(it) },
-                    label = it.label(),
+                    selected = mode == sortMode,
+                    onClick = { onSortModeChange(mode) },
+                    label = mode.label(),
                 )
             }
         }
@@ -166,7 +166,7 @@ internal fun CategorySelector(
     onCategorySelectChange: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showAll by rememberSaveable {
+    var isShowAll by rememberSaveable {
         mutableStateOf(false)
     }
     var searchTerm by rememberSaveable {
@@ -174,7 +174,7 @@ internal fun CategorySelector(
     }
     val filteredCategories = produceCategoryList(
         searchTerm = searchTerm,
-        showAll = showAll,
+        showAll = isShowAll,
         categories = categories,
         selectedCategories = selectedCategories
     )
@@ -208,22 +208,22 @@ internal fun CategorySelector(
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                filteredCategories.forEach {
-                    val selected = remember(selectedCategories) {
-                        selectedCategories.contains(it)
+                filteredCategories.forEach { category ->
+                    val isSelected = remember(selectedCategories) {
+                        selectedCategories.contains(category)
                     }
                     FilterChip(
-                        selected = selected,
-                        onClick = { onCategorySelectChange(it, !selected) },
-                        label = it,
+                        selected = isSelected,
+                        onClick = { onCategorySelectChange(category, !isSelected) },
+                        label = category,
                     )
                 }
             }
             TextButton(
-                onClick = { showAll = !showAll },
+                onClick = { isShowAll = !isShowAll },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                if (showAll) {
+                if (isShowAll) {
                     Icon(Icons.Default.ExpandLess, null)
                     Spacer(Modifier.width(8.dp))
                     Text("Show less")

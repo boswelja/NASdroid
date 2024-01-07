@@ -28,7 +28,7 @@ import com.nasdroid.dashboard.ui.overview.cpu.CpuOverview
 import com.nasdroid.dashboard.ui.overview.memory.MemoryOverview
 import com.nasdroid.dashboard.ui.overview.network.NetworkOverview
 import com.nasdroid.dashboard.ui.overview.system.SystemInformationOverview
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * The Dashboard Overview screen. This displays a list of user-configurable glanceable items for the
@@ -38,14 +38,14 @@ import org.koin.androidx.compose.getViewModel
 fun DashboardOverviewScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    viewModel: OverviewViewModel = getViewModel()
+    viewModel: OverviewViewModel = koinViewModel()
 ) {
     val items by viewModel.dashboardData.collectAsState()
     val editingItems by viewModel.editingList.collectAsState()
     val isEditing by remember(editingItems) {
         derivedStateOf { editingItems != null }
     }
-    items?.getOrNull()?.let {
+    items?.getOrNull()?.let { dashboardItems ->
         ProvideMenuItems(
             if (isEditing) {
                 MenuItem(
@@ -64,7 +64,7 @@ fun DashboardOverviewScreen(
             }
         )
         DashboardOverviewList(
-            items = editingItems ?: it,
+            items = editingItems ?: dashboardItems,
             isEditing = isEditing,
             contentPadding = contentPadding,
             onMoveItem = viewModel::moveDashboardEntry,

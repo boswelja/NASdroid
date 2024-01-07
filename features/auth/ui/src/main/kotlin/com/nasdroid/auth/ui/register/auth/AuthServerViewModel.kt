@@ -15,7 +15,7 @@ class AuthServerViewModel(
     private val addNewServer: AddNewServer,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val serverAddress = savedStateHandle.get<String>("address")!!
+    private val serverAddress = requireNotNull(savedStateHandle.get<String>("address"))
     private val _loginState = MutableStateFlow<LoginState?>(null)
 
     /**

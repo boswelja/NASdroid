@@ -122,8 +122,8 @@ fun SortModeChip(
                 )
             },
             trailingIcon = {
-                AnimatedContent(targetState = pickerExpanded, label = "Dropdown Indicator") {
-                    if (it) {
+                AnimatedContent(targetState = pickerExpanded, label = "Dropdown Indicator") { expanded ->
+                    if (expanded) {
                         Icon(
                             imageVector = Icons.Default.ArrowDropUp,
                             contentDescription = null,
@@ -206,13 +206,13 @@ fun FilterSettingsChipPreview() {
 @Composable
 fun CatalogChipPreview() {
     MaterialThemeExt {
-        var selected by remember {
+        var isSelected by remember {
             mutableStateOf(true)
         }
         CatalogChip(
             catalogName = "TrueNAS",
-            selected = selected,
-            onSelect = { selected = !selected }
+            selected = isSelected,
+            onSelect = { isSelected = !isSelected }
         )
     }
 }

@@ -62,10 +62,10 @@ fun MaterialThemeExt(
         LocalPaddings provides paddings
     ) {
         MaterialTheme(
-            colorScheme,
-            shapes,
-            typography,
-            content
+            colorScheme = colorScheme,
+            shapes = shapes,
+            typography = typography,
+            content = content
         )
     }
 }

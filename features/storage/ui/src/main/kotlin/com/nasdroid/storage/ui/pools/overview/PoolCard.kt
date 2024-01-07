@@ -30,6 +30,7 @@ import com.nasdroid.storage.logic.pool.PoolOverview
  * Displays information about a given [PoolOverview].
  *
  * @param pool The pool to display information for.
+ * @param onShowDetails Called when the user clicked the "See Details" button.
  * @param modifier [Modifier].
  */
 @Composable

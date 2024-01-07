@@ -46,8 +46,8 @@ fun ModalNavigationDrawerLayout(
         drawerContent = {
             TopLevelModalDrawerSheet(
                 selectedDestination = selectedDestination,
-                onClick = {
-                    navigateTo(it)
+                onClick = { destination ->
+                    navigateTo(destination)
                     coroutineScope.launch { drawerState.close() }
                 },
                 modifier = Modifier

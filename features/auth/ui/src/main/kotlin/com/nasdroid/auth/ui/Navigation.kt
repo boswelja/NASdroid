@@ -42,8 +42,8 @@ fun NavGraphBuilder.authNavigation(
         }
         composable("find_server") {
             FindServerScreen(
-                onServerFound = {
-                    navController.navigate("auth_server/${URLEncoder.encode(it, "UTF-8")}")
+                onServerFound = { serverAddress ->
+                    navController.navigate("auth_server/${URLEncoder.encode(serverAddress, "UTF-8")}")
                 },
                 modifier = modifier,
                 contentPadding = contentPadding,

@@ -23,7 +23,7 @@ jobs:
         uses: gradle/gradle-build-action@v2.7.0
       - name: Run Detekt & Lint
         continue-on-error: true
-        run: ./gradlew detektMain lint --continue
+        run: ./gradlew detektDebug lint --continue
       - name: Upload SARIF binary
         uses: actions/upload-artifact@v3
         with:

@@ -21,7 +21,7 @@ class GetNetworkConfiguration(
                 offset = null,
                 sort = null
             ).first { it.name == INTERFACE_GRAPH_NAME }.identifiers
-            val adapters = adapterNames!!.map {
+            val adapters = adapterNames.orEmpty().map {
                 NetworkConfiguration.NetworkAdapter(
                     name = it,
                     address = null // TODO Get the address for an adapter
