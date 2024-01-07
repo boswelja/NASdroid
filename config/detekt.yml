@@ -89,6 +89,8 @@ complexity:
     active: true
   NamedArguments:
     active: true
+    ignoreFunction:
+      - 'kotlinx.coroutines.flow.combine'
   NestedScopeFunctions:
     active: true
   ReplaceSafeCallChainWithRun:
