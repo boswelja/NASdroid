@@ -1,8 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.sqldelight)
 
     alias(libs.plugins.detekt)
 }
@@ -30,13 +29,10 @@ kotlin {
     jvmToolchain(17)
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
-
-ksp {
-    arg("room.incremental", "true")
-    arg("room.generateKotlin", "true")
+sqldelight {
+    databases {
+        create("AppsDatabase")
+    }
 }
 
 detekt {
@@ -48,8 +44,9 @@ detekt {
 dependencies {
     implementation(projects.core.api)
 
+    implementation(libs.kotlinx.coroutines)
     implementation(libs.koin.core)
 
-    implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
+    implementation(libs.sqldelight.driver.android)
+    implementation(libs.sqldelight.extensions.coroutines)
 }
