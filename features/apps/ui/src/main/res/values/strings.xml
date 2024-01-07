@@ -37,7 +37,6 @@
     <string name="app_delete_cancel">Cancel</string>
     <string name="app_delete_title">Delete App</string>
     <string name="app_delete_text">Are you sure you want to delete the app "%s"?</string>
-    <string name="app_delete_data">Delete docker images used by the app</string>
 
     <string name="log_options_pod">Pod</string>
     <string name="log_options_container">Container</string>
