@@ -22,7 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.nasdroid.core.logviewer.LogViewer
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * A screen to allow users to configure and display logs for an application.
@@ -32,7 +32,7 @@ import org.koin.androidx.compose.getViewModel
 fun LogsScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    viewModel: LogsViewModel = getViewModel()
+    viewModel: LogsViewModel = koinViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
 

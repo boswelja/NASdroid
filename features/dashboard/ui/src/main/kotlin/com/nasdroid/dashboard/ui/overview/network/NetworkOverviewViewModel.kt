@@ -50,8 +50,8 @@ class NetworkOverviewViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val networkUsageData: StateFlow<Result<NetworkUsageData>?> = networkConfiguration
         .filterNotNull()
-        .flatMapLatest {
-            it.fold(
+        .flatMapLatest { networkConfigurationResult ->
+            networkConfigurationResult.fold(
                 onSuccess = {
                     repeatingFlow(15.seconds) {
                         emit(getNetworkUsageData(it.adapters.map { it.name }))

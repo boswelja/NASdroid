@@ -28,7 +28,7 @@ class ReportingOverviewViewModel(
 
     val displayedGraphs: StateFlow<List<GraphWithData>> =
         combine(availableGraphsByType, selectedType) { first, second ->
-            first[second] ?: emptyList()
+            first[second].orEmpty()
         }.map { graphsForType ->
             if (graphsForType.isEmpty()) return@map emptyList()
             val requestedGraphs = graphsForType.map { RequestedGraph(it.id, it.identifier) }
