@@ -120,6 +120,7 @@ naming:
   active: true
   BooleanPropertyNaming:
     active: true
+    allowedPattern: '^(is|has|are|can)'
   FunctionMaxLength:
     active: true
     maximumFunctionNameLength: 35
