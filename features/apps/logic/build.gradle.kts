@@ -39,6 +39,7 @@ dependencies {
     api(libs.kotlinx.datetime)
 
     implementation(projects.core.api)
+    implementation(projects.features.apps.data)
 
     implementation(libs.koin.core)
 

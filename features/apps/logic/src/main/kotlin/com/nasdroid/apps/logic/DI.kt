@@ -1,5 +1,6 @@
 package com.nasdroid.apps.logic
 
+import com.nasdroid.apps.data.AppsDataModule
 import com.nasdroid.apps.logic.available.GetAllAvailableApps
 import com.nasdroid.apps.logic.available.GetAvailableApps as GetAvailableAppsLegacy
 import com.nasdroid.apps.logic.available.InstallApplication
@@ -22,6 +23,8 @@ import org.koin.dsl.module
  * A Koin module to inject the apps logic dependency graph.
  */
 val AppsLogicModule = module {
+    includes(AppsDataModule)
+
     factoryOf(::GetAllAvailableApps)
     factoryOf(::GetAvailableAppsLegacy)
     factoryOf(::InstallApplication)

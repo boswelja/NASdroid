@@ -2,13 +2,18 @@ package com.nasdroid.apps.ui.installed.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nasdroid.apps.logic.installed.InstalledAppOverview
 import com.nasdroid.apps.logic.installed.DeleteApp
 import com.nasdroid.apps.logic.installed.GetInstalledApps
+import com.nasdroid.apps.logic.installed.InstalledAppOverview
 import com.nasdroid.apps.logic.installed.StartApp
 import com.nasdroid.apps.logic.installed.StopApp
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
@@ -21,12 +26,24 @@ class InstalledAppsOverviewViewModel(
     private val deleteApp: DeleteApp,
 ) : ViewModel() {
 
-    private val _installedApps = MutableStateFlow<List<InstalledAppOverview>?>(null)
+    private val _searchTerm = MutableStateFlow("")
+
+    private val _refreshTrigger = MutableSharedFlow<Unit>()
 
     /**
      * A list of [InstalledAppOverview]s representing all installed apps.
      */
-    val installedApps: StateFlow<List<InstalledAppOverview>?> = _installedApps
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val installedApps: StateFlow<List<InstalledAppOverview>?> = _refreshTrigger
+        .flatMapLatest { _searchTerm }
+        .flatMapLatest {
+            getInstalledApps(it)
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            null
+        )
 
     init {
         refresh()
@@ -72,7 +89,6 @@ class InstalledAppsOverviewViewModel(
     }
 
     private suspend fun refreshSuspending() {
-        val installedApps = getInstalledApps()
-        _installedApps.emit(installedApps)
+        _refreshTrigger.emit(Unit)
     }
 }
