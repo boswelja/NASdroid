@@ -25,3 +25,13 @@ SELECT * FROM cachedInstalledApps;
 
 searchAll:
 SELECT * FROM cachedInstalledApps WHERE app_name LIKE ?;
+
+updateState:
+UPDATE cachedInstalledApps
+SET state = ?
+WHERE app_name = ?;
+
+updateUpdateAvailable:
+UPDATE cachedInstalledApps
+SET update_available = ?
+WHERE app_name = ?;

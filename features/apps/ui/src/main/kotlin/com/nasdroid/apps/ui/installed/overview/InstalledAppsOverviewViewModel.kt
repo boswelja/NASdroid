@@ -62,7 +62,6 @@ class InstalledAppsOverviewViewModel(
     fun start(appName: String) {
         viewModelScope.launch {
             startApp(appName)
-            refreshSuspending()
         }
     }
 
@@ -72,7 +71,6 @@ class InstalledAppsOverviewViewModel(
     fun stop(appName: String) {
         viewModelScope.launch {
             stopApp(appName)
-            refreshSuspending()
         }
     }
 

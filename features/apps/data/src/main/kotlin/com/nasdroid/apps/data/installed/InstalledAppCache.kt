@@ -30,4 +30,21 @@ interface InstalledAppCache {
      * @param appName The name of the [CachedInstalledApp] to delete.
      */
     suspend fun deleteInstalledApp(appName: String)
+
+    /**
+     * Asynchronously update the state of any cached app that matches the specified name.
+     *
+     * @param appName The name of the [CachedInstalledApp] whose state needs updating.
+     * @param state The new state of the app.
+     */
+    suspend fun setState(appName: String, state: CachedInstalledApp.State)
+
+    /**
+     * Asynchronously set whether an update is available for any cached app that matches the
+     * specified name.
+     *
+     * @param appName The name of the [CachedInstalledApp] whose state needs updating.
+     * @param updateAvailable Whether the app has an update available.
+     */
+    suspend fun setUpdateAvailable(appName: String, updateAvailable: Boolean)
 }
