@@ -68,6 +68,7 @@ accompanist-drawablepainter = { group = "com.google.accompanist", name = "accomp
 compose-menuprovider = { module = "io.github.boswelja.menuprovider:material3", version.ref = "menuprovider" }
 
 sqldelight-driver-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqldelight" }
+sqldelight-driver-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 sqldelight-extensions-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }
 
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }

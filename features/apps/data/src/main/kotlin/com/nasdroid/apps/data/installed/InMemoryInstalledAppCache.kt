@@ -22,7 +22,7 @@ class InMemoryInstalledAppCache(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getInstalledApps(searchTerm: String): Flow<List<CachedInstalledApp>> {
-        return if (searchTerm.isNotBlank()) {
+        return if (searchTerm.isBlank()) {
             queries.getAll()
         } else {
             queries.searchAll(searchTerm)
