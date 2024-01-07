@@ -37,7 +37,7 @@ class InstalledAppsOverviewViewModel(
     val installedApps: StateFlow<List<InstalledAppOverview>?> = _refreshTrigger
         .flatMapLatest { _searchTerm }
         .flatMapLatest {
-            getInstalledApps()
+            getInstalledApps(it)
         }
         .stateIn(
             viewModelScope,

@@ -21,8 +21,8 @@ class GetInstalledApps(
      * Gets a list of all applications installed on the system.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(): Flow<List<InstalledAppOverview>> {
-        return installedAppCache.getInstalledApps("")
+    operator fun invoke(searchTerm: String): Flow<List<InstalledAppOverview>> {
+        return installedAppCache.getInstalledApps(searchTerm)
             .onStart {
                 val releaseDtos = chartReleaseV2Api.getChartReleases()
                 installedAppCache.submitInstalledApps(
