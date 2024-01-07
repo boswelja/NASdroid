@@ -1,5 +1,6 @@
 package com.nasdroid.storage.logic.pool
 
+import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.pool.PoolV2Api
 import com.nasdroid.api.v2.pool.VDev
 import com.nasdroid.capacity.Capacity
@@ -16,47 +17,52 @@ class GetPoolDetails(
     /**
      * Gets a [PoolDetails] for the storage pool with the give ID.
      */
-    suspend operator fun invoke(poolId: Int): Result<PoolDetails> = runCatching {
-        val dto = poolV2Api.getPool(poolId)
-        PoolDetails(
-            id = dto.id,
-            name = dto.name,
-            usage = PoolDetails.Usage(
-                usableCapacity = dto.size.bytes,
-                usedCapacity = dto.allocated.bytes,
-                availableCapacity = dto.free.bytes
-            ),
-            topology = PoolDetails.Topology(
-                dataTopology = dto.topology.data.toTopologyDescriptor(),
-                metadataTopology = dto.topology.special.toTopologyDescriptor(),
-                logTopology = dto.topology.log.toTopologyDescriptor(),
-                cacheTopology = dto.topology.cache.toTopologyDescriptor(),
-                spareTopology = dto.topology.spare.toTopologyDescriptor(),
-                dedupTopology = dto.topology.dedup.toTopologyDescriptor()
-            ),
-            zfsHealth = PoolDetails.ZfsHealth(
-                poolStatus = PoolDetails.ZfsHealth.PoolStatus.ONLINE, // TODO
-                totalErrors = dto.scan.errors,
-                scheduledScrub = null, // TODO
-                autotrimEnabled = dto.autotrim.rawValue == "on",
-                lastScan = if (dto.scan.endTime != null) {
-                    PoolDetails.ZfsHealth.LastScan(
-                        function = dto.scan.function,
-                        finishedAt = Instant.fromEpochMilliseconds(dto.scan.endTime!!),
-                        totalErrors = dto.scan.errors
-                    )
-                } else {
-                    null
-                }
-            ),
-            diskHealth = PoolDetails.DiskHealth( // TODO
-                disksWithAbnormalTemp = 0,
-                highestTemp = null,
-                lowestTemp = null,
-                averageTemp = null,
-                failedTests = 0
+    suspend operator fun invoke(poolId: Int): Result<PoolDetails> {
+        return try {
+            val dto = poolV2Api.getPool(poolId)
+            val result = PoolDetails(
+                id = dto.id,
+                name = dto.name,
+                usage = PoolDetails.Usage(
+                    usableCapacity = dto.size.bytes,
+                    usedCapacity = dto.allocated.bytes,
+                    availableCapacity = dto.free.bytes
+                ),
+                topology = PoolDetails.Topology(
+                    dataTopology = dto.topology.data.toTopologyDescriptor(),
+                    metadataTopology = dto.topology.special.toTopologyDescriptor(),
+                    logTopology = dto.topology.log.toTopologyDescriptor(),
+                    cacheTopology = dto.topology.cache.toTopologyDescriptor(),
+                    spareTopology = dto.topology.spare.toTopologyDescriptor(),
+                    dedupTopology = dto.topology.dedup.toTopologyDescriptor()
+                ),
+                zfsHealth = PoolDetails.ZfsHealth(
+                    poolStatus = PoolDetails.ZfsHealth.PoolStatus.ONLINE, // TODO
+                    totalErrors = dto.scan.errors,
+                    scheduledScrub = null, // TODO
+                    isAutotrimEnabled = dto.autotrim.rawValue == "on",
+                    lastScan = if (dto.scan.endTime != null) {
+                        PoolDetails.ZfsHealth.LastScan(
+                            function = dto.scan.function,
+                            finishedAt = Instant.fromEpochMilliseconds(dto.scan.endTime!!),
+                            totalErrors = dto.scan.errors
+                        )
+                    } else {
+                        null
+                    }
+                ),
+                diskHealth = PoolDetails.DiskHealth( // TODO
+                    disksWithAbnormalTemp = 0,
+                    highestTemp = null,
+                    lowestTemp = null,
+                    averageTemp = null,
+                    failedTests = 0
+                )
             )
-        )
+            Result.success(result)
+        } catch (e: HttpNotOkException) {
+            Result.failure(e)
+        }
     }
 
     private fun List<VDev>.toTopologyDescriptor(): PoolDetails.Topology.TopologyDescriptor? {
@@ -149,14 +155,14 @@ data class PoolDetails(
      * @property poolStatus The status of the pool.
      * @property totalErrors The total number of filesystem errors detected.
      * @property scheduledScrub TODO
-     * @property autotrimEnabled Whether TRIM happens automatically.
+     * @property isAutotrimEnabled Whether TRIM happens automatically.
      * @property lastScan The last scan that happened on the pool.
      */
     data class ZfsHealth(
         val poolStatus: PoolStatus,
         val totalErrors: Int,
         val scheduledScrub: Any?, // TODO
-        val autotrimEnabled: Boolean,
+        val isAutotrimEnabled: Boolean,
         val lastScan: LastScan?,
     ) {
 

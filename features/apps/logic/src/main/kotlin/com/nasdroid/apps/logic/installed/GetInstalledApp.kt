@@ -35,7 +35,7 @@ class GetInstalledApp(
                         ChartRelease.Status.ACTIVE -> InstalledAppDetails.State.ACTIVE
                         ChartRelease.Status.STOPPED -> InstalledAppDetails.State.STOPPED
                     },
-                    updateAvailable = chartRelease.updateAvailable,
+                    hasUpdateAvailable = chartRelease.updateAvailable,
                     webPortalUrl = chartRelease.portals?.webPortal?.firstOrNull()
                 )
             )
@@ -59,7 +59,7 @@ class GetInstalledApp(
  * @property catalog The catalog this application was installed from.
  * @property train The catalog train this application was installed from.
  * @property state The current state of the application.
- * @property updateAvailable Whether the application has an update available.
+ * @property hasUpdateAvailable Whether the application has an update available.
  * @property webPortalUrl The URL to the applications web interface, if any.
  */
 data class InstalledAppDetails(
@@ -74,7 +74,7 @@ data class InstalledAppDetails(
     val catalog: String,
     val train: String,
     val state: State,
-    val updateAvailable: Boolean,
+    val hasUpdateAvailable: Boolean,
     val webPortalUrl: String?
 ) {
     /**

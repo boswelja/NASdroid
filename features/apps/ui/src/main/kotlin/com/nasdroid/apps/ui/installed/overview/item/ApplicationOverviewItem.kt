@@ -83,7 +83,7 @@ internal fun AppInfoText(
             style = MaterialThemeExt.typography.titleMedium,
         )
         Text(
-            text = if (installedAppOverview.updateAvailable) {
+            text = if (installedAppOverview.hasUpdateAvailable) {
                 stringResource(R.string.app_update_available)
             } else {
                 stringResource(R.string.app_update_up_to_date)
@@ -141,7 +141,7 @@ fun ApplicationOverviewItemPreview() {
                 catalog = "Truenas",
                 train = "Community",
                 state = InstalledAppOverview.State.ACTIVE,
-                updateAvailable = false,
+                hasUpdateAvailable = false,
                 webPortalUrl = "http://my.jellyfin.local/"
             ),
             onClick = { },

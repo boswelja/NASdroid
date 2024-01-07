@@ -248,7 +248,7 @@ fun ApplicationInfoPreview() {
                 lastUpdated = null,
                 state = InstalledAppDetails.State.ACTIVE,
                 notes = "",
-                updateAvailable = false,
+                hasUpdateAvailable = false,
                 webPortalUrl = "https://google.com/"
             ),
             onEditClick = { },

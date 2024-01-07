@@ -41,7 +41,7 @@ class InMemoryInstalledAppCacheTest {
                     catalog = "catalog",
                     train = "train",
                     state = CachedInstalledApp.State.ACTIVE,
-                    updateAvailable = true,
+                    hasUpdateAvailable = true,
                     webPortalUrl = "https://google.com"
                 )
             )
@@ -61,7 +61,7 @@ class InMemoryInstalledAppCacheTest {
                 catalog = "catalog",
                 train = "train",
                 state = CachedInstalledApp.State.ACTIVE,
-                updateAvailable = true,
+                hasUpdateAvailable = true,
                 webPortalUrl = "https://google.com"
             )
         )
@@ -89,7 +89,7 @@ class InMemoryInstalledAppCacheTest {
                     catalog = "catalog",
                     train = "train",
                     state = CachedInstalledApp.State.ACTIVE,
-                    updateAvailable = true,
+                    hasUpdateAvailable = true,
                     webPortalUrl = "https://google.com"
                 )
             )
@@ -112,7 +112,7 @@ class InMemoryInstalledAppCacheTest {
                 catalog = "catalog",
                 train = "train",
                 state = CachedInstalledApp.State.ACTIVE,
-                updateAvailable = true,
+                hasUpdateAvailable = true,
                 webPortalUrl = "https://google.com"
             )
         )
@@ -141,7 +141,7 @@ class InMemoryInstalledAppCacheTest {
                 catalog = "catalog",
                 train = "train",
                 state = CachedInstalledApp.State.ACTIVE,
-                updateAvailable = true,
+                hasUpdateAvailable = true,
                 webPortalUrl = "https://google.com"
             )
         )
@@ -154,7 +154,7 @@ class InMemoryInstalledAppCacheTest {
             apps.forEach {
                 installedAppCache.setUpdateAvailable(it.name, newState)
             }
-            val appsWithUpdatedStates = apps.map { it.copy(updateAvailable = newState) }
+            val appsWithUpdatedStates = apps.map { it.copy(hasUpdateAvailable = newState) }
 
             assertEquals(appsWithUpdatedStates, awaitItem())
         }

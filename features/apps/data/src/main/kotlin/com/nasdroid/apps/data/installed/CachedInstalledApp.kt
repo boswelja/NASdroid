@@ -9,7 +9,7 @@ package com.nasdroid.apps.data.installed
  * @property catalog The catalog this application was installed from.
  * @property train The catalog train this application was installed from.
  * @property state The current state of the application.
- * @property updateAvailable Whether the application has an update available.
+ * @property hasUpdateAvailable Whether the application has an update available.
  * @property webPortalUrl The URL to the applications web interface, if any.
  */
 data class CachedInstalledApp(
@@ -19,7 +19,7 @@ data class CachedInstalledApp(
     val catalog: String,
     val train: String,
     val state: State,
-    val updateAvailable: Boolean,
+    val hasUpdateAvailable: Boolean,
     val webPortalUrl: String?
 ) {
     /**

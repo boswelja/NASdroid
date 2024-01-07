@@ -29,8 +29,8 @@ class InMemoryInstalledAppCache(
         }
             .asFlow()
             .mapToList(Dispatchers.IO)
-            .mapLatest {
-                it.map { cachedApp ->
+            .mapLatest { cachedInstalledApps ->
+                cachedInstalledApps.map { cachedApp ->
                     CachedInstalledApp(
                         name = cachedApp.app_name,
                         version = cachedApp.version,
@@ -38,7 +38,7 @@ class InMemoryInstalledAppCache(
                         catalog = cachedApp.catalog,
                         train = cachedApp.train,
                         state = CachedInstalledApp.State.valueOf(cachedApp.state),
-                        updateAvailable = cachedApp.update_available,
+                        hasUpdateAvailable = cachedApp.update_available,
                         webPortalUrl = cachedApp.web_portal_url
                     )
                 }
@@ -58,7 +58,7 @@ class InMemoryInstalledAppCache(
                             catalog = it.catalog,
                             train = it.train,
                             state = it.state.name,
-                            update_available = it.updateAvailable,
+                            update_available = it.hasUpdateAvailable,
                             web_portal_url = it.webPortalUrl
                         )
                     )
