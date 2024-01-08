@@ -113,7 +113,8 @@ fun MainNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "auth"
+        startDestination = "auth",
+        modifier = modifier
     ) {
         authNavigation(
             navController = navController,
@@ -125,19 +126,20 @@ fun MainNavHost(
                     }
                 }
             },
-            modifier = modifier,
             contentPadding = contentPadding,
             windowSizeClass = windowSizeClass,
         )
 
         destinations.forEach { destination ->
             when (destination) {
-                TopLevelDestination.Dashboard -> dashboardGraph(destination.getRoute(), modifier, contentPadding)
+                TopLevelDestination.Dashboard -> dashboardGraph(
+                    route = destination.getRoute(),
+                    contentPadding = contentPadding
+                )
                 TopLevelDestination.Storage -> storageGraph(
                     windowSizeClass = windowSizeClass,
                     navController = navController,
                     route = destination.getRoute(),
-                    modifier = modifier,
                     contentPadding = contentPadding
                 )
                 TopLevelDestination.Datasets -> {}
@@ -150,10 +152,12 @@ fun MainNavHost(
                     windowSizeClass = windowSizeClass,
                     navController = navController,
                     route = destination.getRoute(),
-                    modifier = modifier,
                     contentPadding = contentPadding
                 )
-                TopLevelDestination.Reporting -> reportingGraph(destination.getRoute(), modifier, contentPadding)
+                TopLevelDestination.Reporting -> reportingGraph(
+                    route = destination.getRoute(),
+                    contentPadding = contentPadding
+                )
                 TopLevelDestination.SystemSettings -> {}
             }
         }
