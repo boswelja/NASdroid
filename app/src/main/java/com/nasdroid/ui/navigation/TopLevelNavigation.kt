@@ -74,12 +74,12 @@ fun TopLevelNavigation(
     navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val navigationMode = NavigationMode.calculateFromWindowSize(windowSizeClass)
-    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val navigationMode = NavigationMode.rememberFromWindowSize(windowSizeClass)
     val modalDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val coroutineScope = rememberCoroutineScope()
 
     val navigationScaffold = @Composable {
+        val coroutineScope = rememberCoroutineScope()
+        val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         ProvideSingleTopMenuHost {
             NavigationSuiteScaffold(
                 topBar = {
@@ -172,6 +172,16 @@ data class NavigationMode(
     val secondaryNavigationMode: SecondaryNavigationMode
 ) {
     companion object {
+        /**
+         * A convenience function that remembers [NavigationMode].
+         */
+        @Composable
+        fun rememberFromWindowSize(windowSizeClass: WindowSizeClass): NavigationMode {
+            return remember(windowSizeClass) {
+                calculateFromWindowSize(windowSizeClass)
+            }
+        }
+
         /**
          * Calculates a [NavigationMode] from the provided [WindowSizeClass].
          */
@@ -340,13 +350,13 @@ fun LandscapeUnfoldedFoldablePreview() {
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-@Preview(device = "spec:width=1280dp,height=900dp")
+@Preview(device = "spec:width=1280dp,height=800dp")
 @Composable
 fun LandscapeTabletPreview() {
     var selectedDestination by remember {
         mutableStateOf(TopLevelDestination.Dashboard)
     }
-    val windowSizeClass = WindowSizeClass.calculateFromSize(size = DpSize(1280.dp, 900.dp))
+    val windowSizeClass = WindowSizeClass.calculateFromSize(size = DpSize(1280.dp, 800.dp))
     TopLevelNavigation(
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
