@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ fun TopAppBar(
     windowHeightSizeClass: WindowHeightSizeClass,
     navigationMode: NavigationMode,
     onNavigationClick: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
     menuHost: MenuHost = LocalMenuHost.current
 ) {
@@ -53,6 +55,7 @@ fun TopAppBar(
                 AnimatedTopAppBarMenuItems(menuHost = menuHost)
             },
             modifier = modifier,
+            scrollBehavior = scrollBehavior
         )
     } else {
         MediumTopAppBar(
@@ -64,6 +67,7 @@ fun TopAppBar(
                 )
             },
             modifier = modifier,
+            scrollBehavior = scrollBehavior
         )
     }
 

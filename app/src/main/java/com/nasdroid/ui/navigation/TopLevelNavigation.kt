@@ -14,8 +14,10 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
@@ -28,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
@@ -168,6 +171,7 @@ fun TopLevelNavigation(
  * @param navigateBack Called when the user navigates back.
  * @param content The screen content. The provided PaddingValues come from [Scaffold].
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModalNavigationDrawer(
     windowSizeClass: WindowSizeClass,
@@ -191,6 +195,7 @@ fun ModalNavigationDrawer(
             gesturesEnabled = navigationVisible,
             modifier = modifier,
         ) {
+            val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
             Scaffold(
                 topBar = {
                     if (canNavigateBack || navigationVisible) {
@@ -205,6 +210,7 @@ fun ModalNavigationDrawer(
                                 }
                             },
                             windowHeightSizeClass = windowSizeClass.heightSizeClass,
+                            scrollBehavior = topAppBarScrollBehavior
                         )
                     }
                 },
@@ -217,7 +223,8 @@ fun ModalNavigationDrawer(
                         )
                     }
                 },
-                content = content
+                content = content,
+                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
             )
         }
     }
@@ -237,6 +244,7 @@ fun ModalNavigationDrawer(
  * @param navigateBack Called when the user navigates back.
  * @param content The screen content. The provided PaddingValues come from [Scaffold].
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationRail(
     windowSizeClass: WindowSizeClass,
@@ -276,6 +284,7 @@ fun NavigationRail(
                         }
                     )
                 }
+                val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
                 Scaffold(
                     topBar = {
                         if (navigationVisible || canNavigateBack) {
@@ -283,11 +292,13 @@ fun NavigationRail(
                                 title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
                                 navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
                                 onNavigationClick = navigateBack,
-                                windowHeightSizeClass = windowSizeClass.heightSizeClass
+                                windowHeightSizeClass = windowSizeClass.heightSizeClass,
+                                scrollBehavior = topAppBarScrollBehavior
                             )
                         }
                     },
-                    content = content
+                    content = content,
+                    modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
                 )
             }
         }
@@ -307,6 +318,7 @@ fun NavigationRail(
  * @param navigateBack Called when the user navigates back.
  * @param content The screen content. The provided PaddingValues come from [Scaffold].
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermanentNavigationDrawer(
     windowSizeClass: WindowSizeClass,
@@ -325,6 +337,7 @@ fun PermanentNavigationDrawer(
             navigationVisible = navigationVisible,
             modifier = modifier,
         ) {
+            val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
             Scaffold(
                 topBar = {
                     if (navigationVisible || canNavigateBack) {
@@ -332,11 +345,13 @@ fun PermanentNavigationDrawer(
                             title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
                             navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
                             onNavigationClick = navigateBack,
-                            windowHeightSizeClass = windowSizeClass.heightSizeClass
+                            windowHeightSizeClass = windowSizeClass.heightSizeClass,
+                            scrollBehavior = topAppBarScrollBehavior
                         )
                     }
                 },
-                content = content
+                content = content,
+                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
             )
         }
     }
