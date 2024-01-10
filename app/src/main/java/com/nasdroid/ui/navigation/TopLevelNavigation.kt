@@ -33,9 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.boswelja.menuprovider.MenuItem
-import com.boswelja.menuprovider.ProvideMenuHost
 import com.boswelja.menuprovider.ProvideMenuItems
-import com.boswelja.menuprovider.rememberMenuHost
+import com.boswelja.menuprovider.ProvideSingleTopMenuHost
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.ui.navigation.bar.BottomNavigationBar
 import com.nasdroid.ui.navigation.bar.NavigationMode
@@ -183,9 +182,8 @@ fun ModalNavigationDrawer(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val menuHost = rememberMenuHost()
 
-    ProvideMenuHost(menuHost = menuHost) {
+    ProvideSingleTopMenuHost {
         ModalNavigationDrawerLayout(
             drawerState = drawerState,
             selectedDestination = selectedDestination,
@@ -251,11 +249,10 @@ fun NavigationRail(
     navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val menuHost = rememberMenuHost()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    ProvideMenuHost(menuHost = menuHost) {
+    ProvideSingleTopMenuHost {
         ModalNavigationDrawerLayout(
             drawerState = drawerState,
             selectedDestination = selectedDestination,
@@ -321,9 +318,7 @@ fun PermanentNavigationDrawer(
     navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val menuHost = rememberMenuHost()
-
-    ProvideMenuHost(menuHost = menuHost) {
+    ProvideSingleTopMenuHost {
         PermanentNavigationDrawerLayout(
             selectedDestination = selectedDestination,
             navigateTo = navigateTo,
