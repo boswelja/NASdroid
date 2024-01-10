@@ -1,21 +1,14 @@
 package com.nasdroid.ui.navigation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.EditOff
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
@@ -40,8 +33,9 @@ import com.boswelja.menuprovider.ProvideMenuItems
 import com.boswelja.menuprovider.ProvideSingleTopMenuHost
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.ui.navigation.bar.BottomNavigationBar
-import com.nasdroid.ui.navigation.bar.NavigationMode
 import com.nasdroid.ui.navigation.bar.StartNavigationRail
+import com.nasdroid.ui.navigation.bar.TopAppBar
+import com.nasdroid.ui.navigation.bar.TopAppBarNavigationMode
 import com.nasdroid.ui.navigation.drawer.ModalNavigationDrawerLayout
 import com.nasdroid.ui.navigation.drawer.PermanentNavigationDrawerLayout
 import kotlinx.coroutines.launch
@@ -67,6 +61,7 @@ private val StartNavRailDestinations = listOf(
  * Orchestrates all top-level navigation components. The navigation components displayed depend on
  * [windowSizeClass].
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongMethod")
 @Composable
 fun TopLevelNavigation(
@@ -79,134 +74,33 @@ fun TopLevelNavigation(
     navigateBack: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    when (windowSizeClass.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> {
-            // Compact width suggests we don't have room for any navigation on the sides, so we keep
-            // it collapsed
-            ModalNavigationDrawer(
-                windowSizeClass = windowSizeClass,
-                selectedDestination = selectedDestination,
-                destinations = BottomNavDestinations,
-                navigateTo = navigateTo,
-                navigationVisible = navigationVisible,
-                canNavigateBack = canNavigateBack,
-                navigateBack = navigateBack,
-                content = content,
-                modifier = modifier,
-            )
-        }
-        WindowWidthSizeClass.Medium -> {
-            // Medium width suggests we can fit a navigation rail
-            if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact) {
-                // But if we don't have enough height, all our rail destinations won't fit
-                ModalNavigationDrawer(
-                    windowSizeClass = windowSizeClass,
-                    selectedDestination = selectedDestination,
-                    destinations = BottomNavDestinations,
-                    navigateTo = navigateTo,
-                    navigationVisible = navigationVisible,
-                    canNavigateBack = canNavigateBack,
-                    navigateBack = navigateBack,
-                    content = content,
-                    modifier = modifier,
-                )
-            } else {
-                NavigationRail(
-                    windowSizeClass = windowSizeClass,
-                    selectedDestination = selectedDestination,
-                    destinations = StartNavRailDestinations,
-                    navigateTo = navigateTo,
-                    navigationVisible = navigationVisible,
-                    canNavigateBack = canNavigateBack,
-                    navigateBack = navigateBack,
-                    content = content,
-                    modifier = modifier,
-                )
-            }
-        }
-        WindowWidthSizeClass.Expanded -> {
-            // Expanded width suggests there is enough space for a permanent navigation drawer
-            if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded) {
-                // But we only want to take up all that space if we are sure it's a big screen
-                PermanentNavigationDrawer(
-                    windowSizeClass = windowSizeClass,
-                    selectedDestination = selectedDestination,
-                    navigateTo = navigateTo,
-                    navigationVisible = navigationVisible,
-                    canNavigateBack = canNavigateBack,
-                    navigateBack = navigateBack,
-                    content = content,
-                    modifier = modifier,
-                )
-            } else {
-                NavigationRail(
-                    windowSizeClass = windowSizeClass,
-                    selectedDestination = selectedDestination,
-                    destinations = StartNavRailDestinations,
-                    navigateTo = navigateTo,
-                    navigationVisible = navigationVisible,
-                    canNavigateBack = canNavigateBack,
-                    navigateBack = navigateBack,
-                    content = content,
-                    modifier = modifier,
-                )
-            }
-        }
-    }
-}
-
-/**
- * A Modal navigation drawer with a top app bar to control its state and display the current
- * destination.
- *
- * @param windowSizeClass [WindowSizeClass].
- * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
- * selected.
- * @param destinations A list of [TopLevelDestination]s that should be displayed.
- * @param navigateTo Called when the user navigates to a new destination.
- * @param modifier [Modifier].
- * @param navigationVisible Whether the user can open the modal navigation drawer.
- * @param canNavigateBack Whether the back button should be displayed. When this is true, the user
- * cannot access the navigation drawer.
- * @param navigateBack Called when the user navigates back.
- * @param content The screen content. The provided PaddingValues come from [Scaffold].
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ModalNavigationDrawer(
-    windowSizeClass: WindowSizeClass,
-    selectedDestination: TopLevelDestination?,
-    destinations: List<TopLevelDestination>,
-    navigateTo: (TopLevelDestination) -> Unit,
-    modifier: Modifier = Modifier,
-    navigationVisible: Boolean = true,
-    canNavigateBack: Boolean = false,
-    navigateBack: () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit
-) {
+    val navigationMode = NavigationMode.calculateFromWindowSize(windowSizeClass)
+    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val modalDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    ProvideSingleTopMenuHost {
-        ModalNavigationDrawerLayout(
-            drawerState = drawerState,
-            selectedDestination = selectedDestination,
-            navigateTo = navigateTo,
-            gesturesEnabled = navigationVisible,
-            modifier = modifier,
-        ) {
-            val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-            Scaffold(
+    val navigationScaffold = @Composable {
+        ProvideSingleTopMenuHost {
+            NavigationSuiteScaffold(
                 topBar = {
                     if (canNavigateBack || navigationVisible) {
-                        com.nasdroid.ui.navigation.bar.TopAppBar(
+                        TopAppBar(
                             title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
-                            navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.Drawer,
+                            navigationMode = if (canNavigateBack) {
+                                TopAppBarNavigationMode.Back
+                            } else if (
+                                navigationMode.primaryNavigationMode == PrimaryNavigationMode.Modal &&
+                                navigationMode.secondaryNavigationMode != SecondaryNavigationMode.StartNavRail
+                            ) {
+                                TopAppBarNavigationMode.Drawer
+                            } else {
+                                TopAppBarNavigationMode.None
+                            },
                             onNavigationClick = {
                                 if (canNavigateBack) {
                                     navigateBack()
                                 } else {
-                                    coroutineScope.launch { drawerState.open() }
+                                    coroutineScope.launch { modalDrawerState.open() }
                                 }
                             },
                             windowHeightSizeClass = windowSizeClass.heightSizeClass,
@@ -214,10 +108,28 @@ fun ModalNavigationDrawer(
                         )
                     }
                 },
+                startBar = {
+                    if (
+                        navigationVisible &&
+                        navigationMode.secondaryNavigationMode == SecondaryNavigationMode.StartNavRail
+                    ) {
+                        StartNavigationRail(
+                            destinations = StartNavRailDestinations,
+                            selectedDestination = selectedDestination,
+                            onDestinationClick = navigateTo,
+                            onNavigationClick = {
+                                coroutineScope.launch { modalDrawerState.open() }
+                            }
+                        )
+                    }
+                },
                 bottomBar = {
-                    if (navigationVisible) {
+                    if (
+                        navigationVisible &&
+                        navigationMode.secondaryNavigationMode == SecondaryNavigationMode.BottomNavBar
+                    ) {
                         BottomNavigationBar(
-                            destinations = destinations,
+                            destinations = BottomNavDestinations,
                             selectedDestination = selectedDestination,
                             onDestinationClick = navigateTo
                         )
@@ -228,154 +140,98 @@ fun ModalNavigationDrawer(
             )
         }
     }
-}
-
-/**
- * A Navigation Rail with a top app bar to allow navigating back.
- *
- * @param windowSizeClass [WindowSizeClass].
- * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
- * selected.
- * @param destinations A list of [TopLevelDestination]s that should be displayed.
- * @param navigateTo Called when the user navigates to a new destination.
- * @param modifier [Modifier].
- * @param navigationVisible Whether the user can see the navigation rail.
- * @param canNavigateBack Whether the back button should be displayed.
- * @param navigateBack Called when the user navigates back.
- * @param content The screen content. The provided PaddingValues come from [Scaffold].
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun NavigationRail(
-    windowSizeClass: WindowSizeClass,
-    selectedDestination: TopLevelDestination?,
-    destinations: List<TopLevelDestination>,
-    navigateTo: (TopLevelDestination) -> Unit,
-    modifier: Modifier = Modifier,
-    navigationVisible: Boolean = true,
-    canNavigateBack: Boolean = false,
-    navigateBack: () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit,
-) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val coroutineScope = rememberCoroutineScope()
-
-    ProvideSingleTopMenuHost {
-        ModalNavigationDrawerLayout(
-            drawerState = drawerState,
-            selectedDestination = selectedDestination,
-            gesturesEnabled = navigationVisible,
-            navigateTo = navigateTo
-        ) {
-            Row(modifier) {
-                AnimatedVisibility(
-                    visible = navigationVisible,
-                    enter = slideInHorizontally(),
-                    exit = slideOutHorizontally { -it/2 }
-                ) {
-                    StartNavigationRail(
-                        destinations = destinations,
-                        selectedDestination = selectedDestination,
-                        onDestinationClick = navigateTo,
-                        onNavigationClick = {
-                            coroutineScope.launch {
-                                drawerState.open()
-                            }
-                        }
-                    )
-                }
-                val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-                Scaffold(
-                    topBar = {
-                        if (navigationVisible || canNavigateBack) {
-                            com.nasdroid.ui.navigation.bar.TopAppBar(
-                                title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
-                                navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
-                                onNavigationClick = navigateBack,
-                                windowHeightSizeClass = windowSizeClass.heightSizeClass,
-                                scrollBehavior = topAppBarScrollBehavior
-                            )
-                        }
-                    },
-                    content = content,
-                    modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-                )
-            }
+    when (navigationMode.primaryNavigationMode) {
+        PrimaryNavigationMode.Modal -> {
+            ModalNavigationDrawerLayout(
+                drawerState = modalDrawerState,
+                selectedDestination = selectedDestination,
+                navigateTo = navigateTo,
+                content = navigationScaffold,
+                modifier = modifier
+            )
         }
-    }
-}
-
-/**
- * A Permanent Navigation Drawer with a top app bar to allow navigating back.
- *
- * @param windowSizeClass [WindowSizeClass].
- * @param selectedDestination The currently selected [TopLevelDestination], or null if nothing is
- * selected.
- * @param navigateTo Called when the user navigates to a new destination.
- * @param modifier [Modifier].
- * @param navigationVisible Whether the user can see the navigation drawer.
- * @param canNavigateBack Whether the back button should be displayed.
- * @param navigateBack Called when the user navigates back.
- * @param content The screen content. The provided PaddingValues come from [Scaffold].
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PermanentNavigationDrawer(
-    windowSizeClass: WindowSizeClass,
-    selectedDestination: TopLevelDestination?,
-    navigateTo: (TopLevelDestination) -> Unit,
-    modifier: Modifier = Modifier,
-    navigationVisible: Boolean = true,
-    canNavigateBack: Boolean = false,
-    navigateBack: () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit,
-) {
-    ProvideSingleTopMenuHost {
-        PermanentNavigationDrawerLayout(
-            selectedDestination = selectedDestination,
-            navigateTo = navigateTo,
-            navigationVisible = navigationVisible,
-            modifier = modifier,
-        ) {
-            val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-            Scaffold(
-                topBar = {
-                    if (navigationVisible || canNavigateBack) {
-                        com.nasdroid.ui.navigation.bar.TopAppBar(
-                            title = { selectedDestination?.let { Text(stringResource(it.labelRes)) } },
-                            navigationMode = if (canNavigateBack) NavigationMode.Back else NavigationMode.None,
-                            onNavigationClick = navigateBack,
-                            windowHeightSizeClass = windowSizeClass.heightSizeClass,
-                            scrollBehavior = topAppBarScrollBehavior
-                        )
-                    }
-                },
-                content = content,
-                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+        PrimaryNavigationMode.Permanent -> {
+            PermanentNavigationDrawerLayout(
+                selectedDestination = selectedDestination,
+                navigateTo = navigateTo,
+                content = navigationScaffold,
+                modifier = modifier
             )
         }
     }
 }
 
+/**
+ * Describes the state of navigation components on the screen.
+ *
+ * @property primaryNavigationMode The mode of the primary form of navigation.
+ * @property secondaryNavigationMode The mode of the secondary form of navigation.
+ */
+data class NavigationMode(
+    val primaryNavigationMode: PrimaryNavigationMode,
+    val secondaryNavigationMode: SecondaryNavigationMode
+) {
+    companion object {
+        /**
+         * Calculates a [NavigationMode] from the provided [WindowSizeClass].
+         */
+        fun calculateFromWindowSize(windowSizeClass: WindowSizeClass): NavigationMode {
+            val primaryNavigationMode = if (
+                windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded &&
+                windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded
+            ) {
+                PrimaryNavigationMode.Permanent
+            } else {
+                PrimaryNavigationMode.Modal
+            }
+            val secondaryNavigationMode = if (primaryNavigationMode == PrimaryNavigationMode.Permanent) {
+                SecondaryNavigationMode.None
+            } else if (windowSizeClass.widthSizeClass <= WindowWidthSizeClass.Compact) {
+                SecondaryNavigationMode.BottomNavBar
+            } else if (
+                windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium &&
+                windowSizeClass.heightSizeClass >= WindowHeightSizeClass.Medium
+            ) {
+                SecondaryNavigationMode.StartNavRail
+            } else {
+                SecondaryNavigationMode.None
+            }
+            return NavigationMode(primaryNavigationMode, secondaryNavigationMode)
+        }
+    }
+}
+
+/**
+ * All possible states for the apps primary mode of navigation.
+ */
+enum class PrimaryNavigationMode {
+    Modal,
+    Permanent
+}
+
+/**
+ * All possible states for the apps secondary mode of navigation.
+ */
+enum class SecondaryNavigationMode {
+    None,
+    BottomNavBar,
+    StartNavRail
+}
+
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(device = "spec:width=411dp,height=891dp")
 @Composable
-fun ModalNavigationDrawerPreview() {
+fun PortraitPhonePreviewPreview() {
     val destinations = BottomNavDestinations
     var selectedDestination by remember {
         mutableStateOf(destinations.first())
     }
-    ModalNavigationDrawer(
-        windowSizeClass = WindowSizeClass.calculateFromSize(DpSize(411.dp, 891.dp)),
+    val windowSizeClass = WindowSizeClass.calculateFromSize(size = DpSize(411.dp, 891.dp))
+    TopLevelNavigation(
+        windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
-        destinations = destinations,
-        navigateTo = {
-            selectedDestination = it
-        },
-        navigationVisible = true,
-        canNavigateBack = false,
-        navigateBack = {}
-    ) { requiredPadding ->
+        navigateTo = { selectedDestination = it }
+    ) {
         ProvideMenuItems(
             MenuItem(
                 label = "Edit",
@@ -386,7 +242,37 @@ fun ModalNavigationDrawerPreview() {
         )
         Box(
             Modifier
-                .padding(requiredPadding)
+                .padding(it)
+                .fillMaxSize()
+                .background(MaterialThemeExt.colorScheme.primaryContainer)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@Preview(device = "spec:width=891dp,height=411dp")
+@Composable
+fun LandscapePhonePreviewPreview() {
+    var selectedDestination by remember {
+        mutableStateOf(TopLevelDestination.Dashboard)
+    }
+    val windowSizeClass = WindowSizeClass.calculateFromSize(size = DpSize(891.dp, 411.dp))
+    TopLevelNavigation(
+        windowSizeClass = windowSizeClass,
+        selectedDestination = selectedDestination,
+        navigateTo = { selectedDestination = it }
+    ) {
+        ProvideMenuItems(
+            MenuItem(
+                label = "Edit",
+                imageVector = Icons.Default.Edit,
+                onClick = {},
+                isImportant = true
+            )
+        )
+        Box(
+            Modifier
+                .padding(it)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
@@ -396,33 +282,27 @@ fun ModalNavigationDrawerPreview() {
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(device = "spec:width=673dp,height=841dp")
 @Composable
-fun NavigationRailPreview() {
-    val destinations = StartNavRailDestinations
+fun PortraitUnfoldedFoldablePreview() {
     var selectedDestination by remember {
-        mutableStateOf(destinations.first())
+        mutableStateOf(TopLevelDestination.Dashboard)
     }
-    NavigationRail(
-        windowSizeClass = WindowSizeClass.calculateFromSize(DpSize(673.dp, 841.dp)),
+    val windowSizeClass = WindowSizeClass.calculateFromSize(size = DpSize(673.dp, 841.dp))
+    TopLevelNavigation(
+        windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
-        destinations = destinations,
-        navigateTo = {
-            selectedDestination = it
-        },
-        navigationVisible = true,
-        canNavigateBack = true,
-        navigateBack = {}
-    ) { requiredPadding ->
+        navigateTo = { selectedDestination = it }
+    ) {
         ProvideMenuItems(
             MenuItem(
-                label = "More",
-                imageVector = Icons.Default.MoreVert,
+                label = "Edit",
+                imageVector = Icons.Default.Edit,
                 onClick = {},
                 isImportant = true
             )
         )
         Box(
             Modifier
-                .padding(requiredPadding)
+                .padding(it)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
@@ -430,34 +310,59 @@ fun NavigationRailPreview() {
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
+@Preview(device = "spec:width=841dp,height=673dp")
 @Composable
-fun PermanentNavigationDrawerPreview() {
-    val destinations = TopLevelDestination.entries
+fun LandscapeUnfoldedFoldablePreview() {
     var selectedDestination by remember {
-        mutableStateOf(destinations.first())
+        mutableStateOf(TopLevelDestination.Dashboard)
     }
-    PermanentNavigationDrawer(
-        windowSizeClass = WindowSizeClass.calculateFromSize(DpSize(1280.dp, 800.dp)),
+    val windowSizeClass = WindowSizeClass.calculateFromSize(size = DpSize(841.dp, 673.dp))
+    TopLevelNavigation(
+        windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
-        navigateTo = {
-            selectedDestination = it
-        },
-        navigationVisible = true,
-        canNavigateBack = true,
-        navigateBack = {}
-    ) { requiredPadding ->
+        navigateTo = { selectedDestination = it }
+    ) {
         ProvideMenuItems(
             MenuItem(
-                label = "Stop editing",
-                imageVector = Icons.Default.EditOff,
+                label = "Edit",
+                imageVector = Icons.Default.Edit,
                 onClick = {},
                 isImportant = true
             )
         )
         Box(
             Modifier
-                .padding(requiredPadding)
+                .padding(it)
+                .fillMaxSize()
+                .background(MaterialThemeExt.colorScheme.primaryContainer)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@Preview(device = "spec:width=1280dp,height=900dp")
+@Composable
+fun LandscapeTabletPreview() {
+    var selectedDestination by remember {
+        mutableStateOf(TopLevelDestination.Dashboard)
+    }
+    val windowSizeClass = WindowSizeClass.calculateFromSize(size = DpSize(1280.dp, 900.dp))
+    TopLevelNavigation(
+        windowSizeClass = windowSizeClass,
+        selectedDestination = selectedDestination,
+        navigateTo = { selectedDestination = it }
+    ) {
+        ProvideMenuItems(
+            MenuItem(
+                label = "Edit",
+                imageVector = Icons.Default.Edit,
+                onClick = {},
+                isImportant = true
+            )
+        )
+        Box(
+            Modifier
+                .padding(it)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )

@@ -24,7 +24,7 @@ import com.boswelja.menuprovider.material3.AnimatedTopAppBarMenuItems
 fun TopAppBar(
     title: @Composable () -> Unit,
     windowHeightSizeClass: WindowHeightSizeClass,
-    navigationMode: NavigationMode,
+    navigationMode: TopAppBarNavigationMode,
     onNavigationClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
@@ -33,11 +33,11 @@ fun TopAppBar(
     val navigationIcon = @Composable {
         AnimatedContent(targetState = navigationMode, label = "Top App Bar Navigation Mode") { mode ->
             when (mode) {
-                NavigationMode.None -> {}
-                NavigationMode.Back -> {
+                TopAppBarNavigationMode.None -> {}
+                TopAppBarNavigationMode.Back -> {
                     NavigateBackButton(onClick = onNavigationClick)
                 }
-                NavigationMode.Drawer -> {
+                TopAppBarNavigationMode.Drawer -> {
                     IconButton(
                         onClick = onNavigationClick
                     ) {
@@ -86,7 +86,7 @@ internal fun NavigateBackButton(
 /**
  * Describes all possible modes for the [TopAppBar] navigation icon.
  */
-enum class NavigationMode {
+enum class TopAppBarNavigationMode {
     None,
     Back,
     Drawer
