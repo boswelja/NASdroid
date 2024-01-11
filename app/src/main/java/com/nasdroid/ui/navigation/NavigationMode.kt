@@ -67,10 +67,10 @@ enum class PrimaryNavigationMode {
 /**
  * All possible states for the apps secondary mode of navigation.
  *
- * @property providesPrimaryNavigationLauncher Whether the secondary navigation mode provides a way
+ * @property hasPrimaryNavigationLauncher Whether the secondary navigation mode provides a way
  * for the user to launch the [PrimaryNavigationMode].
  */
-enum class SecondaryNavigationMode(val providesPrimaryNavigationLauncher: Boolean) {
+enum class SecondaryNavigationMode(val hasPrimaryNavigationLauncher: Boolean) {
     None(false),
     BottomNavBar(false),
     StartNavRail(true)

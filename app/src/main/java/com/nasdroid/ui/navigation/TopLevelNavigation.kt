@@ -171,7 +171,7 @@ internal fun TopNavigation(
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Navigate back")
                     }
-                } else if (!navigationMode.secondaryNavigationMode.providesPrimaryNavigationLauncher) {
+                } else if (!navigationMode.secondaryNavigationMode.hasPrimaryNavigationLauncher) {
                     IconButton(onClick = onOpenModalNavigation) {
                         Icon(Icons.Default.Menu, contentDescription = "Navigation drawer")
                     }
@@ -264,7 +264,7 @@ fun PortraitPhonePreviewPreview() {
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
         navigateTo = { selectedDestination = it }
-    ) {
+    ) { paddingValues ->
         ProvideMenuItems(
             MenuItem(
                 label = "Edit",
@@ -275,7 +275,7 @@ fun PortraitPhonePreviewPreview() {
         )
         Box(
             Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
@@ -294,7 +294,7 @@ fun LandscapePhonePreviewPreview() {
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
         navigateTo = { selectedDestination = it }
-    ) {
+    ) { paddingValues ->
         ProvideMenuItems(
             MenuItem(
                 label = "Edit",
@@ -305,7 +305,7 @@ fun LandscapePhonePreviewPreview() {
         )
         Box(
             Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
@@ -324,7 +324,7 @@ fun PortraitUnfoldedFoldablePreview() {
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
         navigateTo = { selectedDestination = it }
-    ) {
+    ) { paddingValues ->
         ProvideMenuItems(
             MenuItem(
                 label = "Edit",
@@ -335,7 +335,7 @@ fun PortraitUnfoldedFoldablePreview() {
         )
         Box(
             Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
@@ -354,7 +354,7 @@ fun LandscapeUnfoldedFoldablePreview() {
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
         navigateTo = { selectedDestination = it }
-    ) {
+    ) { paddingValues ->
         ProvideMenuItems(
             MenuItem(
                 label = "Edit",
@@ -365,7 +365,7 @@ fun LandscapeUnfoldedFoldablePreview() {
         )
         Box(
             Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
@@ -384,7 +384,7 @@ fun LandscapeTabletPreview() {
         windowSizeClass = windowSizeClass,
         selectedDestination = selectedDestination,
         navigateTo = { selectedDestination = it }
-    ) {
+    ) { paddingValues ->
         ProvideMenuItems(
             MenuItem(
                 label = "Edit",
@@ -395,7 +395,7 @@ fun LandscapeTabletPreview() {
         )
         Box(
             Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .fillMaxSize()
                 .background(MaterialThemeExt.colorScheme.primaryContainer)
         )
