@@ -55,3 +55,23 @@ data class NavigationMode(
         }
     }
 }
+
+/**
+ * All possible states for the apps primary mode of navigation.
+ */
+enum class PrimaryNavigationMode {
+    Modal,
+    Permanent
+}
+
+/**
+ * All possible states for the apps secondary mode of navigation.
+ *
+ * @property providesPrimaryNavigationLauncher Whether the secondary navigation mode provides a way
+ * for the user to launch the [PrimaryNavigationMode].
+ */
+enum class SecondaryNavigationMode(val providesPrimaryNavigationLauncher: Boolean) {
+    None(false),
+    BottomNavBar(false),
+    StartNavRail(true)
+}

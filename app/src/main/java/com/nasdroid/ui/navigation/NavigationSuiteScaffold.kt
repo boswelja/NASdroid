@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
  * @param modifier [Modifier].
  * @param topBar A slot at the top of the scaffold to host a navigation bar.
  * @param bottomBar A slot at the bottom of the scaffold to host a navigation bar.
- * @param startBar A slot at the start of the scaffold to host a navigation bar.
+ * @param sideBar A slot at the start of the scaffold to host a navigation bar.
  * @param content The content to fill the remaining space on the screen. Note you must apply the
  * provided PaddingValues.
  */
@@ -21,11 +21,11 @@ fun NavigationSuiteScaffold(
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
-    startBar: @Composable () -> Unit = {},
+    sideBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     Row {
-        startBar()
+        sideBar()
         Scaffold(
             modifier = modifier,
             topBar = topBar,
