@@ -95,6 +95,6 @@ dependencies {
     debugImplementation(libs.bundles.compose.tooling)
     androidTestImplementation(libs.compose.ui.test.junit4)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.kotlin.test)
     androidTestImplementation(libs.androidx.test.ext.junit)
 }

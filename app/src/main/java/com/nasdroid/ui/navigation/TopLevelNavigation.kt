@@ -13,9 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -157,56 +155,6 @@ fun TopLevelNavigation(
                 content = navigationScaffold,
                 modifier = modifier
             )
-        }
-    }
-}
-
-/**
- * Describes the state of navigation components on the screen.
- *
- * @property primaryNavigationMode The mode of the primary form of navigation.
- * @property secondaryNavigationMode The mode of the secondary form of navigation.
- */
-data class NavigationMode(
-    val primaryNavigationMode: PrimaryNavigationMode,
-    val secondaryNavigationMode: SecondaryNavigationMode
-) {
-    companion object {
-        /**
-         * A convenience function that remembers [NavigationMode].
-         */
-        @Composable
-        fun rememberFromWindowSize(windowSizeClass: WindowSizeClass): NavigationMode {
-            return remember(windowSizeClass) {
-                calculateFromWindowSize(windowSizeClass)
-            }
-        }
-
-        /**
-         * Calculates a [NavigationMode] from the provided [WindowSizeClass].
-         */
-        fun calculateFromWindowSize(windowSizeClass: WindowSizeClass): NavigationMode {
-            val primaryNavigationMode = if (
-                windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded &&
-                windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded
-            ) {
-                PrimaryNavigationMode.Permanent
-            } else {
-                PrimaryNavigationMode.Modal
-            }
-            val secondaryNavigationMode = if (primaryNavigationMode == PrimaryNavigationMode.Permanent) {
-                SecondaryNavigationMode.None
-            } else if (windowSizeClass.widthSizeClass <= WindowWidthSizeClass.Compact) {
-                SecondaryNavigationMode.BottomNavBar
-            } else if (
-                windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium &&
-                windowSizeClass.heightSizeClass >= WindowHeightSizeClass.Medium
-            ) {
-                SecondaryNavigationMode.StartNavRail
-            } else {
-                SecondaryNavigationMode.None
-            }
-            return NavigationMode(primaryNavigationMode, secondaryNavigationMode)
         }
     }
 }
