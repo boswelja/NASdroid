@@ -4,19 +4,29 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.GetApp
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,7 +35,9 @@ import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.apps.ui.R
 import com.nasdroid.apps.ui.installed.overview.item.ApplicationOverviewItem
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * A screen for displaying apps installed on the system.
@@ -48,12 +60,20 @@ fun InstalledAppsOverviewScreen(
     )
 
     val installedApps by viewModel.installedApps.collectAsState()
+    val searchTerm by viewModel.searchTerm.collectAsState()
 
     Box(modifier) {
         LazyColumn(
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            item {
+                SearchField(
+                    value = searchTerm,
+                    onValueChange = viewModel::setSearchTerm,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             installedApps?.let { apps ->
                 items(
                     items = apps,
@@ -83,4 +103,41 @@ fun InstalledAppsOverviewScreen(
             Text("Discover Apps")
         }
     }
+}
+
+@Composable
+internal fun SearchField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var searchQuery by rememberSaveable(value) {
+        mutableStateOf(value)
+    }
+    LaunchedEffect(key1 = searchQuery) {
+        delay(250.milliseconds)
+        onValueChange(searchQuery)
+    }
+    OutlinedTextField(
+        value = searchQuery,
+        onValueChange = { searchQuery = it },
+        label = {
+            Text(stringResource(R.string.overview_app_search))
+        },
+        leadingIcon = {
+            Icon(Icons.Default.Search, null)
+        },
+        trailingIcon = {
+            if (searchQuery.isNotEmpty()) {
+                IconButton(onClick = { searchQuery = "" }) {
+                    Icon(Icons.Default.Clear, stringResource(R.string.overview_app_clear_search))
+                }
+            }
+        },
+        keyboardActions = KeyboardActions {
+            onValueChange(searchQuery)
+        },
+        singleLine = true,
+        modifier = modifier
+    )
 }

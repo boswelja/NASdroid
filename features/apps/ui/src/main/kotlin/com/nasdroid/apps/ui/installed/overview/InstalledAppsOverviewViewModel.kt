@@ -43,6 +43,11 @@ class InstalledAppsOverviewViewModel(
             null
         )
 
+    /**
+     * The current text being used to search the app list.
+     */
+    val searchTerm: StateFlow<String> = _searchTerm
+
     init {
         refresh()
     }
@@ -72,6 +77,13 @@ class InstalledAppsOverviewViewModel(
         viewModelScope.launch {
             stopApp(appName)
         }
+    }
+
+    /**
+     * Sets the term used to search the app list. This will trigger a reload of the app list.
+     */
+    fun setSearchTerm(searchTerm: String) {
+        _searchTerm.value = searchTerm
     }
 
     private suspend fun refreshSuspending() {
