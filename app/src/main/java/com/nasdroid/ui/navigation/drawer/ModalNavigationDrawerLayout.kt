@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
  * @param navigateTo Called when the user navigates to a new destination.
  * @param modifier [Modifier].
  * @param gesturesEnabled Whether the modal drawer can be opened by gestures.
+ * @param headerContent Content to go at the top of the navigation drawer.
  * @param content The screen content. The provided PaddingValues come from [Scaffold].
  */
 @Composable
@@ -37,6 +38,7 @@ fun ModalNavigationDrawerLayout(
     navigateTo: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
     gesturesEnabled: Boolean = true,
+    headerContent: @Composable () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -52,7 +54,8 @@ fun ModalNavigationDrawerLayout(
                 },
                 modifier = Modifier
                     .fillMaxHeight()
-                    .verticalScroll(drawerScrollState)
+                    .verticalScroll(drawerScrollState),
+                headerContent = headerContent,
             )
         },
         drawerState = drawerState,
@@ -67,10 +70,12 @@ internal fun TopLevelModalDrawerSheet(
     selectedDestination: TopLevelDestination?,
     onClick: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
+    headerContent: @Composable () -> Unit = {}
 ) {
     ModalDrawerSheet(
         modifier = modifier
     ) {
+        headerContent()
         Spacer(Modifier.height(12.dp))
         TopLevelDestination.entries.forEach { destination ->
             TopLevelDrawerItem(

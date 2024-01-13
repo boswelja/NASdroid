@@ -26,6 +26,7 @@ import com.nasdroid.ui.navigation.TopLevelDestination
  * @param navigateTo Called when the user navigates to a new destination.
  * @param modifier [Modifier].
  * @param navigationVisible Whether the user can see the navigation drawer.
+ * @param headerContent Content to go at the top of the navigation drawer.
  * @param content The screen content. The provided PaddingValues come from [Scaffold].
  */
 @Composable
@@ -34,6 +35,7 @@ fun PermanentNavigationDrawerLayout(
     navigateTo: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
     navigationVisible: Boolean = true,
+    headerContent: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     val drawerScrollState = rememberScrollState()
@@ -47,7 +49,8 @@ fun PermanentNavigationDrawerLayout(
             TopLevelPermanentDrawerSheet(
                 selectedDestination = selectedDestination,
                 onClick = navigateTo,
-                modifier = Modifier.fillMaxHeight().verticalScroll(drawerScrollState)
+                modifier = Modifier.fillMaxHeight().verticalScroll(drawerScrollState),
+                headerContent = headerContent,
             )
         }
         content()
@@ -59,10 +62,12 @@ internal fun TopLevelPermanentDrawerSheet(
     selectedDestination: TopLevelDestination?,
     onClick: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
+    headerContent: @Composable () -> Unit = {},
 ) {
     PermanentDrawerSheet(
         modifier = modifier
     ) {
+        headerContent()
         Spacer(Modifier.height(12.dp))
         TopLevelDestination.entries.forEach { destination ->
             TopLevelDrawerItem(
