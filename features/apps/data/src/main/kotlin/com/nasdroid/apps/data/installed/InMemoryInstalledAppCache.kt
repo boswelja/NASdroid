@@ -25,7 +25,7 @@ class InMemoryInstalledAppCache(
         return if (searchTerm.isBlank()) {
             queries.getAll()
         } else {
-            queries.searchAll(searchTerm)
+            queries.searchAll("%$searchTerm%")
         }
             .asFlow()
             .mapToList(Dispatchers.IO)
