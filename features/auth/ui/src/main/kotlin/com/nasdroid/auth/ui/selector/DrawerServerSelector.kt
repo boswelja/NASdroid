@@ -28,6 +28,7 @@ import org.koin.androidx.compose.koinViewModel
  */
 @Composable
 fun DrawerServerSelector(
+    onLogout: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ServerSelectorViewModel = koinViewModel()
 ) {
@@ -35,7 +36,10 @@ fun DrawerServerSelector(
     DrawerServerSelector(
         serverAddress = selectedServer.url,
         serverName = selectedServer.name,
-        onLogoutClick = viewModel::logOut,
+        onLogoutClick = {
+            viewModel.logOut()
+            onLogout()
+        },
         modifier = modifier,
     )
 }

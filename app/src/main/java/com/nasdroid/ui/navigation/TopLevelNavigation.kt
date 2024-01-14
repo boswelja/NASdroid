@@ -28,6 +28,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -88,6 +89,12 @@ fun TopLevelNavigation(
 ) {
     val navigationMode = NavigationMode.rememberFromWindowSize(windowSizeClass)
     val modalDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    LaunchedEffect(navigationVisible, modalDrawerState) {
+        if (!navigationVisible) {
+            modalDrawerState.close()
+        }
+    }
 
     val navigationScaffold = @Composable {
         val coroutineScope = rememberCoroutineScope()

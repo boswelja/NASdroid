@@ -83,9 +83,10 @@ fun MainScreen(
         selectedDestination = selectedDestination,
         navigateTo = { destination ->
             navController.navigate(destination.getRoute()) {
-                val currentRoute = requireNotNull(currentBackstackEntry?.destination?.route)
-                popUpTo(currentRoute) {
-                    inclusive = true
+                selectedDestination?.getRoute()?.let {
+                    popUpTo(it) {
+                        inclusive = true
+                    }
                 }
             }
         },
@@ -94,6 +95,15 @@ fun MainScreen(
         navigateBack = navController::popBackStack,
         drawerHeaderContent = {
             DrawerServerSelector(
+                onLogout = {
+                    navController.navigate("auth") {
+                        selectedDestination?.getRoute()?.let {
+                            popUpTo(it) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                },
                 modifier = Modifier.padding(horizontal = MaterialThemeExt.paddings.large)
             )
         }
