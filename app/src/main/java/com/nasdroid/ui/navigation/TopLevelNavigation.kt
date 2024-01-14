@@ -28,6 +28,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,10 +84,17 @@ fun TopLevelNavigation(
     navigationVisible: Boolean = true,
     canNavigateBack: Boolean = false,
     navigateBack: () -> Unit = {},
+    drawerHeaderContent: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val navigationMode = NavigationMode.rememberFromWindowSize(windowSizeClass)
     val modalDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    LaunchedEffect(navigationVisible, modalDrawerState) {
+        if (!navigationVisible) {
+            modalDrawerState.close()
+        }
+    }
 
     val navigationScaffold = @Composable {
         val coroutineScope = rememberCoroutineScope()
@@ -136,7 +144,8 @@ fun TopLevelNavigation(
                 selectedDestination = selectedDestination,
                 navigateTo = navigateTo,
                 content = navigationScaffold,
-                modifier = modifier
+                modifier = modifier,
+                headerContent = drawerHeaderContent,
             )
         }
         PrimaryNavigationMode.Permanent -> {
@@ -144,7 +153,8 @@ fun TopLevelNavigation(
                 selectedDestination = selectedDestination,
                 navigateTo = navigateTo,
                 content = navigationScaffold,
-                modifier = modifier
+                modifier = modifier,
+                headerContent = drawerHeaderContent,
             )
         }
     }
