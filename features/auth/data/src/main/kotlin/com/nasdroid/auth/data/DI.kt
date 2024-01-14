@@ -1,5 +1,7 @@
 package com.nasdroid.auth.data
 
+import com.nasdroid.auth.data.currentserver.CurrentServerSource
+import com.nasdroid.auth.data.currentserver.InMemoryCurrentServerSource
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStoreImpl
 import com.nasdroid.auth.data.serverstore.sqldelight.createAuthDatabase
@@ -14,4 +16,5 @@ import org.koin.dsl.module
 val AuthDataModule = module {
     single { createAuthDatabase(androidApplication()) }
     singleOf(::AuthenticatedServersStoreImpl) bind AuthenticatedServersStore::class
+    singleOf(::InMemoryCurrentServerSource) bind CurrentServerSource::class
 }
