@@ -18,8 +18,8 @@ class GetCurrentServer(
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<Server?> {
         return currentServerSource.getCurrentServer()
-            .mapLatest {
-                it?.let { server ->
+            .mapLatest { currentServer ->
+                currentServer?.let { server ->
                     Server(
                         id = server.uid,
                         name = server.name,
