@@ -16,7 +16,9 @@ import com.nasdroid.apps.logic.installed.GetLogOptions
 import com.nasdroid.apps.logic.installed.RollbackApp
 import com.nasdroid.apps.logic.installed.StartApp
 import com.nasdroid.apps.logic.installed.StopApp
+import kotlinx.datetime.Clock
 import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 /**
@@ -24,6 +26,8 @@ import org.koin.dsl.module
  */
 val AppsLogicModule = module {
     includes(AppsDataModule)
+
+    single { Clock.System } bind Clock::class
 
     factoryOf(::GetAllAvailableApps)
     factoryOf(::GetAvailableAppsLegacy)
