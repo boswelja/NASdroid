@@ -22,7 +22,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nasdroid.apps.ui.appsGraph
 import com.nasdroid.auth.ui.authNavigation
+import com.nasdroid.auth.ui.selector.DrawerServerSelector
 import com.nasdroid.dashboard.ui.dashboardGraph
+import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.design.NasDroidTheme
 import com.nasdroid.reporting.reportingGraph
 import com.nasdroid.storage.ui.storageGraph
@@ -89,7 +91,12 @@ fun MainScreen(
         },
         navigationVisible = isNavigationVisible,
         canNavigateBack = canNavigateBack,
-        navigateBack = navController::popBackStack
+        navigateBack = navController::popBackStack,
+        drawerHeaderContent = {
+            DrawerServerSelector(
+                modifier = Modifier.padding(horizontal = MaterialThemeExt.paddings.large)
+            )
+        }
     ) {
         MainNavHost(
             navController = navController,
