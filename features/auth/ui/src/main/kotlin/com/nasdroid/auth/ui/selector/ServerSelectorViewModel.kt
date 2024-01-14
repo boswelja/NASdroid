@@ -3,11 +3,13 @@ package com.nasdroid.auth.ui.selector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.auth.logic.Server
-import com.nasdroid.auth.logic.auth.LogIn
+import com.nasdroid.auth.logic.auth.GetCurrentServer
 import com.nasdroid.auth.logic.auth.LogOut
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
 
 /**
  * Exposes all data and events needed for a selector that displays the current selected server, as
@@ -15,15 +17,20 @@ import kotlinx.coroutines.launch
  */
 class ServerSelectorViewModel(
     private val logOut: LogOut,
-    private val logIn: LogIn,
+    getCurrentServer: GetCurrentServer,
 ) : ViewModel() {
 
     /**
      * Flows the currently selected server.
      */
-    val selectedServer: StateFlow<Server> = MutableStateFlow(
-        Server(name = "Server name", url = "http://truenas.local", id = "")
-    )
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val selectedServer: StateFlow<Server> = getCurrentServer()
+        .mapLatest { it ?: FallbackServerDetails }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            FallbackServerDetails
+        )
 
     /**
      * Logs the user out of the current server.
@@ -32,12 +39,11 @@ class ServerSelectorViewModel(
         logOut.invoke()
     }
 
-    /**
-     * Switches the current authenticated server to the new selection.
-     */
-    fun switchServer(server: Server) {
-        viewModelScope.launch {
-            logIn.invoke(server)
-        }
+    companion object {
+        private val FallbackServerDetails = Server(
+            name = "Nothing",
+            url = "Please report this",
+            id = ""
+        )
     }
 }

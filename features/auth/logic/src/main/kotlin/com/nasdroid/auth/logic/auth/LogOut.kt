@@ -1,12 +1,14 @@
 package com.nasdroid.auth.logic.auth
 
 import com.nasdroid.api.ApiStateProvider
+import com.nasdroid.auth.data.currentserver.CurrentServerSource
 
 /**
  * Signs out the current user. See [invoke] for details.
  */
 class LogOut(
     private val apiStateProvider: ApiStateProvider,
+    private val currentServerSource: CurrentServerSource,
 ) {
 
     /**
@@ -16,5 +18,6 @@ class LogOut(
     operator fun invoke() {
         apiStateProvider.serverAddress = null
         apiStateProvider.authorization = null
+        currentServerSource.setCurrentServer(null)
     }
 }

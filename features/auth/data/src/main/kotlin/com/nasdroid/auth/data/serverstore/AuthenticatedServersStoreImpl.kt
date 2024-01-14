@@ -2,6 +2,7 @@ package com.nasdroid.auth.data.serverstore
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import com.nasdroid.auth.data.Server
 import com.nasdroid.auth.data.serverstore.sqldelight.AuthDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
