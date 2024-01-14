@@ -83,6 +83,7 @@ fun TopLevelNavigation(
     navigationVisible: Boolean = true,
     canNavigateBack: Boolean = false,
     navigateBack: () -> Unit = {},
+    drawerHeaderContent: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val navigationMode = NavigationMode.rememberFromWindowSize(windowSizeClass)
@@ -136,7 +137,8 @@ fun TopLevelNavigation(
                 selectedDestination = selectedDestination,
                 navigateTo = navigateTo,
                 content = navigationScaffold,
-                modifier = modifier
+                modifier = modifier,
+                headerContent = drawerHeaderContent,
             )
         }
         PrimaryNavigationMode.Permanent -> {
@@ -144,7 +146,8 @@ fun TopLevelNavigation(
                 selectedDestination = selectedDestination,
                 navigateTo = navigateTo,
                 content = navigationScaffold,
-                modifier = modifier
+                modifier = modifier,
+                headerContent = drawerHeaderContent,
             )
         }
     }
