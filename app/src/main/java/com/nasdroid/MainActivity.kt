@@ -81,9 +81,10 @@ fun MainScreen(
         selectedDestination = selectedDestination,
         navigateTo = { destination ->
             navController.navigate(destination.getRoute()) {
-                val currentRoute = requireNotNull(currentBackstackEntry?.destination?.route)
-                popUpTo(currentRoute) {
-                    inclusive = true
+                selectedDestination?.getRoute()?.let {
+                    popUpTo(it) {
+                        inclusive = true
+                    }
                 }
             }
         },
