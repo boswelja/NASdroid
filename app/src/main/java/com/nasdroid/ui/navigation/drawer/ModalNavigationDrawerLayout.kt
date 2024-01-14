@@ -14,7 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.ui.navigation.TopLevelDestination
 import kotlinx.coroutines.launch
 
@@ -76,7 +76,7 @@ internal fun TopLevelModalDrawerSheet(
         modifier = modifier
     ) {
         headerContent()
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(MaterialThemeExt.paddings.large))
         TopLevelDestination.entries.forEach { destination ->
             TopLevelDrawerItem(
                 destination = destination,
@@ -87,5 +87,6 @@ internal fun TopLevelModalDrawerSheet(
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
             )
         }
+        Spacer(Modifier.height(MaterialThemeExt.paddings.large))
     }
 }
