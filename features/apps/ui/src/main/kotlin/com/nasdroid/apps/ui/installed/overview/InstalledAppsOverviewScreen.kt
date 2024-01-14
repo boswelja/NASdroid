@@ -68,14 +68,10 @@ fun InstalledAppsOverviewScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
     Box(modifier) {
-        AnimatedVisibility(
+        LoadingIndicator(
             visible = isLoading,
-            modifier = Modifier.align(Alignment.TopCenter),
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        }
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
         LazyColumn(
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -101,8 +97,7 @@ fun InstalledAppsOverviewScreen(
                 }
             }
             item {
-                // TODO Don't use Spacer for extended FAB padding
-                Spacer(Modifier.height(56.dp))
+                Spacer(Modifier.height(56.dp)) // TODO Don't use Spacer for extended FAB padding
             }
         }
 
@@ -115,6 +110,21 @@ fun InstalledAppsOverviewScreen(
             Icon(Icons.Default.GetApp, contentDescription = null)
             Text("Discover Apps")
         }
+    }
+}
+
+@Composable
+internal fun LoadingIndicator(
+    visible: Boolean,
+    modifier: Modifier = Modifier
+) {
+    AnimatedVisibility(
+        visible = visible,
+        modifier = modifier,
+        enter = expandVertically(),
+        exit = shrinkVertically()
+    ) {
+        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
     }
 }
 
