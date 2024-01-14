@@ -1,5 +1,8 @@
 package com.nasdroid.apps.ui.installed.overview
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,6 +21,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -61,8 +65,13 @@ fun InstalledAppsOverviewScreen(
 
     val installedApps by viewModel.installedApps.collectAsState()
     val searchTerm by viewModel.searchTerm.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Box(modifier) {
+        LoadingIndicator(
+            visible = isLoading,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
         LazyColumn(
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -88,8 +97,7 @@ fun InstalledAppsOverviewScreen(
                 }
             }
             item {
-                // TODO Don't use Spacer for extended FAB padding
-                Spacer(Modifier.height(56.dp))
+                Spacer(Modifier.height(56.dp)) // TODO Don't use Spacer for extended FAB padding
             }
         }
 
@@ -106,6 +114,21 @@ fun InstalledAppsOverviewScreen(
 }
 
 @Composable
+internal fun LoadingIndicator(
+    visible: Boolean,
+    modifier: Modifier = Modifier
+) {
+    AnimatedVisibility(
+        visible = visible,
+        modifier = modifier,
+        enter = expandVertically(),
+        exit = shrinkVertically()
+    ) {
+        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+    }
+}
+
+@Composable
 internal fun SearchField(
     value: String,
     onValueChange: (String) -> Unit,
@@ -115,7 +138,8 @@ internal fun SearchField(
         mutableStateOf(value)
     }
     LaunchedEffect(key1 = searchQuery) {
-        delay(250.milliseconds)
+        // Debounce submitting updates
+        delay(100.milliseconds)
         onValueChange(searchQuery)
     }
     OutlinedTextField(

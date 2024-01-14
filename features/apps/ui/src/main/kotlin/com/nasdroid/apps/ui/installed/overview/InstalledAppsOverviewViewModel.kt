@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,13 @@ class InstalledAppsOverviewViewModel(
 
     private val _refreshTrigger = MutableSharedFlow<Unit>()
 
+    private val _loading = MutableStateFlow(true)
+
+    /**
+     * Flows whether this ViewModel is currently loading data for [installedApps].
+     */
+    val isLoading: StateFlow<Boolean> = _loading
+
     /**
      * A list of [InstalledAppOverview]s representing all installed apps.
      */
@@ -36,6 +44,9 @@ class InstalledAppsOverviewViewModel(
         .flatMapLatest { _searchTerm }
         .flatMapLatest {
             getInstalledApps(it)
+        }
+        .onEach {
+            _loading.value = false
         }
         .stateIn(
             viewModelScope,
@@ -83,10 +94,12 @@ class InstalledAppsOverviewViewModel(
      * Sets the term used to search the app list. This will trigger a reload of the app list.
      */
     fun setSearchTerm(searchTerm: String) {
+        _loading.value = true
         _searchTerm.value = searchTerm
     }
 
     private suspend fun refreshSuspending() {
+        _loading.value = true
         _refreshTrigger.emit(Unit)
     }
 }
