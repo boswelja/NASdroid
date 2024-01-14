@@ -41,9 +41,9 @@ class GetInstalledApps(
                             installedApp.toCachedApp()
                         }
                     )
-                    lastSearchQuery = searchTerm
                     lastCacheRefresh = queryTime
                 }
+                lastSearchQuery = searchTerm
             }
             .mapLatest { cachedInstalledApps ->
                 cachedInstalledApps.map { cachedApp ->
