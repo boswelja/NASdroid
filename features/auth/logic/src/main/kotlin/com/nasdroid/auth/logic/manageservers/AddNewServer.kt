@@ -4,9 +4,9 @@ import com.nasdroid.api.ApiStateProvider
 import com.nasdroid.api.Authorization
 import com.nasdroid.auth.logic.then
 import com.nasdroid.api.v2.system.SystemV2Api
+import com.nasdroid.auth.data.Server
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 import com.nasdroid.auth.data.serverstore.Authentication
-import com.nasdroid.auth.data.Server
 import com.nasdroid.auth.logic.auth.TestServerAuthentication
 
 /**

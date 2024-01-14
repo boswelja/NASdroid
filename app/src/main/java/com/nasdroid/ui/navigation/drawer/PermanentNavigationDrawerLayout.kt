@@ -15,7 +15,6 @@ import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.ui.navigation.TopLevelDestination
 
