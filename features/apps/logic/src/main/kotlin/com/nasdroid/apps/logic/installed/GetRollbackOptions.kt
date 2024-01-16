@@ -19,6 +19,7 @@ class GetRollbackOptions(
         return RollbackOptions(
             canRollBack = availableVersions.isNotEmpty(),
             availableVersions = availableVersions
+                .sortedDescending()
         )
     }
 }
@@ -28,9 +29,11 @@ class GetRollbackOptions(
  * earlier version.
  *
  * @property canRollBack Whether rolling back the app is possible.
- * @property availableVersions A set of available versions that the app can be rolled back to.
+ * @property availableVersions A list of available versions that the app can be rolled back to.
+ * Versions are sorted such that the highest (latest) version is at the top, and the lowest
+ * (earliest) version is at the bottom.
  */
 data class RollbackOptions(
     val canRollBack: Boolean,
-    val availableVersions: Set<String>
+    val availableVersions: List<String>
 )
