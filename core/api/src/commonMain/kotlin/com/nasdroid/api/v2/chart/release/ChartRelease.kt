@@ -48,7 +48,9 @@ data class ChartRelease(
     @SerialName("portals")
     val portals: Portals?,
     @SerialName("hooks")
-    val hooks: List<Hook>?
+    val hooks: List<Hook>?,
+    @SerialName("history")
+    val history: Map<String, ChartRelease>?
 ) {
     @Serializable
     enum class Status {

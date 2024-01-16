@@ -39,9 +39,11 @@ interface ChartReleaseV2Api {
     /**
      * Retrieves details of a single [ChartRelease] with the given ID.
      *
+     * @param id The ID of the release whose details should be retrieved.
+     * @param includeHistory Whether the release history should be included.
      * @throws HttpNotOkException
      */
-    suspend fun getChartRelease(id: String): ChartRelease
+    suspend fun getChartRelease(id: String, includeHistory: Boolean = false): ChartRelease
 
     /**
      * Updates the details for the chart release whose ID matches the given [ChartRelease.id].
