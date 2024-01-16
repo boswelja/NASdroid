@@ -51,9 +51,9 @@ class GetMemoryUsageDataTest {
         assertTrue(result.isSuccess)
         assertEquals(
             MemoryUsageData(
-                used = 40326.bytes,
-                free = 48345.bytes,
-                cached = 40092.bytes
+                used = 40326620000.bytes,
+                free = 48345160000.bytes,
+                cached = 40092330000.bytes
             ),
             result.getOrNull()
         )
