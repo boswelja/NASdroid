@@ -72,16 +72,12 @@ class GetNetworkConfigurationTest {
                 title = "Interface Traffic ({identifier})",
                 verticalLabel = "Bits/s",
                 identifiers = listOf("eno1", "eno2"),
-                stacked = false,
-                stackedShowTotal = false
             ),
             ReportingGraph(
                 name = "cpu",
                 title = "CPU Usage",
                 verticalLabel = "%CPU",
                 identifiers = null,
-                stacked = true,
-                stackedShowTotal = false
             ),
         )
     }
