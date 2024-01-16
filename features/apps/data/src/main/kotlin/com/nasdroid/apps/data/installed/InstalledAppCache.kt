@@ -40,11 +40,16 @@ interface InstalledAppCache {
     suspend fun setState(appName: String, state: CachedInstalledApp.State)
 
     /**
-     * Asynchronously set whether an update is available for any cached app that matches the
-     * specified name.
+     * Asynchronously set both the app version and whether there is an update available for any
+     * cached app that matches the specified name.
      *
      * @param appName The name of the [CachedInstalledApp] whose state needs updating.
+     * @param version The version the app is currently running.
      * @param updateAvailable Whether the app has an update available.
      */
-    suspend fun setUpdateAvailable(appName: String, updateAvailable: Boolean)
+    suspend fun setAppVersion(
+        appName: String,
+        version: String,
+        updateAvailable: Boolean
+    )
 }

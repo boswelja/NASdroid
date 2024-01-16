@@ -79,9 +79,12 @@ class InMemoryInstalledAppCache(
         }
     }
 
-    override suspend fun setUpdateAvailable(appName: String, updateAvailable: Boolean) {
+    override suspend fun setAppVersion(appName: String, version: String, updateAvailable: Boolean) {
         withContext(Dispatchers.IO) {
-            queries.updateUpdateAvailable(update_available = updateAvailable, app_name = appName)
+            queries.transaction {
+                queries.updateUpdateAvailable(update_available = updateAvailable, app_name = appName)
+                queries.updateAppVersion(version = version, app_name = appName)
+            }
         }
     }
 }
