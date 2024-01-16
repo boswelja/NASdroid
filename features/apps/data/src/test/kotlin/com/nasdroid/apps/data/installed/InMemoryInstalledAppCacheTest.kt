@@ -132,7 +132,7 @@ class InMemoryInstalledAppCacheTest {
     }
 
     @Test
-    fun `setUpdateAvailable sets the updateAvailable of the app in cache`() = runTest {
+    fun `setAppVersion sets the updateAvailable and version of the app in cache`() = runTest {
         val apps = listOf(
             CachedInstalledApp(
                 name = "Test App",
@@ -150,11 +150,10 @@ class InMemoryInstalledAppCacheTest {
         installedAppCache.getInstalledApps("").test {
             assertEquals(apps, awaitItem())
 
-            val newState = false
             apps.forEach {
-                installedAppCache.setUpdateAvailable(it.name, newState)
+                installedAppCache.setAppVersion(it.name, "1.0.1", false)
             }
-            val appsWithUpdatedStates = apps.map { it.copy(hasUpdateAvailable = newState) }
+            val appsWithUpdatedStates = apps.map { it.copy(hasUpdateAvailable = false, version = "1.0.1") }
 
             assertEquals(appsWithUpdatedStates, awaitItem())
         }

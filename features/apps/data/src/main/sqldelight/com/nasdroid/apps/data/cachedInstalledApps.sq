@@ -35,3 +35,8 @@ updateUpdateAvailable:
 UPDATE cachedInstalledApps
 SET update_available = ?
 WHERE app_name = ?;
+
+updateAppVersion:
+UPDATE cachedInstalledApps
+SET version = ?
+WHERE app_name = ?;
