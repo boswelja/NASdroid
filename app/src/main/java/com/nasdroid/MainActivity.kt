@@ -97,8 +97,8 @@ fun MainScreen(
             DrawerServerSelector(
                 onLogout = {
                     navController.navigate("auth") {
-                        selectedDestination?.getRoute()?.let {
-                            popUpTo(it) {
+                        selectedDestination?.getRoute()?.let { selectedDestinationRoute ->
+                            popUpTo(selectedDestinationRoute) {
                                 inclusive = true
                             }
                         }
