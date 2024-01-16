@@ -83,8 +83,8 @@ fun MainScreen(
         selectedDestination = selectedDestination,
         navigateTo = { destination ->
             navController.navigate(destination.getRoute()) {
-                selectedDestination?.getRoute()?.let {
-                    popUpTo(it) {
+                selectedDestination?.getRoute()?.let { selectedDestinationRoute ->
+                    popUpTo(selectedDestinationRoute) {
                         inclusive = true
                     }
                 }

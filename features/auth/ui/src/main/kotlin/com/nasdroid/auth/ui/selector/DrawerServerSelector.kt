@@ -23,6 +23,8 @@ import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.design.NasDroidTheme
 import org.koin.androidx.compose.koinViewModel
 
+private const val SERVER_SELECTOR_ASPECT_RATIO = 2.2f
+
 /**
  * An authenticated server selector designed to fit inside a navigation drawer as a header.
  */
@@ -53,7 +55,7 @@ internal fun DrawerServerSelector(
 ) {
     CompositionLocalProvider(LocalContentColor provides MaterialThemeExt.colorScheme.onSurfaceVariant) {
         Row(
-            modifier = modifier.aspectRatio(2.2f),
+            modifier = modifier.aspectRatio(SERVER_SELECTOR_ASPECT_RATIO),
             verticalAlignment = Alignment.Bottom
         ) {
             Column(
