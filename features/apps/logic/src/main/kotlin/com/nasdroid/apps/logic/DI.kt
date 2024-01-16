@@ -13,6 +13,7 @@ import com.nasdroid.apps.logic.installed.GetAppLogs
 import com.nasdroid.apps.logic.installed.GetInstalledApp
 import com.nasdroid.apps.logic.installed.GetInstalledApps
 import com.nasdroid.apps.logic.installed.GetLogOptions
+import com.nasdroid.apps.logic.installed.GetRollbackOptions
 import com.nasdroid.apps.logic.installed.RollbackApp
 import com.nasdroid.apps.logic.installed.StartApp
 import com.nasdroid.apps.logic.installed.StopApp
@@ -43,6 +44,7 @@ val AppsLogicModule = module {
     factoryOf(::GetInstalledApp)
     factoryOf(::GetInstalledApps)
     factoryOf(::GetLogOptions)
+    factoryOf(::GetRollbackOptions)
     factoryOf(::RollbackApp)
     factoryOf(::StartApp)
     factoryOf(::StopApp)
