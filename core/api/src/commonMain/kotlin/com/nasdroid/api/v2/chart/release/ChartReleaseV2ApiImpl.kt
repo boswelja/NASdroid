@@ -8,6 +8,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.parameters
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -31,8 +32,12 @@ internal class ChartReleaseV2ApiImpl(
         return response.body()
     }
 
-    override suspend fun getChartRelease(id: String): ChartRelease {
-        val response = httpClient.get("chart/release/id/$id")
+    override suspend fun getChartRelease(id: String, includeHistory: Boolean): ChartRelease {
+        val response = httpClient.get("chart/release/id/$id") {
+            parameters {
+                append("extra.history", includeHistory.toString())
+            }
+        }
         return response.body()
     }
 
