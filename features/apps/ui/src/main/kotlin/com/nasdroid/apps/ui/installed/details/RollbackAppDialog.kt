@@ -54,12 +54,12 @@ fun RollbackAppDialog(
     loading: Boolean = false
 ) {
     var selectedVersion by rememberSaveable(availableVersions) { mutableStateOf(availableVersions.firstOrNull()) }
-    var rollbackSnapshots by rememberSaveable { mutableStateOf(false) }
+    var isRollbackSnapshots by rememberSaveable { mutableStateOf(false) }
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             FilledTonalButton(
-                onClick = { onConfirm(checkNotNull(selectedVersion), rollbackSnapshots) },
+                onClick = { onConfirm(checkNotNull(selectedVersion), isRollbackSnapshots) },
                 enabled = !loading
             ) {
                 Text("Roll Back")
@@ -82,8 +82,8 @@ fun RollbackAppDialog(
                 RollbackConfigurationSelector(
                     availableVersions = availableVersions,
                     selectedVersion = selectedVersion.orEmpty(),
-                    rollbackSnapshots = rollbackSnapshots,
-                    onRollbackSnapshotsChange = { rollbackSnapshots = it },
+                    rollbackSnapshots = isRollbackSnapshots,
+                    onRollbackSnapshotsChange = { isRollbackSnapshots = it },
                     onSelectedVersionChange = { selectedVersion = it },
                     enabled = !loading
                 )
@@ -111,7 +111,7 @@ internal fun RollbackConfigurationSelector(
     contentPadding: PaddingValues = PaddingValues(),
     enabled: Boolean = true,
 ) {
-    var versionSelectExpanded by remember { mutableStateOf(false) }
+    var isVersionSelectExpanded by remember { mutableStateOf(false) }
     val itemPadding = PaddingValues(
         start = contentPadding.calculateStartPadding(LocalLayoutDirection.current),
         end = contentPadding.calculateEndPadding(LocalLayoutDirection.current)
@@ -122,8 +122,8 @@ internal fun RollbackConfigurationSelector(
         verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium)
     ) {
         ExposedDropdownMenuBox(
-            expanded = versionSelectExpanded,
-            onExpandedChange = { versionSelectExpanded = !versionSelectExpanded },
+            expanded = isVersionSelectExpanded,
+            onExpandedChange = { isVersionSelectExpanded = !isVersionSelectExpanded },
             modifier = Modifier.padding(itemPadding)
         ) {
             TextField(
@@ -138,15 +138,15 @@ internal fun RollbackConfigurationSelector(
                 trailingIcon = { Icon(Icons.Default.ArrowDropDown, null) }
             )
             ExposedDropdownMenu(
-                expanded = versionSelectExpanded,
-                onDismissRequest = { versionSelectExpanded = false },
+                expanded = isVersionSelectExpanded,
+                onDismissRequest = { isVersionSelectExpanded = false },
             ) {
                 availableVersions.forEach { version ->
                     DropdownMenuItem(
                         text = { Text(version) },
                         onClick = {
                             onSelectedVersionChange(version)
-                            versionSelectExpanded = false
+                            isVersionSelectExpanded = false
                         }
                     )
                 }

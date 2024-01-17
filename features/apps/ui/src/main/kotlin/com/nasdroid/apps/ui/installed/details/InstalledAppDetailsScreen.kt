@@ -42,22 +42,22 @@ fun InstalledAppDetailsScreen(
     viewModel: InstalledAppDetailsViewModel = koinViewModel()
 ) {
     val appDetails by viewModel.appDetails.collectAsState()
-    var showRollbackDialog by rememberSaveable(appDetails) { mutableStateOf(false) }
+    var isShowRollbackDialog by rememberSaveable(appDetails) { mutableStateOf(false) }
 
     AnimatedContent(
         targetState = appDetails,
         label = "Installed App Details Content",
         transitionSpec = { fadeIn() togetherWith fadeOut() }
-    ) {
-        if (it != null) {
+    ) { installedAppDetails ->
+        if (installedAppDetails != null) {
             InstalledAppDetailsContent(
-                installedAppDetails = it,
+                installedAppDetails = installedAppDetails,
                 onDeleteClick = {
                     viewModel.tryDeleteApp(true)
                     navigateUp()
                 },
                 onRollbackClick = {
-                    showRollbackDialog = true
+                    isShowRollbackDialog = true
                 },
                 modifier = modifier,
                 contentPadding = contentPadding,
@@ -68,15 +68,15 @@ fun InstalledAppDetailsScreen(
             }
         }
     }
-    if (showRollbackDialog) {
+    if (isShowRollbackDialog) {
         val rollbackOptions by viewModel.rollbackOptions.collectAsState()
         RollbackAppDialog(
             availableVersions = rollbackOptions?.availableVersions.orEmpty(),
             onConfirm = { version, rollbackSnapshots ->
                 viewModel.tryRollBackApp(version, rollbackSnapshots)
-                showRollbackDialog = false
+                isShowRollbackDialog = false
             },
-            onDismiss = { showRollbackDialog = false },
+            onDismiss = { isShowRollbackDialog = false },
             loading = rollbackOptions == null
         )
     }
