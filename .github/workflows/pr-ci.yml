@@ -22,3 +22,27 @@ jobs:
         uses: gradle/gradle-build-action@v2.7.0
       - name: Build
         run: ./gradlew assemble${{ matrix.variant }} --scan
+
+  unit-test:
+    needs: build
+    strategy:
+      matrix:
+        variant: [Debug]
+        module:
+          - core:capacity
+          - features:apps:data
+          - features:apps:logic
+          - features:dashboard:logic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.9.0
+        with:
+          java-version: 17
+          distribution: temurin
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2.7.0
+      - name: Run Unit Tests
+        run: ./gradlew ${{ matrix.module }}:test${{ matrix.variant }}UnitTest

@@ -6,6 +6,7 @@ import com.nasdroid.api.v2.reporting.ReportingV2Api
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import kotlin.math.roundToLong
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -53,13 +54,13 @@ class GetNetworkUsageDataTest {
                 adapterUtilisation = listOf(
                     NetworkUsageData.AdapterUtilisation(
                         name = "eno1",
-                        receivedBits = (17.33774 * 1000 * 1000).toLong(),
-                        sentBits = (4.876272 * 1000 * 1000).toLong()
+                        receivedBits = (17.33774 * 1000).roundToLong(),
+                        sentBits = (4.876272 * 1000).roundToLong()
                     ),
                     NetworkUsageData.AdapterUtilisation(
                         name = "eno2",
-                        receivedBits = (17.33774 * 1000 * 1000).toLong(),
-                        sentBits = (4.876272 * 1000 * 1000).toLong()
+                        receivedBits = (17.33774 * 1000).roundToLong(),
+                        sentBits = (4.876272 * 1000).roundToLong()
                     )
                 )
             ),

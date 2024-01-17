@@ -1,10 +1,31 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.library)
 
     alias(libs.plugins.detekt)
 }
 
+android {
+    namespace = "com.nasdroid.core.capacity"
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+    lint {
+        sarifReport = true
+        htmlReport = false
+    }
+}
+
 kotlin {
+    androidTarget()
     jvm()
     jvmToolchain(17)
 
