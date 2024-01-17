@@ -42,18 +42,22 @@ fun InstalledAppDetailsScreen(
     viewModel: InstalledAppDetailsViewModel = koinViewModel()
 ) {
     val appDetails by viewModel.appDetails.collectAsState()
+    var isShowRollbackDialog by rememberSaveable(appDetails) { mutableStateOf(false) }
 
     AnimatedContent(
         targetState = appDetails,
         label = "Installed App Details Content",
         transitionSpec = { fadeIn() togetherWith fadeOut() }
-    ) {
-        if (it != null) {
+    ) { installedAppDetails ->
+        if (installedAppDetails != null) {
             InstalledAppDetailsContent(
-                installedAppDetails = it,
+                installedAppDetails = installedAppDetails,
                 onDeleteClick = {
                     viewModel.tryDeleteApp(true)
                     navigateUp()
+                },
+                onRollbackClick = {
+                    isShowRollbackDialog = true
                 },
                 modifier = modifier,
                 contentPadding = contentPadding,
@@ -64,6 +68,18 @@ fun InstalledAppDetailsScreen(
             }
         }
     }
+    if (isShowRollbackDialog) {
+        val rollbackOptions by viewModel.rollbackOptions.collectAsState()
+        RollbackAppDialog(
+            availableVersions = rollbackOptions?.availableVersions.orEmpty(),
+            onConfirm = { version, rollbackSnapshots ->
+                viewModel.tryRollBackApp(version, rollbackSnapshots)
+                isShowRollbackDialog = false
+            },
+            onDismiss = { isShowRollbackDialog = false },
+            loading = rollbackOptions == null
+        )
+    }
 }
 
 /**
@@ -73,6 +89,7 @@ fun InstalledAppDetailsScreen(
 fun InstalledAppDetailsContent(
     installedAppDetails: InstalledAppDetails,
     onDeleteClick: () -> Unit,
+    onRollbackClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
@@ -90,7 +107,7 @@ fun InstalledAppDetailsContent(
             ApplicationInfo(
                 installedAppDetails = installedAppDetails,
                 onEditClick = { /* TODO */ },
-                onRollBackClick = { /* TODO */ },
+                onRollBackClick = onRollbackClick,
                 onDeleteClick = {
                     isShowDeleteDialog = true
                 }

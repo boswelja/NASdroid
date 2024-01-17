@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.apps.logic.installed.DeleteApp
 import com.nasdroid.apps.logic.installed.GetInstalledApp
+import com.nasdroid.apps.logic.installed.GetRollbackOptions
 import com.nasdroid.apps.logic.installed.InstalledAppDetails
+import com.nasdroid.apps.logic.installed.RollbackApp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +24,8 @@ class InstalledAppDetailsViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val getInstalledApp: GetInstalledApp,
     private val deleteApp: DeleteApp,
+    private val getRollbackOptions: GetRollbackOptions,
+    private val rollbackApp: RollbackApp,
 ) : ViewModel() {
 
     /**
@@ -37,6 +41,24 @@ class InstalledAppDetailsViewModel(
                 // We treat "null" as loading, so we want to reset the "loading" state first.
                 emit(null)
                 emit(it?.let { getInstalledApp(it).getOrNull() })
+            }
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Lazily,
+            null
+        )
+
+    /**
+     * The options available to the user when initiating a rollback of the installed app.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val rollbackOptions = appName
+        .flatMapLatest {
+            flow {
+                // We treat "null" as loading, so we want to reset the "loading" state first.
+                emit(null)
+                emit(it?.let { getRollbackOptions(it) })
             }
         }
         .stateIn(
@@ -71,6 +93,15 @@ class InstalledAppDetailsViewModel(
     fun tryDeleteApp(deleteUnusedImages: Boolean) {
         viewModelScope.launch {
             deleteApp(checkNotNull(appName.value), deleteUnusedImages)
+        }
+    }
+
+    /**
+     * Attempts to roll back the installed version of the app whose name matches [appName].
+     */
+    fun tryRollBackApp(targetVersion: String, rollbackSnapshots: Boolean) {
+        viewModelScope.launch {
+            rollbackApp(checkNotNull(appName.value), targetVersion, rollbackSnapshots)
         }
     }
 }
