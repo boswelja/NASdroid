@@ -50,7 +50,7 @@ data class ChartRelease(
     @SerialName("hooks")
     val hooks: List<Hook>?,
     @SerialName("history")
-    val history: Map<String, ChartRelease>?
+    val history: Map<String, ChartHistoryItem>?
 ) {
     @Serializable
     enum class Status {
@@ -170,6 +170,135 @@ data class ChartRelease(
             @SerialName("open")
             override val open: List<String>?
         ) : Portals()
+    }
+
+    @Serializable
+    data class Hook(
+        @SerialName("name")
+        val name: String,
+        @SerialName("kind")
+        val kind: String,
+        @SerialName("path")
+        val path: String,
+        @SerialName("manifest")
+        val manifest: String,
+        @SerialName("events")
+        val events: List<String>,
+        @SerialName("last_run")
+        val lastRun: LastRun,
+        @SerialName("delete_policies")
+        val deletePolicies: List<String>,
+        @SerialName("weight")
+        val weight: Int?
+    ) {
+        @Serializable
+        data class LastRun(
+            @SerialName("started_at")
+            val startedAt: String,
+            @SerialName("completed_at")
+            val completedAt: String,
+            @SerialName("phase")
+            val phase: String
+        )
+    }
+}
+@Serializable
+data class ChartHistoryItem(
+    @SerialName("name")
+    val name: String,
+    @SerialName("info")
+    val info: Info,
+    @SerialName("config")
+    val config: Map<String, JsonElement>,
+    @SerialName("version")
+    val version: Int,
+    @SerialName("namespace")
+    val namespace: String,
+    @SerialName("chart_metadata")
+    val chartMetadata: ChartMetadata,
+    @SerialName("id")
+    val id: String,
+    @SerialName("catalog")
+    val catalog: String,
+    @SerialName("catalog_train")
+    val catalogTrain: String,
+    @SerialName("human_version")
+    val humanVersion: String,
+    @SerialName("hooks")
+    val hooks: List<Hook>?,
+    @SerialName("history")
+    val history: Map<String, ChartRelease>?
+) {
+    @Serializable
+    data class Info(
+        @SerialName("first_deployed")
+        val firstDeployed: String,
+        @SerialName("last_deployed")
+        val lastDeployed: String,
+        @SerialName("deleted")
+        val deleted: String,
+        @SerialName("description")
+        val description: String,
+        @SerialName("status")
+        val status: String,
+        @SerialName("notes")
+        val notes: String?
+    )
+
+    @Serializable
+    data class ChartMetadata(
+        @SerialName("name")
+        val name: String,
+        @SerialName("home")
+        val home: String,
+        @SerialName("version")
+        val version: String,
+        @SerialName("description")
+        val description: String,
+        @SerialName("maintainers")
+        val maintainers: List<Maintainer>,
+        @SerialName("icon")
+        val icon: String,
+        @SerialName("apiVersion")
+        val apiVersion: String,
+        @SerialName("appVersion")
+        val appVersion: String,
+        @SerialName("annotations")
+        val annotations: Map<String, String>,
+        @SerialName("kubeVersion")
+        val kubeVersion: String,
+        @SerialName("dependencies")
+        val dependencies: List<Dependency>,
+        @SerialName("type")
+        val type: String?,
+        @SerialName("latest_chart_version")
+        val latestChartVersion: String?,
+        @SerialName("sources")
+        val sources: List<String>?,
+        @SerialName("keywords")
+        val keywords: List<String>?,
+    ) {
+        @Serializable
+        data class Maintainer(
+            @SerialName("name")
+            val name: String,
+            @SerialName("email")
+            val email: String,
+            @SerialName("url")
+            val url: String
+        )
+
+        @Serializable
+        data class Dependency(
+            @SerialName("name")
+            val name: String,
+            @SerialName("version")
+            val version: String,
+            @SerialName("repository")
+            val repository: String,
+            @SerialName("enabled")
+            val enabled: Boolean
+        )
     }
 
     @Serializable
