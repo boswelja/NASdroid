@@ -42,6 +42,7 @@ fun InstalledAppDetailsScreen(
     viewModel: InstalledAppDetailsViewModel = koinViewModel()
 ) {
     val appDetails by viewModel.appDetails.collectAsState()
+    var showRollbackDialog by rememberSaveable(appDetails) { mutableStateOf(false) }
 
     AnimatedContent(
         targetState = appDetails,
@@ -55,6 +56,9 @@ fun InstalledAppDetailsScreen(
                     viewModel.tryDeleteApp(true)
                     navigateUp()
                 },
+                onRollbackClick = {
+                    showRollbackDialog = true
+                },
                 modifier = modifier,
                 contentPadding = contentPadding,
             )
@@ -63,6 +67,18 @@ fun InstalledAppDetailsScreen(
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
         }
+    }
+    if (showRollbackDialog) {
+        val rollbackOptions by viewModel.rollbackOptions.collectAsState()
+        RollbackAppDialog(
+            availableVersions = rollbackOptions?.availableVersions.orEmpty(),
+            onConfirm = { version, rollbackSnapshots ->
+                viewModel.tryRollBackApp(version, rollbackSnapshots)
+                showRollbackDialog = false
+            },
+            onDismiss = { showRollbackDialog = false },
+            loading = rollbackOptions == null
+        )
     }
 }
 
@@ -73,6 +89,7 @@ fun InstalledAppDetailsScreen(
 fun InstalledAppDetailsContent(
     installedAppDetails: InstalledAppDetails,
     onDeleteClick: () -> Unit,
+    onRollbackClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
@@ -90,7 +107,7 @@ fun InstalledAppDetailsContent(
             ApplicationInfo(
                 installedAppDetails = installedAppDetails,
                 onEditClick = { /* TODO */ },
-                onRollBackClick = { /* TODO */ },
+                onRollBackClick = onRollbackClick,
                 onDeleteClick = {
                     isShowDeleteDialog = true
                 }
