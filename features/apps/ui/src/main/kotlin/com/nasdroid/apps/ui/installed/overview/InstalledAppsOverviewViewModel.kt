@@ -94,8 +94,10 @@ class InstalledAppsOverviewViewModel(
      * Sets the term used to search the app list. This will trigger a reload of the app list.
      */
     fun setSearchTerm(searchTerm: String) {
-        _loading.value = true
-        _searchTerm.value = searchTerm
+        if (_searchTerm.value != searchTerm) {
+            _loading.value = true
+            _searchTerm.value = searchTerm
+        }
     }
 
     private suspend fun refreshSuspending() {
