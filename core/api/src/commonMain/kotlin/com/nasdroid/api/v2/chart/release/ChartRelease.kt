@@ -224,10 +224,6 @@ data class ChartHistoryItem(
     val catalogTrain: String,
     @SerialName("human_version")
     val humanVersion: String,
-    @SerialName("hooks")
-    val hooks: List<Hook>?,
-    @SerialName("history")
-    val history: Map<String, ChartRelease>?
 ) {
     @Serializable
     data class Info(
@@ -271,8 +267,6 @@ data class ChartHistoryItem(
         val dependencies: List<Dependency>,
         @SerialName("type")
         val type: String?,
-        @SerialName("latest_chart_version")
-        val latestChartVersion: String?,
         @SerialName("sources")
         val sources: List<String>?,
         @SerialName("keywords")
@@ -298,36 +292,6 @@ data class ChartHistoryItem(
             val repository: String,
             @SerialName("enabled")
             val enabled: Boolean
-        )
-    }
-
-    @Serializable
-    data class Hook(
-        @SerialName("name")
-        val name: String,
-        @SerialName("kind")
-        val kind: String,
-        @SerialName("path")
-        val path: String,
-        @SerialName("manifest")
-        val manifest: String,
-        @SerialName("events")
-        val events: List<String>,
-        @SerialName("last_run")
-        val lastRun: LastRun,
-        @SerialName("delete_policies")
-        val deletePolicies: List<String>,
-        @SerialName("weight")
-        val weight: Int?
-    ) {
-        @Serializable
-        data class LastRun(
-            @SerialName("started_at")
-            val startedAt: String,
-            @SerialName("completed_at")
-            val completedAt: String,
-            @SerialName("phase")
-            val phase: String
         )
     }
 }
