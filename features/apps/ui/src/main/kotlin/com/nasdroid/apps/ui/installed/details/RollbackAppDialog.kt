@@ -1,5 +1,8 @@
 package com.nasdroid.apps.ui.installed.details
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -46,30 +50,44 @@ fun RollbackAppDialog(
     availableVersions: List<String>,
     onConfirm: (version: String, rollbackSnapshots: Boolean) -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    loading: Boolean = false
 ) {
-    var selectedVersion by rememberSaveable(availableVersions) { mutableStateOf(availableVersions.first()) }
+    var selectedVersion by rememberSaveable(availableVersions) { mutableStateOf(availableVersions.firstOrNull()) }
     var rollbackSnapshots by rememberSaveable { mutableStateOf(false) }
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            FilledTonalButton(onClick = { onConfirm(selectedVersion, rollbackSnapshots) }) {
+            FilledTonalButton(
+                onClick = { onConfirm(checkNotNull(selectedVersion), rollbackSnapshots) },
+                enabled = !loading
+            ) {
                 Text("Roll Back")
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onDismiss, enabled = !loading) {
                 Text("Cancel")
             }
         },
         text = {
-            RollbackConfigurationSelector(
-                availableVersions = availableVersions,
-                selectedVersion = selectedVersion,
-                rollbackSnapshots = rollbackSnapshots,
-                onRollbackSnapshotsChange = { rollbackSnapshots = it },
-                onSelectedVersionChange = { selectedVersion = it }
-            )
+            AnimatedVisibility(
+                visible = loading,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                LinearProgressIndicator(Modifier.fillMaxWidth())
+            }
+            Column {
+                RollbackConfigurationSelector(
+                    availableVersions = availableVersions,
+                    selectedVersion = selectedVersion.orEmpty(),
+                    rollbackSnapshots = rollbackSnapshots,
+                    onRollbackSnapshotsChange = { rollbackSnapshots = it },
+                    onSelectedVersionChange = { selectedVersion = it },
+                    enabled = !loading
+                )
+            }
         },
         title = {
             Text("Roll Back")
@@ -90,7 +108,8 @@ internal fun RollbackConfigurationSelector(
     onRollbackSnapshotsChange: (Boolean) -> Unit,
     onSelectedVersionChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
+    contentPadding: PaddingValues = PaddingValues(),
+    enabled: Boolean = true,
 ) {
     var versionSelectExpanded by remember { mutableStateOf(false) }
     val itemPadding = PaddingValues(
@@ -111,6 +130,7 @@ internal fun RollbackConfigurationSelector(
                 value = selectedVersion,
                 onValueChange = onSelectedVersionChange,
                 readOnly = true,
+                enabled = enabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .menuAnchor(),
@@ -145,7 +165,7 @@ internal fun RollbackConfigurationSelector(
                 text = "Roll back snapshots",
                 style = MaterialThemeExt.typography.bodyLarge
             )
-            Checkbox(checked = rollbackSnapshots, onCheckedChange = null)
+            Checkbox(checked = rollbackSnapshots, onCheckedChange = null, enabled = enabled)
         }
     }
 }
@@ -164,6 +184,21 @@ fun RollbackAppDialogPreview() {
             onConfirm = { _, _ -> /* no-op */ },
             onDismiss = { /* no-op */ },
             modifier = Modifier.padding(12.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RollbackAppDialogLoadingPreview() {
+    val availableVersions = emptyList<String>()
+    NasDroidTheme {
+        RollbackAppDialog(
+            availableVersions = availableVersions,
+            onConfirm = { _, _ -> /* no-op */ },
+            onDismiss = { /* no-op */ },
+            modifier = Modifier.padding(12.dp),
+            loading = true
         )
     }
 }
