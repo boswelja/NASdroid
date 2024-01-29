@@ -17,7 +17,7 @@ compose-foundation = "1.6.0-rc01"
 compose-icons = "1.6.0-rc01"
 compose-material3 = "1.2.0-beta02"
 compose-ui = "1.6.0-rc01"
-accompanist = "0.33.2-alpha"
+accompanist = "0.34.0"
 menuprovider = "1.2.2"
 
 sqldelight = "2.0.1"
