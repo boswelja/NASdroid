@@ -41,6 +41,7 @@ jobs:
           - core/api
           - core/capacity
           - core/compose-logviewer
+          - core/compose-markdown
           - core/compose-urllauncher
           - features/apps
           - features/auth

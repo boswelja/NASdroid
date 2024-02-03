@@ -19,6 +19,8 @@ core:capacity:
   - core/capacity/**
 core:compose-logviewer:
   - core/compose-logviewer/**
+core:compose-markdown:
+  - core/compose-markdown/**
 core:compose-urllauncher:
   - core/compose-urllauncher/**
 core:design:
