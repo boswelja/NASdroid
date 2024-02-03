@@ -32,10 +32,11 @@ internal class ChartReleaseV2ApiImpl(
         return response.body()
     }
 
-    override suspend fun getChartRelease(id: String, includeHistory: Boolean): ChartRelease {
+    override suspend fun getChartRelease(id: String, includeHistory: Boolean, includeSchema: Boolean): ChartRelease {
         val response = httpClient.get("chart/release/id/$id") {
             url {
                 parameters.append("extra.history", includeHistory.toString())
+                parameters.append("extra.include_chart_schema", includeSchema.toString())
             }
         }
         return response.body()

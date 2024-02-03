@@ -50,7 +50,9 @@ data class ChartRelease(
     @SerialName("hooks")
     val hooks: List<Hook>?,
     @SerialName("history")
-    val history: Map<String, ChartHistoryItem>?
+    val history: Map<String, ChartHistoryItem>?,
+    @SerialName("chart_schema")
+    val chartSchema: ChartSchema?
 ) {
     @Serializable
     enum class Status {
@@ -292,6 +294,42 @@ data class ChartHistoryItem(
             val repository: String,
             @SerialName("enabled")
             val enabled: Boolean
+        )
+    }
+}
+
+@Serializable
+data class ChartSchema(
+    @SerialName("location")
+    val location: String,
+    @SerialName("required_features")
+    val requiredFeatures: List<String>,
+    @SerialName("chart_metadata")
+    val chartMetadata: ChartRelease.ChartMetadata,
+    @SerialName("app_metadata")
+    val appMetadata: AppMetadata
+) {
+    @Serializable
+    data class AppMetadata(
+        @SerialName("runAsContext")
+        val runAsContext: List<RunAs>,
+        @SerialName("capabilities")
+        val capabilities: List<String>,
+        @SerialName("hostMounts")
+        val hostMounts: List<String>
+    ) {
+        @Serializable
+        data class RunAs(
+            @SerialName("userName")
+            val username: String,
+            @SerialName("groupName")
+            val groupName: String,
+            @SerialName("gid")
+            val groupId: Int,
+            @SerialName("uid")
+            val userId: Int,
+            @SerialName("description")
+            val description: String,
         )
     }
 }
