@@ -37,8 +37,25 @@ class MarkdownNodeGenerator(
             MarkdownTokenTypes.WHITE_SPACE -> MarkdownWhitespace
             MarkdownTokenTypes.HORIZONTAL_RULE -> MarkdownRule
             MarkdownElementTypes.CODE_FENCE -> parseCodeBlock(astNode)
+            GFMElementTypes.TABLE -> parseTable(astNode)
             else -> error("Unknown node type ${astNode.type}")
         }
+    }
+
+    private fun parseTable(astNode: ASTNode): MarkdownTable {
+        val headers = astNode.children[0].children.filter { it.type == GFMTokenTypes.CELL }
+        val bodyNodes = astNode.children
+            .filter { it.type == GFMElementTypes.ROW }
+        val columns = headers.mapIndexed { index: Int, headerNode: ASTNode ->
+            val columnCellNodes = bodyNodes
+                .map { it.children.filter { it.type == GFMTokenTypes.CELL }[index] }
+            MarkdownTable.Column(
+                header = parseParagraphNode(headerNode),
+                alignment = MarkdownTable.Alignment.LEFT,
+                cells = columnCellNodes.map { parseParagraphNode(it) }
+            )
+        }
+        return MarkdownTable(columns)
     }
 
     private fun parseCodeBlock(astNode: ASTNode): MarkdownCodeBlock {
@@ -68,22 +85,25 @@ class MarkdownNodeGenerator(
     }
 
     private fun parseParagraphNode(astNode: ASTNode): MarkdownParagraph {
-        val parsedChildren = astNode.children.map { childNode ->
-            when (childNode.type) {
-                MarkdownElementTypes.STRONG,
-                GFMElementTypes.STRIKETHROUGH,
-                MarkdownTokenTypes.TEXT,
-                MarkdownElementTypes.EMPH -> parseTextNode(childNode)
-                MarkdownTokenTypes.WHITE_SPACE -> MarkdownWhitespace
-                MarkdownTokenTypes.EOL -> MarkdownEol
-                GFMTokenTypes.GFM_AUTOLINK,
-                MarkdownElementTypes.INLINE_LINK,
-                MarkdownElementTypes.AUTOLINK -> parseLinkNode(childNode)
-                MarkdownElementTypes.IMAGE -> parseImageNode(childNode)
-                MarkdownElementTypes.CODE_SPAN -> parseCodeSpan(childNode)
-                else -> error("Unsure how to handle type ${childNode.type} inside a PARAGRAPH")
+        val parsedChildren = astNode.children
+            .dropWhile { it.type == MarkdownTokenTypes.WHITE_SPACE }
+            .dropLastWhile { it.type == MarkdownTokenTypes.WHITE_SPACE }
+            .map { childNode ->
+                when (childNode.type) {
+                    MarkdownElementTypes.STRONG,
+                    GFMElementTypes.STRIKETHROUGH,
+                    MarkdownTokenTypes.TEXT,
+                    MarkdownElementTypes.EMPH -> parseTextNode(childNode)
+                    MarkdownTokenTypes.WHITE_SPACE -> MarkdownWhitespace
+                    MarkdownTokenTypes.EOL -> MarkdownEol
+                    GFMTokenTypes.GFM_AUTOLINK,
+                    MarkdownElementTypes.INLINE_LINK,
+                    MarkdownElementTypes.AUTOLINK -> parseLinkNode(childNode)
+                    MarkdownElementTypes.IMAGE -> parseImageNode(childNode)
+                    MarkdownElementTypes.CODE_SPAN -> parseCodeSpan(childNode)
+                    else -> error("Unsure how to handle type ${childNode.type} inside a PARAGRAPH")
+                }
             }
-        }
         return MarkdownParagraph(children = parsedChildren)
     }
 

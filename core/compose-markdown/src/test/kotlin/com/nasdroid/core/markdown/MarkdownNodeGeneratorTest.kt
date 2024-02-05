@@ -176,10 +176,64 @@ class MarkdownNodeGeneratorTest {
             "![alt text](https://test.image \"Test image\")" to produceMarkdownImage("alt text", "https://test.image", "Test image")
         )
 
+        private val TABLE_PATTERNS = mapOf(
+            """
+                | foo | bar |
+                | --- | --- |
+                | baz | bim |
+            """.trimIndent() to produceMarkdownTable(
+                produceMarkdownTableColumn(
+                    produceMarkdownParagraphNode(produceMarkdownTextNode("foo")),
+                    MarkdownTable.Alignment.LEFT,
+                    produceMarkdownParagraphNode(produceMarkdownTextNode("baz"))
+                ),
+                produceMarkdownTableColumn(
+                    produceMarkdownParagraphNode(produceMarkdownTextNode("bar")),
+                    MarkdownTable.Alignment.LEFT,
+                    produceMarkdownParagraphNode(produceMarkdownTextNode("bim"))
+                )
+            ),
+            """
+                | foo | bar | baz |
+                | :--- | ---: | :---: |
+            """.trimIndent() to produceMarkdownTable(
+                produceMarkdownTableColumn(
+                    produceMarkdownParagraphNode(produceMarkdownTextNode("foo")),
+                    MarkdownTable.Alignment.LEFT,
+                ),
+                produceMarkdownTableColumn(
+                    produceMarkdownParagraphNode(produceMarkdownTextNode("bar")),
+                    MarkdownTable.Alignment.RIGHT,
+                ),
+                produceMarkdownTableColumn(
+                    produceMarkdownParagraphNode(produceMarkdownTextNode("baz")),
+                    MarkdownTable.Alignment.CENTER,
+                )
+            )
+        )
+
         private fun produceMarkdownAstNode(markdown: String): ASTNode {
             val flavor = GFMFlavourDescriptor()
             val tree = MarkdownParser(flavor).buildMarkdownTreeFromString(markdown)
             return tree
+        }
+
+        private fun produceMarkdownTable(
+            vararg columns: MarkdownTable.Column
+        ): MarkdownTable {
+            return MarkdownTable(columns.toList())
+        }
+
+        private fun produceMarkdownTableColumn(
+            header: MarkdownParagraph,
+            alignment: MarkdownTable.Alignment = MarkdownTable.Alignment.LEFT,
+            vararg cells: MarkdownParagraph
+        ): MarkdownTable.Column {
+            return MarkdownTable.Column(
+                header = header,
+                alignment = alignment,
+                cells = cells.toList()
+            )
         }
 
         private fun produceMarkdownImage(
@@ -311,6 +365,15 @@ class MarkdownNodeGeneratorTest {
         )
     }
 
+    private fun testTableParsing(markdown: String, expectedTable: MarkdownTable) {
+        val generator = MarkdownNodeGenerator(markdown, produceMarkdownAstNode(markdown))
+        val actual = generator.generateNodes()
+        assertEquals(
+            listOf(expectedTable), actual,
+            "Matching failed for input $markdown"
+        )
+    }
+
     private fun testImageParsing(markdown: String, expectedImage: MarkdownImage) {
         testParagraphParsing(markdown, MarkdownParagraph(listOf(expectedImage)))
     }
@@ -395,6 +458,13 @@ class MarkdownNodeGeneratorTest {
     fun `code block parsing`() {
         CODEBLOCK_PATTERNS.forEach { (markdown, expected) ->
             testCodeBlockParsing(markdown, expected)
+        }
+    }
+
+    @Test
+    fun `table parsing`() {
+        TABLE_PATTERNS.forEach { (markdown, expected) ->
+            testTableParsing(markdown, expected)
         }
     }
 }

@@ -156,3 +156,36 @@ data class MarkdownText(
 data class MarkdownCodeSpan(
     val text: String,
 ): MarkdownSpanNode
+
+/**
+ * Describes a Markdown table. A table is a grid of Markdown paragraphs, grouped into columns.
+ *
+ * @property columns The list of [Column]s contained in this table.
+ */
+data class MarkdownTable(
+    val columns: List<Column>
+) : MarkdownNode {
+
+    /**
+     * Describes a single column within a Markdown table. A column contains a header, and a series
+     * of data cells to be displayed under said header.
+     *
+     * @property header The [MarkdownParagraph] header content.
+     * @property cells The list of [MarkdownParagraph]s cell contents.
+     * @property alignment The text alignment for this column.
+     */
+    data class Column(
+        val header: MarkdownParagraph,
+        val cells: List<MarkdownParagraph>,
+        val alignment: Alignment
+    )
+
+    /**
+     * Represents all possible text alignments for table cell text.
+     */
+    enum class Alignment {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
+}
