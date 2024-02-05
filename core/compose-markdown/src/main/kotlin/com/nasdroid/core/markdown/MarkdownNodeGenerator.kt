@@ -112,7 +112,7 @@ class MarkdownNodeGenerator(
                                 it.type == MarkdownTokenTypes.ATX_HEADER
                     }
                     .map { parseTextNode(it) },
-                size = TypographyToken.Headline1,
+                size = MarkdownHeading.Size.Headline1,
             )
             MarkdownElementTypes.SETEXT_2,
             MarkdownElementTypes.ATX_2 -> MarkdownHeading(
@@ -123,31 +123,31 @@ class MarkdownNodeGenerator(
                                 it.type == MarkdownTokenTypes.ATX_HEADER
                     }
                     .map { parseTextNode(it) },
-                size = TypographyToken.Headline2,
+                size = MarkdownHeading.Size.Headline2,
             )
             MarkdownElementTypes.ATX_3 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
                     .map { parseTextNode(it) },
-                size = TypographyToken.Headline3,
+                size = MarkdownHeading.Size.Headline3,
             )
             MarkdownElementTypes.ATX_4 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
                     .map { parseTextNode(it) },
-                size = TypographyToken.Headline4,
+                size = MarkdownHeading.Size.Headline4,
             )
             MarkdownElementTypes.ATX_5 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
                     .map { parseTextNode(it) },
-                size = TypographyToken.Headline5,
+                size = MarkdownHeading.Size.Headline5,
             )
             MarkdownElementTypes.ATX_6 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
                     .map { parseTextNode(it) },
-                size = TypographyToken.Headline6,
+                size = MarkdownHeading.Size.Headline6,
             )
             else -> error("Unsure how to handle header type ${astNode.type}")
         }
