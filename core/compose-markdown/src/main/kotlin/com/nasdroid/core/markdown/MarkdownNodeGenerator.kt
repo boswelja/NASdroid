@@ -78,7 +78,11 @@ class MarkdownNodeGenerator(
             ?.getTextInNode(allFileText)
             ?.toString()
         val code = astNode.children
-            .filterNot { it.type == MarkdownTokenTypes.CODE_FENCE_START || it.type == MarkdownTokenTypes.CODE_FENCE_END || it.type == MarkdownTokenTypes.FENCE_LANG }
+            .filterNot {
+                it.type == MarkdownTokenTypes.CODE_FENCE_START ||
+                        it.type == MarkdownTokenTypes.CODE_FENCE_END ||
+                        it.type == MarkdownTokenTypes.FENCE_LANG
+            }
             .joinToString(separator = "") {
                 if (it.type == MarkdownTokenTypes.EOL) {
                     "\n"
@@ -218,8 +222,7 @@ class MarkdownNodeGenerator(
                     .filter { it.type == MarkdownTokenTypes.AUTOLINK }
                     .joinToString(separator = "") { it.getTextInNode(allFileText) }
                 MarkdownLink(
-                    displayText =
-                    listOf(
+                    displayText = listOf(
                         MarkdownText(
                             text = url,
                             isBold = false,
@@ -246,11 +249,10 @@ class MarkdownNodeGenerator(
                     ?.children
                     ?.first { it.type == MarkdownTokenTypes.TEXT }
                     ?.getTextInNode(allFileText)
-                    ?.toString()
                 MarkdownLink(
                     displayText = label,
                     url = link,
-                    titleText = titleText
+                    titleText = titleText?.toString()
                 )
             }
             GFMTokenTypes.GFM_AUTOLINK -> {
