@@ -1,9 +1,15 @@
-package com.nasdroid.core.markdown
+package com.nasdroid.core.markdown.generator
 
 /**
  * Encapsulates all possible content types within a Markdown document.
  */
 sealed interface MarkdownNode
+
+/**
+ * Encapsulates all possible span nodes in a Markdown document. A span node is a stylized element
+ * contained within a block of text, like a paragraph.
+ */
+sealed interface MarkdownSpanNode
 
 /**
  * Describes a Markdown paragraph. A paragraph is a collection of spans that make up a block of text.
@@ -38,12 +44,12 @@ data object MarkdownRule : MarkdownNode
 /**
  * Represents whitespace in a Markdown Span.
  */
-data object MarkdownWhitespace : MarkdownSpanNode
+data object MarkdownWhitespace : MarkdownSpanNode, MarkdownNode
 
 /**
  * Represents a line end in a Markdown Span.
  */
-data object MarkdownEol: MarkdownSpanNode
+data object MarkdownEol: MarkdownSpanNode, MarkdownNode
 
 /**
  * Describes Markdown code block. A code block is a visually distinct section of non-formattable
@@ -86,12 +92,6 @@ data class MarkdownHeading(
         Headline6,
     }
 }
-
-/**
- * Encapsulates all possible span nodes in a Markdown document. A span node is a stylized element
- * contained within a block of text, like a paragraph.
- */
-sealed interface MarkdownSpanNode : MarkdownNode
 
 /**
  * Describes a Markdown image. An image is an inline rich media preview.
