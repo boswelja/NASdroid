@@ -1,5 +1,17 @@
 package com.nasdroid.core.markdown
 
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownBlockQuote
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownCodeBlock
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownCodeSpan
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownHeader
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownImage
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownOrderedList
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownParagraph
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownTable
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownTableColumn
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownText
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownUnorderedList
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownLink
 import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
@@ -10,29 +22,29 @@ class MarkdownNodeGeneratorTest {
 
     companion object {
         private val ITALICS_PATTERNS = mapOf(
-            "*asterisks*" to produceMarkdownTextNode(text = "asterisks", isItalics = true),
-            "_underscores_" to produceMarkdownTextNode(text = "underscores", isItalics = true),
-            "*multi word asterisks*" to produceMarkdownTextNode(text = "multi word asterisks", isItalics = true),
-            "_multi word underscores_" to produceMarkdownTextNode(text = "multi word underscores", isItalics = true),
+            "*asterisks*" to markdownText(text = "asterisks", isItalics = true),
+            "_underscores_" to markdownText(text = "underscores", isItalics = true),
+            "*multi word asterisks*" to markdownText(text = "multi word asterisks", isItalics = true),
+            "_multi word underscores_" to markdownText(text = "multi word underscores", isItalics = true),
         )
 
         private val BOLD_PATTERNS = mapOf(
-            "**asterisks**" to produceMarkdownTextNode(text = "asterisks", isBold = true),
-            "__underscores__" to produceMarkdownTextNode(text = "underscores", isBold = true),
-            "**multi word asterisks**" to produceMarkdownTextNode(text = "multi word asterisks", isBold = true),
-            "__multi word underscores__" to produceMarkdownTextNode(text = "multi word underscores", isBold = true),
+            "**asterisks**" to markdownText(text = "asterisks", isBold = true),
+            "__underscores__" to markdownText(text = "underscores", isBold = true),
+            "**multi word asterisks**" to markdownText(text = "multi word asterisks", isBold = true),
+            "__multi word underscores__" to markdownText(text = "multi word underscores", isBold = true),
         )
 
         private val STRIKETHROUGH_PATTERNS = mapOf(
-            "~~strikethrough~~" to produceMarkdownTextNode(text = "strikethrough", isStrikethrough = true),
+            "~~strikethrough~~" to markdownText(text = "strikethrough", isStrikethrough = true),
             "~~multi word strikethrough~~" to
-                    produceMarkdownTextNode(text = "multi word strikethrough", isStrikethrough = true)
+                    markdownText(text = "multi word strikethrough", isStrikethrough = true)
         )
 
         private val MONOSPACE_PATTERNS = mapOf(
-            "`monospace`" to produceMarkdownCodeSpan("monospace"),
-            "` `" to produceMarkdownCodeSpan(" "),
-            "`multi word monospace`" to produceMarkdownCodeSpan("multi word monospace")
+            "`monospace`" to markdownCodeSpan("monospace"),
+            "` `" to markdownCodeSpan(" "),
+            "`multi word monospace`" to markdownCodeSpan("multi word monospace")
         )
 
         private val RULE_PATTERNS = mapOf(
@@ -44,13 +56,13 @@ class MarkdownNodeGeneratorTest {
                 ```kotlin
                 val codeBlockTest = true
                 ```
-            """.trimIndent() to produceMarkdownCodeBlock(text = "val codeBlockTest = true", language = "kotlin"),
+            """.trimIndent() to markdownCodeBlock(text = "val codeBlockTest = true", language = "kotlin"),
             """
                 ```kotlin
                 val codeBlockTest = true
                 val secondLine = true
                 ```
-            """.trimIndent() to produceMarkdownCodeBlock(
+            """.trimIndent() to markdownCodeBlock(
                 text = "val codeBlockTest = true\nval secondLine = true",
                 language = "kotlin"
             ),
@@ -60,16 +72,16 @@ class MarkdownNodeGeneratorTest {
                 
                 val secondLine = true
                 ```
-            """.trimIndent() to produceMarkdownCodeBlock(
+            """.trimIndent() to markdownCodeBlock(
                 text = "val codeBlockTest = true\n\nval secondLine = true",
                 language = "kotlin"
             ),
         )
 
         private val BLOCKQUOTE_PATTERNS = mapOf(
-            "> this is a block quote" to produceMarkdownBlockQuote(
-                produceMarkdownParagraphNode(
-                    produceMarkdownTextNode("this is a block quote")
+            "> this is a block quote" to markdownBlockQuote(
+                markdownParagraph(
+                    markdownText("this is a block quote")
                 )
             ),
             """
@@ -78,102 +90,102 @@ class MarkdownNodeGeneratorTest {
                 > > Is this
                 >
                 > # Heading
-            """.trimIndent() to produceMarkdownBlockQuote(
-                produceMarkdownBlockQuote(
-                    produceMarkdownParagraphNode(produceMarkdownTextNode("What on earth"))
+            """.trimIndent() to markdownBlockQuote(
+                markdownBlockQuote(
+                    markdownParagraph(markdownText("What on earth"))
                 ),
                 MarkdownEol,
                 MarkdownWhitespace,
                 MarkdownEol,
                 MarkdownWhitespace,
-                produceMarkdownBlockQuote(
-                    produceMarkdownParagraphNode(produceMarkdownTextNode("Is this"))
+                markdownBlockQuote(
+                    markdownParagraph(markdownText("Is this"))
                 ),
                 MarkdownEol,
                 MarkdownWhitespace,
                 MarkdownEol,
                 MarkdownWhitespace,
-                produceMarkdownHeaderNode(MarkdownHeading.Size.Headline1, produceMarkdownTextNode("Heading")),
+                markdownHeader(MarkdownHeading.Size.Headline1, markdownText("Heading")),
             )
         )
 
         private val PARAGRAPH_PATTERNS = mapOf(
-            "**bold** _italics_ ~~strikethrough~~ [Google](https://google.com)" to produceMarkdownParagraphNode(
-                produceMarkdownTextNode("bold", isBold = true),
+            "**bold** _italics_ ~~strikethrough~~ [Google](https://google.com)" to markdownParagraph(
+                markdownText("bold", isBold = true),
                 MarkdownWhitespace,
-                produceMarkdownTextNode("italics", isItalics = true),
+                markdownText("italics", isItalics = true),
                 MarkdownWhitespace,
-                produceMarkdownTextNode("strikethrough", isStrikethrough = true),
+                markdownText("strikethrough", isStrikethrough = true),
                 MarkdownWhitespace,
-                produceMarkdownUrlNode("https://google.com", listOf(produceMarkdownTextNode("Google")))
+                markdownLink("https://google.com", listOf(markdownText("Google")))
             ),
             """
                 **bold** _italics_
                 [Google](https://google.com)
                 This is a single newline test
-            """.trimIndent() to produceMarkdownParagraphNode(
-                produceMarkdownTextNode("bold", isBold = true),
+            """.trimIndent() to markdownParagraph(
+                markdownText("bold", isBold = true),
                 MarkdownWhitespace,
-                produceMarkdownTextNode("italics", isItalics = true),
+                markdownText("italics", isItalics = true),
                 MarkdownEol,
-                produceMarkdownUrlNode("https://google.com", listOf(produceMarkdownTextNode("Google"))),
+                markdownLink("https://google.com", listOf(markdownText("Google"))),
                 MarkdownEol,
-                produceMarkdownTextNode("This is a single newline test")
+                markdownText("This is a single newline test")
             ),
-            "un*frigging*believable" to produceMarkdownParagraphNode(
-                produceMarkdownTextNode("un"),
-                produceMarkdownTextNode("frigging", isItalics = true),
-                produceMarkdownTextNode("believable")
+            "un*frigging*believable" to markdownParagraph(
+                markdownText("un"),
+                markdownText("frigging", isItalics = true),
+                markdownText("believable")
             )
         )
 
         private val LINK_PATTERNS = mapOf(
-            "https://google.com" to produceMarkdownUrlNode("https://google.com"),
-            "<https://google.com>" to produceMarkdownUrlNode("https://google.com"),
-            "[Google](https://google.com)" to produceMarkdownUrlNode(
-                url = "https://google.com",
-                text = listOf(produceMarkdownTextNode("Google"))
+            "https://google.com" to markdownLink("https://google.com"),
+            "<https://google.com>" to markdownLink("https://google.com"),
+            "[Google](https://google.com)" to markdownLink(
+                link = "https://google.com",
+                text = listOf(markdownText("Google"))
             ),
-            "[*Google*](https://google.com)" to produceMarkdownUrlNode(
-                url = "https://google.com",
-                text = listOf(produceMarkdownTextNode("Google", isItalics = true))
+            "[*Google*](https://google.com)" to markdownLink(
+                link = "https://google.com",
+                text = listOf(markdownText("Google", isItalics = true))
             ),
-            "[**Google**](https://google.com)" to produceMarkdownUrlNode(
-                url = "https://google.com",
-                text = listOf(produceMarkdownTextNode("Google", isBold = true))
+            "[**Google**](https://google.com)" to markdownLink(
+                link = "https://google.com",
+                text = listOf(markdownText("Google", isBold = true))
             ),
-            "[Google](https://google.com \"Google\")" to produceMarkdownUrlNode(
-                url = "https://google.com",
-                text = listOf(produceMarkdownTextNode("Google")),
+            "[Google](https://google.com \"Google\")" to markdownLink(
+                link = "https://google.com",
+                text = listOf(markdownText("Google")),
                 altText = "Google"
             ),
         )
 
         private val PLAINTEXT_PATTERNS = mapOf(
-            "text" to produceMarkdownTextNode(text = "text"),
-            "one two three" to produceMarkdownTextNode("one two three")
+            "text" to markdownText(text = "text"),
+            "one two three" to markdownText("one two three")
         )
 
         private val HEADER_PATTERNS = mapOf(
             """
                 H1
                 ===
-            """.trimIndent() to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline1, produceMarkdownTextNode("H1")),
-            "# H1" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline1, produceMarkdownTextNode("H1")),
+            """.trimIndent() to markdownHeader(MarkdownHeading.Size.Headline1, markdownText("H1")),
+            "# H1" to markdownHeader(MarkdownHeading.Size.Headline1, markdownText("H1")),
             """
                 H2
                 ---
-            """.trimIndent() to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline2, produceMarkdownTextNode("H2")),
-            "## H2" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline2, produceMarkdownTextNode("H2")),
-            "### H3" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline3, produceMarkdownTextNode("H3")),
-            "#### H4" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline4, produceMarkdownTextNode("H4")),
-            "##### H5" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline5, produceMarkdownTextNode("H5")),
-            "###### H6" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline6, produceMarkdownTextNode("H6")),
+            """.trimIndent() to markdownHeader(MarkdownHeading.Size.Headline2, markdownText("H2")),
+            "## H2" to markdownHeader(MarkdownHeading.Size.Headline2, markdownText("H2")),
+            "### H3" to markdownHeader(MarkdownHeading.Size.Headline3, markdownText("H3")),
+            "#### H4" to markdownHeader(MarkdownHeading.Size.Headline4, markdownText("H4")),
+            "##### H5" to markdownHeader(MarkdownHeading.Size.Headline5, markdownText("H5")),
+            "###### H6" to markdownHeader(MarkdownHeading.Size.Headline6, markdownText("H6")),
         )
 
         private val IMAGE_PATTERNS = mapOf(
-            "![alt text](https://test.image)" to produceMarkdownImage("alt text", "https://test.image"),
-            "![alt text](https://test.image \"Test image\")" to produceMarkdownImage("alt text", "https://test.image", "Test image")
+            "![alt text](https://test.image)" to markdownImage("alt text", "https://test.image"),
+            "![alt text](https://test.image \"Test image\")" to markdownImage("alt text", "https://test.image", "Test image")
         )
 
         private val TABLE_PATTERNS = mapOf(
@@ -181,32 +193,32 @@ class MarkdownNodeGeneratorTest {
                 | foo | bar |
                 | --- | --- |
                 | baz | bim |
-            """.trimIndent() to produceMarkdownTable(
-                produceMarkdownTableColumn(
-                    produceMarkdownParagraphNode(produceMarkdownTextNode("foo")),
+            """.trimIndent() to markdownTable(
+                markdownTableColumn(
+                    markdownParagraph(markdownText("foo")),
                     MarkdownTable.Alignment.LEFT,
-                    produceMarkdownParagraphNode(produceMarkdownTextNode("baz"))
+                    markdownParagraph(markdownText("baz"))
                 ),
-                produceMarkdownTableColumn(
-                    produceMarkdownParagraphNode(produceMarkdownTextNode("bar")),
+                markdownTableColumn(
+                    markdownParagraph(markdownText("bar")),
                     MarkdownTable.Alignment.LEFT,
-                    produceMarkdownParagraphNode(produceMarkdownTextNode("bim"))
+                    markdownParagraph(markdownText("bim"))
                 )
             ),
             """
                 | foo | bar | baz |
                 | :--- | ---: | :---: |
-            """.trimIndent() to produceMarkdownTable(
-                produceMarkdownTableColumn(
-                    produceMarkdownParagraphNode(produceMarkdownTextNode("foo")),
+            """.trimIndent() to markdownTable(
+                markdownTableColumn(
+                    markdownParagraph(markdownText("foo")),
                     MarkdownTable.Alignment.LEFT,
                 ),
-                produceMarkdownTableColumn(
-                    produceMarkdownParagraphNode(produceMarkdownTextNode("bar")),
+                markdownTableColumn(
+                    markdownParagraph(markdownText("bar")),
                     MarkdownTable.Alignment.RIGHT,
                 ),
-                produceMarkdownTableColumn(
-                    produceMarkdownParagraphNode(produceMarkdownTextNode("baz")),
+                markdownTableColumn(
+                    markdownParagraph(markdownText("baz")),
                     MarkdownTable.Alignment.CENTER,
                 )
             )
@@ -217,28 +229,28 @@ class MarkdownNodeGeneratorTest {
                 * Apples
                 * Oranges
                 * Pears
-            """.trimIndent() to produceMarkdownUnorderedList(
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            """.trimIndent() to markdownUnorderedList(
+                markdownParagraph(markdownText("Apples")),
+                markdownParagraph(markdownText("Oranges")),
+                markdownParagraph(markdownText("Pears")),
             ),
             """
                 - Apples
                 - Oranges
                 - Pears
-            """.trimIndent() to produceMarkdownUnorderedList(
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            """.trimIndent() to markdownUnorderedList(
+                markdownParagraph(markdownText("Apples")),
+                markdownParagraph(markdownText("Oranges")),
+                markdownParagraph(markdownText("Pears")),
             ),
             """
                 + Apples
                 + Oranges
                 + Pears
-            """.trimIndent() to produceMarkdownUnorderedList(
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            """.trimIndent() to markdownUnorderedList(
+                markdownParagraph(markdownText("Apples")),
+                markdownParagraph(markdownText("Oranges")),
+                markdownParagraph(markdownText("Pears")),
             ),
         )
 
@@ -247,19 +259,19 @@ class MarkdownNodeGeneratorTest {
                 1. Apples
                 2. Oranges
                 3. Pears
-            """.trimIndent() to produceMarkdownOrderedList(
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            """.trimIndent() to markdownOrderedList(
+                markdownParagraph(markdownText("Apples")),
+                markdownParagraph(markdownText("Oranges")),
+                markdownParagraph(markdownText("Pears")),
             ),
             """
                 1) Apples
                 2) Oranges
                 3) Pears
-            """.trimIndent() to produceMarkdownOrderedList(
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
-                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            """.trimIndent() to markdownOrderedList(
+                markdownParagraph(markdownText("Apples")),
+                markdownParagraph(markdownText("Oranges")),
+                markdownParagraph(markdownText("Pears")),
             ),
         )
 
@@ -268,169 +280,10 @@ class MarkdownNodeGeneratorTest {
             val tree = MarkdownParser(flavor).buildMarkdownTreeFromString(markdown)
             return tree
         }
-
-        private fun produceMarkdownUnorderedList(vararg listItems: MarkdownParagraph): MarkdownUnorderedList {
-            return MarkdownUnorderedList(listItems.toList())
-        }
-
-        private fun produceMarkdownOrderedList(vararg listItems: MarkdownParagraph): MarkdownOrderedList {
-            return MarkdownOrderedList(listItems.toList())
-        }
-
-        private fun produceMarkdownTable(
-            vararg columns: MarkdownTable.Column
-        ): MarkdownTable {
-            return MarkdownTable(columns.toList())
-        }
-
-        private fun produceMarkdownTableColumn(
-            header: MarkdownParagraph,
-            alignment: MarkdownTable.Alignment = MarkdownTable.Alignment.LEFT,
-            vararg cells: MarkdownParagraph
-        ): MarkdownTable.Column {
-            return MarkdownTable.Column(
-                header = header,
-                alignment = alignment,
-                cells = cells.toList()
-            )
-        }
-
-        private fun produceMarkdownImage(
-            contentDescription: String,
-            imageUrl: String,
-            titleText: String? = null
-        ): MarkdownImage {
-            return MarkdownImage(
-                imageUrl = imageUrl,
-                contentDescription = contentDescription,
-                titleText = titleText
-            )
-        }
-
-        private fun produceMarkdownCodeBlock(
-            text: String,
-            language: String? = null
-        ): MarkdownCodeBlock {
-            return MarkdownCodeBlock(
-                code = text,
-                language = language
-            )
-        }
-
-        private fun produceMarkdownBlockQuote(
-            vararg children: MarkdownNode
-        ): MarkdownBlockQuote {
-            return MarkdownBlockQuote(
-                children = children.toList()
-            )
-        }
-        private fun produceMarkdownParagraphNode(
-            vararg children: MarkdownSpanNode
-        ): MarkdownParagraph {
-            return MarkdownParagraph(
-                children = children.toList()
-            )
-        }
-
-        private fun produceMarkdownCodeSpan(
-            text: String
-        ): MarkdownCodeSpan {
-            return MarkdownCodeSpan(text)
-        }
-
-        private fun produceMarkdownTextNode(
-            text: String,
-            isBold: Boolean = false,
-            isItalics: Boolean = false,
-            isStrikethrough: Boolean = false,
-        ): MarkdownText {
-            return MarkdownText(
-                text = text,
-                isBold = isBold,
-                isItalics = isItalics,
-                isStrikethrough = isStrikethrough
-            )
-        }
-
-        private fun produceMarkdownUrlNode(
-            url: String,
-            text: List<MarkdownText> = listOf(produceMarkdownTextNode(url)),
-            altText: String? = null
-        ): MarkdownLink {
-            return MarkdownLink(
-                displayText = text,
-                url = url,
-                titleText = altText
-            )
-        }
-
-        private fun produceMarkdownHeaderNode(
-            size: MarkdownHeading.Size,
-            vararg children: MarkdownSpanNode
-        ): MarkdownHeading {
-            return MarkdownHeading(
-                children = children.toList(),
-                size = size
-            )
-        }
     }
 
-    private fun testParagraphParsing(markdown: String, expectedParagraph: MarkdownParagraph) {
-        val generator = MarkdownNodeGenerator(markdown, produceMarkdownAstNode(markdown))
-        val actual = generator.generateNodes()
-        assertEquals(
-            listOf(expectedParagraph), actual,
-            "Matching failed for input $markdown"
-        )
-    }
-
-    private fun testBlockquoteParsing(markdown: String, expectedParagraph: MarkdownBlockQuote) {
-        val generator = MarkdownNodeGenerator(markdown, produceMarkdownAstNode(markdown))
-        val actual = generator.generateNodes()
-        assertEquals(
-            listOf(expectedParagraph), actual,
-            "Matching failed for input $markdown"
-        )
-    }
-
-    private fun testTextParsing(markdown: String, expectedText: MarkdownSpanNode) {
-        testParagraphParsing(markdown, MarkdownParagraph(listOf(expectedText)))
-    }
-
-    private fun testHeaderParsing(markdown: String, expectedHeader: MarkdownHeading) {
-        val generator = MarkdownNodeGenerator(markdown, produceMarkdownAstNode(markdown))
-        val actual = generator.generateNodes()
-        assertEquals(
-            listOf(expectedHeader), actual,
-            "Matching failed for input $markdown"
-        )
-    }
-
-    private fun testRuleParsing(markdown: String, expectedRule: MarkdownRule) {
-        val generator = MarkdownNodeGenerator(markdown, produceMarkdownAstNode(markdown))
-        val actual = generator.generateNodes()
-        assertEquals(
-            listOf(expectedRule), actual,
-            "Matching failed for input $markdown"
-        )
-    }
-
-    private fun testCodeBlockParsing(markdown: String, expectedCodeBlock: MarkdownCodeBlock) {
-        val generator = MarkdownNodeGenerator(markdown, produceMarkdownAstNode(markdown))
-        val actual = generator.generateNodes()
-        assertEquals(
-            listOf(expectedCodeBlock), actual,
-            "Matching failed for input $markdown"
-        )
-    }
-
-    private fun testTableParsing(markdown: String, expectedTable: MarkdownTable) {
-        val generator = MarkdownNodeGenerator(markdown, produceMarkdownAstNode(markdown))
-        val actual = generator.generateNodes()
-        assertEquals(
-            listOf(expectedTable), actual,
-            "Matching failed for input $markdown"
-        )
+    private fun testSpanParsing(markdown: String, expectedText: MarkdownSpanNode) {
+        testNodeParsing(markdown, MarkdownParagraph(listOf(expectedText)))
     }
 
     private fun testNodeParsing(markdown: String, expectedNode: MarkdownNode) {
@@ -442,97 +295,93 @@ class MarkdownNodeGeneratorTest {
         )
     }
 
-    private fun testImageParsing(markdown: String, expectedImage: MarkdownImage) {
-        testParagraphParsing(markdown, MarkdownParagraph(listOf(expectedImage)))
-    }
-
     @Test
     fun `plaintext parsing`() {
         PLAINTEXT_PATTERNS.forEach { (markdown, expected) ->
-            testTextParsing(markdown, expected)
+            testSpanParsing(markdown, expected)
         }
     }
     @Test
     fun `strikethrough parsing`() {
         STRIKETHROUGH_PATTERNS.forEach { (markdown, expected) ->
-            testTextParsing(markdown, expected)
+            testSpanParsing(markdown, expected)
         }
     }
 
     @Test
     fun `bold parsing`() {
         BOLD_PATTERNS.forEach { (markdown, expected) ->
-            testTextParsing(markdown, expected)
+            testSpanParsing(markdown, expected)
         }
     }
 
     @Test
     fun `italics parsing`() {
         ITALICS_PATTERNS.forEach { (markdown, expected) ->
-            testTextParsing(markdown, expected)
+            testSpanParsing(markdown, expected)
         }
     }
 
     @Test
     fun `header parsing`() {
         HEADER_PATTERNS.forEach { (markdown, expected) ->
-            testHeaderParsing(markdown, expected)
+            testNodeParsing(markdown, expected)
         }
     }
 
     @Test
     fun `link parsing`() {
         LINK_PATTERNS.forEach { (markdown, expected) ->
-            testTextParsing(markdown, expected)
+            testSpanParsing(markdown, expected)
         }
     }
 
     @Test
     fun `paragraph parsing`() {
         PARAGRAPH_PATTERNS.forEach { (markdown, expected) ->
-            testParagraphParsing(markdown, expected)
+            testNodeParsing(markdown, expected)
         }
     }
 
     @Test
     fun `image parsing`() {
         IMAGE_PATTERNS.forEach { (markdown, expected) ->
-            testImageParsing(markdown, expected)
+            testSpanParsing(markdown, expected)
         }
     }
 
     @Test
     fun `rule parsing`() {
         RULE_PATTERNS.forEach { (markdown, expected) ->
-            testRuleParsing(markdown, expected)
+            testNodeParsing(markdown, expected)
         }
     }
 
     @Test
     fun `blockquote parsing`() {
         BLOCKQUOTE_PATTERNS.forEach { (markdown, expected) ->
-            testBlockquoteParsing(markdown, expected)
+            testNodeParsing(markdown, expected)
         }
     }
 
     @Test
     fun `code span parsing`() {
         MONOSPACE_PATTERNS.forEach { (markdown, expected) ->
-            testTextParsing(markdown, expected)
+            testSpanParsing(markdown, expected)
         }
     }
 
     @Test
     fun `code block parsing`() {
         CODEBLOCK_PATTERNS.forEach { (markdown, expected) ->
-            testCodeBlockParsing(markdown, expected)
+            testNodeParsing(markdown, expected)
         }
     }
 
     @Test
     fun `table parsing`() {
         TABLE_PATTERNS.forEach { (markdown, expected) ->
-            testTableParsing(markdown, expected)
+            testNodeParsing(markdown, expected)
         }
     }
 
