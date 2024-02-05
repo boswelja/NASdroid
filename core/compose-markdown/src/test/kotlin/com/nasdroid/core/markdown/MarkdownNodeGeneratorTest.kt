@@ -212,10 +212,69 @@ class MarkdownNodeGeneratorTest {
             )
         )
 
+        private val UNORDERED_LIST_PATTERNS = mapOf(
+            """
+                * Apples
+                * Oranges
+                * Pears
+            """.trimIndent() to produceMarkdownUnorderedList(
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            ),
+            """
+                - Apples
+                - Oranges
+                - Pears
+            """.trimIndent() to produceMarkdownUnorderedList(
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            ),
+            """
+                + Apples
+                + Oranges
+                + Pears
+            """.trimIndent() to produceMarkdownUnorderedList(
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            ),
+        )
+
+        private val ORDERED_LIST_PATTERNS = mapOf(
+            """
+                1. Apples
+                2. Oranges
+                3. Pears
+            """.trimIndent() to produceMarkdownOrderedList(
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            ),
+            """
+                1) Apples
+                2) Oranges
+                3) Pears
+            """.trimIndent() to produceMarkdownOrderedList(
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Apples")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Oranges")),
+                produceMarkdownParagraphNode(produceMarkdownTextNode("Pears")),
+            ),
+        )
+
         private fun produceMarkdownAstNode(markdown: String): ASTNode {
             val flavor = GFMFlavourDescriptor()
             val tree = MarkdownParser(flavor).buildMarkdownTreeFromString(markdown)
             return tree
+        }
+
+        private fun produceMarkdownUnorderedList(vararg listItems: MarkdownParagraph): MarkdownUnorderedList {
+            return MarkdownUnorderedList(listItems.toList())
+        }
+
+        private fun produceMarkdownOrderedList(vararg listItems: MarkdownParagraph): MarkdownOrderedList {
+            return MarkdownOrderedList(listItems.toList())
         }
 
         private fun produceMarkdownTable(
@@ -374,6 +433,15 @@ class MarkdownNodeGeneratorTest {
         )
     }
 
+    private fun testNodeParsing(markdown: String, expectedNode: MarkdownNode) {
+        val generator = MarkdownNodeGenerator(markdown, produceMarkdownAstNode(markdown))
+        val actual = generator.generateNodes()
+        assertEquals(
+            listOf(expectedNode), actual,
+            "Matching failed for input $markdown"
+        )
+    }
+
     private fun testImageParsing(markdown: String, expectedImage: MarkdownImage) {
         testParagraphParsing(markdown, MarkdownParagraph(listOf(expectedImage)))
     }
@@ -465,6 +533,20 @@ class MarkdownNodeGeneratorTest {
     fun `table parsing`() {
         TABLE_PATTERNS.forEach { (markdown, expected) ->
             testTableParsing(markdown, expected)
+        }
+    }
+
+    @Test
+    fun `unordered list parsing`() {
+        UNORDERED_LIST_PATTERNS.forEach { (markdown, expected) ->
+            testNodeParsing(markdown, expected)
+        }
+    }
+
+    @Test
+    fun `ordered list parsing`() {
+        ORDERED_LIST_PATTERNS.forEach { (markdown, expected) ->
+            testNodeParsing(markdown, expected)
         }
     }
 }

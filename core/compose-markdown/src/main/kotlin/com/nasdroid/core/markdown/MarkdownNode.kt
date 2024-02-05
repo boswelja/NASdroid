@@ -189,3 +189,27 @@ data class MarkdownTable(
         RIGHT
     }
 }
+
+/**
+ * Describes a Markdown ordered list. An ordered list is a list of formatted text, displayed as a
+ * numbered (ordered) list.
+ *
+ * See [Lists](https://commonmark.org/help/tutorial/06-lists.html) for a how-to.
+ *
+ * @property listItems A list of [MarkdownParagraph]s this list contains.
+ */
+data class MarkdownOrderedList(
+    val listItems: List<MarkdownParagraph>
+) : MarkdownNode
+
+/**
+ * Describes a Markdown unordered list. An unordered list is a list of formatted text, displayed as
+ * a bulleted (unordered) list.
+ *
+ * See [Lists](https://commonmark.org/help/tutorial/06-lists.html) for a how-to.
+ *
+ * @property listItems A list of [MarkdownParagraph]s this list contains.
+ */
+data class MarkdownUnorderedList(
+    val listItems: List<MarkdownParagraph>
+) : MarkdownNode

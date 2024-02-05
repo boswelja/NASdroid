@@ -38,8 +38,22 @@ class MarkdownNodeGenerator(
             MarkdownTokenTypes.HORIZONTAL_RULE -> MarkdownRule
             MarkdownElementTypes.CODE_FENCE -> parseCodeBlock(astNode)
             GFMElementTypes.TABLE -> parseTable(astNode)
+            MarkdownElementTypes.UNORDERED_LIST -> parseUnorderedList(astNode)
+            MarkdownElementTypes.ORDERED_LIST -> parseOrderedList(astNode)
             else -> error("Unknown node type ${astNode.type}")
         }
+    }
+
+    private fun parseUnorderedList(astNode: ASTNode): MarkdownUnorderedList {
+        val listItems = astNode.children
+            .filter { it.type == MarkdownElementTypes.LIST_ITEM }
+            .map { parseParagraphNode(it.children[1]) }
+        return MarkdownUnorderedList(listItems)
+    }
+
+    private fun parseOrderedList(astNode: ASTNode): MarkdownOrderedList {
+        val list = parseUnorderedList(astNode)
+        return MarkdownOrderedList(list.listItems)
     }
 
     private fun parseTable(astNode: ASTNode): MarkdownTable {
