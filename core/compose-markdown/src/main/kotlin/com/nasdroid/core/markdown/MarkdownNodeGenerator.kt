@@ -7,6 +7,10 @@ import org.intellij.markdown.ast.getTextInNode
 import org.intellij.markdown.flavours.gfm.GFMElementTypes
 import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 
+/**
+ * A class that takes a Markdown document and its parsed [ASTNode], and produces a type-safe
+ * representation of the document tree. See [MarkdownNode] for possible types.
+ */
 class MarkdownNodeGenerator(
     private val allFileText: String,
     private val rootNode: ASTNode
@@ -17,6 +21,9 @@ class MarkdownNodeGenerator(
         }
     }
 
+    /**
+     * Generates a list of [MarkdownNode]s from the data provided at construction time.
+     */
     fun generateNodes(): List<MarkdownNode> {
         return rootNode.children.map { parseGenericNode(it) }
     }
@@ -62,7 +69,7 @@ class MarkdownNodeGenerator(
             .filter { it.type == GFMElementTypes.ROW }
         val columns = headers.mapIndexed { index: Int, headerNode: ASTNode ->
             val columnCellNodes = bodyNodes
-                .map { it.children.filter { it.type == GFMTokenTypes.CELL }[index] }
+                .map { row -> row.children.filter { it.type == GFMTokenTypes.CELL }[index] }
             MarkdownTable.Column(
                 header = parseParagraphNode(headerNode),
                 alignment = MarkdownTable.Alignment.LEFT,
