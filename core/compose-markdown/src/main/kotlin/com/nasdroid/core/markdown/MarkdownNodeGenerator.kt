@@ -106,25 +106,28 @@ class MarkdownNodeGenerator(
         val parsedChildren = astNode.children
             .dropWhile { it.type == MarkdownTokenTypes.WHITE_SPACE }
             .dropLastWhile { it.type == MarkdownTokenTypes.WHITE_SPACE }
-            .map { childNode ->
-                when (childNode.type) {
-                    MarkdownElementTypes.STRONG,
-                    GFMElementTypes.STRIKETHROUGH,
-                    MarkdownTokenTypes.TEXT,
-                    MarkdownElementTypes.EMPH -> parseTextNode(childNode)
-                    MarkdownTokenTypes.WHITE_SPACE -> MarkdownWhitespace
-                    MarkdownTokenTypes.EOL -> MarkdownEol
-                    GFMTokenTypes.GFM_AUTOLINK,
-                    MarkdownElementTypes.INLINE_LINK,
-                    MarkdownElementTypes.AUTOLINK -> parseLinkNode(childNode)
-                    MarkdownElementTypes.IMAGE -> parseImageNode(childNode)
-                    MarkdownElementTypes.CODE_SPAN -> parseCodeSpan(childNode)
-                    else -> error("Unsure how to handle type ${childNode.type} inside a PARAGRAPH")
-                }
-            }
+            .map { childNode -> parseSpanNode(childNode) }
         return MarkdownParagraph(children = parsedChildren)
     }
 
+    private fun parseSpanNode(astNode: ASTNode): MarkdownSpanNode {
+        return when (astNode.type) {
+            MarkdownElementTypes.STRONG,
+            GFMElementTypes.STRIKETHROUGH,
+            MarkdownTokenTypes.TEXT,
+            MarkdownTokenTypes.SETEXT_CONTENT,
+            MarkdownTokenTypes.ATX_CONTENT,
+            MarkdownElementTypes.EMPH -> parseTextNode(astNode)
+            MarkdownTokenTypes.WHITE_SPACE -> MarkdownWhitespace
+            MarkdownTokenTypes.EOL -> MarkdownEol
+            GFMTokenTypes.GFM_AUTOLINK,
+            MarkdownElementTypes.INLINE_LINK,
+            MarkdownElementTypes.AUTOLINK -> parseLinkNode(astNode)
+            MarkdownElementTypes.IMAGE -> parseImageNode(astNode)
+            MarkdownElementTypes.CODE_SPAN -> parseCodeSpan(astNode)
+            else -> error("Unsure how to handle type ${astNode.type} inside a PARAGRAPH")
+        }
+    }
     private fun parseCodeSpan(astNode: ASTNode): MarkdownCodeSpan {
         val text = astNode.children
             .filterNot { it.type == MarkdownTokenTypes.BACKTICK }
@@ -136,7 +139,7 @@ class MarkdownNodeGenerator(
         val imageLink = astNode.children[1]
         val link = parseLinkNode(imageLink)
 
-        return MarkdownImage(link.url, link.displayText.joinToString(separator = " ") { it.text }, link.titleText)
+        return MarkdownImage(link.url, link.displayText.joinToString(separator = " ") { (it as MarkdownText).text }, link.titleText)
     }
 
     private fun parseHeaderNode(astNode: ASTNode): MarkdownHeading {
@@ -149,7 +152,7 @@ class MarkdownNodeGenerator(
                                 it.type == MarkdownTokenTypes.EOL ||
                                 it.type == MarkdownTokenTypes.ATX_HEADER
                     }
-                    .map { parseTextNode(it) },
+                    .map { parseSpanNode(it) },
                 size = MarkdownHeading.Size.Headline1,
             )
             MarkdownElementTypes.SETEXT_2,
@@ -160,31 +163,31 @@ class MarkdownNodeGenerator(
                                 it.type == MarkdownTokenTypes.EOL ||
                                 it.type == MarkdownTokenTypes.ATX_HEADER
                     }
-                    .map { parseTextNode(it) },
+                    .map { parseSpanNode(it) },
                 size = MarkdownHeading.Size.Headline2,
             )
             MarkdownElementTypes.ATX_3 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
-                    .map { parseTextNode(it) },
+                    .map { parseSpanNode(it) },
                 size = MarkdownHeading.Size.Headline3,
             )
             MarkdownElementTypes.ATX_4 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
-                    .map { parseTextNode(it) },
+                    .map { parseSpanNode(it) },
                 size = MarkdownHeading.Size.Headline4,
             )
             MarkdownElementTypes.ATX_5 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
-                    .map { parseTextNode(it) },
+                    .map { parseSpanNode(it) },
                 size = MarkdownHeading.Size.Headline5,
             )
             MarkdownElementTypes.ATX_6 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
-                    .map { parseTextNode(it) },
+                    .map { parseSpanNode(it) },
                 size = MarkdownHeading.Size.Headline6,
             )
             else -> error("Unsure how to handle header type ${astNode.type}")
@@ -243,7 +246,7 @@ class MarkdownNodeGenerator(
                     .first { it.type == MarkdownElementTypes.LINK_TEXT }
                     .children
                     .filterNot { it.type == MarkdownTokenTypes.LBRACKET || it.type == MarkdownTokenTypes.RBRACKET }
-                    .map { parseTextNode(it) }
+                    .map { parseSpanNode(it) }
                 val titleText = astNode.children
                     .firstOrNull { it.type == MarkdownElementTypes.LINK_TITLE }
                     ?.children

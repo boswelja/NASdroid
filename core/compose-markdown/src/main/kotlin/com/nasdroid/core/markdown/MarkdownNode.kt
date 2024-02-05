@@ -117,13 +117,13 @@ data class MarkdownImage(
  *
  * See [Links](https://commonmark.org/help/tutorial/07-links.html) for a how-to.
  *
- * @property displayText The text that is displayed to the user representing this link.
+ * @property displayText The [MarkdownSpanNode]s that are displayed to the user representing this link.
  * @property titleText Optional accompanying text for the link. This can be used to provide
  * additional context.
  * @property url The link that users should be navigated to upon clicking.
  */
 data class MarkdownLink(
-    val displayText: List<MarkdownText>,
+    val displayText: List<MarkdownSpanNode>,
     val titleText: String?,
     val url: String,
 ) : MarkdownSpanNode
