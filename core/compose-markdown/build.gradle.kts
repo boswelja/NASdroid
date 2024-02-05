@@ -43,4 +43,7 @@ dependencies {
     debugImplementation(libs.bundles.compose.tooling)
 
     implementation(libs.intellij.markdown)
+    implementation(libs.coil.compose)
+
+    testImplementation(libs.kotlin.test)
 }
