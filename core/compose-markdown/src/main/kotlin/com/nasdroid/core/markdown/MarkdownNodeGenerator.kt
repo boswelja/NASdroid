@@ -146,7 +146,11 @@ class MarkdownNodeGenerator(
         val imageLink = astNode.children[1]
         val link = parseLinkNode(imageLink)
 
-        return MarkdownImage(link.url, link.displayText.joinToString(separator = " ") { (it as MarkdownText).text }, link.titleText)
+        return MarkdownImage(
+            imageUrl = link.url,
+            contentDescription = link.displayText.joinToString(separator = " ") { (it as MarkdownText).text },
+            titleText = link.titleText
+        )
     }
 
     private fun parseHeaderNode(astNode: ASTNode): MarkdownHeading {
@@ -248,7 +252,6 @@ class MarkdownNodeGenerator(
                 val link = astNode.children
                     .first { it.type == MarkdownElementTypes.LINK_DESTINATION }
                     .getTextInNode(allFileText)
-                    .toString()
                 val label = astNode.children
                     .first { it.type == MarkdownElementTypes.LINK_TEXT }
                     .children
@@ -261,7 +264,7 @@ class MarkdownNodeGenerator(
                     ?.getTextInNode(allFileText)
                 MarkdownLink(
                     displayText = label,
-                    url = link,
+                    url = link.toString(),
                     titleText = titleText?.toString()
                 )
             }
