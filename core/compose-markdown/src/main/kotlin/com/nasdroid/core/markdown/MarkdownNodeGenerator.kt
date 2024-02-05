@@ -90,11 +90,11 @@ class MarkdownNodeGenerator(
                         it.type == MarkdownTokenTypes.CODE_FENCE_END ||
                         it.type == MarkdownTokenTypes.FENCE_LANG
             }
-            .joinToString(separator = "") {
-                if (it.type == MarkdownTokenTypes.EOL) {
+            .joinToString(separator = "") { node ->
+                if (node.type == MarkdownTokenTypes.EOL) {
                     "\n"
                 } else {
-                    it.getTextInNode(allFileText)
+                    node.getTextInNode(allFileText)
                 }
             }
             .trim('\n')
