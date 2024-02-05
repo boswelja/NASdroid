@@ -1,45 +1,143 @@
 package com.nasdroid.core.markdown
 
+/**
+ * Encapsulates all possible content types within a Markdown document.
+ */
 sealed interface MarkdownNode
 
+/**
+ * Describes a Markdown paragraph. A paragraph is a collection of spans that make up a block of text.
+ *
+ * See [Paragraphs](https://commonmark.org/help/tutorial/03-paragraphs.html) for a how-to, or
+ * [MarkdownSpanNode] for possible span types.
+ *
+ * @property children The list of [MarkdownSpanNode]s this paragraph contains.
+ */
 data class MarkdownParagraph(
     val children: List<MarkdownSpanNode>
 ) : MarkdownNode
 
+/**
+ * Describes a Markdown block quote. A block quote is a fully-formatted Markdown section that is
+ * visually distinct from the rest of the document, usually used to indicate a quote.
+ *
+ * See [Blockquotes](https://commonmark.org/help/tutorial/05-blockquotes.html) for a how-to.
+ *
+ * @property children The list of [MarkdownNode]s contained within the block quote.
+ */
 data class MarkdownBlockQuote(
     val children: List<MarkdownNode>
 ) : MarkdownNode
 
+/**
+ * Represents a Markdown rule. A rule is a horizontal line spanning the width of the document,
+ * usually used to separate content.
+ */
 data object MarkdownRule : MarkdownNode
 
+/**
+ * Represents whitespace in a Markdown Span.
+ */
 data object MarkdownWhitespace : MarkdownSpanNode
 
+/**
+ * Represents a line end in a Markdown Span.
+ */
 data object MarkdownEol: MarkdownSpanNode
 
+/**
+ * Describes Markdown code block. A code block is a visually distinct section of non-formattable
+ * text, usually used to display code.
+ *
+ * See [Code](https://commonmark.org/help/tutorial/09-code.html) for a how-to.
+ *
+ * @property code The contents of the code block.
+ * @property language The language the code is written in, if specified.
+ */
 data class MarkdownCodeBlock(
     val code: String,
     val language: String?
 ): MarkdownNode
 
-data class MarkdownHeader(
+/**
+ * Describes a Markdown heading. A heading is a line of stylized text, typically larger than the
+ * main file content, used to denote the start of a section.
+ *
+ * See [Headings](https://commonmark.org/help/tutorial/04-headings.html) for a how-to.
+ *
+ * @property children A list of [MarkdownSpanNode]s that are contained in this heading.
+ * @property size The [Size] of the heading.
+ */
+data class MarkdownHeading(
     val children: List<MarkdownSpanNode>,
-    val typeToken: TypographyToken,
-) : MarkdownNode
+    val size: Size,
+) : MarkdownNode {
 
+    /**
+     * Represents a Markdown heading size. [Headline1] is the largest size, while [Headline6] is the
+     * smallest.
+     */
+    enum class Size {
+        Headline1,
+        Headline2,
+        Headline3,
+        Headline4,
+        Headline5,
+        Headline6,
+    }
+}
+
+/**
+ * Encapsulates all possible span nodes in a Markdown document. A span node is a stylized element
+ * contained within a block of text, like a paragraph.
+ */
 sealed interface MarkdownSpanNode : MarkdownNode
 
+/**
+ * Describes a Markdown image. An image is an inline rich media preview.
+ *
+ * See [Images](https://commonmark.org/help/tutorial/08-images.html) for a how-to.
+ *
+ * @property imageUrl The URL used to load the image. This may be relative to the URL of the
+ * Markdown document.
+ * @property contentDescription The content description of the image. This is used to describe the
+ * image.
+ * @property titleText Optional accompanying text for the image. This can be used to provide
+ * additional context.
+ */
 data class MarkdownImage(
     val imageUrl: String,
     val contentDescription: String,
     val titleText: String?,
 ) : MarkdownSpanNode
 
+/**
+ * Describes a Markdown link. A link is a clickable text element that navigates the user to the
+ * specified URL.
+ *
+ * See [Links](https://commonmark.org/help/tutorial/07-links.html) for a how-to.
+ *
+ * @property displayText The text that is displayed to the user representing this link.
+ * @property titleText Optional accompanying text for the link. This can be used to provide
+ * additional context.
+ * @property url The link that users should be navigated to upon clicking.
+ */
 data class MarkdownLink(
     val displayText: List<MarkdownText>,
     val titleText: String?,
     val url: String,
 ) : MarkdownSpanNode
 
+/**
+ * Describes a Markdown text. A text is a span element that can be displayed with various emphasis.
+ *
+ * See [Emphasis](https://commonmark.org/help/tutorial/02-emphasis.html) for a how-to.
+ *
+ * @property text The content of the text span.
+ * @property isBold Whether the text span is bold.
+ * @property isItalics Whether the text span is italicized.
+ * @property isStrikethrough Whether the text span is stricken through.
+ */
 data class MarkdownText(
     val text: String,
     val isBold: Boolean,
@@ -47,6 +145,14 @@ data class MarkdownText(
     val isStrikethrough: Boolean,
 ) : MarkdownSpanNode
 
+/**
+ * Describes a Markdown code span. A code span is a text element that is visually distinct from the
+ * surrounding content, and is displayed in a monospace font.
+ *
+ * See [Code](https://commonmark.org/help/tutorial/09-code.html) for a how-to.
+ *
+ * @property text The text contained within the code span.
+ */
 data class MarkdownCodeSpan(
     val text: String,
 ): MarkdownSpanNode

@@ -93,7 +93,7 @@ class MarkdownNodeGeneratorTest {
                 MarkdownWhitespace,
                 MarkdownEol,
                 MarkdownWhitespace,
-                produceMarkdownHeaderNode(TypographyToken.Headline1, produceMarkdownTextNode("Heading")),
+                produceMarkdownHeaderNode(MarkdownHeading.Size.Headline1, produceMarkdownTextNode("Heading")),
             )
         )
 
@@ -158,17 +158,17 @@ class MarkdownNodeGeneratorTest {
             """
                 H1
                 ===
-            """.trimIndent() to produceMarkdownHeaderNode(TypographyToken.Headline1, produceMarkdownTextNode("H1")),
-            "# H1" to produceMarkdownHeaderNode(TypographyToken.Headline1, produceMarkdownTextNode("H1")),
+            """.trimIndent() to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline1, produceMarkdownTextNode("H1")),
+            "# H1" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline1, produceMarkdownTextNode("H1")),
             """
                 H2
                 ---
-            """.trimIndent() to produceMarkdownHeaderNode(TypographyToken.Headline2, produceMarkdownTextNode("H2")),
-            "## H2" to produceMarkdownHeaderNode(TypographyToken.Headline2, produceMarkdownTextNode("H2")),
-            "### H3" to produceMarkdownHeaderNode(TypographyToken.Headline3, produceMarkdownTextNode("H3")),
-            "#### H4" to produceMarkdownHeaderNode(TypographyToken.Headline4, produceMarkdownTextNode("H4")),
-            "##### H5" to produceMarkdownHeaderNode(TypographyToken.Headline5, produceMarkdownTextNode("H5")),
-            "###### H6" to produceMarkdownHeaderNode(TypographyToken.Headline6, produceMarkdownTextNode("H6")),
+            """.trimIndent() to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline2, produceMarkdownTextNode("H2")),
+            "## H2" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline2, produceMarkdownTextNode("H2")),
+            "### H3" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline3, produceMarkdownTextNode("H3")),
+            "#### H4" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline4, produceMarkdownTextNode("H4")),
+            "##### H5" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline5, produceMarkdownTextNode("H5")),
+            "###### H6" to produceMarkdownHeaderNode(MarkdownHeading.Size.Headline6, produceMarkdownTextNode("H6")),
         )
 
         private val IMAGE_PATTERNS = mapOf(
@@ -252,12 +252,12 @@ class MarkdownNodeGeneratorTest {
         }
 
         private fun produceMarkdownHeaderNode(
-            typographyToken: TypographyToken,
+            size: MarkdownHeading.Size,
             vararg children: MarkdownSpanNode
-        ): MarkdownHeader {
-            return MarkdownHeader(
+        ): MarkdownHeading {
+            return MarkdownHeading(
                 children = children.toList(),
-                typeToken = typographyToken
+                size = size
             )
         }
     }
@@ -284,7 +284,7 @@ class MarkdownNodeGeneratorTest {
         testParagraphParsing(markdown, MarkdownParagraph(listOf(expectedText)))
     }
 
-    private fun testHeaderParsing(markdown: String, expectedHeader: MarkdownHeader) {
+    private fun testHeaderParsing(markdown: String, expectedHeader: MarkdownHeading) {
         val generator = MarkdownNodeGenerator(markdown, produceMarkdownAstNode(markdown))
         val actual = generator.generateNodes()
         assertEquals(

@@ -101,10 +101,10 @@ class MarkdownNodeGenerator(
         return MarkdownImage(link.url, link.displayText.joinToString(separator = " ") { it.text }, link.titleText)
     }
 
-    private fun parseHeaderNode(astNode: ASTNode): MarkdownHeader {
+    private fun parseHeaderNode(astNode: ASTNode): MarkdownHeading {
         return when (astNode.type) {
             MarkdownElementTypes.SETEXT_1,
-            MarkdownElementTypes.ATX_1 -> MarkdownHeader(
+            MarkdownElementTypes.ATX_1 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot {
                         it.type == MarkdownTokenTypes.SETEXT_1 ||
@@ -112,10 +112,10 @@ class MarkdownNodeGenerator(
                                 it.type == MarkdownTokenTypes.ATX_HEADER
                     }
                     .map { parseTextNode(it) },
-                typeToken = TypographyToken.Headline1,
+                size = TypographyToken.Headline1,
             )
             MarkdownElementTypes.SETEXT_2,
-            MarkdownElementTypes.ATX_2 -> MarkdownHeader(
+            MarkdownElementTypes.ATX_2 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot {
                         it.type == MarkdownTokenTypes.SETEXT_2 ||
@@ -123,31 +123,31 @@ class MarkdownNodeGenerator(
                                 it.type == MarkdownTokenTypes.ATX_HEADER
                     }
                     .map { parseTextNode(it) },
-                typeToken = TypographyToken.Headline2,
+                size = TypographyToken.Headline2,
             )
-            MarkdownElementTypes.ATX_3 -> MarkdownHeader(
+            MarkdownElementTypes.ATX_3 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
                     .map { parseTextNode(it) },
-                typeToken = TypographyToken.Headline3,
+                size = TypographyToken.Headline3,
             )
-            MarkdownElementTypes.ATX_4 -> MarkdownHeader(
+            MarkdownElementTypes.ATX_4 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
                     .map { parseTextNode(it) },
-                typeToken = TypographyToken.Headline4,
+                size = TypographyToken.Headline4,
             )
-            MarkdownElementTypes.ATX_5 -> MarkdownHeader(
+            MarkdownElementTypes.ATX_5 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
                     .map { parseTextNode(it) },
-                typeToken = TypographyToken.Headline5,
+                size = TypographyToken.Headline5,
             )
-            MarkdownElementTypes.ATX_6 -> MarkdownHeader(
+            MarkdownElementTypes.ATX_6 -> MarkdownHeading(
                 children = astNode.children
                     .filterNot { it.type == MarkdownTokenTypes.ATX_HEADER }
                     .map { parseTextNode(it) },
-                typeToken = TypographyToken.Headline6,
+                size = TypographyToken.Headline6,
             )
             else -> error("Unsure how to handle header type ${astNode.type}")
         }
