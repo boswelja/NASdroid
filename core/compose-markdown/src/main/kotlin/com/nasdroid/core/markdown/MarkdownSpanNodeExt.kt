@@ -1,9 +1,13 @@
 package com.nasdroid.core.markdown
 
+import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
@@ -12,6 +16,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import com.nasdroid.core.markdown.generator.MarkdownCodeSpan
 import com.nasdroid.core.markdown.generator.MarkdownEol
 import com.nasdroid.core.markdown.generator.MarkdownImage
@@ -20,11 +28,45 @@ import com.nasdroid.core.markdown.generator.MarkdownSpanNode
 import com.nasdroid.core.markdown.generator.MarkdownText
 import com.nasdroid.core.markdown.generator.MarkdownWhitespace
 
-@OptIn(ExperimentalTextApi::class)
-fun MarkdownSpanNode.toAnnotatedString(
+data class TextWithContent(
+    val text: AnnotatedString,
+    val content: Map<String, InlineTextContent>
+)
+
+fun List<MarkdownSpanNode>.buildTextWithContent(
     textStyle: TextStyle,
     linkStyle: TextStyle = textStyle.copy(color = Color.Blue, textDecoration = TextDecoration.Underline),
-    codeStyle: TextStyle = textStyle.copy(color = Color.Blue, textDecoration = TextDecoration.Underline)
+    codeStyle: TextStyle = textStyle.copy(color = Color.Blue, textDecoration = TextDecoration.Underline),
+): TextWithContent {
+    val content = mutableMapOf<String, InlineTextContent>()
+    val text = buildAnnotatedString {
+        this@buildTextWithContent.forEach { node ->
+            if (node is MarkdownImage) {
+                content[node.imageUrl] = InlineTextContent(
+                    // TODO auto-size the content
+                    placeholder = Placeholder(100.sp, 100.sp, PlaceholderVerticalAlign.TextBottom)
+                ) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(node.imageUrl)
+                            .decoderFactory(SvgDecoder.Factory())
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = it
+                    )
+                }
+            }
+            append(node.toAnnotatedString(textStyle, linkStyle, codeStyle))
+        }
+    }
+    return TextWithContent(text, content)
+}
+
+@OptIn(ExperimentalTextApi::class)
+internal fun MarkdownSpanNode.toAnnotatedString(
+    textStyle: TextStyle,
+    linkStyle: TextStyle,
+    codeStyle: TextStyle
 ): AnnotatedString {
     return when (this) {
         is MarkdownCodeSpan -> AnnotatedString(
@@ -38,7 +80,7 @@ fun MarkdownSpanNode.toAnnotatedString(
             withAnnotation(UrlAnnotation(url)) {
                 withStyle(linkStyle.toSpanStyle()) {
                     displayText.forEach {
-                        append(it.toAnnotatedString(textStyle))
+                        append(it.toAnnotatedString(textStyle, linkStyle, codeStyle))
                     }
                 }
             }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -74,7 +75,18 @@ internal fun MarkdownNode(
     when (node) {
         is MarkdownBlockQuote -> MarkdownBlockQuote(blockQuote = node)
         is MarkdownCodeBlock -> MarkdownCodeBlock(codeBlock = node)
-        is MarkdownHeading -> MarkdownHeading(node, modifier)
+        is MarkdownHeading -> MarkdownHeading(
+            heading = node,
+            modifier = modifier,
+            headingStyles = HeadingStyles(
+                headline1 = MaterialTheme.typography.displaySmall,
+                headline2 = MaterialTheme.typography.headlineLarge,
+                headline3 = MaterialTheme.typography.headlineMedium,
+                headline4 = MaterialTheme.typography.headlineSmall,
+                headline5 = MaterialTheme.typography.titleLarge,
+                headline6 = MaterialTheme.typography.titleMedium
+            )
+        )
         is MarkdownOrderedList -> MarkdownOrderedList(node, modifier)
         is MarkdownParagraph -> MarkdownParagraph(
             paragraph = node,
@@ -106,13 +118,18 @@ internal fun MarkdownOrderedList(
 ) {
     Column(modifier) {
         list.listItems.forEachIndexed { index, markdownParagraph ->
-            val annotatedString = remember(index, markdownParagraph) {
-                buildAnnotatedString {
+            val (annotatedString, inlineContent) = remember(index, markdownParagraph) {
+                val textWithContent = markdownParagraph.children.buildTextWithContent(textStyle)
+                val listItemText = buildAnnotatedString {
                     append("\t${index + 1}. ")
-                    markdownParagraph.children.forEach { append(it.toAnnotatedString(textStyle)) }
+                    append(textWithContent.text)
                 }
+                Pair(listItemText, textWithContent.content)
             }
-            Text(annotatedString)
+            BasicText(
+                text = annotatedString,
+                inlineContent = inlineContent
+            )
         }
     }
 }
@@ -124,14 +141,19 @@ internal fun MarkdownUnorderedList(
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     Column(modifier) {
-        list.listItems.forEachIndexed { index, markdownParagraph ->
-            val annotatedString = remember(index, markdownParagraph) {
-                buildAnnotatedString {
+        list.listItems.forEach { markdownParagraph ->
+            val (annotatedString, inlineContent) = remember(markdownParagraph) {
+                val textWithContent = markdownParagraph.children.buildTextWithContent(textStyle)
+                val listItemText = buildAnnotatedString {
                     append("\t\u2022 ")
-                    markdownParagraph.children.forEach { append(it.toAnnotatedString(textStyle)) }
+                    append(textWithContent.text)
                 }
+                Pair(listItemText, textWithContent.content)
             }
-            Text(annotatedString)
+            BasicText(
+                text = annotatedString,
+                inlineContent = inlineContent
+            )
         }
     }
 }
@@ -173,32 +195,6 @@ internal fun MarkdownBlockQuote(
             }
         }
     }
-}
-
-@Composable
-internal fun MarkdownHeading(
-    heading: MarkdownHeading,
-    modifier: Modifier = Modifier
-) {
-    val typeStyle = when (heading.size) {
-        MarkdownHeading.Size.Headline1 -> MaterialTheme.typography.displaySmall
-        MarkdownHeading.Size.Headline2 -> MaterialTheme.typography.headlineLarge
-        MarkdownHeading.Size.Headline3 -> MaterialTheme.typography.headlineMedium
-        MarkdownHeading.Size.Headline4 -> MaterialTheme.typography.headlineSmall
-        MarkdownHeading.Size.Headline5 -> MaterialTheme.typography.titleLarge
-        MarkdownHeading.Size.Headline6 -> MaterialTheme.typography.titleMedium
-    }
-    val annotatedString = remember(heading) {
-        buildAnnotatedString {
-            heading.children.forEach {
-                append(it.toAnnotatedString(typeStyle))
-            }
-        }
-    }
-    Text(
-        text = annotatedString,
-        modifier = modifier,
-    )
 }
 
 @Preview(showBackground = true, heightDp = 1800)
