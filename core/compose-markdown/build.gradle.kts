@@ -44,6 +44,7 @@ dependencies {
 
     implementation(libs.intellij.markdown)
     implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
 
     testImplementation(libs.kotlin.test)
 }
