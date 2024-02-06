@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -16,8 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -74,7 +71,12 @@ internal fun MarkdownNode(
 ) {
     when (node) {
         is MarkdownBlockQuote -> MarkdownBlockQuote(blockQuote = node)
-        is MarkdownCodeBlock -> MarkdownCodeBlock(codeBlock = node)
+        is MarkdownCodeBlock -> MarkdownCodeBlock(
+            codeBlock = node,
+            textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace),
+            background = Color.Gray,
+            shape = MaterialTheme.shapes.medium
+        )
         is MarkdownHeading -> MarkdownHeading(
             heading = node,
             modifier = modifier,
@@ -87,7 +89,11 @@ internal fun MarkdownNode(
                 headline6 = MaterialTheme.typography.titleMedium
             )
         )
-        is MarkdownOrderedList -> MarkdownOrderedList(node, modifier)
+        is MarkdownOrderedList -> MarkdownOrderedList(
+            list = node,
+            textStyle = MaterialTheme.typography.bodyLarge,
+            modifier = modifier
+        )
         is MarkdownParagraph -> MarkdownParagraph(
             paragraph = node,
             textStyle = MaterialTheme.typography.bodyLarge,
@@ -96,7 +102,11 @@ internal fun MarkdownNode(
         MarkdownRule -> HorizontalDivider()
         is MarkdownTable -> TODO()
         is MarkdownHtmlBlock -> MarkdownHtmlBlock(node, modifier)
-        is MarkdownUnorderedList -> MarkdownUnorderedList(node, modifier)
+        is MarkdownUnorderedList -> MarkdownUnorderedList(
+            list = node,
+            textStyle = MaterialTheme.typography.bodyLarge,
+            modifier = modifier
+        )
         MarkdownEol,
         MarkdownWhitespace -> { /* no-op */ }
     }
@@ -108,72 +118,6 @@ internal fun MarkdownHtmlBlock(
     modifier: Modifier = Modifier
 ) {
     Text(htmlBlock.text, modifier = modifier)
-}
-
-@Composable
-internal fun MarkdownOrderedList(
-    list: MarkdownOrderedList,
-    modifier: Modifier = Modifier,
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
-) {
-    Column(modifier) {
-        list.listItems.forEachIndexed { index, markdownParagraph ->
-            val (annotatedString, inlineContent) = remember(index, markdownParagraph) {
-                val textWithContent = markdownParagraph.children.buildTextWithContent(textStyle)
-                val listItemText = buildAnnotatedString {
-                    append("\t${index + 1}. ")
-                    append(textWithContent.text)
-                }
-                Pair(listItemText, textWithContent.content)
-            }
-            BasicText(
-                text = annotatedString,
-                inlineContent = inlineContent
-            )
-        }
-    }
-}
-
-@Composable
-internal fun MarkdownUnorderedList(
-    list: MarkdownUnorderedList,
-    modifier: Modifier = Modifier,
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
-) {
-    Column(modifier) {
-        list.listItems.forEach { markdownParagraph ->
-            val (annotatedString, inlineContent) = remember(markdownParagraph) {
-                val textWithContent = markdownParagraph.children.buildTextWithContent(textStyle)
-                val listItemText = buildAnnotatedString {
-                    append("\t\u2022 ")
-                    append(textWithContent.text)
-                }
-                Pair(listItemText, textWithContent.content)
-            }
-            BasicText(
-                text = annotatedString,
-                inlineContent = inlineContent
-            )
-        }
-    }
-}
-
-@Composable
-internal fun MarkdownCodeBlock(
-    codeBlock: MarkdownCodeBlock,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = Modifier
-            .background(Color.Gray, MaterialTheme.shapes.medium)
-            .then(modifier)
-    ) {
-        Text(
-            text = codeBlock.code,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier.padding(8.dp)
-        )
-    }
 }
 
 @Composable
