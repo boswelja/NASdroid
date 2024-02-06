@@ -213,3 +213,12 @@ data class MarkdownOrderedList(
 data class MarkdownUnorderedList(
     val listItems: List<MarkdownParagraph>
 ) : MarkdownNode
+
+/**
+ * Describes a block of HTML-formatted text contained within a Markdown document.
+ *
+ * @property text The HTML-formatted text that makes up the block.
+ */
+data class MarkdownHtmlBlock(
+    val text: String
+) : MarkdownNode

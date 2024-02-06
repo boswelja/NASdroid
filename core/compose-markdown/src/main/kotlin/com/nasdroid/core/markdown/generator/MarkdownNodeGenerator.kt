@@ -43,10 +43,12 @@ class MarkdownNodeGenerator(
             MarkdownTokenTypes.EOL -> MarkdownEol
             MarkdownTokenTypes.WHITE_SPACE -> MarkdownWhitespace
             MarkdownTokenTypes.HORIZONTAL_RULE -> MarkdownRule
+            MarkdownElementTypes.CODE_BLOCK,
             MarkdownElementTypes.CODE_FENCE -> parseCodeBlock(astNode)
             GFMElementTypes.TABLE -> parseTable(astNode)
             MarkdownElementTypes.UNORDERED_LIST -> parseUnorderedList(astNode)
             MarkdownElementTypes.ORDERED_LIST -> parseOrderedList(astNode)
+            MarkdownElementTypes.HTML_BLOCK -> MarkdownHtmlBlock(astNode.getTextInNode(allFileText).toString())
             else -> error("Unknown node type ${astNode.type}")
         }
     }
@@ -98,6 +100,7 @@ class MarkdownNodeGenerator(
                 }
             }
             .trim('\n')
+            .trimIndent()
         return MarkdownCodeBlock(code, language)
     }
 
@@ -124,6 +127,8 @@ class MarkdownNodeGenerator(
             MarkdownTokenTypes.TEXT,
             MarkdownTokenTypes.SETEXT_CONTENT,
             MarkdownTokenTypes.ATX_CONTENT,
+            MarkdownTokenTypes.HTML_TAG,
+            MarkdownTokenTypes.HTML_BLOCK_CONTENT,
             MarkdownElementTypes.EMPH -> parseTextNode(astNode)
             MarkdownTokenTypes.WHITE_SPACE -> MarkdownWhitespace
             MarkdownTokenTypes.EOL -> MarkdownEol
@@ -209,6 +214,8 @@ class MarkdownNodeGenerator(
         return when (astNode.type) {
             MarkdownTokenTypes.SETEXT_CONTENT,
             MarkdownTokenTypes.ATX_CONTENT,
+            MarkdownTokenTypes.HTML_TAG,
+            MarkdownTokenTypes.HTML_BLOCK_CONTENT,
             MarkdownTokenTypes.TEXT -> MarkdownText(
                 text = astNode.getTextInNode(allFileText).trim().toString(),
                 isBold = false,
