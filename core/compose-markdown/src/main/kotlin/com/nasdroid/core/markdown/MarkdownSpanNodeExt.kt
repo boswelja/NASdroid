@@ -11,6 +11,7 @@ import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -36,7 +37,7 @@ data class TextWithContent(
 fun List<MarkdownSpanNode>.buildTextWithContent(
     textStyle: TextStyle,
     linkStyle: TextStyle = textStyle.copy(color = Color.Blue, textDecoration = TextDecoration.Underline),
-    codeStyle: TextStyle = textStyle.copy(color = Color.Blue, textDecoration = TextDecoration.Underline),
+    codeStyle: TextStyle = textStyle.copy(background = Color.Gray, fontFamily = FontFamily.Monospace),
 ): TextWithContent {
     val content = mutableMapOf<String, InlineTextContent>()
     val text = buildAnnotatedString {

@@ -141,7 +141,7 @@ internal fun MarkdownBlockQuote(
     }
 }
 
-@Preview(showBackground = true, heightDp = 1800)
+@Preview(showBackground = true, heightDp = 1900)
 @Composable
 fun MarkdownTextPreview() {
     MarkdownText("""

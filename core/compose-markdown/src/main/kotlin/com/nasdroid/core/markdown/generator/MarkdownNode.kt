@@ -196,10 +196,10 @@ data class MarkdownTable(
  *
  * See [Lists](https://commonmark.org/help/tutorial/06-lists.html) for a how-to.
  *
- * @property listItems A list of [MarkdownParagraph]s this list contains.
+ * @property listItems A list of [MarkdownNode]s this list contains.
  */
 data class MarkdownOrderedList(
-    val listItems: List<MarkdownParagraph>
+    val listItems: List<MarkdownNode>
 ) : MarkdownNode
 
 /**
@@ -208,10 +208,10 @@ data class MarkdownOrderedList(
  *
  * See [Lists](https://commonmark.org/help/tutorial/06-lists.html) for a how-to.
  *
- * @property listItems A list of [MarkdownParagraph]s this list contains.
+ * @property listItems A list of [MarkdownNode]s this list contains.
  */
 data class MarkdownUnorderedList(
-    val listItems: List<MarkdownParagraph>
+    val listItems: List<MarkdownNode>
 ) : MarkdownNode
 
 /**
