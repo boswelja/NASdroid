@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
 import com.nasdroid.core.markdown.generator.MarkdownCodeBlock
-import com.nasdroid.core.markdown.generator.MarkdownEol
 import com.nasdroid.core.markdown.generator.MarkdownHeading
 import com.nasdroid.core.markdown.generator.MarkdownHtmlBlock
 import com.nasdroid.core.markdown.generator.MarkdownNode
@@ -32,7 +31,6 @@ import com.nasdroid.core.markdown.generator.MarkdownParagraph
 import com.nasdroid.core.markdown.generator.MarkdownRule
 import com.nasdroid.core.markdown.generator.MarkdownTable
 import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
-import com.nasdroid.core.markdown.generator.MarkdownWhitespace
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 
@@ -107,8 +105,6 @@ internal fun MarkdownNode(
             textStyle = MaterialTheme.typography.bodyLarge,
             modifier = modifier
         )
-        MarkdownEol,
-        MarkdownWhitespace -> { /* no-op */ }
     }
 }
 

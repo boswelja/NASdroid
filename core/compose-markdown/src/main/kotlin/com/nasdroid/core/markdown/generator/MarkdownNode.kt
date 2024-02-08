@@ -44,12 +44,12 @@ data object MarkdownRule : MarkdownNode
 /**
  * Represents whitespace in a Markdown Span.
  */
-data object MarkdownWhitespace : MarkdownSpanNode, MarkdownNode
+data object MarkdownWhitespace : MarkdownSpanNode
 
 /**
  * Represents a line end in a Markdown Span.
  */
-data object MarkdownEol: MarkdownSpanNode, MarkdownNode
+data object MarkdownEol: MarkdownSpanNode
 
 /**
  * Describes Markdown code block. A code block is a visually distinct section of non-formattable

@@ -25,10 +25,10 @@ class MarkdownNodeGenerator(
      * Generates a list of [MarkdownNode]s from the data provided at construction time.
      */
     fun generateNodes(): List<MarkdownNode> {
-        return rootNode.children.map { parseGenericNode(it) }
+        return rootNode.children.mapNotNull { parseGenericNode(it) }
     }
 
-    private fun parseGenericNode(astNode: ASTNode): MarkdownNode {
+    private fun parseGenericNode(astNode: ASTNode): MarkdownNode? {
         return when (astNode.type) {
             MarkdownElementTypes.ATX_1,
             MarkdownElementTypes.ATX_2,
@@ -40,8 +40,8 @@ class MarkdownNodeGenerator(
             MarkdownElementTypes.SETEXT_2 -> parseHeaderNode(astNode)
             MarkdownElementTypes.PARAGRAPH -> parseParagraphNode(astNode)
             MarkdownElementTypes.BLOCK_QUOTE -> parseBlockQuote(astNode)
-            MarkdownTokenTypes.EOL -> MarkdownEol
-            MarkdownTokenTypes.WHITE_SPACE -> MarkdownWhitespace
+            MarkdownTokenTypes.EOL,
+            MarkdownTokenTypes.WHITE_SPACE -> null // Ignored in generic nodes, the renderer should handle it.
             MarkdownTokenTypes.HORIZONTAL_RULE -> MarkdownRule
             MarkdownElementTypes.CODE_BLOCK,
             MarkdownElementTypes.CODE_FENCE -> parseCodeBlock(astNode)
@@ -59,8 +59,7 @@ class MarkdownNodeGenerator(
             .map { listItemNode ->
                 MarkdownListItem(
                     content = listItemNode.children.drop(1)
-                        .map { parseGenericNode(it) }
-                        .filterNot { it is MarkdownEol || it is MarkdownWhitespace }
+                        .mapNotNull { parseGenericNode(it) }
                 )
             }
         return MarkdownUnorderedList(listItems)
@@ -114,7 +113,7 @@ class MarkdownNodeGenerator(
         return MarkdownBlockQuote(
             children = astNode.children
                 .filterNot { it.type == MarkdownTokenTypes.BLOCK_QUOTE }
-                .map { parseGenericNode(it) }
+                .mapNotNull { parseGenericNode(it) }
         )
     }
 

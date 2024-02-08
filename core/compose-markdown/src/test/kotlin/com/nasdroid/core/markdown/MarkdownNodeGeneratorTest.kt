@@ -104,17 +104,9 @@ class MarkdownNodeGeneratorTest {
                 markdownBlockQuote(
                     markdownParagraph(markdownText("What on earth"))
                 ),
-                MarkdownEol,
-                MarkdownWhitespace,
-                MarkdownEol,
-                MarkdownWhitespace,
                 markdownBlockQuote(
                     markdownParagraph(markdownText("Is this"))
                 ),
-                MarkdownEol,
-                MarkdownWhitespace,
-                MarkdownEol,
-                MarkdownWhitespace,
                 markdownHeader(MarkdownHeading.Size.Headline1, markdownText("Heading")),
             )
         )
