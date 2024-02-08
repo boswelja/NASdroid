@@ -19,6 +19,7 @@ import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.nasdroid.core.markdown.generator.MarkdownCodeSpan
@@ -49,6 +50,7 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(node.imageUrl)
                             .decoderFactory(SvgDecoder.Factory())
+                            .decoderFactory(ImageDecoderDecoder.Factory())
                             .crossfade(true)
                             .build(),
                         contentDescription = it
