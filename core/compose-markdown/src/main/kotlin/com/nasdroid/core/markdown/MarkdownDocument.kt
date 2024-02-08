@@ -1,15 +1,12 @@
 package com.nasdroid.core.markdown
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -71,7 +68,11 @@ internal fun MarkdownNode(
     modifier: Modifier = Modifier
 ) {
     when (node) {
-        is MarkdownBlockQuote -> MarkdownBlockQuote(blockQuote = node)
+        is MarkdownBlockQuote -> MarkdownBlockQuote(
+            blockQuote = node,
+            backgroundColor = Color.Gray,
+            shape = MaterialTheme.shapes.medium
+        )
         is MarkdownCodeBlock -> MarkdownCodeBlock(
             codeBlock = node,
             textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace),
@@ -102,41 +103,16 @@ internal fun MarkdownNode(
         )
         MarkdownRule -> HorizontalDivider()
         is MarkdownTable -> TODO()
-        is MarkdownHtmlBlock -> MarkdownHtmlBlock(node, modifier)
+        is MarkdownHtmlBlock -> MarkdownHtmlBlock(
+            htmlBlock = node,
+            textStyle = MaterialTheme.typography.bodyLarge,
+            modifier = modifier
+        )
         is MarkdownUnorderedList -> MarkdownUnorderedList(
             list = node,
             textStyle = MaterialTheme.typography.bodyLarge,
             modifier = modifier
         )
-    }
-}
-
-@Composable
-internal fun MarkdownHtmlBlock(
-    htmlBlock: MarkdownHtmlBlock,
-    modifier: Modifier = Modifier
-) {
-    Text(htmlBlock.text, modifier = modifier)
-}
-
-@Composable
-internal fun MarkdownBlockQuote(
-    blockQuote: MarkdownBlockQuote,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = Modifier
-            .background(Color.Gray, MaterialTheme.shapes.medium)
-            .then(modifier)
-    ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.typography.bodyMedium.fontSize.toDp())
-        ) {
-            blockQuote.children.forEach {
-                MarkdownNode(node = it)
-            }
-        }
     }
 }
 
