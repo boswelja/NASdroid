@@ -2,6 +2,7 @@ package com.nasdroid.core.markdown
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -79,13 +80,16 @@ internal fun MarkdownNode(
         is MarkdownBlockQuote -> MarkdownBlockQuote(
             blockQuote = node,
             backgroundColor = Color.Gray,
-            shape = MaterialTheme.shapes.medium
+            nodeSpacing = MaterialTheme.typography.bodyMedium.fontSize.toDp(),
+            shape = MaterialTheme.shapes.medium,
+            innerPadding = PaddingValues(8.dp)
         )
         is MarkdownCodeBlock -> MarkdownCodeBlock(
             codeBlock = node,
             textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace),
             background = Color.Gray,
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            innerPadding = PaddingValues(8.dp)
         )
         is MarkdownHeading -> MarkdownHeading(
             heading = node,

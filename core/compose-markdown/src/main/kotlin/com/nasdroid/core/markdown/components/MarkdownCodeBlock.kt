@@ -2,6 +2,7 @@ package com.nasdroid.core.markdown.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
@@ -22,7 +23,8 @@ fun MarkdownCodeBlock(
     textStyle: TextStyle,
     background: Color,
     shape: Shape,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    innerPadding: PaddingValues = PaddingValues()
 ) {
     Box(
         modifier = Modifier
@@ -32,7 +34,7 @@ fun MarkdownCodeBlock(
         BasicText(
             text = codeBlock.code,
             style = textStyle,
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(innerPadding)
         )
     }
 }
