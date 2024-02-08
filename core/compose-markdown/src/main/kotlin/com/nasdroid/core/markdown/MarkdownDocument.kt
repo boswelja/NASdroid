@@ -17,6 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.nasdroid.core.markdown.components.HeadingStyles
+import com.nasdroid.core.markdown.components.MarkdownBlockQuote
+import com.nasdroid.core.markdown.components.MarkdownCodeBlock
+import com.nasdroid.core.markdown.components.MarkdownHeading
+import com.nasdroid.core.markdown.components.MarkdownHtmlBlock
+import com.nasdroid.core.markdown.components.MarkdownOrderedList
+import com.nasdroid.core.markdown.components.MarkdownParagraph
+import com.nasdroid.core.markdown.components.MarkdownUnorderedList
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
 import com.nasdroid.core.markdown.generator.MarkdownCodeBlock
 import com.nasdroid.core.markdown.generator.MarkdownHeading

@@ -1,4 +1,4 @@
-package com.nasdroid.core.markdown
+package com.nasdroid.core.markdown.components
 
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
