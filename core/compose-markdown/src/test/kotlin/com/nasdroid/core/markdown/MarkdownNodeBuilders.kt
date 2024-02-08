@@ -6,6 +6,7 @@ import com.nasdroid.core.markdown.generator.MarkdownCodeSpan
 import com.nasdroid.core.markdown.generator.MarkdownHeading
 import com.nasdroid.core.markdown.generator.MarkdownImage
 import com.nasdroid.core.markdown.generator.MarkdownLink
+import com.nasdroid.core.markdown.generator.MarkdownListItem
 import com.nasdroid.core.markdown.generator.MarkdownNode
 import com.nasdroid.core.markdown.generator.MarkdownOrderedList
 import com.nasdroid.core.markdown.generator.MarkdownParagraph
@@ -15,12 +16,16 @@ import com.nasdroid.core.markdown.generator.MarkdownText
 import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
 
 object MarkdownNodeBuilders {
-    fun markdownUnorderedList(vararg listItems: MarkdownParagraph): MarkdownUnorderedList {
+    fun markdownUnorderedList(vararg listItems: MarkdownListItem): MarkdownUnorderedList {
         return MarkdownUnorderedList(listItems.toList())
     }
 
-    fun markdownOrderedList(vararg listItems: MarkdownParagraph): MarkdownOrderedList {
+    fun markdownOrderedList(vararg listItems: MarkdownListItem): MarkdownOrderedList {
         return MarkdownOrderedList(listItems.toList())
+    }
+
+    fun markdownListItem(vararg content: MarkdownNode): MarkdownListItem {
+        return MarkdownListItem(content.toList())
     }
 
     fun markdownTable(

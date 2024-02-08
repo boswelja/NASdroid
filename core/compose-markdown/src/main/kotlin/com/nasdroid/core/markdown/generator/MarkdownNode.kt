@@ -199,7 +199,7 @@ data class MarkdownTable(
  * @property listItems A list of [MarkdownNode]s this list contains.
  */
 data class MarkdownOrderedList(
-    val listItems: List<MarkdownNode>
+    val listItems: List<MarkdownListItem>
 ) : MarkdownNode
 
 /**
@@ -211,8 +211,18 @@ data class MarkdownOrderedList(
  * @property listItems A list of [MarkdownNode]s this list contains.
  */
 data class MarkdownUnorderedList(
-    val listItems: List<MarkdownNode>
+    val listItems: List<MarkdownListItem>
 ) : MarkdownNode
+
+/**
+ * Describes a single item contained within a Markdown list. List items can contain a number of
+ * sub-items, for example it could contain one paragraph followed by one (nested) list.
+ *
+ * @property content A list of [MarkdownNode]s that this list item contains.
+ */
+data class MarkdownListItem(
+    val content: List<MarkdownNode>
+)
 
 /**
  * Describes a block of HTML-formatted text contained within a Markdown document.

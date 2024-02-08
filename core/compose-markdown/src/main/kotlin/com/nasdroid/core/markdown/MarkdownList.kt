@@ -28,7 +28,11 @@ fun MarkdownOrderedList(
                     text = "\t${index + 1}.",
                     style = textStyle
                 )
-                MarkdownNode(node = markdownNode)
+                Column {
+                    markdownNode.content.forEach {
+                        MarkdownNode(node = it)
+                    }
+                }
             }
         }
     }
@@ -49,7 +53,11 @@ fun MarkdownUnorderedList(
                     text = "\t\u2022",
                     style = textStyle
                 )
-                MarkdownNode(node = markdownNode)
+                Column {
+                    markdownNode.content.forEach {
+                        MarkdownNode(node = it)
+                    }
+                }
             }
         }
     }

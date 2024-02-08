@@ -56,7 +56,13 @@ class MarkdownNodeGenerator(
     private fun parseUnorderedList(astNode: ASTNode): MarkdownUnorderedList {
         val listItems = astNode.children
             .filter { it.type == MarkdownElementTypes.LIST_ITEM }
-            .map { parseGenericNode(it.children[1]) }
+            .map { listItemNode ->
+                MarkdownListItem(
+                    content = listItemNode.children.drop(1)
+                        .map { parseGenericNode(it) }
+                        .filterNot { it is MarkdownEol || it is MarkdownWhitespace }
+                )
+            }
         return MarkdownUnorderedList(listItems)
     }
 

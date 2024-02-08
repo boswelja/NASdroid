@@ -204,9 +204,9 @@ fun MarkdownTextPreview() {
         9. List
 
         * Mixed
-          1. List
-            + Containing
-          2. Different
+            1. List
+                + Containing
+            2. Different
         * Types
 
         `inline code`

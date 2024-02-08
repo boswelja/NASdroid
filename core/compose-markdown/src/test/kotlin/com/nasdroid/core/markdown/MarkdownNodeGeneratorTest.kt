@@ -12,6 +12,7 @@ import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownTableColumn
 import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownText
 import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownUnorderedList
 import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownLink
+import com.nasdroid.core.markdown.MarkdownNodeBuilders.markdownListItem
 import com.nasdroid.core.markdown.generator.MarkdownEol
 import com.nasdroid.core.markdown.generator.MarkdownHeading
 import com.nasdroid.core.markdown.generator.MarkdownNode
@@ -239,27 +240,27 @@ class MarkdownNodeGeneratorTest {
                 * Oranges
                 * Pears
             """.trimIndent() to markdownUnorderedList(
-                markdownParagraph(markdownText("Apples")),
-                markdownParagraph(markdownText("Oranges")),
-                markdownParagraph(markdownText("Pears")),
+                markdownListItem(markdownParagraph(markdownText("Apples"))),
+                markdownListItem(markdownParagraph(markdownText("Oranges"))),
+                markdownListItem(markdownParagraph(markdownText("Pears"))),
             ),
             """
                 - Apples
                 - Oranges
                 - Pears
             """.trimIndent() to markdownUnorderedList(
-                markdownParagraph(markdownText("Apples")),
-                markdownParagraph(markdownText("Oranges")),
-                markdownParagraph(markdownText("Pears")),
+                markdownListItem(markdownParagraph(markdownText("Apples"))),
+                markdownListItem(markdownParagraph(markdownText("Oranges"))),
+                markdownListItem(markdownParagraph(markdownText("Pears"))),
             ),
             """
                 + Apples
                 + Oranges
                 + Pears
             """.trimIndent() to markdownUnorderedList(
-                markdownParagraph(markdownText("Apples")),
-                markdownParagraph(markdownText("Oranges")),
-                markdownParagraph(markdownText("Pears")),
+                markdownListItem(markdownParagraph(markdownText("Apples"))),
+                markdownListItem(markdownParagraph(markdownText("Oranges"))),
+                markdownListItem(markdownParagraph(markdownText("Pears"))),
             ),
         )
 
@@ -269,19 +270,43 @@ class MarkdownNodeGeneratorTest {
                 2. Oranges
                 3. Pears
             """.trimIndent() to markdownOrderedList(
-                markdownParagraph(markdownText("Apples")),
-                markdownParagraph(markdownText("Oranges")),
-                markdownParagraph(markdownText("Pears")),
+                markdownListItem(markdownParagraph(markdownText("Apples"))),
+                markdownListItem(markdownParagraph(markdownText("Oranges"))),
+                markdownListItem(markdownParagraph(markdownText("Pears"))),
             ),
             """
                 1) Apples
                 2) Oranges
                 3) Pears
             """.trimIndent() to markdownOrderedList(
-                markdownParagraph(markdownText("Apples")),
-                markdownParagraph(markdownText("Oranges")),
-                markdownParagraph(markdownText("Pears")),
+                markdownListItem(markdownParagraph(markdownText("Apples"))),
+                markdownListItem(markdownParagraph(markdownText("Oranges"))),
+                markdownListItem(markdownParagraph(markdownText("Pears"))),
             ),
+        )
+
+        private val MIXED_LIST_PATTERNS = mapOf(
+            """
+                * Mixed
+                    1. List
+                        + Containing
+                    2. Different
+                * Types
+            """.trimIndent() to markdownUnorderedList(
+                markdownListItem(
+                    markdownParagraph(markdownText("Mixed")),
+                    markdownOrderedList(
+                        markdownListItem(
+                            markdownParagraph(markdownText("List")),
+                            markdownUnorderedList(
+                                markdownListItem(markdownParagraph(markdownText("Containing")))
+                            )
+                        ),
+                        markdownListItem(markdownParagraph(markdownText("Different")))
+                    )
+                ),
+                markdownListItem(markdownParagraph(markdownText("Types")))
+            )
         )
 
         private fun produceMarkdownAstNode(markdown: String): ASTNode {
@@ -397,6 +422,13 @@ class MarkdownNodeGeneratorTest {
     @Test
     fun `unordered list parsing`() {
         UNORDERED_LIST_PATTERNS.forEach { (markdown, expected) ->
+            testNodeParsing(markdown, expected)
+        }
+    }
+
+    @Test
+    fun `mixed list parsing`() {
+        MIXED_LIST_PATTERNS.forEach { (markdown, expected) ->
             testNodeParsing(markdown, expected)
         }
     }
