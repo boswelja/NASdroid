@@ -34,8 +34,11 @@ import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 
+/**
+ * Displays a Markdown document.
+ */
 @Composable
-fun MarkdownText(
+fun MarkdownDocument(
     markdown: String,
     modifier: Modifier = Modifier,
     sectionSpacing: Dp = MaterialTheme.typography.bodyMedium.fontSize.toDp()
@@ -140,7 +143,7 @@ internal fun MarkdownBlockQuote(
 @Preview(showBackground = true, heightDp = 1900)
 @Composable
 fun MarkdownTextPreview() {
-    MarkdownText("""
+    MarkdownDocument("""
         # H1        
         H1
         ==

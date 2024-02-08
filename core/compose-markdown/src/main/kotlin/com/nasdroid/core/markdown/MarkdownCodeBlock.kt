@@ -12,6 +12,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.nasdroid.core.markdown.generator.MarkdownCodeBlock
 
+/**
+ * Displays a [MarkdownCodeBlock]. A code block is a visually distinct section of text, usually used
+ * to show code.
+ */
 @Composable
 fun MarkdownCodeBlock(
     codeBlock: MarkdownCodeBlock,

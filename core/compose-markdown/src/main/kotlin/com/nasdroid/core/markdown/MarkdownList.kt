@@ -12,6 +12,10 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.core.markdown.generator.MarkdownOrderedList
 import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
 
+/**
+ * Displays a [MarkdownOrderedList]. An ordered list is a list where each item is prefixed with its
+ * index in the list.
+ */
 @Composable
 fun MarkdownOrderedList(
     list: MarkdownOrderedList,
@@ -25,7 +29,7 @@ fun MarkdownOrderedList(
                 verticalAlignment = Alignment.Top
             ) {
                 BasicText(
-                    text = "\t${index + 1}.",
+                    text = "${index + 1}".padStart(3) + ".",
                     style = textStyle
                 )
                 Column {
@@ -38,6 +42,10 @@ fun MarkdownOrderedList(
     }
 }
 
+/**
+ * Displays a [MarkdownUnorderedList]. An unordered list is a list where each item is prefixed with
+ * a bullet of some description.
+ */
 @Composable
 fun MarkdownUnorderedList(
     list: MarkdownUnorderedList,

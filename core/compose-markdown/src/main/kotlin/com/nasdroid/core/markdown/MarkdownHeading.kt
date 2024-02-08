@@ -7,6 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import com.nasdroid.core.markdown.generator.MarkdownHeading
 
+/**
+ * Displays a [MarkdownHeading]. A heading is a higher emphasis paragraph, usually used to separate
+ * a document into sections.
+ */
 @Composable
 fun MarkdownHeading(
     heading: MarkdownHeading,
@@ -31,6 +35,10 @@ fun MarkdownHeading(
     )
 }
 
+/**
+ * Describes the styles available to all different Markdown headings.
+ */
+@Suppress("UndocumentedPublicProperty") // These are (hopefully) self-explanatory.
 data class HeadingStyles(
     val headline1: TextStyle,
     val headline2: TextStyle,

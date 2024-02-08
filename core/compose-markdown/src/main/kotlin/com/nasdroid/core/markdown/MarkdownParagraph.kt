@@ -9,6 +9,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import com.nasdroid.core.markdown.generator.MarkdownParagraph
 
+/**
+ * Displays a [MarkdownParagraph]. A paragraph is a group of "spans". Spans are stylized sections of
+ * text, but can also include inline images and links.
+ */
 @Composable
 fun MarkdownParagraph(
     paragraph: MarkdownParagraph,

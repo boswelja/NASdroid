@@ -29,11 +29,9 @@ import com.nasdroid.core.markdown.generator.MarkdownSpanNode
 import com.nasdroid.core.markdown.generator.MarkdownText
 import com.nasdroid.core.markdown.generator.MarkdownWhitespace
 
-data class TextWithContent(
-    val text: AnnotatedString,
-    val content: Map<String, InlineTextContent>
-)
-
+/**
+ * Maps a list of [MarkdownSpanNode]s to a [TextWithContent] for use in a Text Composable.
+ */
 fun List<MarkdownSpanNode>.buildTextWithContent(
     textStyle: TextStyle,
     linkStyle: TextStyle = textStyle.copy(color = Color.Blue, textDecoration = TextDecoration.Underline),
@@ -62,6 +60,18 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
     }
     return TextWithContent(text, content)
 }
+
+/**
+ * Describes an [AnnotatedString], along with a map describing inline content within the annotated
+ * string.
+ *
+ * @property text The [AnnotatedString] to be displayed.
+ * @property content The map containing [InlineTextContent]s to be displayed.
+ */
+data class TextWithContent(
+    val text: AnnotatedString,
+    val content: Map<String, InlineTextContent>
+)
 
 @OptIn(ExperimentalTextApi::class)
 internal fun MarkdownSpanNode.toAnnotatedString(
