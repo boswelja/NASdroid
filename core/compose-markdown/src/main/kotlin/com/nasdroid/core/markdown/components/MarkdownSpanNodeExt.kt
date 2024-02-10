@@ -1,7 +1,9 @@
 package com.nasdroid.core.markdown.components
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
@@ -43,7 +45,7 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
         this@buildTextWithContent.forEach { node ->
             if (node is MarkdownImage) {
                 content[node.imageUrl] = InlineTextContent(
-                    // TODO auto-size the content
+                    // TODO auto-size the content - https://issuetracker.google.com/issues/294110693
                     placeholder = Placeholder(100.sp, 100.sp, PlaceholderVerticalAlign.TextBottom)
                 ) {
                     AsyncImage(
@@ -53,7 +55,8 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
                             .decoderFactory(ImageDecoderDecoder.Factory())
                             .crossfade(true)
                             .build(),
-                        contentDescription = it
+                        contentDescription = it,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
