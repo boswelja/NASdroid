@@ -48,13 +48,24 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
                     // TODO auto-size the content - https://issuetracker.google.com/issues/294110693
                     placeholder = Placeholder(100.sp, 100.sp, PlaceholderVerticalAlign.TextBottom)
                 ) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
+                    val request = when {
+                        node.imageUrl.endsWith("svg") -> ImageRequest.Builder(LocalContext.current)
                             .data(node.imageUrl)
                             .decoderFactory(SvgDecoder.Factory())
+                            .crossfade(true)
+                            .build()
+                        node.imageUrl.endsWith("gif") -> ImageRequest.Builder(LocalContext.current)
+                            .data(node.imageUrl)
                             .decoderFactory(ImageDecoderDecoder.Factory())
                             .crossfade(true)
-                            .build(),
+                            .build()
+                        else -> ImageRequest.Builder(LocalContext.current)
+                            .data(node.imageUrl)
+                            .crossfade(true)
+                            .build()
+                    }
+                    AsyncImage(
+                        model = request,
                         contentDescription = it,
                         modifier = Modifier.fillMaxSize()
                     )

@@ -161,9 +161,7 @@ fun MarkdownTextPreview() {
         <https://anilist.co/>
 
         ![anilist icon](https://anilist.co/img/icons/icon.svg)
-        ![image](https://picsum.photos/400)
-        ![image](https://picsum.photos/300)
-        ![image](https://picsum.photos/200)
+        ![image](https://picsum.photos/50)
 
         ---
         ***
