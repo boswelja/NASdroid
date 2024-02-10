@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.nasdroid.core.markdown.components.HeadingStyles
 import com.nasdroid.core.markdown.components.MarkdownBlockQuote
 import com.nasdroid.core.markdown.components.MarkdownCodeBlock
 import com.nasdroid.core.markdown.components.MarkdownHeading
@@ -29,6 +28,7 @@ import com.nasdroid.core.markdown.components.MarkdownHtmlBlock
 import com.nasdroid.core.markdown.components.MarkdownOrderedList
 import com.nasdroid.core.markdown.components.MarkdownParagraph
 import com.nasdroid.core.markdown.components.MarkdownUnorderedList
+import com.nasdroid.core.markdown.components.TextStyleModifiers
 import com.nasdroid.core.markdown.components.TextStyles
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
 import com.nasdroid.core.markdown.generator.MarkdownCodeBlock
@@ -68,19 +68,14 @@ fun MarkdownDocument(
                 node = it,
                 textStyles = TextStyles(
                     textStyle = MaterialTheme.typography.bodyLarge,
-                    bold = { it.copy(fontWeight = FontWeight.Bold) },
-                    italics = { it.copy(fontStyle = FontStyle.Italic) },
-                    strikethrough = { it.copy(textDecoration = TextDecoration.LineThrough) },
-                    link = { it.copy(color = primaryColor, textDecoration = TextDecoration.Underline) },
-                    code = { it.copy(fontFamily = FontFamily.Monospace) }
-                ),
-                headingStyles = HeadingStyles(
                     headline1 = MaterialTheme.typography.displaySmall,
                     headline2 = MaterialTheme.typography.headlineLarge,
                     headline3 = MaterialTheme.typography.headlineMedium,
                     headline4 = MaterialTheme.typography.headlineSmall,
                     headline5 = MaterialTheme.typography.titleLarge,
                     headline6 = MaterialTheme.typography.titleMedium,
+                ),
+                textStyleModifiers = TextStyleModifiers(
                     bold = { it.copy(fontWeight = FontWeight.Bold) },
                     italics = { it.copy(fontStyle = FontStyle.Italic) },
                     strikethrough = { it.copy(textDecoration = TextDecoration.LineThrough) },
@@ -103,7 +98,7 @@ internal fun TextUnit.toDp(): Dp {
 internal fun MarkdownNode(
     node: MarkdownNode,
     textStyles: TextStyles,
-    headingStyles: HeadingStyles,
+    textStyleModifiers: TextStyleModifiers,
     modifier: Modifier = Modifier
 ) {
     when (node) {
@@ -113,7 +108,7 @@ internal fun MarkdownNode(
             nodeSpacing = textStyles.textStyle.fontSize.toDp(),
             shape = MaterialTheme.shapes.medium,
             textStyles = textStyles,
-            headingStyles = headingStyles,
+            textStyleModifiers = textStyleModifiers,
             innerPadding = PaddingValues(8.dp)
         )
         is MarkdownCodeBlock -> MarkdownCodeBlock(
@@ -126,17 +121,19 @@ internal fun MarkdownNode(
         is MarkdownHeading -> MarkdownHeading(
             heading = node,
             modifier = modifier,
-            headingStyles = headingStyles,
+            textStyles = textStyles,
+            textStyleModifiers = textStyleModifiers,
         )
         is MarkdownOrderedList -> MarkdownOrderedList(
             list = node,
             textStyles = textStyles,
-            headingStyles = headingStyles,
+            textStyleModifiers = textStyleModifiers,
             modifier = modifier
         )
         is MarkdownParagraph -> MarkdownParagraph(
             paragraph = node,
-            textStyles = textStyles,
+            textStyle = textStyles.textStyle,
+            textStyleModifiers = textStyleModifiers,
             modifier = modifier
         )
         MarkdownRule -> HorizontalDivider()
@@ -149,7 +146,7 @@ internal fun MarkdownNode(
         is MarkdownUnorderedList -> MarkdownUnorderedList(
             list = node,
             textStyles = textStyles,
-            headingStyles = headingStyles,
+            textStyleModifiers = textStyleModifiers,
             modifier = modifier
         )
     }

@@ -20,7 +20,7 @@ import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
 fun MarkdownOrderedList(
     list: MarkdownOrderedList,
     textStyles: TextStyles,
-    headingStyles: HeadingStyles,
+    textStyleModifiers: TextStyleModifiers,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -38,7 +38,7 @@ fun MarkdownOrderedList(
                         MarkdownNode(
                             node = it,
                             textStyles = textStyles,
-                            headingStyles = headingStyles,
+                            textStyleModifiers = textStyleModifiers,
                         )
                     }
                 }
@@ -55,7 +55,7 @@ fun MarkdownOrderedList(
 fun MarkdownUnorderedList(
     list: MarkdownUnorderedList,
     textStyles: TextStyles,
-    headingStyles: HeadingStyles,
+    textStyleModifiers: TextStyleModifiers,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -72,7 +72,7 @@ fun MarkdownUnorderedList(
                         MarkdownNode(
                             node = it,
                             textStyles = textStyles,
-                            headingStyles = headingStyles,
+                            textStyleModifiers = textStyleModifiers,
                         )
                     }
                 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import com.nasdroid.core.markdown.generator.MarkdownParagraph
 
@@ -14,11 +15,12 @@ import com.nasdroid.core.markdown.generator.MarkdownParagraph
 @Composable
 fun MarkdownParagraph(
     paragraph: MarkdownParagraph,
-    textStyles: TextStyles,
+    textStyle: TextStyle,
+    textStyleModifiers: TextStyleModifiers,
     modifier: Modifier = Modifier,
 ) {
     val (annotatedString, inlineContent) = remember(paragraph) {
-        paragraph.children.buildTextWithContent(textStyles, TextUnitSize(100.sp, 100.sp))
+        paragraph.children.buildTextWithContent(textStyle, textStyleModifiers, TextUnitSize(100.sp, 100.sp))
     }
     BasicText(
         text = annotatedString,

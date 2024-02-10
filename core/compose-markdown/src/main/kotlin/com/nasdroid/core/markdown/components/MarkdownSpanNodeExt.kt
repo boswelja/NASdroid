@@ -9,6 +9,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withAnnotation
@@ -30,7 +31,8 @@ import com.nasdroid.core.markdown.generator.MarkdownWhitespace
  * Maps a list of [MarkdownSpanNode]s to a [TextWithContent] for use in a Text Composable.
  */
 fun List<MarkdownSpanNode>.buildTextWithContent(
-    textStyles: TextStyles,
+    textStyles: TextStyle,
+    textStyleModifiers: TextStyleModifiers,
     imageSize: TextUnitSize,
 ): TextWithContent {
     val content = mutableMapOf<String, InlineTextContent>()
@@ -64,7 +66,7 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
                     )
                 }
             }
-            append(node.toAnnotatedString(textStyles))
+            append(node.toAnnotatedString(textStyles,textStyleModifiers))
         }
     }
     return TextWithContent(text, content)
@@ -95,35 +97,36 @@ data class TextWithContent(
 
 @OptIn(ExperimentalTextApi::class)
 internal fun MarkdownSpanNode.toAnnotatedString(
-    textStyles: TextStyles,
+    textStyle: TextStyle,
+    textStyleModifiers: TextStyleModifiers,
 ): AnnotatedString {
     return when (this) {
         is MarkdownCodeSpan -> AnnotatedString(
             text = text,
-            spanStyle = textStyles.code(textStyles.textStyle).toSpanStyle()
+            spanStyle = textStyleModifiers.code(textStyle).toSpanStyle()
         )
         is MarkdownImage -> buildAnnotatedString {
             appendInlineContent(imageUrl, contentDescription)
         }
         is MarkdownLink -> buildAnnotatedString {
             withAnnotation(UrlAnnotation(url)) {
-                withStyle(textStyles.link(textStyles.textStyle).toSpanStyle()) {
+                withStyle(textStyleModifiers.link(textStyle).toSpanStyle()) {
                     displayText.forEach {
-                        append(it.toAnnotatedString(textStyles))
+                        append(it.toAnnotatedString(textStyle, textStyleModifiers))
                     }
                 }
             }
         }
         is MarkdownText -> AnnotatedString(
             text = this.text,
-            spanStyle = textStyles.textStyle
-                .maybeLet(isBold, textStyles.bold)
-                .maybeLet(isItalics, textStyles.italics)
-                .maybeLet(isStrikethrough, textStyles.strikethrough)
+            spanStyle = textStyle
+                .maybeLet(isBold, textStyleModifiers.bold)
+                .maybeLet(isItalics, textStyleModifiers.italics)
+                .maybeLet(isStrikethrough, textStyleModifiers.strikethrough)
                 .toSpanStyle()
         )
-        MarkdownWhitespace -> AnnotatedString(" ", textStyles.textStyle.toSpanStyle())
-        MarkdownEol -> AnnotatedString("\n", textStyles.textStyle.toSpanStyle())
+        MarkdownWhitespace -> AnnotatedString(" ", textStyle.toSpanStyle())
+        MarkdownEol -> AnnotatedString("\n", textStyle.toSpanStyle())
     }
 }
 

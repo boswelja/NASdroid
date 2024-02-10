@@ -25,7 +25,7 @@ fun MarkdownBlockQuote(
     shape: Shape,
     nodeSpacing: Dp,
     textStyles: TextStyles,
-    headingStyles: HeadingStyles,
+    textStyleModifiers: TextStyleModifiers,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues = PaddingValues()
 ) {
@@ -42,7 +42,7 @@ fun MarkdownBlockQuote(
                 MarkdownNode(
                     node = it,
                     textStyles = textStyles,
-                    headingStyles = headingStyles
+                    textStyleModifiers = textStyleModifiers,
                 )
             }
         }
