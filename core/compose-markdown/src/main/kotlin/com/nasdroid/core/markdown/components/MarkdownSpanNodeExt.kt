@@ -43,7 +43,7 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
                 content[node.imageUrl] = InlineTextContent(
                     // TODO auto-size the content - https://issuetracker.google.com/issues/294110693
                     placeholder = Placeholder(imageSize.width, imageSize.height, PlaceholderVerticalAlign.TextBottom)
-                ) {
+                ) { contentDescription ->
                     val request = when {
                         node.imageUrl.endsWith("svg") -> ImageRequest.Builder(LocalContext.current)
                             .data(node.imageUrl)
@@ -62,7 +62,7 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
                     }
                     AsyncImage(
                         model = request,
-                        contentDescription = it,
+                        contentDescription = contentDescription,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

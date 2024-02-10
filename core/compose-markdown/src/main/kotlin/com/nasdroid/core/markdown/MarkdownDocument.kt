@@ -24,6 +24,7 @@ import com.nasdroid.core.markdown.components.MarkdownHeading
 import com.nasdroid.core.markdown.components.MarkdownHtmlBlock
 import com.nasdroid.core.markdown.components.MarkdownOrderedList
 import com.nasdroid.core.markdown.components.MarkdownParagraph
+import com.nasdroid.core.markdown.components.MarkdownTable
 import com.nasdroid.core.markdown.components.MarkdownUnorderedList
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
 import com.nasdroid.core.markdown.generator.MarkdownCodeBlock
@@ -123,7 +124,12 @@ internal fun MarkdownNode(
             modifier = modifier
         )
         MarkdownRule -> HorizontalDivider()
-        is MarkdownTable -> TODO()
+        is MarkdownTable -> MarkdownTable(
+            table = node,
+            textStyle = textStyles.textStyle,
+            textStyleModifiers = textStyleModifiers,
+            modifier = modifier
+        )
         is MarkdownHtmlBlock -> MarkdownHtmlBlock(
             htmlBlock = node,
             textStyle = textStyles.textStyle,
@@ -141,7 +147,7 @@ internal fun MarkdownNode(
 @Preview(showBackground = true, heightDp = 1900)
 @Composable
 fun MarkdownTextPreview() {
-    MarkdownDocument("""
+    MarkdownDocument(markdown = """
         # H1        
         H1
         ==

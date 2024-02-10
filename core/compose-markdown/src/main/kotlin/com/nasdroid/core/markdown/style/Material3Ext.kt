@@ -7,6 +7,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 
+/**
+ * Constructs a [TextStyles] using recommended defaults from your Material 3 theme.
+ */
 @Composable
 fun m3TextStyles(): TextStyles {
     return TextStyles(
@@ -20,6 +23,9 @@ fun m3TextStyles(): TextStyles {
     )
 }
 
+/**
+ * Constructs a [TextStyleModifiers] using recommended defaults from your Material 3 theme.
+ */
 @Composable
 fun m3TextStyleModifiers(): TextStyleModifiers {
     val primaryColor = MaterialTheme.colorScheme.primary

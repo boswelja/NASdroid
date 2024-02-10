@@ -14,6 +14,8 @@ import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
 import com.nasdroid.core.markdown.style.TextStyleModifiers
 import com.nasdroid.core.markdown.style.TextStyles
 
+private const val OrderedListDefaultPrefixLength = 3
+
 /**
  * Displays a [MarkdownOrderedList]. An ordered list is a list where each item is prefixed with its
  * index in the list.
@@ -32,7 +34,7 @@ fun MarkdownOrderedList(
                 verticalAlignment = Alignment.Top
             ) {
                 BasicText(
-                    text = "${index + 1}".padStart(3) + ".",
+                    text = "${index + 1}".padStart(OrderedListDefaultPrefixLength) + ".",
                     style = textStyles.textStyle
                 )
                 Column {
