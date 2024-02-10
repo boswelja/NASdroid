@@ -7,7 +7,6 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.nasdroid.core.markdown.MarkdownNode
 import com.nasdroid.core.markdown.generator.MarkdownOrderedList
@@ -20,7 +19,8 @@ import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
 @Composable
 fun MarkdownOrderedList(
     list: MarkdownOrderedList,
-    textStyle: TextStyle,
+    textStyles: TextStyles,
+    headingStyles: HeadingStyles,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -31,11 +31,15 @@ fun MarkdownOrderedList(
             ) {
                 BasicText(
                     text = "${index + 1}".padStart(3) + ".",
-                    style = textStyle
+                    style = textStyles.textStyle
                 )
                 Column {
                     markdownNode.content.forEach {
-                        MarkdownNode(node = it)
+                        MarkdownNode(
+                            node = it,
+                            textStyles = textStyles,
+                            headingStyles = headingStyles,
+                        )
                     }
                 }
             }
@@ -50,7 +54,8 @@ fun MarkdownOrderedList(
 @Composable
 fun MarkdownUnorderedList(
     list: MarkdownUnorderedList,
-    textStyle: TextStyle,
+    textStyles: TextStyles,
+    headingStyles: HeadingStyles,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -60,11 +65,15 @@ fun MarkdownUnorderedList(
             ) {
                 BasicText(
                     text = "\t\u2022",
-                    style = textStyle
+                    style = textStyles.textStyle
                 )
                 Column {
                     markdownNode.content.forEach {
-                        MarkdownNode(node = it)
+                        MarkdownNode(
+                            node = it,
+                            textStyles = textStyles,
+                            headingStyles = headingStyles,
+                        )
                     }
                 }
             }

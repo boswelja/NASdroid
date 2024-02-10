@@ -4,22 +4,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.TextUnit
 import coil.compose.AsyncImage
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
@@ -36,9 +30,8 @@ import com.nasdroid.core.markdown.generator.MarkdownWhitespace
  * Maps a list of [MarkdownSpanNode]s to a [TextWithContent] for use in a Text Composable.
  */
 fun List<MarkdownSpanNode>.buildTextWithContent(
-    textStyle: TextStyle,
-    linkStyle: TextStyle = textStyle.copy(color = Color.Blue, textDecoration = TextDecoration.Underline),
-    codeStyle: TextStyle = textStyle.copy(background = Color.Gray, fontFamily = FontFamily.Monospace),
+    textStyles: TextStyles,
+    imageSize: TextUnitSize,
 ): TextWithContent {
     val content = mutableMapOf<String, InlineTextContent>()
     val text = buildAnnotatedString {
@@ -46,7 +39,7 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
             if (node is MarkdownImage) {
                 content[node.imageUrl] = InlineTextContent(
                     // TODO auto-size the content - https://issuetracker.google.com/issues/294110693
-                    placeholder = Placeholder(100.sp, 100.sp, PlaceholderVerticalAlign.TextBottom)
+                    placeholder = Placeholder(imageSize.width, imageSize.height, PlaceholderVerticalAlign.TextBottom)
                 ) {
                     val request = when {
                         node.imageUrl.endsWith("svg") -> ImageRequest.Builder(LocalContext.current)
@@ -71,11 +64,22 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
                     )
                 }
             }
-            append(node.toAnnotatedString(textStyle, linkStyle, codeStyle))
+            append(node.toAnnotatedString(textStyles))
         }
     }
     return TextWithContent(text, content)
 }
+
+/**
+ * Describes the size of an element rendered inline with text.
+ *
+ * @property width The width of the element.
+ * @property height THe height of the element.
+ */
+data class TextUnitSize(
+    val width: TextUnit,
+    val height: TextUnit,
+)
 
 /**
  * Describes an [AnnotatedString], along with a map describing inline content within the annotated
@@ -91,50 +95,40 @@ data class TextWithContent(
 
 @OptIn(ExperimentalTextApi::class)
 internal fun MarkdownSpanNode.toAnnotatedString(
-    textStyle: TextStyle,
-    linkStyle: TextStyle,
-    codeStyle: TextStyle
+    textStyles: TextStyles,
 ): AnnotatedString {
     return when (this) {
         is MarkdownCodeSpan -> AnnotatedString(
             text = text,
-            spanStyle = codeStyle.toSpanStyle()
+            spanStyle = textStyles.code(textStyles.textStyle).toSpanStyle()
         )
         is MarkdownImage -> buildAnnotatedString {
             appendInlineContent(imageUrl, contentDescription)
         }
         is MarkdownLink -> buildAnnotatedString {
             withAnnotation(UrlAnnotation(url)) {
-                withStyle(linkStyle.toSpanStyle()) {
+                withStyle(textStyles.link(textStyles.textStyle).toSpanStyle()) {
                     displayText.forEach {
-                        append(it.toAnnotatedString(textStyle, linkStyle, codeStyle))
+                        append(it.toAnnotatedString(textStyles))
                     }
                 }
             }
         }
         is MarkdownText -> AnnotatedString(
             text = this.text,
-            spanStyle = textStyle
-                .copy(
-                    fontWeight = if (isBold) {
-                        FontWeight.Bold
-                    } else {
-                        textStyle.fontWeight
-                    },
-                    fontStyle = if (isItalics) {
-                        FontStyle.Italic
-                    } else {
-                        textStyle.fontStyle
-                    },
-                    textDecoration = if (isStrikethrough) {
-                        TextDecoration.LineThrough
-                    } else {
-                        textStyle.textDecoration
-                    }
-                )
+            spanStyle = textStyles.textStyle
+                .maybeLet(isBold, textStyles.bold)
+                .maybeLet(isItalics, textStyles.italics)
+                .maybeLet(isStrikethrough, textStyles.strikethrough)
                 .toSpanStyle()
         )
-        MarkdownWhitespace -> AnnotatedString(" ", textStyle.toSpanStyle())
-        MarkdownEol -> AnnotatedString("\n", textStyle.toSpanStyle())
+        MarkdownWhitespace -> AnnotatedString(" ", textStyles.textStyle.toSpanStyle())
+        MarkdownEol -> AnnotatedString("\n", textStyles.textStyle.toSpanStyle())
+    }
+}
+
+internal inline fun <T> T.maybeLet(condition: Boolean, block: (T) -> T): T {
+    return this.let {
+        if (condition) block(it) else it
     }
 }

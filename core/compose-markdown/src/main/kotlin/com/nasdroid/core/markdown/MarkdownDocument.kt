@@ -14,6 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -26,6 +29,7 @@ import com.nasdroid.core.markdown.components.MarkdownHtmlBlock
 import com.nasdroid.core.markdown.components.MarkdownOrderedList
 import com.nasdroid.core.markdown.components.MarkdownParagraph
 import com.nasdroid.core.markdown.components.MarkdownUnorderedList
+import com.nasdroid.core.markdown.components.TextStyles
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
 import com.nasdroid.core.markdown.generator.MarkdownCodeBlock
 import com.nasdroid.core.markdown.generator.MarkdownHeading
@@ -47,7 +51,7 @@ import org.intellij.markdown.parser.MarkdownParser
 fun MarkdownDocument(
     markdown: String,
     modifier: Modifier = Modifier,
-    sectionSpacing: Dp = MaterialTheme.typography.bodyMedium.fontSize.toDp()
+    sectionSpacing: Dp = MaterialTheme.typography.bodyLarge.fontSize.toDp()
 ) {
     val parsedMarkdownNodes = remember(markdown) {
         val flavor = GFMFlavourDescriptor()
@@ -59,7 +63,31 @@ fun MarkdownDocument(
         verticalArrangement = Arrangement.spacedBy(sectionSpacing)
     ) {
         parsedMarkdownNodes.forEach {
-            MarkdownNode(node = it)
+            val primaryColor = MaterialTheme.colorScheme.primary
+            MarkdownNode(
+                node = it,
+                textStyles = TextStyles(
+                    textStyle = MaterialTheme.typography.bodyLarge,
+                    bold = { it.copy(fontWeight = FontWeight.Bold) },
+                    italics = { it.copy(fontStyle = FontStyle.Italic) },
+                    strikethrough = { it.copy(textDecoration = TextDecoration.LineThrough) },
+                    link = { it.copy(color = primaryColor, textDecoration = TextDecoration.Underline) },
+                    code = { it.copy(fontFamily = FontFamily.Monospace) }
+                ),
+                headingStyles = HeadingStyles(
+                    headline1 = MaterialTheme.typography.displaySmall,
+                    headline2 = MaterialTheme.typography.headlineLarge,
+                    headline3 = MaterialTheme.typography.headlineMedium,
+                    headline4 = MaterialTheme.typography.headlineSmall,
+                    headline5 = MaterialTheme.typography.titleLarge,
+                    headline6 = MaterialTheme.typography.titleMedium,
+                    bold = { it.copy(fontWeight = FontWeight.Bold) },
+                    italics = { it.copy(fontStyle = FontStyle.Italic) },
+                    strikethrough = { it.copy(textDecoration = TextDecoration.LineThrough) },
+                    link = { it.copy(color = primaryColor, textDecoration = TextDecoration.Underline) },
+                    code = { it.copy(fontFamily = FontFamily.Monospace) }
+                )
+            )
         }
     }
 }
@@ -74,19 +102,23 @@ internal fun TextUnit.toDp(): Dp {
 @Composable
 internal fun MarkdownNode(
     node: MarkdownNode,
+    textStyles: TextStyles,
+    headingStyles: HeadingStyles,
     modifier: Modifier = Modifier
 ) {
     when (node) {
         is MarkdownBlockQuote -> MarkdownBlockQuote(
             blockQuote = node,
             backgroundColor = Color.Gray,
-            nodeSpacing = MaterialTheme.typography.bodyMedium.fontSize.toDp(),
+            nodeSpacing = textStyles.textStyle.fontSize.toDp(),
             shape = MaterialTheme.shapes.medium,
+            textStyles = textStyles,
+            headingStyles = headingStyles,
             innerPadding = PaddingValues(8.dp)
         )
         is MarkdownCodeBlock -> MarkdownCodeBlock(
             codeBlock = node,
-            textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace),
+            textStyle = textStyles.textStyle.copy(fontFamily = FontFamily.Monospace),
             background = Color.Gray,
             shape = MaterialTheme.shapes.medium,
             innerPadding = PaddingValues(8.dp)
@@ -94,35 +126,30 @@ internal fun MarkdownNode(
         is MarkdownHeading -> MarkdownHeading(
             heading = node,
             modifier = modifier,
-            headingStyles = HeadingStyles(
-                headline1 = MaterialTheme.typography.displaySmall,
-                headline2 = MaterialTheme.typography.headlineLarge,
-                headline3 = MaterialTheme.typography.headlineMedium,
-                headline4 = MaterialTheme.typography.headlineSmall,
-                headline5 = MaterialTheme.typography.titleLarge,
-                headline6 = MaterialTheme.typography.titleMedium
-            )
+            headingStyles = headingStyles,
         )
         is MarkdownOrderedList -> MarkdownOrderedList(
             list = node,
-            textStyle = MaterialTheme.typography.bodyLarge,
+            textStyles = textStyles,
+            headingStyles = headingStyles,
             modifier = modifier
         )
         is MarkdownParagraph -> MarkdownParagraph(
             paragraph = node,
-            textStyle = MaterialTheme.typography.bodyLarge,
+            textStyles = textStyles,
             modifier = modifier
         )
         MarkdownRule -> HorizontalDivider()
         is MarkdownTable -> TODO()
         is MarkdownHtmlBlock -> MarkdownHtmlBlock(
             htmlBlock = node,
-            textStyle = MaterialTheme.typography.bodyLarge,
+            textStyle = textStyles.textStyle,
             modifier = modifier
         )
         is MarkdownUnorderedList -> MarkdownUnorderedList(
             list = node,
-            textStyle = MaterialTheme.typography.bodyLarge,
+            textStyles = textStyles,
+            headingStyles = headingStyles,
             modifier = modifier
         )
     }
@@ -205,6 +232,6 @@ fun MarkdownTextPreview() {
         ```
     """.trimIndent(),
         modifier = Modifier
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()))
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp))
 }

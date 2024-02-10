@@ -24,6 +24,8 @@ fun MarkdownBlockQuote(
     backgroundColor: Color,
     shape: Shape,
     nodeSpacing: Dp,
+    textStyles: TextStyles,
+    headingStyles: HeadingStyles,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues = PaddingValues()
 ) {
@@ -37,7 +39,11 @@ fun MarkdownBlockQuote(
             verticalArrangement = Arrangement.spacedBy(nodeSpacing)
         ) {
             blockQuote.children.forEach {
-                MarkdownNode(node = it)
+                MarkdownNode(
+                    node = it,
+                    textStyles = textStyles,
+                    headingStyles = headingStyles
+                )
             }
         }
     }
