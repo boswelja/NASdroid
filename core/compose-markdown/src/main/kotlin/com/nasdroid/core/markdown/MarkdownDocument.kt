@@ -14,9 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -28,8 +25,6 @@ import com.nasdroid.core.markdown.components.MarkdownHtmlBlock
 import com.nasdroid.core.markdown.components.MarkdownOrderedList
 import com.nasdroid.core.markdown.components.MarkdownParagraph
 import com.nasdroid.core.markdown.components.MarkdownUnorderedList
-import com.nasdroid.core.markdown.style.TextStyleModifiers
-import com.nasdroid.core.markdown.style.TextStyles
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
 import com.nasdroid.core.markdown.generator.MarkdownCodeBlock
 import com.nasdroid.core.markdown.generator.MarkdownHeading
@@ -41,6 +36,10 @@ import com.nasdroid.core.markdown.generator.MarkdownParagraph
 import com.nasdroid.core.markdown.generator.MarkdownRule
 import com.nasdroid.core.markdown.generator.MarkdownTable
 import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
+import com.nasdroid.core.markdown.style.TextStyleModifiers
+import com.nasdroid.core.markdown.style.TextStyles
+import com.nasdroid.core.markdown.style.m3TextStyleModifiers
+import com.nasdroid.core.markdown.style.m3TextStyles
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 
@@ -50,6 +49,8 @@ import org.intellij.markdown.parser.MarkdownParser
 @Composable
 fun MarkdownDocument(
     markdown: String,
+    textStyles: TextStyles,
+    textStyleModifiers: TextStyleModifiers,
     modifier: Modifier = Modifier,
     sectionSpacing: Dp = MaterialTheme.typography.bodyLarge.fontSize.toDp()
 ) {
@@ -63,25 +64,10 @@ fun MarkdownDocument(
         verticalArrangement = Arrangement.spacedBy(sectionSpacing)
     ) {
         parsedMarkdownNodes.forEach {
-            val primaryColor = MaterialTheme.colorScheme.primary
             MarkdownNode(
                 node = it,
-                textStyles = TextStyles(
-                    textStyle = MaterialTheme.typography.bodyLarge,
-                    headline1 = MaterialTheme.typography.displaySmall,
-                    headline2 = MaterialTheme.typography.headlineLarge,
-                    headline3 = MaterialTheme.typography.headlineMedium,
-                    headline4 = MaterialTheme.typography.headlineSmall,
-                    headline5 = MaterialTheme.typography.titleLarge,
-                    headline6 = MaterialTheme.typography.titleMedium,
-                ),
-                textStyleModifiers = TextStyleModifiers(
-                    bold = { it.copy(fontWeight = FontWeight.Bold) },
-                    italics = { it.copy(fontStyle = FontStyle.Italic) },
-                    strikethrough = { it.copy(textDecoration = TextDecoration.LineThrough) },
-                    link = { it.copy(color = primaryColor, textDecoration = TextDecoration.Underline) },
-                    code = { it.copy(fontFamily = FontFamily.Monospace) }
-                )
+                textStyles = textStyles,
+                textStyleModifiers = textStyleModifiers
             )
         }
     }
@@ -228,6 +214,8 @@ fun MarkdownTextPreview() {
         code
         ```
     """.trimIndent(),
+        textStyles = m3TextStyles(),
+        textStyleModifiers = m3TextStyleModifiers(),
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .padding(16.dp))
