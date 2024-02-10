@@ -1,4 +1,4 @@
-package com.nasdroid.core.markdown.components
+package com.nasdroid.core.markdown.style
 
 import androidx.compose.ui.text.TextStyle
 

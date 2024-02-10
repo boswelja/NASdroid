@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import com.nasdroid.core.markdown.MarkdownNode
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
+import com.nasdroid.core.markdown.style.TextStyleModifiers
+import com.nasdroid.core.markdown.style.TextStyles
 
 /**
  * Displays a [MarkdownBlockQuote]. A block quote is a visually distinct section in a document,

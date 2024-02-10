@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.core.markdown.MarkdownNode
 import com.nasdroid.core.markdown.generator.MarkdownOrderedList
 import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
+import com.nasdroid.core.markdown.style.TextStyleModifiers
+import com.nasdroid.core.markdown.style.TextStyles
 
 /**
  * Displays a [MarkdownOrderedList]. An ordered list is a list where each item is prefixed with its

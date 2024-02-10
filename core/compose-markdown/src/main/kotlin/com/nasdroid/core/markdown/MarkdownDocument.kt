@@ -28,8 +28,8 @@ import com.nasdroid.core.markdown.components.MarkdownHtmlBlock
 import com.nasdroid.core.markdown.components.MarkdownOrderedList
 import com.nasdroid.core.markdown.components.MarkdownParagraph
 import com.nasdroid.core.markdown.components.MarkdownUnorderedList
-import com.nasdroid.core.markdown.components.TextStyleModifiers
-import com.nasdroid.core.markdown.components.TextStyles
+import com.nasdroid.core.markdown.style.TextStyleModifiers
+import com.nasdroid.core.markdown.style.TextStyles
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
 import com.nasdroid.core.markdown.generator.MarkdownCodeBlock
 import com.nasdroid.core.markdown.generator.MarkdownHeading

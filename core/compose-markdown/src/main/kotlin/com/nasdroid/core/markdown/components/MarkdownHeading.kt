@@ -6,6 +6,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import com.nasdroid.core.markdown.generator.MarkdownHeading
+import com.nasdroid.core.markdown.style.TextStyleModifiers
+import com.nasdroid.core.markdown.style.TextStyles
+import com.nasdroid.core.markdown.style.TextUnitSize
 
 /**
  * Displays a [MarkdownHeading]. A heading is a higher emphasis paragraph, usually used to separate

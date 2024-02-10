@@ -14,7 +14,6 @@ import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.TextUnit
 import coil.compose.AsyncImage
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
@@ -26,6 +25,8 @@ import com.nasdroid.core.markdown.generator.MarkdownLink
 import com.nasdroid.core.markdown.generator.MarkdownSpanNode
 import com.nasdroid.core.markdown.generator.MarkdownText
 import com.nasdroid.core.markdown.generator.MarkdownWhitespace
+import com.nasdroid.core.markdown.style.TextStyleModifiers
+import com.nasdroid.core.markdown.style.TextUnitSize
 
 /**
  * Maps a list of [MarkdownSpanNode]s to a [TextWithContent] for use in a Text Composable.
@@ -71,17 +72,6 @@ fun List<MarkdownSpanNode>.buildTextWithContent(
     }
     return TextWithContent(text, content)
 }
-
-/**
- * Describes the size of an element rendered inline with text.
- *
- * @property width The width of the element.
- * @property height THe height of the element.
- */
-data class TextUnitSize(
-    val width: TextUnit,
-    val height: TextUnit,
-)
 
 /**
  * Describes an [AnnotatedString], along with a map describing inline content within the annotated
