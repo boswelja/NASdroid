@@ -2,15 +2,12 @@ package com.nasdroid.core.markdown
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +38,8 @@ import com.nasdroid.core.markdown.style.BlockQuoteStyle
 import com.nasdroid.core.markdown.style.CodeBlockStyle
 import com.nasdroid.core.markdown.style.TextStyleModifiers
 import com.nasdroid.core.markdown.style.TextStyles
+import com.nasdroid.core.markdown.style.m3BlockQuoteStyle
+import com.nasdroid.core.markdown.style.m3CodeBlockStyle
 import com.nasdroid.core.markdown.style.m3TextStyleModifiers
 import com.nasdroid.core.markdown.style.m3TextStyles
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
@@ -54,8 +53,10 @@ fun MarkdownDocument(
     markdown: String,
     textStyles: TextStyles,
     textStyleModifiers: TextStyleModifiers,
+    blockQuoteStyle: BlockQuoteStyle,
+    codeBlockStyle: CodeBlockStyle,
     modifier: Modifier = Modifier,
-    sectionSpacing: Dp = MaterialTheme.typography.bodyLarge.fontSize.toDp()
+    sectionSpacing: Dp = textStyles.textStyle.fontSize.toDp()
 ) {
     val parsedMarkdownNodes = remember(markdown) {
         val flavor = GFMFlavourDescriptor()
@@ -71,17 +72,8 @@ fun MarkdownDocument(
                 node = it,
                 textStyles = textStyles,
                 textStyleModifiers = textStyleModifiers,
-                blockQuoteStyle = BlockQuoteStyle(
-                    background = Color.Gray,
-                    nodeSpacing = textStyles.textStyle.fontSize.toDp(),
-                    shape = MaterialTheme.shapes.medium,
-                    innerPadding = PaddingValues(8.dp)
-                ),
-                codeBlockStyle = CodeBlockStyle(
-                    background = Color.Gray,
-                    shape = MaterialTheme.shapes.medium,
-                    innerPadding = PaddingValues(8.dp)
-                )
+                blockQuoteStyle = blockQuoteStyle,
+                codeBlockStyle = codeBlockStyle
             )
         }
     }
@@ -243,6 +235,8 @@ fun MarkdownTextPreview() {
     """.trimIndent(),
         textStyles = m3TextStyles(),
         textStyleModifiers = m3TextStyleModifiers(),
+        blockQuoteStyle = m3BlockQuoteStyle(),
+        codeBlockStyle = m3CodeBlockStyle(),
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .padding(16.dp))

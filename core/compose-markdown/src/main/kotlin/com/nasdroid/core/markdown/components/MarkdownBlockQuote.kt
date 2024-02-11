@@ -13,6 +13,7 @@ import com.nasdroid.core.markdown.style.BlockQuoteStyle
 import com.nasdroid.core.markdown.style.CodeBlockStyle
 import com.nasdroid.core.markdown.style.TextStyleModifiers
 import com.nasdroid.core.markdown.style.TextStyles
+import com.nasdroid.core.markdown.toDp
 
 /**
  * Displays a [MarkdownBlockQuote]. A block quote is a visually distinct section in a document,
@@ -34,7 +35,7 @@ fun MarkdownBlockQuote(
     ) {
         Column(
             modifier = Modifier.padding(style.innerPadding),
-            verticalArrangement = Arrangement.spacedBy(style.nodeSpacing)
+            verticalArrangement = Arrangement.spacedBy(textStyles.textStyle.fontSize.toDp())
         ) {
             blockQuote.children.forEach {
                 MarkdownNode(
