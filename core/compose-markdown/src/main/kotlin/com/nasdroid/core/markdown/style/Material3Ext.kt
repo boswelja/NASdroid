@@ -1,9 +1,11 @@
+@file:Suppress("ForbiddenImport")
 package com.nasdroid.core.markdown.style
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -51,20 +53,34 @@ fun m3TextStyleModifiers(
     )
 }
 
+/**
+ * Constructs a [BlockQuoteStyle] using recommended defaults for your Material 3 theme.
+ */
 @Composable
-fun m3BlockQuoteStyle(): BlockQuoteStyle {
+fun m3BlockQuoteStyle(
+    background: Color = MaterialTheme.colorScheme.surfaceVariant,
+    shape: Shape = MaterialTheme.shapes.medium,
+    innerPadding: PaddingValues = PaddingValues(8.dp)
+): BlockQuoteStyle {
     return BlockQuoteStyle(
-        background = MaterialTheme.colorScheme.surfaceVariant,
-        shape = MaterialTheme.shapes.medium,
-        innerPadding = PaddingValues(8.dp)
+        background = background,
+        shape = shape,
+        innerPadding = innerPadding
     )
 }
 
+/**
+ * Constructs a [CodeBlockStyle] using recommended defaults for your Material 3 theme.
+ */
 @Composable
-fun m3CodeBlockStyle(): CodeBlockStyle {
+fun m3CodeBlockStyle(
+    background: Color = MaterialTheme.colorScheme.surfaceVariant,
+    shape: Shape = MaterialTheme.shapes.medium,
+    innerPadding: PaddingValues = PaddingValues(8.dp)
+): CodeBlockStyle {
     return CodeBlockStyle(
-        background = MaterialTheme.colorScheme.surfaceVariant,
-        shape = MaterialTheme.shapes.medium,
-        innerPadding = PaddingValues(8.dp)
+        background = background,
+        shape = shape,
+        innerPadding = innerPadding
     )
 }
