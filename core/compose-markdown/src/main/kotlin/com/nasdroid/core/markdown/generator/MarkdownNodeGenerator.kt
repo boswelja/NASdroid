@@ -134,6 +134,7 @@ class MarkdownNodeGenerator(
             MarkdownTokenTypes.ATX_CONTENT,
             MarkdownTokenTypes.HTML_TAG,
             MarkdownTokenTypes.HTML_BLOCK_CONTENT,
+            MarkdownTokenTypes.COLON,
             MarkdownElementTypes.EMPH -> parseTextNode(astNode)
             MarkdownTokenTypes.WHITE_SPACE -> MarkdownWhitespace
             MarkdownTokenTypes.EOL -> MarkdownEol
@@ -221,6 +222,7 @@ class MarkdownNodeGenerator(
             MarkdownTokenTypes.ATX_CONTENT,
             MarkdownTokenTypes.HTML_TAG,
             MarkdownTokenTypes.HTML_BLOCK_CONTENT,
+            MarkdownTokenTypes.COLON,
             MarkdownTokenTypes.TEXT -> MarkdownText(
                 text = astNode.getTextInNode(allFileText).trim().toString(),
                 isBold = false,
