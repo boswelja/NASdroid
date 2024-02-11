@@ -37,6 +37,8 @@ import com.nasdroid.core.markdown.generator.MarkdownParagraph
 import com.nasdroid.core.markdown.generator.MarkdownRule
 import com.nasdroid.core.markdown.generator.MarkdownTable
 import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
+import com.nasdroid.core.markdown.style.BlockQuoteStyle
+import com.nasdroid.core.markdown.style.CodeBlockStyle
 import com.nasdroid.core.markdown.style.TextStyleModifiers
 import com.nasdroid.core.markdown.style.TextStyles
 import com.nasdroid.core.markdown.style.m3TextStyleModifiers
@@ -68,7 +70,18 @@ fun MarkdownDocument(
             MarkdownNode(
                 node = it,
                 textStyles = textStyles,
-                textStyleModifiers = textStyleModifiers
+                textStyleModifiers = textStyleModifiers,
+                blockQuoteStyle = BlockQuoteStyle(
+                    background = Color.Gray,
+                    nodeSpacing = textStyles.textStyle.fontSize.toDp(),
+                    shape = MaterialTheme.shapes.medium,
+                    innerPadding = PaddingValues(8.dp)
+                ),
+                codeBlockStyle = CodeBlockStyle(
+                    background = Color.Gray,
+                    shape = MaterialTheme.shapes.medium,
+                    innerPadding = PaddingValues(8.dp)
+                )
             )
         }
     }
@@ -86,24 +99,24 @@ internal fun MarkdownNode(
     node: MarkdownNode,
     textStyles: TextStyles,
     textStyleModifiers: TextStyleModifiers,
+    blockQuoteStyle: BlockQuoteStyle,
+    codeBlockStyle: CodeBlockStyle,
     modifier: Modifier = Modifier
 ) {
     when (node) {
         is MarkdownBlockQuote -> MarkdownBlockQuote(
             blockQuote = node,
-            backgroundColor = Color.Gray,
-            nodeSpacing = textStyles.textStyle.fontSize.toDp(),
-            shape = MaterialTheme.shapes.medium,
+            style = blockQuoteStyle,
             textStyles = textStyles,
             textStyleModifiers = textStyleModifiers,
-            innerPadding = PaddingValues(8.dp)
+            codeBlockStyle = codeBlockStyle,
+            modifier = modifier,
         )
         is MarkdownCodeBlock -> MarkdownCodeBlock(
             codeBlock = node,
+            style = codeBlockStyle,
             textStyle = textStyles.textStyle.copy(fontFamily = FontFamily.Monospace),
-            background = Color.Gray,
-            shape = MaterialTheme.shapes.medium,
-            innerPadding = PaddingValues(8.dp)
+            modifier = modifier,
         )
         is MarkdownHeading -> MarkdownHeading(
             heading = node,
@@ -115,6 +128,8 @@ internal fun MarkdownNode(
             list = node,
             textStyles = textStyles,
             textStyleModifiers = textStyleModifiers,
+            blockQuoteStyle = blockQuoteStyle,
+            codeBlockStyle = codeBlockStyle,
             modifier = modifier
         )
         is MarkdownParagraph -> MarkdownParagraph(
@@ -139,6 +154,8 @@ internal fun MarkdownNode(
             list = node,
             textStyles = textStyles,
             textStyleModifiers = textStyleModifiers,
+            blockQuoteStyle = blockQuoteStyle,
+            codeBlockStyle = codeBlockStyle,
             modifier = modifier
         )
     }

@@ -11,10 +11,12 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.core.markdown.MarkdownNode
 import com.nasdroid.core.markdown.generator.MarkdownOrderedList
 import com.nasdroid.core.markdown.generator.MarkdownUnorderedList
+import com.nasdroid.core.markdown.style.BlockQuoteStyle
+import com.nasdroid.core.markdown.style.CodeBlockStyle
 import com.nasdroid.core.markdown.style.TextStyleModifiers
 import com.nasdroid.core.markdown.style.TextStyles
 
-private const val OrderedListDefaultPrefixLength = 3
+private const val ORDERED_LIST_PREFIX_LENGTH = 3
 
 /**
  * Displays a [MarkdownOrderedList]. An ordered list is a list where each item is prefixed with its
@@ -25,6 +27,8 @@ fun MarkdownOrderedList(
     list: MarkdownOrderedList,
     textStyles: TextStyles,
     textStyleModifiers: TextStyleModifiers,
+    blockQuoteStyle: BlockQuoteStyle,
+    codeBlockStyle: CodeBlockStyle,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -34,7 +38,7 @@ fun MarkdownOrderedList(
                 verticalAlignment = Alignment.Top
             ) {
                 BasicText(
-                    text = "${index + 1}".padStart(OrderedListDefaultPrefixLength) + ".",
+                    text = "${index + 1}".padStart(ORDERED_LIST_PREFIX_LENGTH) + ".",
                     style = textStyles.textStyle
                 )
                 Column {
@@ -43,6 +47,8 @@ fun MarkdownOrderedList(
                             node = it,
                             textStyles = textStyles,
                             textStyleModifiers = textStyleModifiers,
+                            blockQuoteStyle = blockQuoteStyle,
+                            codeBlockStyle = codeBlockStyle
                         )
                     }
                 }
@@ -60,6 +66,8 @@ fun MarkdownUnorderedList(
     list: MarkdownUnorderedList,
     textStyles: TextStyles,
     textStyleModifiers: TextStyleModifiers,
+    blockQuoteStyle: BlockQuoteStyle,
+    codeBlockStyle: CodeBlockStyle,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -77,6 +85,8 @@ fun MarkdownUnorderedList(
                             node = it,
                             textStyles = textStyles,
                             textStyleModifiers = textStyleModifiers,
+                            blockQuoteStyle = blockQuoteStyle,
+                            codeBlockStyle = codeBlockStyle
                         )
                     }
                 }
