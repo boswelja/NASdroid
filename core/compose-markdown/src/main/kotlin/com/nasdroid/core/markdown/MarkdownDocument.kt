@@ -24,6 +24,7 @@ import com.nasdroid.core.markdown.components.MarkdownHeading
 import com.nasdroid.core.markdown.components.MarkdownHtmlBlock
 import com.nasdroid.core.markdown.components.MarkdownOrderedList
 import com.nasdroid.core.markdown.components.MarkdownParagraph
+import com.nasdroid.core.markdown.components.MarkdownRule
 import com.nasdroid.core.markdown.components.MarkdownTable
 import com.nasdroid.core.markdown.components.MarkdownUnorderedList
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
@@ -123,7 +124,7 @@ internal fun MarkdownNode(
             textStyleModifiers = textStyleModifiers,
             modifier = modifier
         )
-        MarkdownRule -> HorizontalDivider()
+        MarkdownRule -> MarkdownRule(modifier = modifier)
         is MarkdownTable -> MarkdownTable(
             table = node,
             textStyle = textStyles.textStyle,
@@ -185,6 +186,10 @@ fun MarkdownTextPreview() {
         > block quote
         
         >> nested block quote
+
+        table | with | content
+        --- | --- | ---
+        content | content | content
 
         - Bulleted
         - List
