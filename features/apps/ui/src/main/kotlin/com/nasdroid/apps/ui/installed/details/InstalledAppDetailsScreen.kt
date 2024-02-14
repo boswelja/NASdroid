@@ -123,6 +123,16 @@ fun InstalledAppDetailsContent(
         }
         item {
             ElevatedCard {
+                ApplicationWorkloads(
+                    modifier = Modifier.padding(
+                        vertical = MaterialThemeExt.paddings.medium,
+                        horizontal = MaterialThemeExt.paddings.large
+                    )
+                )
+            }
+        }
+        item {
+            ElevatedCard {
                 ApplicationHistory(
                     onRefreshClick = { /*TODO*/ },
                     modifier = Modifier.padding(
