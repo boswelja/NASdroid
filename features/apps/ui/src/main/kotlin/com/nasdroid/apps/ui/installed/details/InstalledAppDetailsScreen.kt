@@ -121,6 +121,17 @@ fun InstalledAppDetailsContent(
                 )
             }
         }
+        item {
+            ElevatedCard {
+                ApplicationHistory(
+                    onRefreshClick = { /*TODO*/ },
+                    modifier = Modifier.padding(
+                        vertical = MaterialThemeExt.paddings.medium,
+                        horizontal = MaterialThemeExt.paddings.large
+                    )
+                )
+            }
+        }
         installedAppDetails.notes?.let {
             item {
                 ElevatedCard {
