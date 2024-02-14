@@ -7,12 +7,14 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -97,25 +99,39 @@ fun InstalledAppDetailsContent(
         mutableStateOf(false)
     }
     LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Adaptive(240.dp),
+        columns = StaggeredGridCells.Adaptive(320.dp),
         modifier = modifier,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium),
         verticalItemSpacing = MaterialThemeExt.paddings.medium
     ) {
         item {
-            ApplicationInfo(
-                installedAppDetails = installedAppDetails,
-                onEditClick = { /* TODO */ },
-                onRollBackClick = onRollbackClick,
-                onDeleteClick = {
-                    isShowDeleteDialog = true
-                }
-            )
+            ElevatedCard {
+                ApplicationInfo(
+                    installedAppDetails = installedAppDetails,
+                    onEditClick = { /* TODO */ },
+                    onRollBackClick = onRollbackClick,
+                    onDeleteClick = {
+                        isShowDeleteDialog = true
+                    },
+                    modifier = Modifier.padding(
+                        vertical = MaterialThemeExt.paddings.medium,
+                        horizontal = MaterialThemeExt.paddings.large
+                    )
+                )
+            }
         }
         installedAppDetails.notes?.let {
             item {
-                ApplicationNotes(note = it)
+                ElevatedCard {
+                    ApplicationNotes(
+                        note = it,
+                        modifier = Modifier.padding(
+                            vertical = MaterialThemeExt.paddings.medium,
+                            horizontal = MaterialThemeExt.paddings.large
+                        )
+                    )
+                }
             }
         }
     }
