@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,14 +30,23 @@ fun ApplicationNotes(
             text = "Notes",
             style = MaterialThemeExt.typography.headlineMedium
         )
-        Spacer(Modifier.height(8.dp))
-        MarkdownDocument(
-            markdown = note,
-            textStyles = m3TextStyles(),
-            textStyleModifiers = m3TextStyleModifiers(),
-            blockQuoteStyle = m3BlockQuoteStyle(),
-            codeBlockStyle = m3CodeBlockStyle()
-        )
+        Spacer(Modifier.height(MaterialThemeExt.paddings.medium))
+        Surface(
+            color = MaterialThemeExt.colorScheme.surfaceVariant,
+            shape = MaterialThemeExt.shapes.medium
+        ) {
+            MarkdownDocument(
+                markdown = note,
+                textStyles = m3TextStyles(),
+                textStyleModifiers = m3TextStyleModifiers(),
+                blockQuoteStyle = m3BlockQuoteStyle(),
+                codeBlockStyle = m3CodeBlockStyle(),
+                modifier = Modifier.padding(
+                    vertical = MaterialThemeExt.paddings.medium,
+                    horizontal = MaterialThemeExt.paddings.large
+                )
+            )
+        }
     }
 }
 
