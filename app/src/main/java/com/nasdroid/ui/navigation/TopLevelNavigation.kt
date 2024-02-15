@@ -146,6 +146,7 @@ fun TopLevelNavigation(
                 content = navigationScaffold,
                 modifier = modifier,
                 headerContent = drawerHeaderContent,
+                gesturesEnabled = navigationVisible
             )
         }
         PrimaryNavigationMode.Permanent -> {
