@@ -13,10 +13,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -170,13 +170,13 @@ internal fun ApplicationControls(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        OutlinedIconButton(onClick = onEditClick) {
+        FilledTonalIconButton(onClick = onEditClick) {
             Icon(Icons.Default.Edit, stringResource(R.string.app_control_edit))
         }
-        OutlinedIconButton(onClick = onRollBackClick) {
+        FilledTonalIconButton(onClick = onRollBackClick) {
             Icon(Icons.Default.Restore, stringResource(R.string.app_control_rollback))
         }
-        OutlinedIconButton(onClick = onDeleteClick) {
+        FilledTonalIconButton(onClick = onDeleteClick) {
             Icon(Icons.Default.Delete, stringResource(R.string.app_control_delete))
         }
     }

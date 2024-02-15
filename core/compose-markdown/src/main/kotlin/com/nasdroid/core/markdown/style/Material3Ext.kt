@@ -2,6 +2,7 @@
 package com.nasdroid.core.markdown.style
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -18,13 +19,14 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun m3TextStyles(
-    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
-    headline1: TextStyle = MaterialTheme.typography.displaySmall,
-    headline2: TextStyle = MaterialTheme.typography.headlineLarge,
-    headline3: TextStyle = MaterialTheme.typography.headlineMedium,
-    headline4: TextStyle = MaterialTheme.typography.headlineSmall,
-    headline5: TextStyle = MaterialTheme.typography.titleLarge,
-    headline6: TextStyle = MaterialTheme.typography.titleMedium,
+    textColor: Color = LocalContentColor.current,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge.copy(color = textColor),
+    headline1: TextStyle = MaterialTheme.typography.displaySmall.copy(color = textColor),
+    headline2: TextStyle = MaterialTheme.typography.headlineLarge.copy(color = textColor),
+    headline3: TextStyle = MaterialTheme.typography.headlineMedium.copy(color = textColor),
+    headline4: TextStyle = MaterialTheme.typography.headlineSmall.copy(color = textColor),
+    headline5: TextStyle = MaterialTheme.typography.titleLarge.copy(color = textColor),
+    headline6: TextStyle = MaterialTheme.typography.titleMedium.copy(color = textColor),
 ): TextStyles {
     return TextStyles(
         textStyle = textStyle,
