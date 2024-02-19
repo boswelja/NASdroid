@@ -69,7 +69,6 @@ fun m3BlockQuoteStyle(
     barWidth: Dp = 6.dp,
     barColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     barShape: Shape = CircleShape,
-    paddingAfterBar: Dp = 5.dp,
     innerPadding: PaddingValues = PaddingValues(8.dp)
 ): BlockQuoteStyle {
     return BlockQuoteStyle(
@@ -78,7 +77,6 @@ fun m3BlockQuoteStyle(
         barWidth = barWidth,
         barColor = barColor,
         barShape = barShape,
-        paddingAfterBar = paddingAfterBar,
         innerPadding = innerPadding
     )
 }
