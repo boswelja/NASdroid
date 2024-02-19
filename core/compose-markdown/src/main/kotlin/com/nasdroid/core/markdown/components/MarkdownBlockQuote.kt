@@ -54,15 +54,13 @@ fun MarkdownBlockQuote(
                 verticalArrangement = Arrangement.spacedBy(textStyles.textStyle.fontSize.toDp())
             ) {
                 blockQuote.children.forEach {
-                    Row(Modifier.height(IntrinsicSize.Min)) {
-                        MarkdownNode(
-                            node = it,
-                            textStyles = textStyles,
-                            textStyleModifiers = textStyleModifiers,
-                            blockQuoteStyle = style,
-                            codeBlockStyle = codeBlockStyle
-                        )
-                    }
+                    MarkdownNode(
+                        node = it,
+                        textStyles = textStyles,
+                        textStyleModifiers = textStyleModifiers,
+                        blockQuoteStyle = style,
+                        codeBlockStyle = codeBlockStyle
+                    )
                 }
             }
         }
