@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,7 +40,7 @@ fun MarkdownBlockQuote(
             .background(style.background, style.shape)
             .then(modifier)
     ) {
-        Box(Modifier.height(IntrinsicSize.Min)) {
+        Row(Modifier.height(IntrinsicSize.Min)) {
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
@@ -48,7 +49,7 @@ fun MarkdownBlockQuote(
                     .fillMaxHeight()
             )
             Column(
-                modifier = Modifier.padding(style.innerPadding).padding(start = style.barWidth),
+                modifier = Modifier.padding(style.innerPadding),
                 verticalArrangement = Arrangement.spacedBy(textStyles.textStyle.fontSize.toDp())
             ) {
                 blockQuote.children.forEach {
