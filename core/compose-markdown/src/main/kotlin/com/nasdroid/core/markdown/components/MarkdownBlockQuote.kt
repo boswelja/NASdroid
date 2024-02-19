@@ -35,20 +35,20 @@ fun MarkdownBlockQuote(
     codeBlockStyle: CodeBlockStyle,
     modifier: Modifier = Modifier,
 ) {
-        Box(
-            modifier = Modifier
-                .background(style.background, style.shape)
-                .then(modifier)
-        ) {
-            Row(Modifier.height(IntrinsicSize.Min)) {
-                Surface(
-                    shape = CircleShape,
-                    color = style.barColor,
-                    modifier = Modifier
-                        .padding(end = style.paddingAfterBar)
-                        .width(style.barWidth)
-                        .fillMaxHeight()
-                ) {}
+    Box(
+        modifier = Modifier
+            .background(style.background, style.shape)
+            .then(modifier)
+    ) {
+        Row(Modifier.height(IntrinsicSize.Min)) {
+            Surface(
+                shape = CircleShape,
+                color = style.barColor,
+                modifier = Modifier
+                    .padding(end = style.paddingAfterBar)
+                    .width(style.barWidth)
+                    .fillMaxHeight()
+            ) {}
             Column(
                 modifier = Modifier.padding(style.innerPadding),
                 verticalArrangement = Arrangement.spacedBy(textStyles.textStyle.fontSize.toDp())
@@ -65,5 +65,4 @@ fun MarkdownBlockQuote(
             }
         }
     }
-
 }
