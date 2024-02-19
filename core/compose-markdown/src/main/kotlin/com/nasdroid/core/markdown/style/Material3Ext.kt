@@ -65,8 +65,8 @@ fun m3TextStyleModifiers(
 @Composable
 fun m3BlockQuoteStyle(
     background: Color = MaterialTheme.colorScheme.surfaceVariant,
-    shape: Shape = RoundedCornerShape(CornerSize(2.5.dp)),
-    barWidth: Dp = 2.5.dp,
+    shape: Shape = RoundedCornerShape(CornerSize(3.dp)),
+    barWidth: Dp = 6.dp,
     barColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     barShape: Shape = CircleShape,
     paddingAfterBar: Dp = 5.dp,
