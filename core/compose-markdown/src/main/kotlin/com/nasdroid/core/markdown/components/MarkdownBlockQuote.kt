@@ -35,35 +35,37 @@ fun MarkdownBlockQuote(
     codeBlockStyle: CodeBlockStyle,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = Modifier
-            .background(style.background, style.shape)
-            .then(modifier)
-    ) {
-        Column(
-            modifier = Modifier.padding(style.innerPadding),
-            verticalArrangement = Arrangement.spacedBy(textStyles.textStyle.fontSize.toDp())
+        Box(
+            modifier = Modifier
+                .background(style.background, style.shape)
+                .then(modifier)
         ) {
-            blockQuote.children.forEach {
-                Row(Modifier.height(IntrinsicSize.Min)) {
-                    Surface(
-                        shape = CircleShape,
-                        color = style.barColor,
-                        modifier = Modifier
-                            .padding(end = style.paddingAfterBar)
-                            .width(style.barWidth)
-                            .fillMaxHeight()
-                    ) {}
-
-                    MarkdownNode(
-                        node = it,
-                        textStyles = textStyles,
-                        textStyleModifiers = textStyleModifiers,
-                        blockQuoteStyle = style,
-                        codeBlockStyle = codeBlockStyle
-                    )
+            Row(Modifier.height(IntrinsicSize.Min)) {
+                Surface(
+                    shape = CircleShape,
+                    color = style.barColor,
+                    modifier = Modifier
+                        .padding(end = style.paddingAfterBar)
+                        .width(style.barWidth)
+                        .fillMaxHeight()
+                ) {}
+            Column(
+                modifier = Modifier.padding(style.innerPadding),
+                verticalArrangement = Arrangement.spacedBy(textStyles.textStyle.fontSize.toDp())
+            ) {
+                blockQuote.children.forEach {
+                    Row(Modifier.height(IntrinsicSize.Min)) {
+                        MarkdownNode(
+                            node = it,
+                            textStyles = textStyles,
+                            textStyleModifiers = textStyleModifiers,
+                            blockQuoteStyle = style,
+                            codeBlockStyle = codeBlockStyle
+                        )
+                    }
                 }
             }
         }
     }
+
 }
