@@ -30,7 +30,7 @@ ktor = "2.3.8"
 
 kotlinx-coroutines = "1.8.0"
 kotlinx-datetime = "0.5.0"
-kotlinx-serialization-formats = "1.6.2"
+kotlinx-serialization-formats = "1.6.3"
 
 intellij-markdown = "0.6.1"
 
