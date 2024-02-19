@@ -37,13 +37,14 @@ fun MarkdownBlockQuote(
 ) {
     Box(
         modifier = Modifier
-            .background(style.background, style.shape)
+            .clip(style.shape)
+            .background(style.background)
             .then(modifier)
     ) {
         Row(Modifier.height(IntrinsicSize.Min)) {
             Box(
                 modifier = Modifier
-                    .clip(CircleShape)
+                    .clip(style.barShape)
                     .background(style.barColor)
                     .width(style.barWidth)
                     .fillMaxHeight()
