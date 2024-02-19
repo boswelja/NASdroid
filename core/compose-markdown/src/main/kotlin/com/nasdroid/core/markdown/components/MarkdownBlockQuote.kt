@@ -40,7 +40,7 @@ fun MarkdownBlockQuote(
             .background(style.background, style.shape)
             .then(modifier)
     ) {
-        Row(Modifier.height(IntrinsicSize.Min)) {
+        Box(Modifier.height(IntrinsicSize.Min)) {
             Surface(
                 shape = CircleShape,
                 color = style.barColor,
@@ -49,7 +49,7 @@ fun MarkdownBlockQuote(
                     .fillMaxHeight()
             ) {}
             Column(
-                modifier = Modifier.padding(style.innerPadding),
+                modifier = Modifier.padding(style.innerPadding).padding(start = style.barWidth),
                 verticalArrangement = Arrangement.spacedBy(textStyles.textStyle.fontSize.toDp())
             ) {
                 blockQuote.children.forEach {
