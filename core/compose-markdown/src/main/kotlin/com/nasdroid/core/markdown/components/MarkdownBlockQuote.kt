@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import com.nasdroid.core.markdown.MarkdownNode
 import com.nasdroid.core.markdown.generator.MarkdownBlockQuote
 import com.nasdroid.core.markdown.style.BlockQuoteStyle
@@ -40,13 +41,13 @@ fun MarkdownBlockQuote(
             .then(modifier)
     ) {
         Box(Modifier.height(IntrinsicSize.Min)) {
-            Surface(
-                shape = CircleShape,
-                color = style.barColor,
+            Box(
                 modifier = Modifier
+                    .clip(CircleShape)
+                    .background(style.barColor)
                     .width(style.barWidth)
                     .fillMaxHeight()
-            ) {}
+            )
             Column(
                 modifier = Modifier.padding(style.innerPadding).padding(start = style.barWidth),
                 verticalArrangement = Arrangement.spacedBy(textStyles.textStyle.fontSize.toDp())
