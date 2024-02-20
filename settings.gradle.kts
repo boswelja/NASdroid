@@ -29,7 +29,6 @@ include(
     ":core:api",
     ":core:capacity",
     ":core:compose-logviewer",
-    ":core:compose-markdown",
     ":core:compose-urllauncher",
     ":core:design",
     ":features:apps:data",
