@@ -19,7 +19,7 @@ compose-material3 = "1.2.0"
 compose-ui = "1.7.0-alpha02"
 accompanist = "0.35.0-alpha"
 menuprovider = "1.2.2"
-markdown = "1.0.0"
+markdown = "1.0.1"
 
 sqldelight = "2.0.1"
 
