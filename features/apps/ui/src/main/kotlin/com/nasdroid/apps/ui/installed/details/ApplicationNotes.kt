@@ -10,11 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nasdroid.core.markdown.MarkdownDocument
-import com.nasdroid.core.markdown.style.m3BlockQuoteStyle
-import com.nasdroid.core.markdown.style.m3CodeBlockStyle
-import com.nasdroid.core.markdown.style.m3TextStyleModifiers
-import com.nasdroid.core.markdown.style.m3TextStyles
+import com.boswelja.markdown.material3.MarkdownDocument
 import com.nasdroid.design.MaterialThemeExt
 
 /**
@@ -37,10 +33,6 @@ fun ApplicationNotes(
         ) {
             MarkdownDocument(
                 markdown = note,
-                textStyles = m3TextStyles(),
-                textStyleModifiers = m3TextStyleModifiers(),
-                blockQuoteStyle = m3BlockQuoteStyle(),
-                codeBlockStyle = m3CodeBlockStyle(),
                 modifier = Modifier.padding(
                     vertical = MaterialThemeExt.paddings.medium,
                     horizontal = MaterialThemeExt.paddings.large

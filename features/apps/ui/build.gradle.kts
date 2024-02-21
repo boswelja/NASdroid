@@ -41,13 +41,13 @@ detekt {
 dependencies {
     implementation(projects.core.composeLogviewer)
     implementation(projects.core.composeUrllauncher)
-    implementation(projects.core.composeMarkdown)
     implementation(projects.core.design)
 
     implementation(projects.features.apps.logic)
 
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
+    implementation(libs.compose.markdown)
     implementation(libs.compose.menuprovider)
     debugImplementation(libs.bundles.compose.tooling)
 
