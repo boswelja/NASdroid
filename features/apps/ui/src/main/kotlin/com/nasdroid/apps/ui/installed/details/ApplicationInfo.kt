@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,7 +38,6 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.nasdroid.apps.logic.installed.InstalledAppDetails
 import com.nasdroid.apps.ui.R
-import com.nasdroid.core.urllauncher.rememberUrlLauncher
 import com.nasdroid.design.MaterialThemeExt
 
 /**
@@ -101,10 +101,10 @@ fun ApplicationInfo(
     }
 
     if (isShowSourcesModal) {
-        val urlLauncher = rememberUrlLauncher()
+        val uriHandler = LocalUriHandler.current
         SourcesListModal(
             sources = installedAppDetails.sources,
-            onSourceClick = { urlLauncher.launchUrl(it) },
+            onSourceClick = { uriHandler.openUri(it) },
             onDismiss = { isShowSourcesModal = false }
         )
     }
