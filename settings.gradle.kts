@@ -29,6 +29,7 @@ include(
     ":core:api",
     ":core:capacity",
     ":core:compose-logviewer",
+    ":core:compose-segmentedprogressindicator",
     ":core:design",
     ":features:apps:data",
     ":features:apps:logic",
