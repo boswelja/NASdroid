@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.gigabytes
 import com.nasdroid.capacity.CapacityUnit
+import com.nasdroid.core.segmentedprogressindicator.SegmentedLinearProgressIndicator
 import com.nasdroid.dashboard.logic.dataloading.memory.MemorySpecs
 import com.nasdroid.dashboard.logic.dataloading.memory.MemoryUsageData
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
@@ -126,12 +127,11 @@ internal fun MemoryOverview(
             )
         }
         Spacer(Modifier.height(4.dp))
-        LinearProgressIndicator(
-            progress = { utilisation?.allocatedPercent ?: 0.5f },
+        SegmentedLinearProgressIndicator(
+            segments = listOf(utilisation?.allocatedPercent ?: 0.5f),
             modifier = Modifier
                 .height(24.dp)
                 .fillMaxWidth()
-                .clip(CircleShape)
                 .skeleton(utilisation == null),
         )
     }
