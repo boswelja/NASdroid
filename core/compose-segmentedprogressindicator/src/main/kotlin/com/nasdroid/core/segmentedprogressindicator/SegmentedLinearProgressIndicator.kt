@@ -73,7 +73,7 @@ fun SegmentedLinearProgressIndicator(
         var currentFraction = 0.0f
         segments.forEachIndexed { index, segmentProgress ->
             // track
-            val color = colors[colors.lastIndex % (index + 1)]
+            val color = colors[index % colors.size]
             val startFraction = currentFraction
             val endFraction = startFraction + segmentProgress
             val adjustedEndFraction = if (index < segments.lastIndex || endFraction < 1f) {
