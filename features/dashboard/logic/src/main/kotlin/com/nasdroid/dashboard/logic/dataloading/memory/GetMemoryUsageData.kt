@@ -67,6 +67,13 @@ data class MemoryUsageData(
      */
     val total: Capacity = used + free + cached
 
+    /**
+     * The percentage of memory that is being actively being utilised.
+     */
     val usedPercent: Float = (used.toLong(CapacityUnit.BYTE) / total.toDouble(CapacityUnit.BYTE)).toFloat()
+
+    /**
+     * The percentage of memory that is cached, but can be freed if needed.
+     */
     val cachedPercent: Float = (cached.toLong(CapacityUnit.BYTE) / total.toDouble(CapacityUnit.BYTE)).toFloat()
 }
