@@ -31,12 +31,13 @@ class GetMemoryUsageData(
             val freeIndex = graph.legend.indexOf("free")
             val usedIndex = graph.legend.indexOf("used")
             val cachedIndex = graph.legend.indexOf("cached")
+            val buffersIndex = graph.legend.indexOf("buffers")
             val memoryData = graph.data.last { !it.contains(null) } as List<Double>
             Result.success(
                 MemoryUsageData(
                     used = memoryData[usedIndex].megabytes,
                     free = memoryData[freeIndex].megabytes,
-                    cached = memoryData[cachedIndex].megabytes
+                    cached = memoryData[cachedIndex].megabytes + memoryData[buffersIndex].megabytes
                 )
             )
         } catch (e: HttpNotOkException) {
@@ -67,12 +68,12 @@ data class MemoryUsageData(
     val total: Capacity = used + free + cached
 
     /**
-     * The allocated memory capacity, as measured by the sum of [used] and [free].
+     * The percentage of memory that is being actively being utilised.
      */
-    val allocated: Capacity = used + cached
+    val usedPercent: Float = (used.toLong(CapacityUnit.BYTE) / total.toDouble(CapacityUnit.BYTE)).toFloat()
 
     /**
-     * The percent of total memory that is allocated, as measured by all parts.
+     * The percentage of memory that is cached, but can be freed if needed.
      */
-    val allocatedPercent: Float = (allocated.toLong(CapacityUnit.BYTE) / total.toDouble(CapacityUnit.BYTE)).toFloat()
+    val cachedPercent: Float = (cached.toLong(CapacityUnit.BYTE) / total.toDouble(CapacityUnit.BYTE)).toFloat()
 }

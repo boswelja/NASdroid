@@ -125,7 +125,10 @@ internal fun MemoryOverview(
         }
         Spacer(Modifier.height(4.dp))
         SegmentedLinearProgressIndicator(
-            segments = listOf(utilisation?.allocatedPercent ?: 0.5f),
+            segments = listOf(
+                utilisation?.usedPercent ?: 0.4f,
+                utilisation?.cachedPercent ?: 0.2f
+            ),
             modifier = Modifier
                 .height(24.dp)
                 .fillMaxWidth()

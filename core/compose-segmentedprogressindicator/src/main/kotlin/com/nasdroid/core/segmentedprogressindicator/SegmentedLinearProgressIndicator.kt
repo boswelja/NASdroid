@@ -1,6 +1,7 @@
 package com.nasdroid.core.segmentedprogressindicator
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import kotlin.math.abs
+import kotlin.math.max
 
 /**
  * <a href="https://m3.material.io/components/progress-indicators/overview" class="external" target="_blank">Determinate Material Design linear progress indicator</a>.
@@ -63,35 +64,34 @@ fun SegmentedLinearProgressIndicator(
             .size(LinearIndicatorWidth, LinearIndicatorHeight)
     ) {
         val strokeWidth = size.height
-        val adjustedGapSize = if (strokeCap == StrokeCap.Butt || size.height > size.width) {
-            gapSize
-        } else {
-            gapSize + strokeWidth.toDp()
-        }
-        val gapSizeFraction = adjustedGapSize / size.width.toDp()
+        val gapSizeFraction = gapSize / size.width.toDp()
+        val strokeCapFraction = if (strokeCap == StrokeCap.Butt) 0f else (strokeWidth / 2) / size.width
+        val minSectionSize = strokeCapFraction * 2 + MinSectionSize
 
         var currentFraction = 0.0f
         segments.forEachIndexed { index, segmentProgress ->
             // track
-            val color = colors[colors.lastIndex % (index + 1)]
-            val startFraction = currentFraction
-            val endFraction = startFraction + segmentProgress
-            val adjustedEndFraction = if (index < segments.lastIndex || endFraction < 1f) {
-                endFraction - gapSizeFraction
-            } else {
-                endFraction
-            }
-            if (startFraction <= 1f) {
+            if (currentFraction <= 1f) {
+                val color = colors[index % colors.size]
+                val adjustedSegmentProgress = max(segmentProgress, minSectionSize)
                 drawLinearIndicator(
-                    startFraction, adjustedEndFraction, color, strokeWidth, strokeCap
+                    startFraction = currentFraction + strokeCapFraction,
+                    endFraction = currentFraction + adjustedSegmentProgress - strokeCapFraction,
+                    color = color,
+                    strokeWidth = strokeWidth,
+                    strokeCap = strokeCap
                 )
-                currentFraction += segmentProgress
+                currentFraction += adjustedSegmentProgress + gapSizeFraction
             }
         }
         // indicator
         if (currentFraction < 1f) {
             drawLinearIndicator(
-                currentFraction, 1.0f, trackColor, strokeWidth, strokeCap
+                startFraction = currentFraction + strokeCapFraction,
+                endFraction = 1.0f,
+                color = trackColor,
+                strokeWidth = strokeWidth,
+                strokeCap = strokeCap
             )
         }
         // stop
@@ -146,6 +146,8 @@ internal val LinearIndicatorWidth = 240.dp
 /*@VisibleForTesting*/
 internal val LinearIndicatorHeight = 4.dp
 
+internal const val MinSectionSize = 0.00001f
+
 private val SemanticsBoundsPadding: Dp = 10.dp
 private val IncreaseSemanticsBounds: Modifier = Modifier
     .layout { measurable, constraints ->
@@ -175,6 +177,13 @@ fun SegmentedLinearProgressIndicatorPreview() {
     SegmentedLinearProgressIndicator(
         segments = listOf(
             0.1f, 0.2f, 0.3f, 0.4f
-        )
+        ),
+        colors = listOf(
+            Color.Red,
+            Color.Green,
+            Color.Blue,
+            Color.Cyan
+        ),
+        modifier = Modifier.height(24.dp)
     )
 }

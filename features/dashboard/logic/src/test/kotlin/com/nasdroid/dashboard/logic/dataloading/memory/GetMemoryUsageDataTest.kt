@@ -53,7 +53,7 @@ class GetMemoryUsageDataTest {
             MemoryUsageData(
                 used = 40326620000.bytes,
                 free = 48345160000.bytes,
-                cached = 40092330000.bytes
+                cached = 40096540938.bytes
             ),
             result.getOrNull()
         )
