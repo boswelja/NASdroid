@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -66,20 +67,22 @@ fun SegmentedLinearProgressIndicator(
         val strokeWidth = size.height
         val gapSizeFraction = gapSize / size.width.toDp()
         val strokeCapFraction = if (strokeCap == StrokeCap.Butt) 0f else (strokeWidth / 2) / size.width
+        val minSectionSize = strokeCapFraction * 2 + 0.000001f
 
         var currentFraction = 0.0f
         segments.forEachIndexed { index, segmentProgress ->
             // track
             if (currentFraction <= 1f) {
                 val color = colors[index % colors.size]
+                val adjustedSegmentProgress = max(segmentProgress, minSectionSize)
                 drawLinearIndicator(
                     startFraction = currentFraction + strokeCapFraction,
-                    endFraction = currentFraction + segmentProgress - strokeCapFraction,
+                    endFraction = currentFraction + adjustedSegmentProgress - strokeCapFraction,
                     color = color,
                     strokeWidth = strokeWidth,
                     strokeCap = strokeCap
                 )
-                currentFraction += segmentProgress + gapSizeFraction
+                currentFraction += adjustedSegmentProgress + gapSizeFraction
             }
         }
         // indicator
