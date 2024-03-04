@@ -88,7 +88,7 @@ fun SegmentedLinearProgressIndicator(
         // indicator
         if (currentFraction < 1f) {
             drawLinearIndicator(
-                startFraction = currentFraction + min(currentFraction, gapSizeFraction),
+                startFraction = currentFraction + strokeCapFraction,
                 endFraction = 1.0f,
                 color = trackColor,
                 strokeWidth = strokeWidth,
