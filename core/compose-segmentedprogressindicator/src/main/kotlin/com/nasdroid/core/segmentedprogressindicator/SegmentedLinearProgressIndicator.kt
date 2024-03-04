@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 
 /**
  * <a href="https://m3.material.io/components/progress-indicators/overview" class="external" target="_blank">Determinate Material Design linear progress indicator</a>.
@@ -67,7 +66,7 @@ fun SegmentedLinearProgressIndicator(
         val strokeWidth = size.height
         val gapSizeFraction = gapSize / size.width.toDp()
         val strokeCapFraction = if (strokeCap == StrokeCap.Butt) 0f else (strokeWidth / 2) / size.width
-        val minSectionSize = strokeCapFraction * 2 + 0.000001f
+        val minSectionSize = strokeCapFraction * 2 + MinSectionSize
 
         var currentFraction = 0.0f
         segments.forEachIndexed { index, segmentProgress ->
@@ -146,6 +145,8 @@ internal val LinearIndicatorWidth = 240.dp
 
 /*@VisibleForTesting*/
 internal val LinearIndicatorHeight = 4.dp
+
+internal const val MinSectionSize = 0.00001f
 
 private val SemanticsBoundsPadding: Dp = 10.dp
 private val IncreaseSemanticsBounds: Modifier = Modifier
