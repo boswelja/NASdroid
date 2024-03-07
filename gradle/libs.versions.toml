@@ -36,7 +36,7 @@ koin = "3.5.3"
 
 vico = "1.14.0"
 
-turbine = "1.0.0"
+turbine = "1.1.0"
 
 androidx-test-ext-junit = "1.1.5"
 mockk = "1.13.10"
