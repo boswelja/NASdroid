@@ -10,3 +10,6 @@ updates:
     labels: []
     schedule:
       interval: "weekly"
+      day: "wednesday"
+      time: "23:23"
+      timezone: "Etc/UTC"
