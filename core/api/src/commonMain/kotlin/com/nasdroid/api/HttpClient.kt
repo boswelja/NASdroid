@@ -4,8 +4,7 @@ import android.util.Log
 import com.nasdroid.api.exception.HttpNotOkException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.HttpClientEngineConfig
-import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.RedirectResponseException
@@ -29,7 +28,7 @@ import kotlinx.serialization.json.JsonObject
 @OptIn(ExperimentalSerializationApi::class)
 fun getHttpClient(
     apiStateProvider: ApiStateProvider,
-    engine: HttpClientEngineFactory<HttpClientEngineConfig> = defaultHttpEngine()
+    engine: HttpClientEngine = defaultHttpEngine()
 ): HttpClient {
     return HttpClient(engine) {
         install(io.ktor.client.plugins.logging.Logging) {
@@ -73,7 +72,7 @@ fun getHttpClient(
     }
 }
 
-internal expect fun defaultHttpEngine(): HttpClientEngineFactory<HttpClientEngineConfig>
+internal expect fun defaultHttpEngine(): HttpClientEngine
 
 private suspend fun ResponseException.toHttpNotOkException(): HttpNotOkException {
     // Try to extract the error message from TrueNAS

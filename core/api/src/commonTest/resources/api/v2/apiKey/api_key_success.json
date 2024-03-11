@@ -1,0 +1,15 @@
+[
+  {
+    "id": 17,
+    "name": "TrueManager for TrueNAS",
+    "created_at": {
+      "$date": 1693635311000
+    },
+    "allowlist": [
+      {
+        "method": "*",
+        "resource": "*"
+      }
+    ]
+  }
+]
