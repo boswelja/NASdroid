@@ -1,15 +1,19 @@
 package com.nasdroid.power.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults.filledTonalButtonColors
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -17,60 +21,72 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.nasdroid.design.MaterialThemeExt
-import org.koin.androidx.compose.koinViewModel
 
 /**
  * Displays various power-related options, such as "shut down" and "reboot".
  */
 @Composable
-fun PowerOptions(
-    modifier: Modifier = Modifier,
-    viewModel: PowerOptionsViewModel = koinViewModel(),
-) {
-    PowerOptions(
-        onShutdown = viewModel::shutdown,
-        onReboot = viewModel::reboot,
-        modifier = modifier
-    )
-}
-
-/**
- * Displays various power-related options, such as "shut down" and "reboot".
- */
-@Composable
-fun PowerOptions(
+fun PowerOptionsPicker(
     onShutdown: () -> Unit,
     onReboot: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
-    var confirmationDialog by rememberSaveable { mutableStateOf(ConfirmationDialog.None) }
+    var confirmationDialogType by rememberSaveable { mutableStateOf(ConfirmationDialogType.None) }
     Column(modifier) {
-        ListItem(
-            headlineContent = { Text("Reboot") },
-            leadingContent = { Icon(Icons.Default.RestartAlt, null) },
-            modifier = Modifier.clickable { confirmationDialog = ConfirmationDialog.Reboot }
-        )
-        ListItem(
-            headlineContent = { Text("Shutdown") },
-            leadingContent = { Icon(Icons.Default.PowerSettingsNew, null) },
-            modifier = Modifier.clickable { confirmationDialog = ConfirmationDialog.Shutdown }
-        )
-    }
-    when (confirmationDialog) {
-        ConfirmationDialog.None -> { /* no-op */ }
-        ConfirmationDialog.Reboot -> {
-            RebootConfirmationDialog(
-                onDismiss = { confirmationDialog = ConfirmationDialog.None },
-                onConfirm = onReboot
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .clickable(enabled = enabled) { confirmationDialogType = ConfirmationDialogType.Reboot }
+                .heightIn(min = 48.dp)
+                .fillMaxWidth()
+        ) {
+            Icon(Icons.Default.RestartAlt, null)
+            Text(
+                text = "Reboot",
+                style = MaterialThemeExt.typography.bodyLarge
             )
         }
-        ConfirmationDialog.Shutdown -> {
+        HorizontalDivider()
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .clickable(enabled = enabled) { confirmationDialogType = ConfirmationDialogType.Shutdown }
+                .heightIn(min = 48.dp)
+                .fillMaxWidth()
+        ) {
+            Icon(Icons.Default.PowerSettingsNew, null)
+            Text(
+                text = "Shutdown",
+                style = MaterialThemeExt.typography.bodyLarge
+            )
+        }
+    }
+    when (confirmationDialogType) {
+        ConfirmationDialogType.None -> { /* no-op */ }
+        ConfirmationDialogType.Reboot -> {
+            RebootConfirmationDialog(
+                onDismiss = { confirmationDialogType = ConfirmationDialogType.None },
+                onConfirm = {
+                    confirmationDialogType = ConfirmationDialogType.None
+                    onReboot()
+                }
+            )
+        }
+        ConfirmationDialogType.Shutdown -> {
             ShutdownConfirmationDialog(
-                onDismiss = { confirmationDialog = ConfirmationDialog.None },
-                onConfirm = onShutdown
+                onDismiss = { confirmationDialogType = ConfirmationDialogType.None },
+                onConfirm = {
+                    confirmationDialogType = ConfirmationDialogType.None
+                    onShutdown()
+                }
             )
         }
     }
@@ -133,9 +149,9 @@ internal fun RebootConfirmationDialog(
 }
 
 /**
- * Encapsulates all possible confirmation dialog types for [PowerOptions].
+ * Encapsulates all possible confirmation dialog types for [PowerOptionsPicker].
  */
-enum class ConfirmationDialog {
+enum class ConfirmationDialogType {
     None,
     Reboot,
     Shutdown
@@ -143,8 +159,8 @@ enum class ConfirmationDialog {
 
 @Preview
 @Composable
-fun PowerOptionsPreview() {
-    PowerOptions(
+fun PowerOptionsPickerPreview() {
+    PowerOptionsPicker(
         onShutdown = {},
         onReboot = {},
     )
