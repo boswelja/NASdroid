@@ -10,7 +10,7 @@ import kotlin.jvm.JvmName
 
 /**
  * A discriminated union that encapsulates a successful outcome with a value of type [T]
- * or a failure with an arbitrary [Throwable] exception.
+ * or a failure with an arbitrary [E] error.
  */
 @JvmInline
 public value class StrongResult<out T, E> @PublishedApi internal constructor(
@@ -29,11 +29,9 @@ public value class StrongResult<out T, E> @PublishedApi internal constructor(
      */
     public val isFailure: Boolean get() = value is Failure<*>
 
-    // value & exception retrieval
-
     /**
-     * Returns the encapsulated value if this instance represents [success][Result.isSuccess] or `null`
-     * if it is [failure][Result.isFailure].
+     * Returns the encapsulated value if this instance represents [success][StrongResult.isSuccess]
+     * or `null` if it is [failure][StrongResult.isFailure].
      *
      * This function is a shorthand for `getOrElse { null }` (see [getOrElse]) or
      * `fold(onSuccess = { it }, onFailure = { null })` (see [fold]).
@@ -45,7 +43,7 @@ public value class StrongResult<out T, E> @PublishedApi internal constructor(
         }
 
     /**
-     * Returns the encapsulated [Throwable] exception if this instance represents [failure][isFailure] or `null`
+     * Returns the encapsulated [E] error if this instance represents [failure][isFailure] or `null`
      * if it is [success][isSuccess].
      *
      * This function is a shorthand for `fold(onSuccess = { null }, onFailure = { it })` (see [fold]).
@@ -57,9 +55,9 @@ public value class StrongResult<out T, E> @PublishedApi internal constructor(
         }
 
     /**
-     * Returns a string `Success(v)` if this instance represents [success][Result.isSuccess]
+     * Returns a string `Success(v)` if this instance represents [success][StrongResult.isSuccess]
      * where `v` is a string representation of the value or a string `Failure(x)` if
-     * it is [failure][isFailure] where `x` is a string representation of the exception.
+     * it is [failure][isFailure] where `x` is a string representation of the error.
      */
     public override fun toString(): String =
         when (value) {
@@ -68,7 +66,7 @@ public value class StrongResult<out T, E> @PublishedApi internal constructor(
         }
 
     /**
-     * Companion object for [Result] class that contains its constructor functions
+     * Companion object for [StrongResult] class that contains its constructor functions
      * [success] and [failure].
      */
     public companion object {
@@ -81,7 +79,7 @@ public value class StrongResult<out T, E> @PublishedApi internal constructor(
             StrongResult(value)
 
         /**
-         * Returns an instance that encapsulates the given [Throwable] [exception] as failure.
+         * Returns an instance that encapsulates the given [E] [error] as failure.
          */
         @Suppress("INAPPLICABLE_JVM_NAME")
         @JvmName("failure")
@@ -100,7 +98,7 @@ public value class StrongResult<out T, E> @PublishedApi internal constructor(
 }
 
 /**
- * Creates an instance of internal marker [Result.Failure] class to
+ * Creates an instance of internal marker [StrongResult.Failure] class to
  * make sure that this class is not exposed in ABI.
  */
 @PublishedApi
@@ -108,8 +106,9 @@ internal fun <T> createFailure(error: T): StrongResult.Failure<T> =
     StrongResult.Failure(error)
 
 /**
- * Returns the encapsulated value if this instance represents [success][Result.isSuccess] or the
- * result of [onFailure] function for the encapsulated [Throwable] exception if it is [failure][Result.isFailure].
+ * Returns the encapsulated value if this instance represents [success][StrongResult.isSuccess] or
+ * the result of [onFailure] function for the encapsulated [Throwable] exception if it is
+ * [failure][StrongResult.isFailure].
  *
  * Note, that this function rethrows any [Throwable] exception thrown by [onFailure] function.
  *
@@ -127,8 +126,8 @@ public inline fun <R, T : R, E> StrongResult<T, E>.getOrElse(onFailure: (error: 
 }
 
 /**
- * Returns the encapsulated value if this instance represents [success][Result.isSuccess] or the
- * [defaultValue] if it is [failure][Result.isFailure].
+ * Returns the encapsulated value if this instance represents [success][StrongResult.isSuccess] or
+ * the [defaultValue] if it is [failure][StrongResult.isFailure].
  *
  * This function is a shorthand for `getOrElse { defaultValue }` (see [getOrElse]).
  */
@@ -138,8 +137,9 @@ public fun <R, T : R> StrongResult<T, *>.getOrDefault(defaultValue: R): R {
 }
 
 /**
- * Returns the result of [onSuccess] for the encapsulated value if this instance represents [success][Result.isSuccess]
- * or the result of [onFailure] function for the encapsulated [Throwable] exception if it is [failure][Result.isFailure].
+ * Returns the result of [onSuccess] for the encapsulated value if this instance represents
+ * [success][StrongResult.isSuccess] or the result of [onFailure] function for the encapsulated [E]
+ * error if it is [failure][StrongResult.isFailure].
  *
  * Note, that this function rethrows any [Throwable] exception thrown by [onSuccess] or by [onFailure] function.
  */
@@ -158,15 +158,12 @@ public inline fun <R, T, E> StrongResult<T, E>.fold(
     }
 }
 
-// transformation
-
 /**
- * Returns the encapsulated result of the given [transform] function applied to the encapsulated value
- * if this instance represents [success][Result.isSuccess] or the
- * original encapsulated [Throwable] exception if it is [failure][Result.isFailure].
+ * Returns the encapsulated result of the given [transform] function applied to the encapsulated
+ * value if this instance represents [success][StrongResult.isSuccess] or the original encapsulated
+ * [E] error if it is [failure][StrongResult.isFailure].
  *
  * Note, that this function rethrows any [Throwable] exception thrown by [transform] function.
- * See [mapCatching] for an alternative that encapsulates exceptions.
  */
 @OptIn(ExperimentalContracts::class)
 public inline fun <R, T, E> StrongResult<T, E>.map(transform: (value: T) -> R): StrongResult<R, E> {
@@ -180,12 +177,11 @@ public inline fun <R, T, E> StrongResult<T, E>.map(transform: (value: T) -> R): 
 }
 
 /**
- * Returns the encapsulated result of the given [transform] function applied to the encapsulated [Throwable] exception
- * if this instance represents [failure][Result.isFailure] or the
- * original encapsulated value if it is [success][Result.isSuccess].
+ * Returns the encapsulated result of the given [transform] function applied to the encapsulated [E]
+ * error if this instance represents [failure][StrongResult.isFailure] or the original encapsulated
+ * value if it is [success][StrongResult.isSuccess].
  *
  * Note, that this function rethrows any [Throwable] exception thrown by [transform] function.
- * See [recoverCatching] for an alternative that encapsulates exceptions.
  */
 @OptIn(ExperimentalContracts::class)
 public inline fun <R, T : R, E> StrongResult<T, E>.recover(transform: (error: E) -> R): StrongResult<R, E> {
@@ -199,8 +195,9 @@ public inline fun <R, T : R, E> StrongResult<T, E>.recover(transform: (error: E)
 }
 
 /**
- * Performs the given [action] on the encapsulated [Throwable] exception if this instance represents [failure][Result.isFailure].
- * Returns the original `Result` unchanged.
+ * Performs the given [action] on the encapsulated [E] error if this instance represents
+ * [failure][StrongResult.isFailure].
+ * Returns the original `StrongResult` unchanged.
  */
 @OptIn(ExperimentalContracts::class)
 public inline fun <T, E> StrongResult<T, E>.onFailure(action: (error: E) -> Unit): StrongResult<T, E> {
@@ -212,8 +209,8 @@ public inline fun <T, E> StrongResult<T, E>.onFailure(action: (error: E) -> Unit
 }
 
 /**
- * Performs the given [action] on the encapsulated value if this instance represents [success][Result.isSuccess].
- * Returns the original `Result` unchanged.
+ * Performs the given [action] on the encapsulated value if this instance represents [success][StrongResult.isSuccess].
+ * Returns the original `StrongResult` unchanged.
  */
 @OptIn(ExperimentalContracts::class)
 public inline fun <T, E> StrongResult<T, E>.onSuccess(action: (value: T) -> Unit): StrongResult<T, E> {
