@@ -19,8 +19,12 @@ core:capacity:
   - core/capacity/**
 core:compose-logviewer:
   - core/compose-logviewer/**
+core:compose-segmentedprogressindicator:
+  - core/compose-segmentedprogressindicator/**
 core:design:
-  - core/design
+  - core/design/**
+core:strong-result:
+  - core/strong-result/**
 
 features:apps:
   - features/apps/**
