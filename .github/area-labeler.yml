@@ -40,6 +40,8 @@ features:datasets:
   - features/datasets/**
 features:network:
   - features/network/**
+features:power:
+  - features/power/**
 features:reporting:
   - features/reporting/**
 features:shares:

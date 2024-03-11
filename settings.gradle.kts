@@ -49,6 +49,8 @@ include(
     ":features:datasets:ui",
     ":features:network:logic",
     ":features:network:ui",
+    ":features:power:logic",
+    ":features:power:ui",
     ":features:reporting",
     ":features:shares:logic",
     ":features:shares:ui",

@@ -51,6 +51,7 @@ jobs:
           - features/dataprotection
           - features/datasets
           - features/network
+          - features/power
           - features/reporting
           - features/shares
           - features/storage
