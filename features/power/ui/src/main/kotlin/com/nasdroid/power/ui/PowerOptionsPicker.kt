@@ -23,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nasdroid.design.MaterialThemeExt
@@ -43,13 +44,15 @@ fun PowerOptionsPicker(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .clickable(enabled = enabled) { confirmationDialogType = ConfirmationDialogType.Reboot }
+                .clickable(enabled = enabled) {
+                    confirmationDialogType = ConfirmationDialogType.Reboot
+                }
                 .heightIn(min = 48.dp)
                 .fillMaxWidth()
         ) {
             Icon(Icons.Default.RestartAlt, null)
             Text(
-                text = "Reboot",
+                text = stringResource(R.string.power_command_reboot),
                 style = MaterialThemeExt.typography.bodyLarge
             )
         }
@@ -58,13 +61,15 @@ fun PowerOptionsPicker(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .clickable(enabled = enabled) { confirmationDialogType = ConfirmationDialogType.Shutdown }
+                .clickable(enabled = enabled) {
+                    confirmationDialogType = ConfirmationDialogType.Shutdown
+                }
                 .heightIn(min = 48.dp)
                 .fillMaxWidth()
         ) {
             Icon(Icons.Default.PowerSettingsNew, null)
             Text(
-                text = "Shutdown",
+                text = stringResource(R.string.power_command_shutdown),
                 style = MaterialThemeExt.typography.bodyLarge
             )
         }
@@ -101,11 +106,11 @@ internal fun ShutdownConfirmationDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.PowerSettingsNew, null) },
-        title = { Text("Shutdown") },
-        text = { Text("Are you sure you want to shut down the system?") },
+        title = { Text(stringResource(R.string.power_confirm_shutdown_title)) },
+        text = { Text(stringResource(R.string.power_confirm_shutdown_text)) },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.power_confirm_shutdown_negative))
             }
         },
         confirmButton = {
@@ -116,7 +121,7 @@ internal fun ShutdownConfirmationDialog(
                     contentColor = MaterialThemeExt.colorScheme.onErrorContainer
                 )
             ) {
-                Text("Confirm")
+                Text(stringResource(R.string.power_confirm_shutdown_positive))
             }
         },
         modifier = modifier,
@@ -132,16 +137,16 @@ internal fun RebootConfirmationDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.RestartAlt, null) },
-        title = { Text("Reboot") },
-        text = { Text("Are you sure you want to reboot the system?") },
+        title = { Text(stringResource(R.string.power_confirm_reboot_title)) },
+        text = { Text(stringResource(R.string.power_confirm_reboot_text)) },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.power_confirm_reboot_negative))
             }
         },
         confirmButton = {
             FilledTonalButton(onClick = onConfirm) {
-                Text("Confirm")
+                Text(stringResource(R.string.power_confirm_reboot_positive))
             }
         },
         modifier = modifier,

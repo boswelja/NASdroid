@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
 
@@ -52,20 +53,20 @@ internal fun PowerOptionsDialog(
         modifier = modifier,
         confirmButton = {
             TextButton(onClick = onDismiss, enabled = state != PowerOptionsState.Loading) {
-                Text("Cancel")
+                Text(stringResource(R.string.power_dialog_cancel))
             }
         },
         title = {
-            Text("Power")
+            Text(stringResource(R.string.power_dialog_title))
         },
         text = {
             AnimatedContent(targetState = state, label = "Dialog content") {
                 when (it) {
                     is PowerOptionsState.ErrorGeneric -> {
-                        Text("Something went wrong, but we aren't sure what.")
+                        Text(stringResource(R.string.power_command_error_unknown))
                     }
                     PowerOptionsState.ErrorUnauthorized -> {
-                        Text("You don't have authorization to perform this action.")
+                        Text(stringResource(R.string.power_command_error_unauthorized))
                     }
                     PowerOptionsState.Loading -> {
                         Box(Modifier.fillMaxWidth()) {
