@@ -10,7 +10,6 @@ import androidx.compose.material3.ButtonDefaults.filledTonalButtonColors
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -20,11 +19,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.nasdroid.design.MaterialThemeExt
+import org.koin.androidx.compose.koinViewModel
 
+/**
+ * Displays various power-related options, such as "shut down" and "reboot".
+ */
 @Composable
 fun PowerOptions(
-    viewModel: PowerOptionsViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: PowerOptionsViewModel = koinViewModel(),
 ) {
     PowerOptions(
         onShutdown = viewModel::shutdown,
@@ -33,6 +37,9 @@ fun PowerOptions(
     )
 }
 
+/**
+ * Displays various power-related options, such as "shut down" and "reboot".
+ */
 @Composable
 fun PowerOptions(
     onShutdown: () -> Unit,
@@ -89,8 +96,8 @@ internal fun ShutdownConfirmationDialog(
             FilledTonalButton(
                 onClick = onConfirm,
                 colors = filledTonalButtonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    containerColor = MaterialThemeExt.colorScheme.errorContainer,
+                    contentColor = MaterialThemeExt.colorScheme.onErrorContainer
                 )
             ) {
                 Text("Confirm")
@@ -124,6 +131,10 @@ internal fun RebootConfirmationDialog(
         modifier = modifier,
     )
 }
+
+/**
+ * Encapsulates all possible confirmation dialog types for [PowerOptions].
+ */
 enum class ConfirmationDialog {
     None,
     Reboot,

@@ -39,6 +39,7 @@ detekt {
 }
 
 dependencies {
+    implementation(projects.core.design)
     implementation(projects.features.power.logic)
 
     implementation(libs.androidx.lifecycle.runtime)
