@@ -7,13 +7,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SettingsPower
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -26,6 +33,7 @@ import com.nasdroid.auth.ui.selector.DrawerServerSelector
 import com.nasdroid.dashboard.ui.dashboardGraph
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.design.NasDroidTheme
+import com.nasdroid.power.ui.PowerOptionsDialog
 import com.nasdroid.reporting.reportingGraph
 import com.nasdroid.storage.ui.storageGraph
 import com.nasdroid.ui.navigation.TopLevelDestination
@@ -77,6 +85,7 @@ fun MainScreen(
             destinations.any { it.getRoute() == currentRoute }
         }
     }
+    var isPowerOptionsVisible by rememberSaveable { mutableStateOf(false) }
 
     TopLevelNavigation(
         windowSizeClass = windowSizeClass,
@@ -104,7 +113,12 @@ fun MainScreen(
                         }
                     }
                 },
-                modifier = Modifier.padding(horizontal = MaterialThemeExt.paddings.large)
+                modifier = Modifier.padding(horizontal = MaterialThemeExt.paddings.large),
+                additionalControls = {
+                    OutlinedIconButton(onClick = { isPowerOptionsVisible = true }) {
+                        Icon(Icons.Default.SettingsPower, "Power")
+                    }
+                }
             )
         }
     ) {
@@ -116,6 +130,12 @@ fun MainScreen(
                 .padding(it),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
             windowSizeClass = windowSizeClass,
+        )
+    }
+
+    if (isPowerOptionsVisible) {
+        PowerOptionsDialog(
+            onDismiss = { isPowerOptionsVisible = false }
         )
     }
 }

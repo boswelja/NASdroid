@@ -1,6 +1,7 @@
 package com.nasdroid.auth.ui.selector
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
@@ -32,7 +33,8 @@ private const val SERVER_SELECTOR_ASPECT_RATIO = 2.2f
 fun DrawerServerSelector(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ServerSelectorViewModel = koinViewModel()
+    viewModel: ServerSelectorViewModel = koinViewModel(),
+    additionalControls: @Composable ColumnScope.() -> Unit = {}
 ) {
     val selectedServer by viewModel.selectedServer.collectAsState()
     DrawerServerSelector(
@@ -43,6 +45,7 @@ fun DrawerServerSelector(
             onLogout()
         },
         modifier = modifier,
+        additionalControls = additionalControls,
     )
 }
 
@@ -51,7 +54,8 @@ internal fun DrawerServerSelector(
     serverName: String,
     serverAddress: String,
     onLogoutClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    additionalControls: @Composable ColumnScope.() -> Unit = {},
 ) {
     CompositionLocalProvider(LocalContentColor provides MaterialThemeExt.colorScheme.onSurfaceVariant) {
         Row(
@@ -76,6 +80,7 @@ internal fun DrawerServerSelector(
                 )
             }
             Column {
+                additionalControls()
                 OutlinedIconButton(onClick = onLogoutClick) {
                     Icon(Icons.AutoMirrored.Default.Logout, contentDescription = "Log out")
                 }
