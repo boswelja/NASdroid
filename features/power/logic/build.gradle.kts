@@ -36,6 +36,7 @@ detekt {
 
 dependencies {
     api(libs.kotlinx.coroutines)
+    api(projects.core.strongResult)
 
     implementation(projects.core.api)
 

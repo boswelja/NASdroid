@@ -53,7 +53,7 @@ class RedirectResponseException(
 /**
  * Thrown when an HTTP request returns a client request-related response code.
  */
-class ClientRequestException(
+open class ClientRequestException(
     code: Int,
     description: String,
     cause: Throwable? = null
@@ -64,6 +64,18 @@ class ClientRequestException(
 
     companion object {
         private val VALID_RANGE = 400..499
+    }
+}
+
+/**
+ * Thrown when an HTTP request returns 401 Unauthorized.
+ */
+class ClientUnauthorizedException(
+    description: String,
+    cause: Throwable? = null
+) : ClientRequestException(UNAUTHORIZED_STATUS_CODE, description, cause) {
+    companion object {
+        private const val UNAUTHORIZED_STATUS_CODE = 401
     }
 }
 

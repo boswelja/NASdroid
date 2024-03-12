@@ -1,6 +1,7 @@
 package com.nasdroid.api
 
 import android.util.Log
+import com.nasdroid.api.exception.ClientUnauthorizedException
 import com.nasdroid.api.exception.HttpNotOkException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -14,6 +15,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.bearerAuth
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.JsonConvertException
 import io.ktor.serialization.kotlinx.json.json
@@ -85,11 +87,17 @@ private suspend fun ResponseException.toHttpNotOkException(): HttpNotOkException
             description = message,
             cause = cause
         )
-        is ClientRequestException -> com.nasdroid.api.exception.ClientRequestException(
-            code = response.status.value,
-            description = message,
-            cause = cause
-        )
+        is ClientRequestException -> {
+            if (this.response.status == HttpStatusCode.Unauthorized) {
+                ClientUnauthorizedException(description = message, cause = cause)
+            } else {
+                com.nasdroid.api.exception.ClientRequestException(
+                    code = response.status.value,
+                    description = message,
+                    cause = cause
+                )
+            }
+        }
         is ServerResponseException -> com.nasdroid.api.exception.ServerResponseException(
             code = response.status.value,
             description = message,

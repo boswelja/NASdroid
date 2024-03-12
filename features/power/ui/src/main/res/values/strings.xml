@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="power_dialog_cancel">Cancel</string>
+    <string name="power_dialog_title">Power</string>
+
+    <string name="power_command_reboot">Reboot</string>
+    <string name="power_command_shutdown">Shutdown</string>
+
+    <string name="power_confirm_reboot_title">Reboot</string>
+    <string name="power_confirm_reboot_text">Are you sure you want to reboot the system?</string>
+    <string name="power_confirm_reboot_positive">Confirm</string>
+    <string name="power_confirm_reboot_negative">Cancel</string>
+
+    <string name="power_confirm_shutdown_title">Shutdown</string>
+    <string name="power_confirm_shutdown_text">Are you sure you want to shut down the system?</string>
+    <string name="power_confirm_shutdown_positive">Confirm</string>
+    <string name="power_confirm_shutdown_negative">Cancel</string>
+
+    <string name="power_command_error_unknown">Something went wrong, but we aren\'t sure what.</string>
+    <string name="power_command_error_unauthorized">You don\'t have authorization to perform this action.</string>
+</resources>
