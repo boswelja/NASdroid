@@ -60,8 +60,8 @@ internal fun PowerOptionsDialog(
             Text(stringResource(R.string.power_dialog_title))
         },
         text = {
-            AnimatedContent(targetState = state, label = "Dialog content") {
-                when (it) {
+            AnimatedContent(targetState = state, label = "Dialog content") { powerOptionsState ->
+                when (powerOptionsState) {
                     is PowerOptionsState.ErrorGeneric -> {
                         Text(stringResource(R.string.power_command_error_unknown))
                     }
