@@ -43,7 +43,7 @@ class PowerOptionsViewModel(
                     technicalDetails = "${error.httpResponseCode}\n\n${error.httpResponseDescription}"
                 )
                 ShutdownError.Unauthorized -> PowerOptionsState.ErrorUnauthorized
-                null -> null
+                null -> PowerOptionsState.Success
             }
         }
     }
@@ -65,7 +65,7 @@ class PowerOptionsViewModel(
                     technicalDetails = "${error.httpResponseCode}\n\n${error.httpResponseDescription}"
                 )
                 RebootError.Unauthorized -> PowerOptionsState.ErrorUnauthorized
-                null -> null
+                null -> PowerOptionsState.Success
             }
         }
     }
@@ -106,4 +106,9 @@ sealed interface PowerOptionsState {
     data class ErrorGeneric(
         val technicalDetails: String
     ) : PowerOptionsState
+
+    /**
+     * Indicates the power option picker successfully made a request.
+     */
+    data object Success : PowerOptionsState
 }
