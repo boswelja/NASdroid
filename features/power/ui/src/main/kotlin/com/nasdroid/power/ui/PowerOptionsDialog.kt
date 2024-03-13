@@ -9,6 +9,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,11 @@ fun PowerOptionsDialog(
     viewModel: PowerOptionsViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
+    LaunchedEffect(state) {
+        if (state == PowerOptionsState.Success) {
+            onDismiss()
+        }
+    }
     PowerOptionsDialog(
         onDismiss = onDismiss,
         onShutdown = viewModel::shutdown,
@@ -72,6 +78,9 @@ internal fun PowerOptionsDialog(
                         Box(Modifier.fillMaxWidth()) {
                             CircularProgressIndicator(Modifier.align(Alignment.Center))
                         }
+                    }
+                    PowerOptionsState.Success -> {
+                        /* no-op */
                     }
                     null -> {
                         PowerOptionsPicker(
