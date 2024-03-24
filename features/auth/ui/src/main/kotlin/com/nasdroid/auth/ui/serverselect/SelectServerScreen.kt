@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.logic.Server
 import com.nasdroid.design.MaterialThemeExt
-import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -54,22 +53,15 @@ fun SelectServerScreen(
     viewModel: SelectServerViewModel = koinViewModel()
 ) {
     val authenticatedServers by viewModel.authenticatedServers.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-
-    LaunchedEffect(viewModel) {
-        viewModel.events.collectLatest { event ->
-            when (event) {
-                SelectServerViewModel.Event.LoginSuccess -> onLoginSuccess()
-                SelectServerViewModel.Event.LoginFailedTokenInvalid -> TODO()
-                SelectServerViewModel.Event.LoginFailedServerNotFound -> TODO()
-                null -> return@collectLatest
-            }
-            viewModel.clearPendingEvent()
+    val loginState by viewModel.loginState.collectAsState()
+    LaunchedEffect(loginState) {
+        if (loginState == LoginState.LoginSuccess) {
+            onLoginSuccess()
         }
     }
 
     SelectServerContent(
-        isLoading = isLoading,
+        isLoading = loginState == LoginState.Loading,
         servers = authenticatedServers,
         onServerClick = viewModel::tryLogIn,
         onAddServerClick = onAddServer,
