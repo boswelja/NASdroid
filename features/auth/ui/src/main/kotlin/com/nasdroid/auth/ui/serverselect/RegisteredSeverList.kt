@@ -11,16 +11,26 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.DefaultAlpha
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.logic.Server
+import com.nasdroid.auth.ui.R
 import com.nasdroid.design.MaterialThemeExt
+
+// TODO Move this somewhere more accessible to everything else
+internal const val DISABLED_ALPHA = 0.38f
 
 /**
  * Displays a list of "registered" servers, and an "add" button to add new servers.
@@ -54,17 +64,23 @@ fun RegisteredServerList(
                 supportingContent = { Text(authenticatedServer.url) },
                 leadingContent = { Icon(Icons.Default.Dns, contentDescription = null) },
                 modifier = Modifier
-                    .clickable(enabled = enabled) { onServerClick(authenticatedServer) }
+                    .clickable(enabled = enabled, role = Role.Button) {
+                        onServerClick(authenticatedServer)
+                    }
                     .padding(horizontal = 16.dp)
+                    .alpha(if (enabled) DefaultAlpha else DISABLED_ALPHA),
+                colors = ListItemDefaults.colors(containerColor = Color.Transparent)
             )
         }
         item {
             ListItem(
-                headlineContent = { Text("Add Server") },
+                headlineContent = { Text(stringResource(R.string.add_server_button)) },
                 leadingContent = { Icon(Icons.Default.Add, contentDescription = null) },
                 modifier = Modifier
-                    .clickable(onClick = onAddServerClick, enabled = enabled)
+                    .clickable(onClick = onAddServerClick, enabled = enabled, role = Role.Button)
                     .padding(horizontal = 16.dp)
+                    .alpha(if (enabled) DefaultAlpha else DISABLED_ALPHA),
+                colors = ListItemDefaults.colors(containerColor = Color.Transparent)
             )
         }
     }

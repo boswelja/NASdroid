@@ -2,6 +2,10 @@ package com.nasdroid.ui.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,7 +34,8 @@ fun NavigationSuiteScaffold(
             modifier = modifier,
             topBar = topBar,
             bottomBar = bottomBar,
-            content = content
+            content = content,
+            contentWindowInsets = WindowInsets.systemBars.add(WindowInsets.ime)
         )
     }
 }
