@@ -61,7 +61,7 @@ fun SelectServerScreen(
     }
 
     SelectServerContent(
-        isLoading = loginState == LoginState.Loading,
+        isLoading = loginState == LoginState.Loading || loginState == LoginState.LoginSuccess,
         servers = authenticatedServers,
         onServerClick = viewModel::tryLogIn,
         onAddServerClick = onAddServer,
