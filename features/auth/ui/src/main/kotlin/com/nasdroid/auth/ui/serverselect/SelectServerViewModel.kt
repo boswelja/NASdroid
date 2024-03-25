@@ -60,9 +60,9 @@ class SelectServerViewModel(
                 onSuccess = { LoginState.LoginSuccess },
                 onFailure = {
                     when (it) {
-                        LoginError.InvalidCredentials -> LoginState.ErrorCredentialsInvalid
-                        LoginError.ServerUnreachable -> LoginState.ErrorServerUnreachable
-                        LoginError.Unknown -> LoginState.ErrorGeneric
+                        LoginError.InvalidCredentials -> LoginState.Error.CredentialsInvalid
+                        LoginError.ServerUnreachable -> LoginState.Error.ServerUnreachable
+                        LoginError.Unknown -> LoginState.Error.Generic
                     }
                 }
             )
@@ -74,10 +74,36 @@ class SelectServerViewModel(
 /**
  * Describes various events that the ViewModel may emit.
  */
-enum class LoginState {
-    Loading,
-    LoginSuccess,
-    ErrorCredentialsInvalid,
-    ErrorServerUnreachable,
-    ErrorGeneric
+sealed interface LoginState {
+
+    /**
+     * The login screen is currently processing a request.
+     */
+    data object Loading : LoginState
+
+    /**
+     * The login screen has successfully authenticated with a server.
+     */
+    data object LoginSuccess : LoginState
+
+    /**
+     * An error occurred during the login process.
+     */
+    sealed interface Error : LoginState {
+
+        /**
+         * A login request was made with the server, but we were unauthorized.
+         */
+        data object CredentialsInvalid : Error
+
+        /**
+         * A login request could not be made to the server because it was not found.
+         */
+        data object ServerUnreachable : Error
+
+        /**
+         * The login request failed for an undefined reason.
+         */
+        data object Generic : Error
+    }
 }
