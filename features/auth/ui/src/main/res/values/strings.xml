@@ -8,6 +8,8 @@
     <string name="invalid_key_auth">The API key you entered is invalid</string>
     <string name="invalid_server_address">Unable to reach the server</string>
 
+    <string name="add_server_button">Add Server</string>
+
     <string name="server_label">Server address</string>
     <string name="username_label">Username</string>
     <string name="password_label">Password</string>
