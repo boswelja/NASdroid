@@ -69,6 +69,10 @@ fun SelectServerScreen(
         modifier = modifier,
         contentPadding = contentPadding,
     )
+
+    (loginState as? LoginState.Error)?.let {
+        SelectServerErrorDialog(onDismissRequest = viewModel::clearPendingEvent, error = it)
+    }
 }
 
 /**
