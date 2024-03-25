@@ -20,4 +20,11 @@
     
     <string name="basic_auth_warning">Your password will be stored securely in-app. We recommend using an API key for added control.</string>
     <string name="switch_api_key">Use an API key</string>
+
+    <string name="error_invalid_credentials_title">Invalid Credentials</string>
+    <string name="error_invalid_credentials_text">The credentials we have stored were rejected by the server</string>
+    <string name="error_unknown_title">Unknown Error</string>
+    <string name="error_unknown_text">Something went wrong, but we\'re not exactly sure what</string>
+    <string name="error_server_unreachable_title">Server Unreachable</string>
+    <string name="error_server_unreachable_text">We couldn\'t reach the server. Make sure you are connected to the network, and that your server is powered on</string>
 </resources>

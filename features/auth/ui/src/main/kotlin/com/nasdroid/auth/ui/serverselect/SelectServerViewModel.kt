@@ -5,10 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.nasdroid.auth.logic.auth.LogIn
 import com.nasdroid.auth.logic.manageservers.GetAllServers
 import com.nasdroid.auth.logic.Server
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import com.nasdroid.auth.logic.auth.LoginError
+import com.nasdroid.core.strongresult.fold
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -32,55 +31,79 @@ class SelectServerViewModel(
             emptyList()
         )
 
-    private val _isLoading = MutableStateFlow(false)
+    private val _loginState = MutableStateFlow<LoginState?>(null)
 
     /**
-     * Whether the ViewModel is currently loading data. This should be used to switch the UI to a
-     * loading state.
-     */
-    val isLoading: StateFlow<Boolean> = _isLoading
-
-    private val _events = MutableSharedFlow<Event?>(
-        replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
-
-    /**
-     * Flows [Event]s coming from the ViewModel. If the value is null, there is no event to handle.
+     * Flows [LoginState]s coming from the ViewModel. If the value is null, there is no event to handle.
      * Note it is up to the collector to clear any existing events via [clearPendingEvent].
      */
-    val events: SharedFlow<Event?> = _events
+    val loginState: StateFlow<LoginState?> = _loginState
 
     /**
-     * Clears any existing [Event] from [events].
+     * Clears any existing [LoginState] from [loginState].
      */
     fun clearPendingEvent() {
-        _events.tryEmit(null)
+        _loginState.tryEmit(null)
     }
 
     /**
      * Try log in to the given server.
      */
     fun tryLogIn(server: Server) {
-        _isLoading.value = true
+        require(_loginState.value != LoginState.Loading) {
+            "Tried to start a second login request, but the ViewModel was busy already!"
+        }
+        _loginState.value = LoginState.Loading
         viewModelScope.launch {
             val result = logIn(server)
-            // TODO handle failures
-            if (result.isSuccess) {
-                _events.emit(Event.LoginSuccess)
-                _isLoading.value = false
-            } else {
-                result.getOrThrow()
-            }
+            val newState = result.fold(
+                onSuccess = { LoginState.LoginSuccess },
+                onFailure = {
+                    when (it) {
+                        LoginError.InvalidCredentials -> LoginState.Error.CredentialsInvalid
+                        LoginError.ServerUnreachable -> LoginState.Error.ServerUnreachable
+                        LoginError.Unknown -> LoginState.Error.Generic
+                    }
+                }
+            )
+            _loginState.emit(newState)
         }
     }
+}
+
+/**
+ * Describes various events that the ViewModel may emit.
+ */
+sealed interface LoginState {
 
     /**
-     * Describes various events that the ViewModel may emit.
+     * The login screen is currently processing a request.
      */
-    enum class Event {
-        LoginSuccess,
-        LoginFailedTokenInvalid,
-        LoginFailedServerNotFound
+    data object Loading : LoginState
+
+    /**
+     * The login screen has successfully authenticated with a server.
+     */
+    data object LoginSuccess : LoginState
+
+    /**
+     * An error occurred during the login process.
+     */
+    sealed interface Error : LoginState {
+
+        /**
+         * A login request was made with the server, but we were unauthorized.
+         */
+        data object CredentialsInvalid : Error
+
+        /**
+         * A login request could not be made to the server because it was not found.
+         */
+        data object ServerUnreachable : Error
+
+        /**
+         * The login request failed for an undefined reason.
+         */
+        data object Generic : Error
     }
 }
