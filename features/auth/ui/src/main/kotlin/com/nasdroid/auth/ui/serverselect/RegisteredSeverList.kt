@@ -30,7 +30,7 @@ import com.nasdroid.auth.ui.R
 import com.nasdroid.design.MaterialThemeExt
 
 // TODO Move this somewhere more accessible to everything else
-internal const val DisabledAlpha = 0.38f
+internal const val DISABLED_ALPHA = 0.38f
 
 /**
  * Displays a list of "registered" servers, and an "add" button to add new servers.
@@ -68,7 +68,7 @@ fun RegisteredServerList(
                         onServerClick(authenticatedServer)
                     }
                     .padding(horizontal = 16.dp)
-                    .alpha(if (enabled) DefaultAlpha else DisabledAlpha),
+                    .alpha(if (enabled) DefaultAlpha else DISABLED_ALPHA),
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent)
             )
         }
@@ -79,7 +79,7 @@ fun RegisteredServerList(
                 modifier = Modifier
                     .clickable(onClick = onAddServerClick, enabled = enabled, role = Role.Button)
                     .padding(horizontal = 16.dp)
-                    .alpha(if (enabled) DefaultAlpha else DisabledAlpha),
+                    .alpha(if (enabled) DefaultAlpha else DISABLED_ALPHA),
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent)
             )
         }
