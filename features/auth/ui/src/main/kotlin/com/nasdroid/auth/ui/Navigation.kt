@@ -47,6 +47,7 @@ fun NavGraphBuilder.authNavigation(
                 },
                 modifier = modifier,
                 contentPadding = contentPadding,
+                windowSizeClass = windowSizeClass,
             )
         }
         composable(
