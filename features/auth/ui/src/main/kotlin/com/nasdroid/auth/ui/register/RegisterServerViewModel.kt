@@ -24,18 +24,29 @@ class RegisterServerViewModel(
     val registerState: StateFlow<RegisterState?> = _registerState
 
     /**
-     * Try to authenticate via username/password. This will verify the credentials, and try to create
-     * an API key.
+     * Resets any possible pending state held by [registerState]. If an error state is currently
+     * held, it will be reset to null.
+     */
+    fun clearPendingState() {
+        require(registerState.value != RegisterState.Loading) { "Tried to reset registerState while it was loading!" }
+        _registerState.value = null
+    }
+
+    /**
+     * Try to register a new server.
      *
      * @param serverAddress The address of the server to connect to.
      * @param username The username to authenticate with.
      * @param password The password to authenticate with.
      */
-    fun logIn(
+    fun tryRegisterServer(
         serverAddress: String,
         username: String,
         password: String
     ) {
+        require(registerState.value != RegisterState.Loading) {
+            "Tried to register a new server while registerState was loading!"
+        }
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading
             val result = addNewServer(
@@ -60,15 +71,18 @@ class RegisterServerViewModel(
     }
 
     /**
-     * Try to authenticate via API key.
+     * Try to register a new server.
      *
      * @param serverAddress The address of the server to connect to.
      * @param apiKey The API key to try authenticate with.
      */
-    fun logIn(
+    fun tryRegisterServer(
         serverAddress: String,
         apiKey: String
     ) {
+        require(registerState.value != RegisterState.Loading) {
+            "Tried to register a new server while registerState was loading!"
+        }
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading
             val result = addNewServer(

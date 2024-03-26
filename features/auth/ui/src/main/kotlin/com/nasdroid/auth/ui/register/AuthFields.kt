@@ -25,7 +25,10 @@ import com.nasdroid.design.MaterialThemeExt
 fun AuthFields(
     authData: AuthData,
     onAuthDataChange: (AuthData) -> Unit,
-    modifier: Modifier = Modifier
+    onDone: () -> Unit,
+    modifier: Modifier = Modifier,
+    error: Boolean = false,
+    enabled: Boolean = true,
 ) {
     AnimatedContent(
         targetState = authData is AuthData.ApiKey,
@@ -39,10 +42,15 @@ fun AuthFields(
                 ApiKeyField(
                     apiKey = apiKeyAuthData.key,
                     onApiKeyChange ={ onAuthDataChange(apiKeyAuthData.copy(key = it)) },
-                    onDone = { /*TODO*/ },
-                    modifier = Modifier.fillMaxWidth()
+                    onDone = onDone,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = enabled,
+                    error = error
                 )
-                SwitchToBasicAuth(onClick = { onAuthDataChange(AuthData.Basic("", "")) })
+                SwitchToBasicAuth(
+                    onClick = { onAuthDataChange(AuthData.Basic("", "")) },
+                    enabled = enabled
+                )
             } else {
                 val basicAuthData = authData as? AuthData.Basic ?: AuthData.Basic("", "")
                 BasicAuthFields(
@@ -50,10 +58,15 @@ fun AuthFields(
                     onUsernameChange = { onAuthDataChange(basicAuthData.copy(username = it)) },
                     password = basicAuthData.password,
                     onPasswordChange = { onAuthDataChange(basicAuthData.copy(password = it)) },
-                    onDone = { /*TODO*/ },
-                    modifier = Modifier.fillMaxWidth()
+                    onDone = onDone,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = enabled,
+                    error = error
                 )
-                SwitchToApiKey(onClick = { onAuthDataChange(AuthData.ApiKey("")) })
+                SwitchToApiKey(
+                    onClick = { onAuthDataChange(AuthData.ApiKey("")) },
+                    enabled = enabled
+                )
             }
         }
     }
@@ -69,7 +82,8 @@ sealed interface AuthData {
 @Composable
 internal fun SwitchToBasicAuth(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Row(modifier) {
         Icon(
@@ -85,7 +99,8 @@ internal fun SwitchToBasicAuth(
                 modifier = Modifier.padding(start = 8.dp)
             )
             TextButton(
-                onClick = onClick
+                onClick = onClick,
+                enabled = enabled
             ) {
                 Text(stringResource(R.string.switch_basic_auth))
             }
@@ -96,7 +111,8 @@ internal fun SwitchToBasicAuth(
 @Composable
 internal fun SwitchToApiKey(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Row(modifier) {
         Icon(
@@ -112,7 +128,8 @@ internal fun SwitchToApiKey(
                 modifier = Modifier.padding(start = 8.dp)
             )
             TextButton(
-                onClick = onClick
+                onClick = onClick,
+                enabled = enabled
             ) {
                 Text(stringResource(R.string.switch_api_key))
             }
