@@ -4,12 +4,19 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -63,8 +70,8 @@ fun FindServerContent(
                 modifier = modifier.padding(contentPadding)
             )
         }
-        windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded &&
-                windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded -> {
+        windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact &&
+                windowSizeClass.heightSizeClass > WindowHeightSizeClass.Compact -> {
             FindServerCenteredContent(
                 onServerAddressChange = onServerFound,
                 modifier = modifier.padding(contentPadding)
@@ -84,9 +91,26 @@ fun FindServerVerticalContent(
     onServerAddressChange: (address: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large, Alignment.Bottom)
+    ) {
+        FindServerByCommonHostname(
+            onServerSelected = onServerAddressChange,
+            modifier = Modifier.widthIn(max = 480.dp)
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.widthIn(max = 480.dp)
+        ) {
+            HorizontalDivider(Modifier.weight(1f))
+            Text("Or", modifier = Modifier.padding(horizontal = MaterialThemeExt.paddings.small))
+            HorizontalDivider(Modifier.weight(1f))
+        }
         FindServerByAddress(
-            onServerAddressChange = onServerAddressChange
+            onServerAddressChange = onServerAddressChange,
+            modifier = Modifier.widthIn(max = 480.dp)
         )
     }
 }
@@ -96,8 +120,24 @@ fun FindServerHorizontalContent(
     onServerAddressChange: (address: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier) {
-        FindServerByAddress(onServerAddressChange = onServerAddressChange)
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large)
+    ) {
+        FindServerByCommonHostname(
+            onServerSelected = onServerAddressChange,
+            modifier = Modifier.weight(1f)
+        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            VerticalDivider(Modifier.weight(1f))
+            Text("Or", modifier = Modifier.padding(vertical = MaterialThemeExt.paddings.small))
+            VerticalDivider(Modifier.weight(1f))
+        }
+        FindServerByAddress(
+            onServerAddressChange = onServerAddressChange,
+            modifier = Modifier.weight(1f)
+        )
     }
 }
 
@@ -106,11 +146,31 @@ fun FindServerCenteredContent(
     onServerAddressChange: (address: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier) {
-        FindServerByAddress(
-            onServerAddressChange = onServerAddressChange,
-            modifier = Modifier.align(Alignment.Center)
-        )
+    Box(modifier, contentAlignment = Alignment.Center) {
+        ElevatedCard {
+            Column(
+                modifier = Modifier.padding(MaterialThemeExt.paddings.large),
+                verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                FindServerByCommonHostname(
+                    onServerSelected = onServerAddressChange,
+                    modifier = Modifier.widthIn(max = 480.dp)
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.widthIn(max = 480.dp)
+                ) {
+                    HorizontalDivider(Modifier.weight(1f))
+                    Text("Or", modifier = Modifier.padding(horizontal = MaterialThemeExt.paddings.small))
+                    HorizontalDivider(Modifier.weight(1f))
+                }
+                FindServerByAddress(
+                    onServerAddressChange = onServerAddressChange,
+                    modifier = Modifier.widthIn(max = 480.dp)
+                )
+            }
+        }
     }
 }
 
@@ -133,13 +193,15 @@ fun FindServerScreenPreview() {
             dynamicLightColorScheme(context)
         }
     ) {
-        FindServerContent(
-            onServerFound = {},
-            windowSizeClass = windowSizeClass,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialThemeExt.colorScheme.background),
-            contentPadding = PaddingValues(MaterialThemeExt.paddings.large)
-        )
+        Surface {
+            FindServerContent(
+                onServerFound = {},
+                windowSizeClass = windowSizeClass,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialThemeExt.colorScheme.background),
+                contentPadding = PaddingValues(MaterialThemeExt.paddings.large)
+            )
+        }
     }
 }
