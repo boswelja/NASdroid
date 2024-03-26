@@ -13,10 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -33,6 +30,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import com.nasdroid.auth.ui.register.auth.AuthServer
 import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 
@@ -96,20 +94,13 @@ fun FindServerVerticalContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large, Alignment.Bottom)
     ) {
-        FindServerByCommonHostname(
-            onServerSelected = onServerAddressChange,
+        FindServerByAddress(
+            address = "",
+            onAddressChange = onServerAddressChange,
             modifier = Modifier.widthIn(max = 480.dp)
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.widthIn(max = 480.dp)
-        ) {
-            HorizontalDivider(Modifier.weight(1f))
-            Text("Or", modifier = Modifier.padding(horizontal = MaterialThemeExt.paddings.small))
-            HorizontalDivider(Modifier.weight(1f))
-        }
-        FindServerByAddress(
-            onServerAddressChange = onServerAddressChange,
+        AuthServer(
+            onLoginWithKey = {}, onLoginWithBasic = {username, password -> },
             modifier = Modifier.widthIn(max = 480.dp)
         )
     }
@@ -125,17 +116,14 @@ fun FindServerHorizontalContent(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large)
     ) {
-        FindServerByCommonHostname(
-            onServerSelected = onServerAddressChange,
+        FindServerByAddress(
+            address = "",
+            onAddressChange = onServerAddressChange,
             modifier = Modifier.weight(1f)
         )
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            VerticalDivider(Modifier.weight(1f))
-            Text("Or", modifier = Modifier.padding(vertical = MaterialThemeExt.paddings.small))
-            VerticalDivider(Modifier.weight(1f))
-        }
-        FindServerByAddress(
-            onServerAddressChange = onServerAddressChange,
+        AuthServer(
+            onLoginWithKey = {},
+            onLoginWithBasic = {username, password -> },
             modifier = Modifier.weight(1f)
         )
     }
@@ -153,20 +141,13 @@ fun FindServerCenteredContent(
                 verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FindServerByCommonHostname(
-                    onServerSelected = onServerAddressChange,
+                FindServerByAddress(
+                    address = "",
+                    onAddressChange = onServerAddressChange,
                     modifier = Modifier.widthIn(max = 480.dp)
                 )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.widthIn(max = 480.dp)
-                ) {
-                    HorizontalDivider(Modifier.weight(1f))
-                    Text("Or", modifier = Modifier.padding(horizontal = MaterialThemeExt.paddings.small))
-                    HorizontalDivider(Modifier.weight(1f))
-                }
-                FindServerByAddress(
-                    onServerAddressChange = onServerAddressChange,
+                AuthServer(
+                    onLoginWithKey = {}, onLoginWithBasic = {username, password -> },
                     modifier = Modifier.widthIn(max = 480.dp)
                 )
             }

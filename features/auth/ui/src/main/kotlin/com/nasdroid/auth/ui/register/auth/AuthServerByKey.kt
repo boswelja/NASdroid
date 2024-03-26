@@ -1,9 +1,7 @@
 package com.nasdroid.auth.ui.register.auth
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -57,14 +55,6 @@ fun AuthServerByKey(
                 if (canLogIn) onLoginWithKey(apiKey)
             },
             enabled = enabled,
-            modifier = Modifier
-                .widthIn(max = 480.dp)
-                .fillMaxWidth()
-        )
-        Spacer(Modifier.height(16.dp))
-        LoginButton(
-            onClick = { onLoginWithKey(apiKey) },
-            enabled = canLogIn,
             modifier = Modifier
                 .widthIn(max = 480.dp)
                 .fillMaxWidth()

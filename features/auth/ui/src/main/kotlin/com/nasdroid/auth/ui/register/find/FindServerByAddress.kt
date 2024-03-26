@@ -1,74 +1,96 @@
 package com.nasdroid.auth.ui.register.find
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 import com.nasdroid.design.MaterialThemeExt
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun FindServerByAddress(
-    onServerAddressChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    address: String,
+    onAddressChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    error: Boolean = false,
+    enabled: Boolean = true,
 ) {
-    val (address, onAddressChange) = rememberSaveable { mutableStateOf("") }
-    val canConnect by remember(address) { derivedStateOf { address.isNotBlank() } }
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium)
     ) {
         Text(
-            text = "Connect to a server via a custom address",
+            text = "Enter the network address of the server",
             style = MaterialThemeExt.typography.titleMedium
         )
-        ServerAddressField(
-            serverAddress = address,
-            onServerAddressChange = onAddressChange,
-            onKeyboardAction = {
-                if (canConnect) onServerAddressChange(address)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        Button(
-            onClick = { onServerAddressChange(address) },
-            modifier = Modifier
-                .fillMaxWidth(),
-            enabled = canConnect
-        ) {
-            Text(stringResource(R.string.connect_server))
+        Column {
+            ServerAddressField(
+                serverAddress = address,
+                onServerAddressChange = onAddressChange,
+                modifier = Modifier.fillMaxWidth(),
+                error = error,
+                enabled = enabled
+            )
+            AnimatedVisibility(
+                visible = address.isEmpty(),
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.small)
+                ) {
+                    DEFAULT_SUGGESTIONS.forEach { suggestedAddress ->
+                        SuggestionChip(
+                            onClick = { onAddressChange(suggestedAddress) },
+                            label = {
+                                Text(
+                                    text = suggestedAddress,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }
+
+internal val DEFAULT_SUGGESTIONS = listOf(
+    "http://truenas.local/"
+)
 
 @Composable
 internal fun ServerAddressField(
     serverAddress: String,
     onServerAddressChange: (String) -> Unit,
-    onKeyboardAction: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     error: Boolean = false
@@ -81,9 +103,8 @@ internal fun ServerAddressField(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Uri,
             autoCorrect = false,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Next
         ),
-        keyboardActions = KeyboardActions { onKeyboardAction() },
         singleLine = true,
         enabled = enabled,
         isError = error,
@@ -101,9 +122,16 @@ internal fun ServerAddressField(
 @PreviewFontScale
 @Composable
 fun FindServerByAddressPreview() {
+    var address by remember {
+        mutableStateOf("")
+    }
     MaterialThemeExt {
         Surface {
-            FindServerByAddress(onServerAddressChange = {}, modifier = Modifier.padding(16.dp))
+            FindServerByAddress(
+                address = address,
+                onAddressChange = { address = it },
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }

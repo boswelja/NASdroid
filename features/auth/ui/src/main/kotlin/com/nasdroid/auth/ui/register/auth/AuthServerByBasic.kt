@@ -82,14 +82,6 @@ fun AuthServerByBasic(
                 .widthIn(max = 480.dp)
                 .fillMaxWidth()
         )
-        Spacer(Modifier.height(16.dp))
-        LoginButton(
-            onClick = { if (canLogIn) onLoginWithBasic(username, password) },
-            enabled = canLogIn,
-            modifier = Modifier
-                .widthIn(max = 480.dp)
-                .fillMaxWidth()
-        )
     }
 }
 

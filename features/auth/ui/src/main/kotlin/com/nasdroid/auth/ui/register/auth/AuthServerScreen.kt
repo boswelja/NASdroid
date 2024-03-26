@@ -92,6 +92,45 @@ fun AuthServerScreen(
 }
 
 @Composable
+fun AuthServer(
+    onLoginWithKey: (key: String) -> Unit,
+    onLoginWithBasic: (username: String, password: String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    error: Boolean = false
+) {
+    var authMode by rememberSaveable { mutableStateOf(AuthMode.ApiKey) }
+
+    AnimatedContent(
+        targetState = authMode,
+        label = "Auth Mode",
+        transitionSpec = { fadeIn() togetherWith fadeOut() }
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large),
+            modifier = modifier
+        ) {
+            when (it) {
+                AuthMode.ApiKey -> {
+                    AuthServerByKey(
+                        onLoginWithKey = onLoginWithKey,
+                        enabled = enabled
+                    )
+                    SwitchToBasicAuth(onClick = { authMode = AuthMode.Basic })
+                }
+                AuthMode.Basic -> {
+                    AuthServerByBasic(
+                        onLoginWithBasic = onLoginWithBasic,
+                        enabled = enabled
+                    )
+                    SwitchToApiKey(onClick = { authMode = AuthMode.ApiKey })
+                }
+            }
+        }
+    }
+}
+
+@Composable
 internal fun SwitchToBasicAuth(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
