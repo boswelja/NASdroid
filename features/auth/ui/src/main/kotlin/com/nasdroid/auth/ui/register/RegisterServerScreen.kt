@@ -200,7 +200,7 @@ fun FindServerVerticalContent(
         AuthFields(
             authData = authData,
             onAuthDataChange = onAuthDataChange,
-            onDone = {},
+            onDone = { if (registerEnabled) onRegisterClick() },
             modifier = Modifier.widthIn(max = 480.dp),
             error = authDataError,
             enabled = !loading
@@ -249,7 +249,7 @@ fun FindServerHorizontalContent(
             AuthFields(
                 authData = authData,
                 onAuthDataChange = onAuthDataChange,
-                onDone = {},
+                onDone = { if (registerEnabled) onRegisterClick() },
                 modifier = Modifier.weight(1f),
                 error = authDataError,
                 enabled = !loading
@@ -299,7 +299,7 @@ fun FindServerCenteredContent(
                     onAuthDataChange = onAuthDataChange,
                     modifier = Modifier.widthIn(max = 480.dp),
                     error = authDataError,
-                    onDone = {},
+                    onDone = { if (registerEnabled) onRegisterClick() },
                     enabled = !loading
                 )
                 Button(
