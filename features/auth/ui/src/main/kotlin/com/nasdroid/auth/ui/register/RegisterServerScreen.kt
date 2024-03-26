@@ -36,10 +36,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import com.nasdroid.auth.ui.R
 import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 
@@ -208,7 +210,7 @@ fun FindServerVerticalContent(
                 .fillMaxWidth(),
             enabled = canRegister,
         ) {
-            Text("Connect")
+            Text(stringResource(R.string.connect_server))
         }
     }
 }
@@ -258,7 +260,7 @@ fun FindServerHorizontalContent(
                 .fillMaxWidth(),
             enabled = canRegister,
         ) {
-            Text("Connect")
+            Text(stringResource(R.string.connect_server))
         }
     }
 }
@@ -305,7 +307,7 @@ fun FindServerCenteredContent(
                         .fillMaxWidth(),
                     enabled = canRegister,
                 ) {
-                    Text("Connect")
+                    Text(stringResource(R.string.connect_server))
                 }
             }
         }
