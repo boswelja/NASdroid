@@ -2,19 +2,19 @@ package com.nasdroid.auth.logic.manageservers
 
 import com.nasdroid.api.ApiStateProvider
 import com.nasdroid.api.Authorization
-import com.nasdroid.auth.logic.then
+import com.nasdroid.api.exception.ClientUnauthorizedException
 import com.nasdroid.api.v2.system.SystemV2Api
 import com.nasdroid.auth.data.Server
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 import com.nasdroid.auth.data.serverstore.Authentication
-import com.nasdroid.auth.logic.auth.TestServerAuthentication
+import com.nasdroid.core.strongresult.StrongResult
+import java.net.UnknownHostException
 
 /**
  * Creates a token for and stores a new server. See [invoke] for details.
  */
 class AddNewServer(
     private val systemV2Api: SystemV2Api,
-    private val testServerAuthentication: TestServerAuthentication,
     private val authenticatedServersStore: AuthenticatedServersStore,
     private val apiStateProvider: ApiStateProvider,
 ) {
@@ -27,15 +27,20 @@ class AddNewServer(
         serverAddress: String,
         username: String,
         password: String
-    ): Result<Unit> =
-        testServerAuthentication(serverAddress, username, password)
-            .then {
-                storeNewServer(
-                    serverName = serverName,
-                    serverAddress = serverAddress,
-                    authentication = Authentication.Basic(username, password)
-                )
-            }
+    ): StrongResult<Unit, AddServerError> {
+        return try {
+            apiStateProvider.serverAddress = serverAddress
+            apiStateProvider.authorization = Authorization.Basic(username, password)
+            storeNewServer(
+                serverName = serverName,
+                serverAddress = serverAddress,
+                authentication = Authentication.Basic(username, password)
+            )
+        } finally {
+            apiStateProvider.serverAddress = null
+            apiStateProvider.authorization = null
+        }
+    }
 
     /**
      * Adds a server with the given [token].
@@ -44,27 +49,27 @@ class AddNewServer(
         serverName: String,
         serverAddress: String,
         token: String
-    ): Result<Unit> =
-        testServerAuthentication(serverAddress, token)
-            .then {
-                storeNewServer(
-                    serverName = serverName,
-                    serverAddress = serverAddress,
-                    Authentication.ApiKey(token)
-                )
-            }
+    ): StrongResult<Unit, AddServerError> {
+        return try {
+            apiStateProvider.serverAddress = serverAddress
+            apiStateProvider.authorization = Authorization.ApiKey(token)
+            storeNewServer(
+                serverName = serverName,
+                serverAddress = serverAddress,
+                authentication = Authentication.ApiKey(token)
+            )
+        } finally {
+            apiStateProvider.serverAddress = null
+            apiStateProvider.authorization = null
+        }
+    }
 
     private suspend fun storeNewServer(
         serverName: String,
         serverAddress: String,
         authentication: Authentication,
-    ): Result<Unit> = runCatching {
-        try {
-            apiStateProvider.serverAddress = serverAddress
-            apiStateProvider.authorization = when (authentication) {
-                is Authentication.ApiKey -> Authorization.ApiKey(authentication.key)
-                is Authentication.Basic -> Authorization.Basic(authentication.username, authentication.password)
-            }
+    ): StrongResult<Unit, AddServerError> {
+        return try {
             val actualName = serverName.ifBlank {
                 val systemInfo = systemV2Api.getSystemInfo()
                 systemInfo.hostName
@@ -74,9 +79,34 @@ class AddNewServer(
                 Server(uid = uid, serverAddress = serverAddress, name = actualName),
                 authentication
             )
-        } finally {
-            apiStateProvider.serverAddress = null
-            apiStateProvider.authorization = null
+            StrongResult.success(Unit)
+        } catch (_: ClientUnauthorizedException) {
+            StrongResult.failure(AddServerError.InvalidCredentials)
+        } catch (_: UnknownHostException) {
+            StrongResult.failure(AddServerError.ServerNotFound)
         }
     }
+}
+
+/**
+ * Encapsulates all possible error states for [AddNewServer].
+ */
+sealed interface AddServerError {
+
+    /**
+     * Indicates that a server could not be found at the address provided. THis could be caused by
+     * an incorrect address, or no internet.
+     */
+    data object ServerNotFound : AddServerError
+
+    /**
+     * Indicates that the server was reached, but the credentials were not valid. This could be
+     * caused by the username, password, or token being incorrect.
+     */
+    data object InvalidCredentials : AddServerError
+
+    /**
+     * Indicates that there is already a server that is registered with the same data.
+     */
+    data object DuplicateEntry : AddServerError
 }
