@@ -45,10 +45,6 @@ fun ServerAddressField(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium)
     ) {
-        Text(
-            text = "Enter the network address of the server",
-            style = MaterialThemeExt.typography.titleMedium
-        )
         Column {
             ServerAddressTextField(
                 serverAddress = address,
