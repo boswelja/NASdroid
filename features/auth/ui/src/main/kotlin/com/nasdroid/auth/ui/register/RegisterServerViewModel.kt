@@ -1,6 +1,5 @@
 package com.nasdroid.auth.ui.register
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.auth.logic.manageservers.AddNewServer
@@ -11,11 +10,9 @@ import kotlinx.coroutines.launch
 /**
  * Provides data and responds to events for the server authentication screen.
  */
-class AuthServerViewModel(
+class RegisterServerViewModel(
     private val addNewServer: AddNewServer,
-    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val serverAddress = requireNotNull(savedStateHandle.get<String>("address"))
     private val _loginState = MutableStateFlow<LoginState?>(null)
 
     /**
@@ -32,6 +29,7 @@ class AuthServerViewModel(
      * @param password The password to authenticate with.
      */
     fun logIn(
+        serverAddress: String,
         username: String,
         password: String
     ) {
@@ -60,6 +58,7 @@ class AuthServerViewModel(
      * @param apiKey The API key to try authenticate with.
      */
     fun logIn(
+        serverAddress: String,
         apiKey: String
     ) {
         viewModelScope.launch {

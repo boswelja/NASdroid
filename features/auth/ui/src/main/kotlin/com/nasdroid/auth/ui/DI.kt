@@ -1,7 +1,7 @@
 package com.nasdroid.auth.ui
 
 import com.nasdroid.auth.logic.AuthLogicModule
-import com.nasdroid.auth.ui.register.AuthServerViewModel
+import com.nasdroid.auth.ui.register.RegisterServerViewModel
 import com.nasdroid.auth.ui.selector.ServerSelectorViewModel
 import com.nasdroid.auth.ui.serverselect.SelectServerViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -14,7 +14,7 @@ import org.koin.dsl.module
 val AuthModule = module {
     loadKoinModules(AuthLogicModule)
 
-    viewModelOf(::AuthServerViewModel)
+    viewModelOf(::RegisterServerViewModel)
     viewModelOf(::ServerSelectorViewModel)
     viewModelOf(::SelectServerViewModel)
 }

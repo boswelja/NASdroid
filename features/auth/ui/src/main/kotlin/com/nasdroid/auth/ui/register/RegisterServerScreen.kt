@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.nasdroid.design.MaterialThemeExt
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * A screen that allows the user to quickly find and connect to their TrueNAS server.
@@ -44,6 +45,7 @@ fun RegisterServerScreen(
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
+    viewModel: RegisterServerViewModel = koinViewModel()
 ) {
     var serverAddress by remember {
         mutableStateOf("")
