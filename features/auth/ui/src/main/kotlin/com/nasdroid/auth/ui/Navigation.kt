@@ -38,8 +38,10 @@ fun NavGraphBuilder.authNavigation(
         }
         composable("addServer") {
             RegisterServerScreen(
-                onServerFound = { serverAddress ->
-                    // navController.navigate("auth_server/${URLEncoder.encode(serverAddress, "UTF-8")}")
+                onServerRegistered = {
+                    navController.navigate("picker") {
+                        popUpTo("picker")
+                    }
                 },
                 modifier = modifier,
                 contentPadding = contentPadding,

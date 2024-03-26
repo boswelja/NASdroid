@@ -21,7 +21,10 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -37,13 +40,22 @@ import com.nasdroid.design.MaterialThemeExt
  */
 @Composable
 fun RegisterServerScreen(
-    onServerFound: (address: String) -> Unit,
+    onServerRegistered: () -> Unit,
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
+    var serverAddress by remember {
+        mutableStateOf("")
+    }
+    var authData by remember {
+        mutableStateOf<AuthData>(AuthData.ApiKey(""))
+    }
     FindServerContent(
-        onServerFound = onServerFound,
+        serverAddress = serverAddress,
+        onServerAddressChange = { serverAddress = it },
+        authData = authData,
+        onAuthDataChange = { authData = it },
         windowSizeClass = windowSizeClass,
         modifier = modifier,
         contentPadding = contentPadding
@@ -52,7 +64,10 @@ fun RegisterServerScreen(
 
 @Composable
 fun FindServerContent(
-    onServerFound: (address: String) -> Unit,
+    serverAddress: String,
+    onServerAddressChange: (String) -> Unit,
+    authData: AuthData,
+    onAuthDataChange: (AuthData) -> Unit,
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -61,20 +76,29 @@ fun FindServerContent(
         windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact &&
                 windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact -> {
             FindServerHorizontalContent(
-                onServerAddressChange = onServerFound,
+                serverAddress = serverAddress,
+                onServerAddressChange = onServerAddressChange,
+                authData = authData,
+                onAuthDataChange = onAuthDataChange,
                 modifier = modifier.padding(contentPadding)
             )
         }
         windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact &&
                 windowSizeClass.heightSizeClass > WindowHeightSizeClass.Compact -> {
             FindServerCenteredContent(
-                onServerAddressChange = onServerFound,
+                serverAddress = serverAddress,
+                onServerAddressChange = onServerAddressChange,
+                authData = authData,
+                onAuthDataChange = onAuthDataChange,
                 modifier = modifier.padding(contentPadding)
             )
         }
         else -> {
             FindServerVerticalContent(
-                onServerAddressChange = onServerFound,
+                serverAddress = serverAddress,
+                onServerAddressChange = onServerAddressChange,
+                authData = authData,
+                onAuthDataChange = onAuthDataChange,
                 modifier = modifier.padding(contentPadding)
             )
         }
@@ -83,7 +107,10 @@ fun FindServerContent(
 
 @Composable
 fun FindServerVerticalContent(
-    onServerAddressChange: (address: String) -> Unit,
+    serverAddress: String,
+    onServerAddressChange: (String) -> Unit,
+    authData: AuthData,
+    onAuthDataChange: (AuthData) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -92,13 +119,13 @@ fun FindServerVerticalContent(
         verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large, Alignment.Bottom)
     ) {
         ServerAddressField(
-            address = "",
+            address = serverAddress,
             onAddressChange = onServerAddressChange,
             modifier = Modifier.widthIn(max = 480.dp)
         )
         AuthFields(
-            authData = AuthData.ApiKey(""),
-            onAuthDataChange = {},
+            authData = authData,
+            onAuthDataChange = onAuthDataChange,
             modifier = Modifier.widthIn(max = 480.dp)
         )
     }
@@ -106,7 +133,10 @@ fun FindServerVerticalContent(
 
 @Composable
 fun FindServerHorizontalContent(
-    onServerAddressChange: (address: String) -> Unit,
+    serverAddress: String,
+    onServerAddressChange: (String) -> Unit,
+    authData: AuthData,
+    onAuthDataChange: (AuthData) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -115,13 +145,13 @@ fun FindServerHorizontalContent(
         horizontalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large)
     ) {
         ServerAddressField(
-            address = "",
+            address = serverAddress,
             onAddressChange = onServerAddressChange,
             modifier = Modifier.weight(1f)
         )
         AuthFields(
-            authData = AuthData.ApiKey(""),
-            onAuthDataChange = {},
+            authData = authData,
+            onAuthDataChange = onAuthDataChange,
             modifier = Modifier.weight(1f)
         )
     }
@@ -129,7 +159,10 @@ fun FindServerHorizontalContent(
 
 @Composable
 fun FindServerCenteredContent(
-    onServerAddressChange: (address: String) -> Unit,
+    serverAddress: String,
+    onServerAddressChange: (String) -> Unit,
+    authData: AuthData,
+    onAuthDataChange: (AuthData) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier, contentAlignment = Alignment.Center) {
@@ -140,13 +173,13 @@ fun FindServerCenteredContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ServerAddressField(
-                    address = "",
+                    address = serverAddress,
                     onAddressChange = onServerAddressChange,
                     modifier = Modifier.widthIn(max = 480.dp)
                 )
                 AuthFields(
-                    authData = AuthData.ApiKey(""),
-                    onAuthDataChange = {},
+                    authData = authData,
+                    onAuthDataChange = onAuthDataChange,
                     modifier = Modifier.widthIn(max = 480.dp)
                 )
             }
@@ -166,6 +199,13 @@ fun FindServerScreenPreview() {
         val size = DpSize(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
         WindowSizeClass.calculateFromSize(size)
     }
+
+    var serverAddress by remember {
+        mutableStateOf("")
+    }
+    var authData by remember {
+        mutableStateOf<AuthData>(AuthData.ApiKey(""))
+    }
     MaterialThemeExt(
         colorScheme = if (isSystemInDarkTheme()) {
             dynamicDarkColorScheme(context)
@@ -175,7 +215,10 @@ fun FindServerScreenPreview() {
     ) {
         Surface {
             FindServerContent(
-                onServerFound = {},
+                serverAddress = serverAddress,
+                onServerAddressChange = { serverAddress = it },
+                authData = authData,
+                onAuthDataChange = { authData = it },
                 windowSizeClass = windowSizeClass,
                 modifier = Modifier
                     .fillMaxSize()
