@@ -1,4 +1,4 @@
-package com.nasdroid.auth.ui.register.auth
+package com.nasdroid.auth.ui.register
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package com.nasdroid.auth.ui.register.find
+package com.nasdroid.auth.ui.register
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -30,20 +30,17 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.nasdroid.auth.ui.register.auth.AuthServer
 import com.nasdroid.design.MaterialThemeExt
-import org.koin.androidx.compose.koinViewModel
 
 /**
  * A screen that allows the user to quickly find and connect to their TrueNAS server.
  */
 @Composable
-fun FindServerScreen(
+fun RegisterServerScreen(
     onServerFound: (address: String) -> Unit,
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    viewModel: FindServerViewModel = koinViewModel()
 ) {
     FindServerContent(
         onServerFound = onServerFound,
@@ -94,13 +91,14 @@ fun FindServerVerticalContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large, Alignment.Bottom)
     ) {
-        FindServerByAddress(
+        ServerAddressField(
             address = "",
             onAddressChange = onServerAddressChange,
             modifier = Modifier.widthIn(max = 480.dp)
         )
-        AuthServer(
-            onLoginWithKey = {}, onLoginWithBasic = {username, password -> },
+        AuthFields(
+            authData = AuthData.ApiKey(""),
+            onAuthDataChange = {},
             modifier = Modifier.widthIn(max = 480.dp)
         )
     }
@@ -116,14 +114,14 @@ fun FindServerHorizontalContent(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large)
     ) {
-        FindServerByAddress(
+        ServerAddressField(
             address = "",
             onAddressChange = onServerAddressChange,
             modifier = Modifier.weight(1f)
         )
-        AuthServer(
-            onLoginWithKey = {},
-            onLoginWithBasic = {username, password -> },
+        AuthFields(
+            authData = AuthData.ApiKey(""),
+            onAuthDataChange = {},
             modifier = Modifier.weight(1f)
         )
     }
@@ -141,13 +139,14 @@ fun FindServerCenteredContent(
                 verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FindServerByAddress(
+                ServerAddressField(
                     address = "",
                     onAddressChange = onServerAddressChange,
                     modifier = Modifier.widthIn(max = 480.dp)
                 )
-                AuthServer(
-                    onLoginWithKey = {}, onLoginWithBasic = {username, password -> },
+                AuthFields(
+                    authData = AuthData.ApiKey(""),
+                    onAuthDataChange = {},
                     modifier = Modifier.widthIn(max = 480.dp)
                 )
             }

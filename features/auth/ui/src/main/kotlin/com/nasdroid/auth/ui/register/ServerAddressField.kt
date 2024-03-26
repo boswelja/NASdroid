@@ -1,4 +1,4 @@
-package com.nasdroid.auth.ui.register.find
+package com.nasdroid.auth.ui.register
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -34,7 +34,7 @@ import com.nasdroid.design.MaterialThemeExt
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun FindServerByAddress(
+fun ServerAddressField(
     address: String,
     onAddressChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -50,7 +50,7 @@ internal fun FindServerByAddress(
             style = MaterialThemeExt.typography.titleMedium
         )
         Column {
-            ServerAddressField(
+            ServerAddressTextField(
                 serverAddress = address,
                 onServerAddressChange = onAddressChange,
                 modifier = Modifier.fillMaxWidth(),
@@ -88,7 +88,7 @@ internal val DEFAULT_SUGGESTIONS = listOf(
 )
 
 @Composable
-internal fun ServerAddressField(
+internal fun ServerAddressTextField(
     serverAddress: String,
     onServerAddressChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -127,7 +127,7 @@ fun FindServerByAddressPreview() {
     }
     MaterialThemeExt {
         Surface {
-            FindServerByAddress(
+            ServerAddressField(
                 address = address,
                 onAddressChange = { address = it },
                 modifier = Modifier.padding(16.dp)
