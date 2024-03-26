@@ -95,15 +95,17 @@ fun RegisterServerScreen(
                     )
                 }
             }
-
         },
-        canRegister = true,
+        registerEnabled = serverAddress.isNotBlank(),
         windowSizeClass = windowSizeClass,
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .then(modifier),
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
+        loading = registerState == RegisterState.Loading || registerState == RegisterState.Success,
+        serverAddressError = registerState is RegisterState.AddressError,
+        authDataError = registerState is RegisterState.AuthError
     )
 }
 
@@ -114,13 +116,13 @@ fun FindServerContent(
     authData: AuthData,
     onAuthDataChange: (AuthData) -> Unit,
     onRegisterClick: () -> Unit,
-    canRegister: Boolean,
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     serverAddressError: Boolean = false,
     authDataError: Boolean = false,
     loading: Boolean = false,
+    registerEnabled: Boolean = true,
 ) {
     when {
         windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact &&
@@ -131,7 +133,7 @@ fun FindServerContent(
                 authData = authData,
                 onAuthDataChange = onAuthDataChange,
                 onRegisterClick = onRegisterClick,
-                canRegister = canRegister,
+                registerEnabled = registerEnabled,
                 modifier = modifier.padding(contentPadding),
                 serverAddressError = serverAddressError,
                 authDataError = authDataError,
@@ -146,7 +148,7 @@ fun FindServerContent(
                 authData = authData,
                 onAuthDataChange = onAuthDataChange,
                 onRegisterClick = onRegisterClick,
-                canRegister = canRegister,
+                registerEnabled = registerEnabled,
                 modifier = modifier.padding(contentPadding),
                 serverAddressError = serverAddressError,
                 authDataError = authDataError,
@@ -160,7 +162,7 @@ fun FindServerContent(
                 authData = authData,
                 onAuthDataChange = onAuthDataChange,
                 onRegisterClick = onRegisterClick,
-                canRegister = canRegister,
+                registerEnabled = registerEnabled,
                 modifier = modifier.padding(contentPadding),
                 serverAddressError = serverAddressError,
                 authDataError = authDataError,
@@ -177,7 +179,7 @@ fun FindServerVerticalContent(
     authData: AuthData,
     onAuthDataChange: (AuthData) -> Unit,
     onRegisterClick: () -> Unit,
-    canRegister: Boolean,
+    registerEnabled: Boolean,
     modifier: Modifier = Modifier,
     serverAddressError: Boolean = false,
     authDataError: Boolean = false,
@@ -208,7 +210,7 @@ fun FindServerVerticalContent(
             modifier = Modifier
                 .widthIn(480.dp)
                 .fillMaxWidth(),
-            enabled = canRegister,
+            enabled = registerEnabled,
         ) {
             Text(stringResource(R.string.connect_server))
         }
@@ -222,7 +224,7 @@ fun FindServerHorizontalContent(
     authData: AuthData,
     onAuthDataChange: (AuthData) -> Unit,
     onRegisterClick: () -> Unit,
-    canRegister: Boolean,
+    registerEnabled: Boolean,
     modifier: Modifier = Modifier,
     serverAddressError: Boolean = false,
     authDataError: Boolean = false,
@@ -258,7 +260,7 @@ fun FindServerHorizontalContent(
             modifier = Modifier
                 .widthIn(max = 480.dp)
                 .fillMaxWidth(),
-            enabled = canRegister,
+            enabled = registerEnabled,
         ) {
             Text(stringResource(R.string.connect_server))
         }
@@ -272,7 +274,7 @@ fun FindServerCenteredContent(
     authData: AuthData,
     onAuthDataChange: (AuthData) -> Unit,
     onRegisterClick: () -> Unit,
-    canRegister: Boolean,
+    registerEnabled: Boolean,
     modifier: Modifier = Modifier,
     serverAddressError: Boolean = false,
     authDataError: Boolean = false,
@@ -305,7 +307,7 @@ fun FindServerCenteredContent(
                     modifier = Modifier
                         .widthIn(max = 480.dp)
                         .fillMaxWidth(),
-                    enabled = canRegister,
+                    enabled = registerEnabled,
                 ) {
                     Text(stringResource(R.string.connect_server))
                 }
@@ -347,7 +349,7 @@ fun FindServerScreenPreview() {
                 authData = authData,
                 onAuthDataChange = { authData = it },
                 onRegisterClick = {},
-                canRegister = true,
+                registerEnabled = true,
                 windowSizeClass = windowSizeClass,
                 modifier = Modifier
                     .fillMaxSize()
