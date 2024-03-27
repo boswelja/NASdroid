@@ -85,6 +85,8 @@ complexity:
   LongParameterList:
     active: true
     ignoreDefaultParameters: true
+    ignoreAnnotated:
+      - 'Composable'
   MethodOverloading:
     active: true
   NamedArguments:
