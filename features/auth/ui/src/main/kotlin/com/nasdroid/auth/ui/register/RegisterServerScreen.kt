@@ -64,13 +64,15 @@ fun RegisterServerScreen(
         mutableStateOf<AuthData>(AuthData.ApiKey(""))
     }
 
+    val loading = registerState == RegisterState.Loading || registerState == RegisterState.Success
+
     LaunchedEffect(registerState) {
         if (registerState is RegisterState.Success) {
             onServerRegistered()
         }
     }
 
-    FindServerContent(
+    RegisterServerContent(
         serverAddress = serverAddress,
         onServerAddressChange = {
             serverAddress = it
@@ -96,21 +98,24 @@ fun RegisterServerScreen(
                 }
             }
         },
-        registerEnabled = serverAddress.isNotBlank(),
+        registerEnabled = serverAddress.isNotBlank() && !loading,
         windowSizeClass = windowSizeClass,
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .then(modifier),
         contentPadding = contentPadding,
-        loading = registerState == RegisterState.Loading || registerState == RegisterState.Success,
+        loading = loading,
         serverAddressError = registerState is RegisterState.AddressError,
         authDataError = registerState is RegisterState.AuthError
     )
 }
 
+/**
+ * The main content of [RegisterServerScreen]. This content will adapt to various form factors.
+ */
 @Composable
-fun FindServerContent(
+fun RegisterServerContent(
     serverAddress: String,
     onServerAddressChange: (String) -> Unit,
     authData: AuthData,
@@ -127,7 +132,7 @@ fun FindServerContent(
     when {
         windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact &&
                 windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact -> {
-            FindServerHorizontalContent(
+            RegisterServerHorizontalContent(
                 serverAddress = serverAddress,
                 onServerAddressChange = onServerAddressChange,
                 authData = authData,
@@ -142,7 +147,7 @@ fun FindServerContent(
         }
         windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact &&
                 windowSizeClass.heightSizeClass > WindowHeightSizeClass.Compact -> {
-            FindServerCenteredContent(
+            RegisterServerCenteredContent(
                 serverAddress = serverAddress,
                 onServerAddressChange = onServerAddressChange,
                 authData = authData,
@@ -156,7 +161,7 @@ fun FindServerContent(
             )
         }
         else -> {
-            FindServerVerticalContent(
+            RegisterServerVerticalContent(
                 serverAddress = serverAddress,
                 onServerAddressChange = onServerAddressChange,
                 authData = authData,
@@ -172,8 +177,11 @@ fun FindServerContent(
     }
 }
 
+/**
+ * The content for [RegisterServerScreen], laid out vertically for a portrait phone form factor.
+ */
 @Composable
-fun FindServerVerticalContent(
+fun RegisterServerVerticalContent(
     serverAddress: String,
     onServerAddressChange: (String) -> Unit,
     authData: AuthData,
@@ -217,8 +225,11 @@ fun FindServerVerticalContent(
     }
 }
 
+/**
+ * The content for [RegisterServerScreen], laid out horizontally for a landscape phone form factor.
+ */
 @Composable
-fun FindServerHorizontalContent(
+fun RegisterServerHorizontalContent(
     serverAddress: String,
     onServerAddressChange: (String) -> Unit,
     authData: AuthData,
@@ -267,8 +278,12 @@ fun FindServerHorizontalContent(
     }
 }
 
+/**
+ * The content for [RegisterServerScreen], laid out vertically in the center of the screen for a
+ * large-screen devices.
+ */
 @Composable
-fun FindServerCenteredContent(
+fun RegisterServerCenteredContent(
     serverAddress: String,
     onServerAddressChange: (String) -> Unit,
     authData: AuthData,
@@ -321,7 +336,7 @@ fun FindServerCenteredContent(
 @PreviewLightDark
 @PreviewScreenSizes
 @Composable
-fun FindServerScreenPreview() {
+fun RegisterServerScreenPreview() {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val windowSizeClass = remember(configuration) {
@@ -343,7 +358,7 @@ fun FindServerScreenPreview() {
         }
     ) {
         Surface {
-            FindServerContent(
+            RegisterServerContent(
                 serverAddress = serverAddress,
                 onServerAddressChange = { serverAddress = it },
                 authData = authData,
