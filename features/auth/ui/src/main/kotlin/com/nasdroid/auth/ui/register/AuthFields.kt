@@ -21,6 +21,10 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 import com.nasdroid.design.MaterialThemeExt
 
+/**
+ * Displays a column of fields that allow users to enter authentication data. See [AuthData] for
+ * possible input modes.
+ */
 @Composable
 fun AuthFields(
     authData: AuthData,
@@ -72,10 +76,25 @@ fun AuthFields(
     }
 }
 
+/**
+ * Holds the current authentication data entered by the user. This can be either [ApiKey] or
+ * [Basic].
+ */
 sealed interface AuthData {
 
+    /**
+     * Holds an API key for authentication.
+     *
+     * @property key The API key that the user has entered.
+     */
     data class ApiKey(val key: String): AuthData
 
+    /**
+     * Holds a username and password for authentication.
+     *
+     * @property username The username that the user has entered.
+     * @property password The password that the user has entered.
+     */
     data class Basic(val username: String, val password: String): AuthData
 }
 
