@@ -1,36 +1,25 @@
 package com.nasdroid.auth.ui.register
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -40,7 +29,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
-import com.nasdroid.design.MaterialThemeExt
 
 /**
  * A set of text fields that allows the user to input a username and password for authentication.
@@ -73,26 +61,6 @@ fun BasicAuthFields(
             error = error,
             modifier = Modifier.fillMaxWidth()
         )
-        AnimatedVisibility(
-            visible = error,
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialThemeExt.colorScheme.error) {
-                Row(
-                    modifier = Modifier.padding(top = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(Icons.Default.Error, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text = stringResource(R.string.invalid_basic_auth),
-                        style = MaterialThemeExt.typography.labelMedium,
-                        color = MaterialThemeExt.colorScheme.error
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -168,6 +136,9 @@ internal fun PasswordTextField(
         leadingIcon = {
             Icon(Icons.Default.Password, null)
         },
+        supportingText = if (error) {{
+            Text(stringResource(R.string.invalid_basic_auth))
+        }} else { null },
         modifier = modifier
     )
 }
