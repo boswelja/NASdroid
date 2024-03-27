@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -56,30 +57,11 @@ fun BasicAuthFields(
     error: Boolean = false,
 ) {
     Column(modifier) {
-        AnimatedVisibility(
-            visible = error,
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialThemeExt.colorScheme.error) {
-                Row(
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(Icons.Default.Error, contentDescription = null)
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text = stringResource(R.string.invalid_basic_auth),
-                        style = MaterialThemeExt.typography.labelLarge,
-                        color = MaterialThemeExt.colorScheme.error
-                    )
-                }
-            }
-        }
         UsernameTextField(
             username = username,
             onUsernameChange = onUsernameChange,
             enabled = enabled,
+            error = error,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))
@@ -88,8 +70,29 @@ fun BasicAuthFields(
             onPasswordChange = onPasswordChange,
             onDone = onDone,
             enabled = enabled,
+            error = error,
             modifier = Modifier.fillMaxWidth()
         )
+        AnimatedVisibility(
+            visible = error,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            CompositionLocalProvider(LocalContentColor provides MaterialThemeExt.colorScheme.error) {
+                Row(
+                    modifier = Modifier.padding(top = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.Error, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = stringResource(R.string.invalid_basic_auth),
+                        style = MaterialThemeExt.typography.labelMedium,
+                        color = MaterialThemeExt.colorScheme.error
+                    )
+                }
+            }
+        }
     }
 }
 
