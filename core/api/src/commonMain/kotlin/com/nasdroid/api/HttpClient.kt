@@ -4,7 +4,9 @@ import android.util.Log
 import com.nasdroid.api.exception.ClientUnauthorizedException
 import com.nasdroid.api.exception.HttpNotOkException
 import io.ktor.client.HttpClient
+import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
+import io.ktor.client.plugins.Charsets
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.RedirectResponseException
@@ -48,6 +50,10 @@ fun getHttpClient(
             )
         }
 
+        Charsets {
+            register(Charsets.UTF_8)
+        }
+
         defaultRequest {
             when (val authorization = requireNotNull(apiStateProvider.authorization)) {
                 is Authorization.ApiKey -> bearerAuth(authorization.apiKey)
@@ -80,13 +86,17 @@ private suspend fun ResponseException.toHttpNotOkException(): HttpNotOkException
         message ?: response.status.description
     } catch (_: NoSuchElementException) {
         message ?: response.status.description
+    } catch (_: NoTransformationFoundException) {
+        message ?: response.status.description
     }
     return when (this) {
-        is RedirectResponseException -> com.nasdroid.api.exception.RedirectResponseException(
-            code = response.status.value,
-            description = message,
-            cause = cause
-        )
+        is RedirectResponseException -> {
+            com.nasdroid.api.exception.RedirectResponseException(
+                code = response.status.value,
+                description = message,
+                cause = cause
+            )
+        }
         is ClientRequestException -> {
             if (this.response.status == HttpStatusCode.Unauthorized) {
                 ClientUnauthorizedException(description = message, cause = cause)
@@ -98,15 +108,19 @@ private suspend fun ResponseException.toHttpNotOkException(): HttpNotOkException
                 )
             }
         }
-        is ServerResponseException -> com.nasdroid.api.exception.ServerResponseException(
-            code = response.status.value,
-            description = message,
-            cause = cause
-        )
-        else -> HttpNotOkException(
-            code = response.status.value,
-            description = message,
-            cause = cause
-        )
+        is ServerResponseException -> {
+            com.nasdroid.api.exception.ServerResponseException(
+                code = response.status.value,
+                description = message,
+                cause = cause
+            )
+        }
+        else -> {
+            HttpNotOkException(
+                code = response.status.value,
+                description = message,
+                cause = cause
+            )
+        }
     }
 }
