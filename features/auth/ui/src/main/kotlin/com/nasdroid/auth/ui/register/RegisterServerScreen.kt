@@ -64,7 +64,7 @@ fun RegisterServerScreen(
         mutableStateOf<AuthData>(AuthData.ApiKey(""))
     }
 
-    val loading = registerState == RegisterState.Loading || registerState == RegisterState.Success
+    val isLoading = registerState == RegisterState.Loading || registerState == RegisterState.Success
 
     LaunchedEffect(registerState) {
         if (registerState is RegisterState.Success) {
@@ -74,38 +74,38 @@ fun RegisterServerScreen(
 
     RegisterServerContent(
         serverAddress = serverAddress,
-        onServerAddressChange = {
-            serverAddress = it
+        onServerAddressChange = { newAuthData ->
+            serverAddress = newAuthData
             viewModel.clearPendingState()
         },
         authData = authData,
-        onAuthDataChange = {
-            authData = it
+        onAuthDataChange = { newAuthData ->
+            authData = newAuthData
             viewModel.clearPendingState()
         },
         onRegisterClick = {
-            authData.let {
-                when (it) {
+            authData.let { auth ->
+                when (auth) {
                     is AuthData.ApiKey -> viewModel.tryRegisterServer(
                         serverAddress = serverAddress,
-                        apiKey = it.key
+                        apiKey = auth.key
                     )
                     is AuthData.Basic -> viewModel.tryRegisterServer(
                         serverAddress = serverAddress,
-                        username = it.username,
-                        password = it.password
+                        username = auth.username,
+                        password = auth.password
                     )
                 }
             }
         },
-        registerEnabled = serverAddress.isNotBlank() && !loading,
+        registerEnabled = serverAddress.isNotBlank() && !isLoading,
         windowSizeClass = windowSizeClass,
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .then(modifier),
         contentPadding = contentPadding,
-        loading = loading,
+        loading = isLoading,
         serverAddressError = registerState is RegisterState.AddressError,
         authDataError = registerState is RegisterState.AuthError
     )
