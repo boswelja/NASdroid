@@ -32,6 +32,10 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 import com.nasdroid.design.MaterialThemeExt
 
+/**
+ * A text field and a set of controls that allows the user to quickly enter an address for a server
+ * they want to connect to.
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ServerAddressField(
