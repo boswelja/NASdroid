@@ -13,11 +13,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -91,28 +93,36 @@ internal fun ServerAddressTextField(
     enabled: Boolean = true,
     error: Boolean = false
 ) {
-    TextField(
-        value = serverAddress,
-        onValueChange = onServerAddressChange,
-        label = { Text(stringResource(R.string.server_label)) },
-        leadingIcon = { Icon(Icons.Default.Dns, contentDescription = null) },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Uri,
-            autoCorrect = false,
-            imeAction = ImeAction.Next
-        ),
-        singleLine = true,
-        enabled = enabled,
-        isError = error,
-        supportingText = if (error) {
-            {
-                Text(stringResource(R.string.invalid_server_address))
+    Column(modifier) {
+        TextField(
+            value = serverAddress,
+            onValueChange = onServerAddressChange,
+            label = { Text(stringResource(R.string.server_label)) },
+            leadingIcon = { Icon(Icons.Default.Dns, contentDescription = null) },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Uri,
+                autoCorrect = false,
+                imeAction = ImeAction.Next
+            ),
+            singleLine = true,
+            enabled = enabled,
+            isError = error,
+            modifier = Modifier.fillMaxWidth()
+        )
+        AnimatedVisibility(
+            visible = error,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            CompositionLocalProvider(LocalContentColor provides MaterialThemeExt.colorScheme.error) {
+                Text(
+                    text = stringResource(R.string.invalid_server_address),
+                    style = MaterialThemeExt.typography.labelMedium,
+                    color = MaterialThemeExt.colorScheme.error
+                )
             }
-        } else {
-            null
-        },
-        modifier = modifier
-    )
+        }
+    }
 }
 
 @PreviewFontScale

@@ -78,20 +78,11 @@ fun BasicAuthFields(
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialThemeExt.colorScheme.error) {
-                Row(
-                    modifier = Modifier.padding(top = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(Icons.Default.Error, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text = stringResource(R.string.invalid_basic_auth),
-                        style = MaterialThemeExt.typography.labelMedium,
-                        color = MaterialThemeExt.colorScheme.error
-                    )
-                }
-            }
+            Text(
+                text = stringResource(R.string.invalid_basic_auth),
+                style = MaterialThemeExt.typography.labelMedium,
+                color = MaterialThemeExt.colorScheme.error
+            )
         }
     }
 }
