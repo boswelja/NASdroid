@@ -1,3 +1,6 @@
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,9 +12,10 @@ android {
     namespace = "com.nasdroid"
 
     defaultConfig {
+        val workflowRun: Int? by project
         applicationId = "com.nasdroid"
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = workflowRun ?: 1
+        versionName = calculateVersionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -98,4 +102,13 @@ dependencies {
 
     testImplementation(libs.kotlin.test)
     androidTestImplementation(libs.androidx.test.ext.junit)
+}
+
+/**
+ * Calculates an appropriate version name, based on [CalVer](https://calver.org/).
+ */
+fun calculateVersionName(): String {
+    val formatter = DateTimeFormatter.ofPattern("YYYY.W")
+    val nowDate = LocalDate.now()
+    return nowDate.format(formatter)
 }
