@@ -1,0 +1,68 @@
+name: Build production
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        type: boolean
+        description: Whether this release is a prerelease
+        required: true
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Prepare signing keystore
+        uses: mobiledevops/secret-to-file-action@v1
+        with:
+          base64-encoded-secret: ${{ secrets.KEYSTORE_CONTENT }}
+          filename: "keystore.jks"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build
+        run: ./gradlew assembleRelease bundleRelease
+        env:
+          ORG_GRADLE_PROJECT_storeFilePath: "../keystore.jks"
+          ORG_GRADLE_PROJECT_storePass: ${{ secrets.KEYSTORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_key: ${{ secrets.KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_keyPass: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload release
+        uses: actions/upload-artifact@v4
+        with:
+          name: nasdroid-release
+          path: |
+            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+
+  publish-github:
+    runs-on: ubuntu-latest
+    needs: build-release
+    permissions:
+      contents: write
+    steps:
+      - name: Download release files
+        uses: actions/download-artifact@v4
+        with:
+          name: nasdroid-release
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "app-release.apk,app-release.aab"
+          prerelease: ${{ github.event.inputs.use-emoji }}
+          latest: true
+          generateReleaseNotes: true
