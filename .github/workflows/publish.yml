@@ -3,7 +3,7 @@ name: Build production
 on:
   workflow_dispatch:
     inputs:
-      channel:
+      prerelease:
         type: boolean
         description: Whether this release is a prerelease
         required: true
@@ -58,11 +58,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nasdroid-release
-
+      - name: Calculate release version
+        run: echo "::set-env name=VERSION::$(date +'%Y.%-m')"
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
+          tag: ${{ env.VERSION }}
           artifacts: "app-release.apk,app-release.aab"
-          prerelease: ${{ github.event.inputs.use-emoji }}
-          latest: true
+          prerelease: ${{ github.event.inputs.prerelease }}
+          makeLatest: true
           generateReleaseNotes: true
