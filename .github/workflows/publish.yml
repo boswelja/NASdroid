@@ -61,7 +61,7 @@ jobs:
 
       - name: Calculate release version
         id: calculate-version
-        run: echo "version=$(date +'%Y.%-m')" >> $GITHUB_OUTPUT
+        run: echo "version=$(date +'%Y.%-W')" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
