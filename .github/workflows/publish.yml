@@ -23,9 +23,10 @@ jobs:
           distribution: temurin
 
       - name: Prepare signing keystore
-        uses: mobiledevops/secret-to-file-action@v1
+        id: write-keystore
+        uses: timheuer/base64-to-file@v1
         with:
-          base64-encoded-secret: ${{ secrets.KEYSTORE_CONTENT }}
+          encodedString: ${{ secrets.KEYSTORE_CONTENT }}
           filename: "keystore.jks"
 
       - name: Setup Gradle
@@ -34,7 +35,7 @@ jobs:
       - name: Build
         run: ./gradlew assembleRelease bundleRelease
         env:
-          ORG_GRADLE_PROJECT_storeFilePath: "../keystore.jks"
+          ORG_GRADLE_PROJECT_storeFilePath: ${{ steps.write-keystore.outputs.filePath }}
           ORG_GRADLE_PROJECT_storePass: ${{ secrets.KEYSTORE_PASSWORD }}
           ORG_GRADLE_PROJECT_key: ${{ secrets.KEY_ALIAS }}
           ORG_GRADLE_PROJECT_keyPass: ${{ secrets.KEY_PASSWORD }}
@@ -61,13 +62,13 @@ jobs:
 
       - name: Calculate release version
         id: calculate-version
-        run: echo "::set-output name=version::$(date +'%Y.%-m')"
+        run: echo "version=$(date +'%Y.%-W')" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.calculate-version.outputs.version }}
-          artifacts: "app-release.apk,app-release.aab"
+          artifacts: "apk/release/app-release.apk,bundle/release/app-release.aab"
           prerelease: ${{ github.event.inputs.prerelease }}
           makeLatest: true
           generateReleaseNotes: true
