@@ -67,7 +67,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.calculate-version.outputs.version }}
-          artifacts: "app-release.apk,app-release.aab"
+          artifacts: "apk/release/app-release.apk,bundle/release/app-release.aab"
           prerelease: ${{ github.event.inputs.prerelease }}
           makeLatest: true
           generateReleaseNotes: true
