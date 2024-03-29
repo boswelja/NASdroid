@@ -23,9 +23,10 @@ jobs:
           distribution: temurin
 
       - name: Prepare signing keystore
-        uses: mobiledevops/secret-to-file-action@v1
+        id: write-keystore
+        uses: timheuer/base64-to-file@v1
         with:
-          base64-encoded-secret: ${{ secrets.KEYSTORE_CONTENT }}
+          encodedString: ${{ secrets.KEYSTORE_CONTENT }}
           filename: "keystore.jks"
 
       - name: Setup Gradle
@@ -34,7 +35,7 @@ jobs:
       - name: Build
         run: ./gradlew assembleRelease bundleRelease
         env:
-          ORG_GRADLE_PROJECT_storeFilePath: "../keystore.jks"
+          ORG_GRADLE_PROJECT_storeFilePath: ${{ steps.write-keystore.outputs.filePath }}
           ORG_GRADLE_PROJECT_storePass: ${{ secrets.KEYSTORE_PASSWORD }}
           ORG_GRADLE_PROJECT_key: ${{ secrets.KEY_ALIAS }}
           ORG_GRADLE_PROJECT_keyPass: ${{ secrets.KEY_PASSWORD }}
