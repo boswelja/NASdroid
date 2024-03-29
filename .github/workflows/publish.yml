@@ -59,10 +59,14 @@ jobs:
         with:
           name: nasdroid-release
 
+      - name: Calculate release version
+        id: calculate-version
+        run: echo "::set-output name=version::$(date +'%Y.%-m')"
+
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          tag: $(date +'%Y.%-m')
+          tag: ${{ steps.calculate-version.outputs.version }}
           artifacts: "app-release.apk,app-release.aab"
           prerelease: ${{ github.event.inputs.prerelease }}
           makeLatest: true
