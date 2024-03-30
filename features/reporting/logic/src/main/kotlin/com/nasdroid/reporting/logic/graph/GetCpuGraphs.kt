@@ -1,11 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.nasdroid.api.v2.reporting.ReportingGraphData
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import kotlinx.datetime.Instant
+import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.temperature.Temperature
+import com.nasdroid.temperature.Temperature.Companion.celsius
 
 /**
  * Retrieves the data needed to display all CPU-related graphs. See [invoke] for details.
@@ -32,32 +33,21 @@ class GetCpuGraphs(
             val (cpuGraph, cpuTempGraph, loadGraph) = reportingData
 
             val result = CpuGraphs(
-                cpuUsageGraph = cpuGraph.toGraphData(),
-                cpuTempGraph = cpuTempGraph.toGraphData(),
-                systemLoadGraph = loadGraph.toGraphData(),
+                cpuUsageGraph = cpuGraph.toGraphData { sliceData ->
+                    sliceData.map { dataPoint -> dataPoint.toFloat().coerceIn(0f, 1f) }
+                },
+                cpuTempGraph = cpuTempGraph.toGraphData { sliceData ->
+                    sliceData.map { it.celsius }
+                },
+                systemLoadGraph = loadGraph.toGraphData { sliceData ->
+                    sliceData.map { dataPoint -> dataPoint.toFloat() }
+                },
             )
 
             return StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
             return StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
-    }
-
-    private fun ReportingGraphData.toGraphData(): GraphData {
-        return GraphData(
-            dataSlices = data.map {
-                val dataNoNulls = it.requireNoNulls()
-                GraphData.DataSlice(
-                    timestamp = Instant.fromEpochMilliseconds(dataNoNulls.first().toLong()),
-                    data = dataNoNulls.drop(1)
-                )
-            },
-            legend = legend.drop(1),
-            name = name,
-            identifier = identifier,
-            start = Instant.fromEpochMilliseconds(start),
-            end = Instant.fromEpochMilliseconds(end)
-        )
     }
 }
 
@@ -69,7 +59,7 @@ class GetCpuGraphs(
  * @property systemLoadGraph Holds all data about system utilisation, designed to be shown as a graph.
  */
 data class CpuGraphs(
-    val cpuUsageGraph: GraphData,
-    val cpuTempGraph: GraphData,
-    val systemLoadGraph: GraphData,
+    val cpuUsageGraph: GraphData<Float>,
+    val cpuTempGraph: GraphData<Temperature>,
+    val systemLoadGraph: GraphData<Float>,
 )
