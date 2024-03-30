@@ -12,7 +12,7 @@ import kotlin.math.roundToLong
  * [toLong], [toDouble], and so on.
  */
 @JvmInline
-value class Temperature internal constructor(val kelvin: Double) : Comparable<Temperature> {
+value class Temperature internal constructor(private val kelvin: Double) : Comparable<Temperature> {
 
     override fun compareTo(other: Temperature): Int {
         return kelvin.compareTo(other.kelvin)
