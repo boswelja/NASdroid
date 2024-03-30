@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nasdroid.reporting"
+    namespace = "com.nasdroid.reporting.logic"
 
     buildTypes {
         release {
@@ -18,10 +18,6 @@ android {
         }
     }
 
-    buildFeatures.compose = true
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     lint {
         sarifReport = true
         htmlReport = false
@@ -39,17 +35,15 @@ detekt {
 }
 
 dependencies {
+    api(libs.kotlinx.coroutines)
+    api(libs.kotlinx.datetime)
+
     implementation(projects.core.api)
-    implementation(projects.core.design)
+    implementation(projects.features.apps.data)
 
-    implementation(libs.androidx.window)
+    implementation(libs.koin.core)
 
-    implementation(libs.vico)
-
-    implementation(libs.androidx.navigation)
-    implementation(libs.bundles.compose)
-    debugImplementation(libs.bundles.compose.tooling)
-
-    implementation(libs.koin.android)
-    implementation(libs.koin.android.compose)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

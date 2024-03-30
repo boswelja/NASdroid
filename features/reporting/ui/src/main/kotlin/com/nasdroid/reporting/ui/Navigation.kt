@@ -1,10 +1,11 @@
-package com.nasdroid.reporting
+package com.nasdroid.reporting.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.nasdroid.reporting.ui.overview.ReportingOverviewScreen
 
 /**
  * Registers a nested navigation graph for the Reporting feature.
