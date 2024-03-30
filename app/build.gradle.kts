@@ -108,7 +108,7 @@ dependencies {
  * Calculates an appropriate version name, based on [CalVer](https://calver.org/).
  */
 fun calculateVersionName(): String {
-    val formatter = DateTimeFormatter.ofPattern("YYYY.W")
+    val formatter = DateTimeFormatter.ofPattern("YYYY.w")
     val nowDate = LocalDate.now()
     return nowDate.format(formatter)
 }
