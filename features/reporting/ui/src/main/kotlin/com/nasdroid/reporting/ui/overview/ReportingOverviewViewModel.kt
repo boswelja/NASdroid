@@ -1,4 +1,4 @@
-package com.nasdroid.reporting.overview
+package com.nasdroid.reporting.ui.overview
 
 import androidx.lifecycle.ViewModel
 
