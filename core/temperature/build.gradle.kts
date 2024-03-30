@@ -32,6 +32,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(libs.ionspin.bignum)
                 implementation(kotlin("stdlib"))
             }
         }

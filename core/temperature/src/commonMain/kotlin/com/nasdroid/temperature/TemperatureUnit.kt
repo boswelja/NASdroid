@@ -1,44 +1,53 @@
 package com.nasdroid.temperature
 
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+
+private val CELSIUS_KELVIN_OFFSET = BigDecimal.fromDouble(273.15)
+private val FAHRENHEIT_KELVIN_OFFSET = BigDecimal.fromDouble(459.67)
+private val FAHRENHEIT_KELVIN_FACTOR = BigDecimal.fromDouble(1.8)
+private val RANKINE_KELVIN_FACTOR = BigDecimal.fromDouble(1.8)
+private val REAUMUR_KELVIN_OFFSET = BigDecimal.fromDouble(273.15)
+private val REAUMUR_KELVIN_FACTOR = BigDecimal.fromDouble(1.25)
+
 /**
  * Defines various units supported by [Temperature]. We can convert to/from any of these.
  */
 @Suppress("MagicNumber")
 enum class TemperatureUnit(
-    internal val toKelvin: (Double) -> Double,
-    internal val fromKelvin: (Double) -> Double,
+    internal val toKelvin: (BigDecimal) -> BigDecimal,
+    internal val fromKelvin: (BigDecimal) -> BigDecimal,
 ) {
     KELVIN({ it }, { it }),
     CELSIUS(
         toKelvin = {
-            it + 273.15
+            it + CELSIUS_KELVIN_OFFSET
         },
         fromKelvin = {
-            it - 273.15
+            it - CELSIUS_KELVIN_OFFSET
         }
     ),
     FAHRENHEIT(
         toKelvin = {
-            (it + 459.67) * (5/9.0)
+            (it + FAHRENHEIT_KELVIN_OFFSET) / FAHRENHEIT_KELVIN_FACTOR
         },
         fromKelvin = {
-            (it * 1.8) - 459.67
+            (it * FAHRENHEIT_KELVIN_FACTOR) - FAHRENHEIT_KELVIN_OFFSET
         }
     ),
     RANKINE(
         toKelvin = {
-            it * (5/9.0)
+            it / RANKINE_KELVIN_FACTOR
         },
         fromKelvin = {
-            it * 1.8
+            it * RANKINE_KELVIN_FACTOR
         }
     ),
     REAUMUR(
         toKelvin = {
-            (it * 1.25) + 273.15
+            (it * REAUMUR_KELVIN_FACTOR) + REAUMUR_KELVIN_OFFSET
         },
         fromKelvin = {
-            (it - 273.15) * 0.8
+            (it - REAUMUR_KELVIN_OFFSET) / REAUMUR_KELVIN_FACTOR
         }
     )
 }

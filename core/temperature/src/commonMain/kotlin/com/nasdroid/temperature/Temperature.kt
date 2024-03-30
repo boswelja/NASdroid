@@ -1,5 +1,7 @@
 package com.nasdroid.temperature
 
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import kotlin.math.roundToLong
 
 /**
@@ -12,7 +14,7 @@ import kotlin.math.roundToLong
  * [toLong], [toDouble], and so on.
  */
 @JvmInline
-value class Temperature internal constructor(private val kelvin: Double) : Comparable<Temperature> {
+value class Temperature internal constructor(private val kelvin: BigDecimal) : Comparable<Temperature> {
 
     override fun compareTo(other: Temperature): Int {
         return kelvin.compareTo(other.kelvin)
@@ -37,7 +39,7 @@ value class Temperature internal constructor(private val kelvin: Double) : Compa
      * precise value.
      */
     fun toDouble(unit: TemperatureUnit): Double {
-        return unit.fromKelvin(kelvin)
+        return unit.fromKelvin(kelvin).doubleValue(exactRequired = false)
     }
 
     /**
@@ -51,13 +53,13 @@ value class Temperature internal constructor(private val kelvin: Double) : Compa
     companion object {
 
         private fun Int.toTemperature(unit: TemperatureUnit): Temperature =
-            Temperature(unit.toKelvin(this.toDouble()))
+            Temperature(unit.toKelvin(this.toBigDecimal()))
         private fun Long.toTemperature(unit: TemperatureUnit): Temperature =
-            Temperature(unit.toKelvin(this.toDouble()))
+            Temperature(unit.toKelvin(this.toBigDecimal()))
         private fun Float.toTemperature(unit: TemperatureUnit): Temperature =
-            Temperature(unit.toKelvin(this.toDouble()))
+            Temperature(unit.toKelvin(this.toBigDecimal()))
         private fun Double.toTemperature(unit: TemperatureUnit): Temperature =
-            Temperature(unit.toKelvin(this))
+            Temperature(unit.toKelvin(this.toBigDecimal()))
 
         // region kelvin
         /** Converts an [Int] representation of kelvin to a [Temperature]. */
