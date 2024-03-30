@@ -4,8 +4,6 @@
     <string name="graph_type_disk">Disk</string>
     <string name="graph_type_memory">Memory</string>
     <string name="graph_type_network">Network</string>
-    <string name="graph_type_nfs">NFS</string>
-    <string name="graph_type_partition">Partition</string>
     <string name="graph_type_system">System</string>
     <string name="graph_type_zfs">ZFS</string>
 </resources>
