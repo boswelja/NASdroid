@@ -32,6 +32,7 @@ include(
     ":core:compose-segmentedprogressindicator",
     ":core:design",
     ":core:strong-result",
+    ":core:temperature",
     ":features:apps:data",
     ":features:apps:logic",
     ":features:apps:ui",
