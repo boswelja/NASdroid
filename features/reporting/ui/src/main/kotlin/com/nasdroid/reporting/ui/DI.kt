@@ -1,5 +1,6 @@
-package com.nasdroid.reporting
+package com.nasdroid.reporting.ui
 
+import com.nasdroid.reporting.overview.ReportingOverviewViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 

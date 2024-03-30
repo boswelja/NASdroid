@@ -34,7 +34,7 @@ import com.nasdroid.dashboard.ui.dashboardGraph
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.design.NasDroidTheme
 import com.nasdroid.power.ui.PowerOptionsDialog
-import com.nasdroid.reporting.reportingGraph
+import com.nasdroid.reporting.ui.reportingGraph
 import com.nasdroid.storage.ui.storageGraph
 import com.nasdroid.ui.navigation.TopLevelDestination
 import com.nasdroid.ui.navigation.TopLevelNavigation
