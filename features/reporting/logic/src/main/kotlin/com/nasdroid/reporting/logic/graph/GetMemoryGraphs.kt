@@ -1,11 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.nasdroid.api.v2.reporting.ReportingGraphData
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
+import com.nasdroid.capacity.Capacity
+import com.nasdroid.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.core.strongresult.StrongResult
-import kotlinx.datetime.Instant
+import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
 
 /**
  * Retrieves the data needed to display all memory-related graphs. See [invoke] for details.
@@ -31,31 +32,18 @@ class GetMemoryGraphs(
             val (memoryGraph, swapGraph) = reportingData
 
             val result = MemoryGraphs(
-                memoryUtilisation = memoryGraph.toGraphData(),
-                swapUtilisation = swapGraph.toGraphData(),
+                memoryUtilisation = memoryGraph.toGraphData { sliceData ->
+                    sliceData.map { it.mebibytes }
+                },
+                swapUtilisation = swapGraph.toGraphData { sliceData ->
+                    sliceData.map { it.mebibytes }
+                },
             )
 
             return StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
             return StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
-    }
-
-    private fun ReportingGraphData.toGraphData(): GraphData {
-        return GraphData(
-            dataSlices = data.map {
-                val dataNoNulls = it.requireNoNulls()
-                GraphData.DataSlice(
-                    timestamp = Instant.fromEpochMilliseconds(dataNoNulls.first().toLong()),
-                    data = dataNoNulls.drop(1)
-                )
-            },
-            legend = legend.drop(1),
-            name = name,
-            identifier = identifier,
-            start = Instant.fromEpochMilliseconds(start),
-            end = Instant.fromEpochMilliseconds(end)
-        )
     }
 }
 
@@ -68,6 +56,6 @@ class GetMemoryGraphs(
  * graph.
  */
 data class MemoryGraphs(
-    val memoryUtilisation: GraphData,
-    val swapUtilisation: GraphData,
+    val memoryUtilisation: GraphData<Capacity>,
+    val swapUtilisation: GraphData<Capacity>,
 )

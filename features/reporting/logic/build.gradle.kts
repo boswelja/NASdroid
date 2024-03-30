@@ -37,6 +37,8 @@ detekt {
 dependencies {
     api(libs.kotlinx.coroutines)
     api(libs.kotlinx.datetime)
+    api(projects.core.capacity)
+    api(projects.core.temperature)
     api(projects.core.strongResult)
 
     implementation(projects.core.api)

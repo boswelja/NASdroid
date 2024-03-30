@@ -1,11 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.nasdroid.api.v2.reporting.ReportingGraphData
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import kotlinx.datetime.Instant
+import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Retrieves the data needed to display all system-related graphs. See [invoke] for details.
@@ -30,31 +31,15 @@ class GetSystemGraphs(
             val (uptimeGraph) = reportingData
 
             val result = SystemGraphs(
-                uptime = uptimeGraph.toGraphData(),
+                uptime = uptimeGraph.toGraphData { sliceData ->
+                    sliceData.map { it.seconds }
+                },
             )
 
             return StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
             return StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
-    }
-
-    private fun ReportingGraphData.toGraphData(): GraphData {
-        val templatedName = identifier?.let { name.replace("{identifier}", it) } ?: name
-        return GraphData(
-            dataSlices = data.map {
-                val dataNoNulls = it.requireNoNulls()
-                GraphData.DataSlice(
-                    timestamp = Instant.fromEpochMilliseconds(dataNoNulls.first().toLong()),
-                    data = dataNoNulls.drop(1)
-                )
-            },
-            legend = legend.drop(1),
-            name = templatedName,
-            identifier = identifier,
-            start = Instant.fromEpochMilliseconds(start),
-            end = Instant.fromEpochMilliseconds(end)
-        )
     }
 }
 
@@ -64,5 +49,5 @@ class GetSystemGraphs(
  * @property uptime Holds all data about system uptime, designed to be shown as a graph.
  */
 data class SystemGraphs(
-    val uptime: GraphData,
+    val uptime: GraphData<Duration>,
 )
