@@ -19,26 +19,26 @@ enum class TemperatureUnit(
     ),
     FAHRENHEIT(
         toKelvin = {
-            (it + 459.67) * (5/9)
+            (it + 459.67) * (5/9.0)
         },
         fromKelvin = {
-            (it * (9/5)) - 459.67
+            (it * 1.8) - 459.67
         }
     ),
     RANKINE(
         toKelvin = {
-            it * (5/9)
+            it * (5/9.0)
         },
         fromKelvin = {
-            it * (9/5)
+            it * 1.8
         }
     ),
     REAUMUR(
         toKelvin = {
-            (it * (5/4)) + 273.15
+            (it * 1.25) + 273.15
         },
         fromKelvin = {
-            (it - 273.15) * (4/5)
+            (it - 273.15) * 0.8
         }
     )
 }
