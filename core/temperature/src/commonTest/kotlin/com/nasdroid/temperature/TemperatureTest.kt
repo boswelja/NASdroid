@@ -67,23 +67,39 @@ class TemperatureTest {
     }
 
     @Test
-    fun `conversions between water freezing point work`() {
+    fun `converting kelvin between water freezing points`() {
         testAgainstTestPoint(
             WATER_FREEZING.kelvin.kelvin,
             WATER_FREEZING
         )
+    }
+
+    @Test
+    fun `converting celsius between water freezing points`() {
         testAgainstTestPoint(
             WATER_FREEZING.celsius.celsius,
             WATER_FREEZING
         )
+    }
+
+    @Test
+    fun `converting fahrenheit between water freezing points`() {
         testAgainstTestPoint(
             WATER_FREEZING.fahrenheit.fahrenheit,
             WATER_FREEZING
         )
+    }
+
+    @Test
+    fun `converting rankine between water freezing points`() {
         testAgainstTestPoint(
             WATER_FREEZING.rankine.rankine,
             WATER_FREEZING
         )
+    }
+
+    @Test
+    fun `converting reaumur between water freezing points`() {
         testAgainstTestPoint(
             WATER_FREEZING.reaumur.reaumur,
             WATER_FREEZING
@@ -91,23 +107,39 @@ class TemperatureTest {
     }
 
     @Test
-    fun `conversions between water boiling point work`() {
+    fun `converting kelvin between water boiling points`() {
         testAgainstTestPoint(
             WATER_BOILING.kelvin.kelvin,
             WATER_BOILING
         )
+    }
+
+    @Test
+    fun `converting celsius between water boiling points`() {
         testAgainstTestPoint(
             WATER_BOILING.celsius.celsius,
             WATER_BOILING
         )
+    }
+
+    @Test
+    fun `converting fahrenheit between water boiling points`() {
         testAgainstTestPoint(
             WATER_BOILING.fahrenheit.fahrenheit,
             WATER_BOILING
         )
+    }
+
+    @Test
+    fun `converting rankine between water boiling points`() {
         testAgainstTestPoint(
             WATER_BOILING.rankine.rankine,
             WATER_BOILING
         )
+    }
+
+    @Test
+    fun `converting reaumur between water boiling points`() {
         testAgainstTestPoint(
             WATER_BOILING.reaumur.reaumur,
             WATER_BOILING
