@@ -25,6 +25,8 @@ core:design:
   - core/design/**
 core:strong-result:
   - core/strong-result/**
+core:temperature:
+  - core/temperature/**
 
 features:apps:
   - features/apps/**

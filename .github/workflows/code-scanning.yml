@@ -51,6 +51,7 @@ jobs:
           - core/compose-segmentedprogressindicator
           - core/design
           - core/strong-result
+          - core/temperature
           - features/apps
           - features/auth
           - features/credentials
