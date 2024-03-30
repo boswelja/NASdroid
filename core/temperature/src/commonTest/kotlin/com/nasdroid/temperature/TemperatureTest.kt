@@ -34,25 +34,35 @@ class TemperatureTest {
     )
 
     private fun testAgainstTestPoint(temperature: Temperature, testPoint: TestPoint) {
+        val convertedKelvin = temperature.toDouble(TemperatureUnit.KELVIN)
         assertEquals(
             testPoint.kelvin,
-            temperature.toDouble(TemperatureUnit.KELVIN)
+            convertedKelvin,
+            "Expected ${testPoint.kelvin} K, but got $convertedKelvin K"
         )
+        val convertedCelsius = temperature.toDouble(TemperatureUnit.CELSIUS)
         assertEquals(
             testPoint.celsius,
-            temperature.toDouble(TemperatureUnit.CELSIUS)
+            convertedCelsius,
+            "Expected ${testPoint.celsius} °C, but got $convertedCelsius °C"
         )
+        val convertedFahrenheit = temperature.toDouble(TemperatureUnit.FAHRENHEIT)
         assertEquals(
             testPoint.fahrenheit,
-            temperature.toDouble(TemperatureUnit.FAHRENHEIT)
+            convertedFahrenheit,
+            "Expected ${testPoint.fahrenheit} °F, but got $convertedFahrenheit °F"
         )
+        val convertedRankine = temperature.toDouble(TemperatureUnit.RANKINE)
         assertEquals(
             testPoint.rankine,
-            temperature.toDouble(TemperatureUnit.RANKINE)
+            convertedRankine,
+            "Expected ${testPoint.rankine} °R, but got $convertedRankine °R"
         )
+        val convertedReaumur = temperature.toDouble(TemperatureUnit.REAUMUR)
         assertEquals(
             testPoint.reaumur,
-            temperature.toDouble(TemperatureUnit.REAUMUR)
+            convertedReaumur,
+            "Expected ${testPoint.reaumur} °Ré, but got $convertedReaumur °Ré"
         )
     }
 
