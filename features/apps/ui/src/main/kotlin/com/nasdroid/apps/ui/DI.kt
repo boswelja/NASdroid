@@ -6,14 +6,13 @@ import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsViewModel
 import com.nasdroid.apps.ui.installed.overview.InstalledAppsOverviewViewModel
 import com.nasdroid.apps.ui.installed.overview.logs.LogsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
-import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
 
 /**
  * A Koin module to inject the apps dependency graph.
  */
 val AppsModule = module {
-    loadKoinModules(AppsLogicModule)
+    includes(AppsLogicModule)
 
     viewModelOf(::DiscoverAppsViewModel)
 

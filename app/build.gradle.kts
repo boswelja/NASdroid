@@ -58,7 +58,9 @@ android {
         resources {
             excludes += listOf(
                 "/META-INF/{AL2.0,LGPL2.1}",
-                "META-INF/versions/9/previous-compilation-data.bin"
+                "META-INF/versions/9/previous-compilation-data.bin",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md"
             )
         }
     }
@@ -101,6 +103,9 @@ dependencies {
     androidTestImplementation(libs.compose.ui.test.junit4)
 
     testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.koin.test)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.test.ext.junit)
 }
 

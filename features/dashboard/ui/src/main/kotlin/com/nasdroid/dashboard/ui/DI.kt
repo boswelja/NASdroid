@@ -7,14 +7,13 @@ import com.nasdroid.dashboard.ui.overview.memory.MemoryOverviewViewModel
 import com.nasdroid.dashboard.ui.overview.network.NetworkOverviewViewModel
 import com.nasdroid.dashboard.ui.overview.system.SystemInformationOverviewViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
-import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
 
 /**
  * A Koin module to inject the dashboard dependency graph.
  */
 val DashboardModule = module {
-    loadKoinModules(dashboardBusinessModule)
+    includes(dashboardBusinessModule)
 
     viewModelOf(::CpuOverviewViewModel)
     viewModelOf(::MemoryOverviewViewModel)
