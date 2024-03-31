@@ -15,20 +15,16 @@ class GetNetworkGraphs(
     private val reportingV2Api: ReportingV2Api
 ) {
 
-    private lateinit var interfaces: List<String>
-
     /**
      * Retrieves a [NetworkGraphs] that describes all CPU-related graphs, or a [ReportingGraphError] if
      * something went wrong. The retrieved data represents the last hour of reporting data.
+     *
+     * @param interfaces A list of network interfaces whose utilisation graphs should be retrieved.
      */
-    suspend operator fun invoke(): StrongResult<NetworkGraphs, ReportingGraphError> {
+    suspend operator fun invoke(
+        interfaces: List<String>
+    ): StrongResult<NetworkGraphs, ReportingGraphError> {
         try {
-            if (!::interfaces.isInitialized) {
-                interfaces = reportingV2Api.getReportingGraphs(null, null, null)
-                    .first { it.name == "interface" }
-                    .identifiers
-                    .orEmpty()
-            }
             val reportingData = reportingV2Api.getGraphData(
                 graphs = interfaces.map {
                     RequestedGraph("interface", it)
@@ -38,7 +34,7 @@ class GetNetworkGraphs(
             )
             val result = NetworkGraphs(
                 reportingData.map { graph ->
-                    graph.toGraphData { it.map { it.kilobytes } }
+                    graph.toGraphData { slice -> slice.map { it.kilobytes } }
                 }
             )
 
