@@ -7,7 +7,6 @@ import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
-import kotlin.math.roundToInt
 
 /**
  * Retrieves the data needed to display all ZFS-related graphs. See [invoke] for details.
@@ -46,8 +45,8 @@ class GetZfsGraphs(
                 actualCacheHitRate = cacheHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
                 arcHitRate = arcHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
                 arcSize = arcSizeGraph.toGraphData { slice -> slice.map { it.mebibytes } },
-                arcDemandResult = arcResultDemandGraph.toGraphData { slice -> slice.map { it.roundToInt() } },
-                arcPrefetchResult = arcResultPrefetchGraph.toGraphData { slice -> slice.map { it.roundToInt() } }
+                arcDemandResult = arcResultDemandGraph.toGraphData { slice -> slice.map { (it / 100).toFloat() } },
+                arcPrefetchResult = arcResultPrefetchGraph.toGraphData { slice -> slice.map { (it / 100).toFloat() } }
             )
 
             return StrongResult.success(result)
@@ -70,6 +69,6 @@ data class ZfsGraphs(
     val actualCacheHitRate: GraphData<Float>,
     val arcHitRate: GraphData<Float>,
     val arcSize: GraphData<Capacity>,
-    val arcDemandResult: GraphData<Int>,
-    val arcPrefetchResult: GraphData<Int>
+    val arcDemandResult: GraphData<Float>,
+    val arcPrefetchResult: GraphData<Float>
 )
