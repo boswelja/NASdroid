@@ -1,6 +1,8 @@
 package com.nasdroid.reporting.logic
 
 import com.nasdroid.reporting.logic.graph.GetCpuGraphs
+import com.nasdroid.reporting.logic.graph.GetDiskGraphs
+import com.nasdroid.reporting.logic.graph.GetDisks
 import com.nasdroid.reporting.logic.graph.GetMemoryGraphs
 import com.nasdroid.reporting.logic.graph.GetNetworkGraphs
 import com.nasdroid.reporting.logic.graph.GetNetworkInterfaces
@@ -14,6 +16,8 @@ import org.koin.dsl.module
  */
 val ReportingLogicModule = module {
     factoryOf(::GetCpuGraphs)
+    factoryOf(::GetDiskGraphs)
+    factoryOf(::GetDisks)
     factoryOf(::GetMemoryGraphs)
     factoryOf(::GetNetworkGraphs)
     factoryOf(::GetNetworkInterfaces)
