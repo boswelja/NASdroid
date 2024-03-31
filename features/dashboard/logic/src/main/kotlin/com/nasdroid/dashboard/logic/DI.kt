@@ -12,7 +12,6 @@ import com.nasdroid.dashboard.logic.dataloading.network.GetNetworkConfiguration
 import com.nasdroid.dashboard.logic.dataloading.network.GetNetworkUsageData
 import com.nasdroid.dashboard.logic.dataloading.system.GetSystemInformation
 import com.nasdroid.data.dashboardDataModule
-import org.koin.core.context.loadKoinModules
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -21,7 +20,7 @@ import org.koin.dsl.module
  * on business exists.
  */
 val dashboardBusinessModule = module {
-    loadKoinModules(dashboardDataModule)
+    includes(dashboardDataModule)
 
     factoryOf(::GetCpuSpecs)
     factoryOf(::GetCpuUsageData)
