@@ -20,6 +20,7 @@ class GetZfsGraphs(
      * Retrieves a [ZfsGraphs] that describes all ZFS-related graphs, or a [ReportingGraphError] if
      * something went wrong. The retrieved data represents the last hour of reporting data.
      */
+    @Suppress("DestructuringDeclarationWithTooManyEntries") // This is intentional here
     suspend operator fun invoke(): StrongResult<ZfsGraphs, ReportingGraphError> {
         try {
             val reportingData = reportingV2Api.getGraphData(
