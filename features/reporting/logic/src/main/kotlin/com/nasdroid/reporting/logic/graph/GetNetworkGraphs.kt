@@ -7,14 +7,15 @@ import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.kilobytes
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 /**
  * Retrieves the data needed to display all network-related graphs. See [invoke] for details.
  */
 class GetNetworkGraphs(
-    private val reportingV2Api: ReportingV2Api
+    private val reportingV2Api: ReportingV2Api,
+    private val calculationDispatcher: CoroutineDispatcher,
 ) {
 
     /**
@@ -25,7 +26,7 @@ class GetNetworkGraphs(
      */
     suspend operator fun invoke(
         interfaces: List<String>
-    ): StrongResult<NetworkGraphs, ReportingGraphError> = withContext(Dispatchers.Default) {
+    ): StrongResult<NetworkGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = interfaces.map {

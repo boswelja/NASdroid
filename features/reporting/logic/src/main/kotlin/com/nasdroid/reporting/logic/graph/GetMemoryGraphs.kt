@@ -7,6 +7,7 @@ import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -15,13 +16,14 @@ import kotlinx.coroutines.withContext
  */
 class GetMemoryGraphs(
     private val reportingV2Api: ReportingV2Api,
+    private val calculationDispatcher: CoroutineDispatcher,
 ) {
 
     /**
      * Retrieves a [MemoryGraphs] that describes all CPU-related graphs, or a [ReportingGraphError]
      * if something went wrong. The retrieved data represents the last hour of reporting data.
      */
-    suspend operator fun invoke(): StrongResult<MemoryGraphs, ReportingGraphError> = withContext(Dispatchers.Default) {
+    suspend operator fun invoke(): StrongResult<MemoryGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = listOf(
