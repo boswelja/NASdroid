@@ -1,5 +1,6 @@
 package com.nasdroid.percentage
 
+import com.nasdroid.percentage.Percentage.Companion.percent
 import kotlin.math.roundToInt
 
 /**
@@ -50,7 +51,7 @@ value class Percentage private constructor(private val percentage: Float): Compa
      * the nearest whole number.
      */
     fun toInt(): Int {
-        return (percentage * 100).roundToInt()
+        return (percentage * FULL_PERCENT_FACTOR).roundToInt()
     }
 
     /**
@@ -60,7 +61,7 @@ value class Percentage private constructor(private val percentage: Float): Compa
      */
     fun toFloat(percentageStyle: PercentageStyle = PercentageStyle.SHORT): Float {
         return when (percentageStyle) {
-            PercentageStyle.FULL -> percentage * 100
+            PercentageStyle.FULL -> percentage * FULL_PERCENT_FACTOR
             PercentageStyle.SHORT -> percentage
         }
     }
@@ -72,12 +73,14 @@ value class Percentage private constructor(private val percentage: Float): Compa
      */
     fun toDouble(percentageStyle: PercentageStyle = PercentageStyle.FULL): Double {
         return when (percentageStyle) {
-            PercentageStyle.FULL -> percentage.toDouble() * 100
+            PercentageStyle.FULL -> percentage.toDouble() * FULL_PERCENT_FACTOR
             PercentageStyle.SHORT -> percentage.toDouble()
         }
     }
 
     companion object {
+
+        private val FULL_PERCENT_FACTOR = 100
 
         /**
          * Converts a Floating-point percentage representation to a [Percentage]. It is assumed that
@@ -91,12 +94,12 @@ value class Percentage private constructor(private val percentage: Float): Compa
          * Double is of [PercentageStyle.FULL] (i.e. 0% == 0.0, 100% == 100.0).
          */
         val Double.percent: Percentage
-            get() = Percentage(this.toFloat() / 100)
+            get() = Percentage(this.toFloat() / FULL_PERCENT_FACTOR)
 
         /**
          * Converts an Integer percentage representation to a [Percentage].
          */
         val Int.percent: Percentage
-            get() = Percentage(this / 100f)
+            get() = Percentage(this / FULL_PERCENT_FACTOR.toFloat())
     }
 }
