@@ -47,7 +47,7 @@ data class GraphData<T>(
                 dataSlices = data.map {
                     val dataNoNulls = it.requireNoNulls()
                     DataSlice(
-                        timestamp = Instant.fromEpochMilliseconds(dataNoNulls.first().toLong()),
+                        timestamp = Instant.fromEpochSeconds(dataNoNulls.first().toLong()),
                         data = dataToType(dataNoNulls.drop(1))
                     )
                 },
