@@ -7,13 +7,15 @@ import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
-import kotlin.math.roundToInt
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * Retrieves the data needed to display all ZFS-related graphs. See [invoke] for details.
  */
 class GetZfsGraphs(
-    private val reportingV2Api: ReportingV2Api
+    private val reportingV2Api: ReportingV2Api,
+    private val calculationDispatcher: CoroutineDispatcher,
 ) {
 
     /**
@@ -21,7 +23,7 @@ class GetZfsGraphs(
      * something went wrong. The retrieved data represents the last hour of reporting data.
      */
     @Suppress("DestructuringDeclarationWithTooManyEntries") // This is intentional here
-    suspend operator fun invoke(): StrongResult<ZfsGraphs, ReportingGraphError> {
+    suspend operator fun invoke(): StrongResult<ZfsGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = listOf(
@@ -46,13 +48,13 @@ class GetZfsGraphs(
                 actualCacheHitRate = cacheHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
                 arcHitRate = arcHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
                 arcSize = arcSizeGraph.toGraphData { slice -> slice.map { it.mebibytes } },
-                arcDemandResult = arcResultDemandGraph.toGraphData { slice -> slice.map { it.roundToInt() } },
-                arcPrefetchResult = arcResultPrefetchGraph.toGraphData { slice -> slice.map { it.roundToInt() } }
+                arcDemandResult = arcResultDemandGraph.toGraphData { slice -> slice.map { (it / 100).toFloat() } },
+                arcPrefetchResult = arcResultPrefetchGraph.toGraphData { slice -> slice.map { (it / 100).toFloat() } }
             )
 
-            return StrongResult.success(result)
+            return@withContext StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
-            return StrongResult.failure(ReportingGraphError.InvalidGraphData)
+            return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
@@ -70,6 +72,6 @@ data class ZfsGraphs(
     val actualCacheHitRate: GraphData<Float>,
     val arcHitRate: GraphData<Float>,
     val arcSize: GraphData<Capacity>,
-    val arcDemandResult: GraphData<Int>,
-    val arcPrefetchResult: GraphData<Int>
+    val arcDemandResult: GraphData<Float>,
+    val arcPrefetchResult: GraphData<Float>
 )

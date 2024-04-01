@@ -5,6 +5,8 @@ import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -12,35 +14,37 @@ import kotlin.time.Duration.Companion.seconds
  * Retrieves the data needed to display all system-related graphs. See [invoke] for details.
  */
 class GetSystemGraphs(
-    private val reportingV2Api: ReportingV2Api
+    private val reportingV2Api: ReportingV2Api,
+    private val calculationDispatcher: CoroutineDispatcher,
 ) {
 
     /**
      * Retrieves a [CpuGraphs] that describes all system-related graphs, or a [ReportingGraphError]
      * if something went wrong. The retrieved data represents the last hour of reporting data.
      */
-    suspend operator fun invoke(): StrongResult<SystemGraphs, ReportingGraphError> {
-        try {
-            val reportingData = reportingV2Api.getGraphData(
-                graphs = listOf(
-                    RequestedGraph("uptime", null),
-                ),
-                unit = Units.HOUR,
-                page = 1
-            )
-            val (uptimeGraph) = reportingData
+    suspend operator fun invoke(): StrongResult<SystemGraphs, ReportingGraphError> =
+        withContext(calculationDispatcher) {
+            try {
+                val reportingData = reportingV2Api.getGraphData(
+                    graphs = listOf(
+                        RequestedGraph("uptime", null),
+                    ),
+                    unit = Units.HOUR,
+                    page = 1
+                )
+                val (uptimeGraph) = reportingData
 
-            val result = SystemGraphs(
-                uptime = uptimeGraph.toGraphData { sliceData ->
-                    sliceData.map { it.seconds }
-                },
-            )
+                val result = SystemGraphs(
+                    uptime = uptimeGraph.toGraphData { sliceData ->
+                        sliceData.map { it.seconds }
+                    },
+                )
 
-            return StrongResult.success(result)
-        } catch (_: IllegalArgumentException) {
-            return StrongResult.failure(ReportingGraphError.InvalidGraphData)
+                return@withContext StrongResult.success(result)
+            } catch (_: IllegalArgumentException) {
+                return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
+            }
         }
-    }
 }
 
 /**
