@@ -8,7 +8,6 @@ import com.nasdroid.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
@@ -23,32 +22,33 @@ class GetMemoryGraphs(
      * Retrieves a [MemoryGraphs] that describes all CPU-related graphs, or a [ReportingGraphError]
      * if something went wrong. The retrieved data represents the last hour of reporting data.
      */
-    suspend operator fun invoke(): StrongResult<MemoryGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
-        try {
-            val reportingData = reportingV2Api.getGraphData(
-                graphs = listOf(
-                    RequestedGraph("memory", null),
-                    RequestedGraph("swap", null),
-                ),
-                unit = Units.HOUR,
-                page = 1
-            )
-            val (memoryGraph, swapGraph) = reportingData
+    suspend operator fun invoke(): StrongResult<MemoryGraphs, ReportingGraphError> =
+        withContext(calculationDispatcher) {
+            try {
+                val reportingData = reportingV2Api.getGraphData(
+                    graphs = listOf(
+                        RequestedGraph("memory", null),
+                        RequestedGraph("swap", null),
+                    ),
+                    unit = Units.HOUR,
+                    page = 1
+                )
+                val (memoryGraph, swapGraph) = reportingData
 
-            val result = MemoryGraphs(
-                memoryUtilisation = memoryGraph.toGraphData { sliceData ->
-                    sliceData.map { it.mebibytes }
-                },
-                swapUtilisation = swapGraph.toGraphData { sliceData ->
-                    sliceData.map { it.mebibytes }
-                },
-            )
+                val result = MemoryGraphs(
+                    memoryUtilisation = memoryGraph.toGraphData { sliceData ->
+                        sliceData.map { it.mebibytes }
+                    },
+                    swapUtilisation = swapGraph.toGraphData { sliceData ->
+                        sliceData.map { it.mebibytes }
+                    },
+                )
 
-            return@withContext StrongResult.success(result)
-        } catch (_: IllegalArgumentException) {
-            return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
+                return@withContext StrongResult.success(result)
+            } catch (_: IllegalArgumentException) {
+                return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
+            }
         }
-    }
 }
 
 /**
