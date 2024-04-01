@@ -8,6 +8,7 @@ import com.nasdroid.reporting.logic.graph.GetNetworkGraphs
 import com.nasdroid.reporting.logic.graph.GetNetworkInterfaces
 import com.nasdroid.reporting.logic.graph.GetSystemGraphs
 import com.nasdroid.reporting.logic.graph.GetZfsGraphs
+import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -15,6 +16,7 @@ import org.koin.dsl.module
  * A Koin module to inject the reporting logic dependency graph.
  */
 val ReportingLogicModule = module {
+    factory { Dispatchers.Default }
     factoryOf(::GetCpuGraphs)
     factoryOf(::GetDiskGraphs)
     factoryOf(::GetDisks)

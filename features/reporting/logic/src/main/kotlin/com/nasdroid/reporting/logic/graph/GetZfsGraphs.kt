@@ -7,14 +7,15 @@ import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 /**
  * Retrieves the data needed to display all ZFS-related graphs. See [invoke] for details.
  */
 class GetZfsGraphs(
-    private val reportingV2Api: ReportingV2Api
+    private val reportingV2Api: ReportingV2Api,
+    private val calculationDispatcher: CoroutineDispatcher,
 ) {
 
     /**
@@ -22,7 +23,7 @@ class GetZfsGraphs(
      * something went wrong. The retrieved data represents the last hour of reporting data.
      */
     @Suppress("DestructuringDeclarationWithTooManyEntries") // This is intentional here
-    suspend operator fun invoke(): StrongResult<ZfsGraphs, ReportingGraphError> = withContext(Dispatchers.Default) {
+    suspend operator fun invoke(): StrongResult<ZfsGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = listOf(

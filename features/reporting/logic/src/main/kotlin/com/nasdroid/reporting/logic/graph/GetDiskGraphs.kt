@@ -9,14 +9,15 @@ import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
 import com.nasdroid.temperature.Temperature
 import com.nasdroid.temperature.Temperature.Companion.celsius
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 /**
  * Retrieves the data needed to display all disk-related graphs. See [invoke] for details.
  */
 class GetDiskGraphs(
-    private val reportingV2Api: ReportingV2Api
+    private val reportingV2Api: ReportingV2Api,
+    private val calculationDispatcher: CoroutineDispatcher,
 ) {
 
     /**
@@ -27,7 +28,7 @@ class GetDiskGraphs(
      */
     suspend operator fun invoke(
         disks: List<String>
-    ): StrongResult<DiskGraphs, ReportingGraphError> = withContext(Dispatchers.Default) {
+    ): StrongResult<DiskGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = disks.flatMap {
