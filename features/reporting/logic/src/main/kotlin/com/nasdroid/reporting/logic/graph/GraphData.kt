@@ -2,6 +2,7 @@ package com.nasdroid.reporting.logic.graph
 
 import com.nasdroid.api.v2.reporting.ReportingGraphData
 import kotlinx.datetime.Instant
+import kotlin.math.max
 
 /**
  * Holds all data needed to display a graph.
@@ -37,20 +38,29 @@ data class GraphData<T>(
     )
 
     companion object {
+
+        private const val MAX_RESOLUTION = 120
+
         internal fun <T> ReportingGraphData.toGraphData(
             dataToType: (List<Double>) -> List<T>
         ): GraphData<T> {
+            val keepEvery = max(data.size, MAX_RESOLUTION) / MAX_RESOLUTION
             val formattedName = identifier?.let {
                 name.replace("{identifier}", it)
             } ?: name
             return GraphData(
-                dataSlices = data.map {
-                    val dataNoNulls = it.requireNoNulls()
-                    DataSlice(
-                        timestamp = Instant.fromEpochSeconds(dataNoNulls.first().toLong()),
-                        data = dataToType(dataNoNulls.drop(1))
-                    )
-                },
+                dataSlices = data
+                    .mapIndexedNotNull { index, data ->
+                        if (index % keepEvery == 0) {
+                            val dataNoNulls = data.requireNoNulls()
+                            DataSlice(
+                                timestamp = Instant.fromEpochSeconds(dataNoNulls.first().toLong()),
+                                data = dataToType(dataNoNulls.drop(1))
+                            )
+                        } else {
+                            null
+                        }
+                    },
                 legend = legend.drop(1),
                 name = formattedName,
                 identifier = identifier,
