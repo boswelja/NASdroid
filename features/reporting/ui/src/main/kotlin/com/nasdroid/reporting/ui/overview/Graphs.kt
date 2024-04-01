@@ -3,6 +3,7 @@ package com.nasdroid.reporting.ui.overview
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.nasdroid.capacity.CapacityUnit
 import com.nasdroid.design.MaterialThemeExt
@@ -10,26 +11,26 @@ import com.nasdroid.reporting.logic.graph.GraphData
 import com.nasdroid.temperature.TemperatureUnit
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
-import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
-import com.patrykandpatrick.vico.compose.chart.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.chart.scroll.rememberVicoScrollState
-import com.patrykandpatrick.vico.compose.component.rememberShapeComponent
-import com.patrykandpatrick.vico.compose.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.legend.rememberHorizontalLegend
-import com.patrykandpatrick.vico.compose.legend.rememberLegendItem
-import com.patrykandpatrick.vico.compose.m3.theme.rememberM3VicoTheme
-import com.patrykandpatrick.vico.compose.theme.ProvideVicoTheme
-import com.patrykandpatrick.vico.compose.theme.vicoTheme
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
+import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollState
+import com.patrykandpatrick.vico.compose.component.shapeComponent
+import com.patrykandpatrick.vico.compose.legend.horizontalLegend
+import com.patrykandpatrick.vico.compose.legend.legendItem
+import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
+import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.compose.style.currentChartStyle
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueFormatter
 import com.patrykandpatrick.vico.core.axis.formatter.PercentageFormatAxisValueFormatter
-import com.patrykandpatrick.vico.core.chart.layout.HorizontalLayout
-import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.model.lineSeries
-import com.patrykandpatrick.vico.core.scroll.Scroll
+import com.patrykandpatrick.vico.core.chart.copy
+import com.patrykandpatrick.vico.core.component.text.textComponent
+import com.patrykandpatrick.vico.core.entry.entriesOf
+import com.patrykandpatrick.vico.core.entry.entryModelOf
+import com.patrykandpatrick.vico.core.scroll.InitialScroll
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.DurationUnit
@@ -39,7 +40,7 @@ fun Graph(
     graph: ReportingGraph,
     modifier: Modifier = Modifier
 ) {
-    ProvideVicoTheme(theme = rememberM3VicoTheme()) {
+    ProvideChartStyle(m3ChartStyle()) {
         when (graph) {
             is ReportingGraph.BitrateGraph -> BitrateGraph(graph = graph, modifier = modifier)
             is ReportingGraph.CapacityGraph -> CapacityGraph(graph = graph, modifier = modifier)
@@ -166,54 +167,54 @@ internal fun <T> VicoGraph(
     modifier: Modifier = Modifier,
     verticalAxisValueFormatter: AxisValueFormatter<AxisPosition.Vertical.Start> = DecimalFormatAxisValueFormatter(),
 ) {
-    val modelProducer = remember(data, dataTransform) {
-        CartesianChartModelProducer.build {
-            lineSeries {
-                val lines = data.dataSlices.first().data.size
-                for (lineIndex in 0 until lines) {
-                    series(data.dataSlices.map { dataTransform(it.data[lineIndex]) })
-                }
-            }
+    val model = remember(data, dataTransform) {
+        val lines = data.dataSlices.first().data.size
+        val entries = (0 until lines).map { lineIndex ->
+            entriesOf(*data.dataSlices.map { dataTransform(it.data[lineIndex]) }.toTypedArray())
         }
+        entryModelOf(*entries.toTypedArray())
     }
-    CartesianChartHost(
-        chart = rememberCartesianChart(
-            rememberLineCartesianLayer(),
-            startAxis = rememberStartAxis(
-                title = verticalLabel,
-                titleComponent = rememberTextComponent(),
-                valueFormatter = verticalAxisValueFormatter
-            ),
-            bottomAxis = rememberBottomAxis(
-                valueFormatter = { value, _, _ ->
-                    data.dataSlices[value.toInt()].timestamp
-                        .toLocalDateTime(TimeZone.currentSystemDefault())
-                        .let {
-                            "${it.hour}:${it.minute}"
-                        }
-                },
-                itemPlacer = remember { AxisItemPlacer.Horizontal.default(spacing = 6) }
-            ),
-            legend = rememberHorizontalLegend(
-                items = data.legend.mapIndexed { index, legend ->
-                    rememberLegendItem(
-                        icon = rememberShapeComponent(
-                            color = vicoTheme
-                                .cartesianLayerColors[vicoTheme.cartesianLayerColors.lastIndex % (index + 1)]
-                        ),
-                        label = rememberTextComponent(),
-                        labelText = legend
-                    )
-                },
-                iconSize = 8.dp,
-                iconPadding = MaterialThemeExt.paddings.tiny,
-                spacing = MaterialThemeExt.paddings.medium
-            )
+    Chart(
+        chart = lineChart(
+            lines = currentChartStyle.lineChart.lines.map { it.copy(lineBackgroundShader = null) }
         ),
-        modelProducer = modelProducer,
-        runInitialAnimation = false,
-        horizontalLayout = HorizontalLayout.FullWidth(),
-        scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
+        model = model,
+        startAxis = rememberStartAxis(
+            title = verticalLabel,
+            titleComponent = textComponent(),
+            valueFormatter = verticalAxisValueFormatter
+        ),
+        bottomAxis = rememberBottomAxis(
+            valueFormatter = { value, _ ->
+                data.dataSlices[value.toInt()].timestamp
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                    .let {
+                        "${it.hour}:${it.minute}"
+                    }
+            },
+            itemPlacer = remember { AxisItemPlacer.Horizontal.default(spacing = 2) }
+        ),
+        legend = horizontalLegend(
+            items = data.legend.mapIndexed { index, legend ->
+                legendItem(
+                    icon = shapeComponent(
+                        color = Color(
+                            currentChartStyle
+                                .lineChart
+                                .lines[currentChartStyle.lineChart.lines.lastIndex % (index + 1)]
+                                .lineColor
+                        )
+                    ),
+                    label = textComponent(),
+                    labelText = legend
+                )
+            },
+            iconSize = 8.dp,
+            iconPadding = MaterialThemeExt.paddings.tiny,
+            spacing = MaterialThemeExt.paddings.medium
+        ),
+        chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End),
+        isZoomEnabled = false,
         modifier = modifier
     )
 }
