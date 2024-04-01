@@ -42,17 +42,22 @@ data class GraphData<T>(
         private const val MAX_RESOLUTION = 120
 
         internal fun <T> ReportingGraphData.toGraphData(
+            dropLines: List<String> = emptyList(),
             dataToType: (List<Double>) -> List<T>
         ): GraphData<T> {
             val keepEvery = max(data.size, MAX_RESOLUTION) / MAX_RESOLUTION
             val formattedName = identifier?.let {
                 name.replace("{identifier}", it)
             } ?: name
+            val dropLineIndices = dropLines.map { legend.indexOf(it) }
             return GraphData(
                 dataSlices = data
                     .mapIndexedNotNull { index, data ->
                         if (index % keepEvery == 0) {
                             val dataNoNulls = data.requireNoNulls()
+                                .filterIndexed { pointIndex, _ ->
+                                    !dropLineIndices.contains(pointIndex)
+                                }
                             DataSlice(
                                 timestamp = Instant.fromEpochSeconds(dataNoNulls.first().toLong()),
                                 data = dataToType(dataNoNulls.drop(1))
@@ -61,7 +66,7 @@ data class GraphData<T>(
                             null
                         }
                     },
-                legend = legend.drop(1),
+                legend = legend.drop(1).filterNot { dropLines.contains(it) },
                 name = formattedName,
                 identifier = identifier,
                 start = Instant.fromEpochMilliseconds(start),

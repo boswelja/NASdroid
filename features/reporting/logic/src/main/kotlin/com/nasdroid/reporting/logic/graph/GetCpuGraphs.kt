@@ -33,7 +33,7 @@ class GetCpuGraphs(
             val (cpuGraph, cpuTempGraph, loadGraph) = reportingData
 
             val result = CpuGraphs(
-                cpuUsageGraph = cpuGraph.toGraphData { sliceData ->
+                cpuUsageGraph = cpuGraph.toGraphData(dropLines = listOf("idle")) { sliceData ->
                     sliceData.map { dataPoint -> dataPoint.toFloat() / 100 }
                 },
                 cpuTempGraph = cpuTempGraph.toGraphData { sliceData ->

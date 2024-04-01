@@ -1,5 +1,8 @@
 package com.nasdroid.reporting.ui.overview
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -14,7 +17,6 @@ import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
-import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollState
 import com.patrykandpatrick.vico.compose.component.shapeComponent
 import com.patrykandpatrick.vico.compose.legend.horizontalLegend
 import com.patrykandpatrick.vico.compose.legend.legendItem
@@ -25,7 +27,6 @@ import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueFormatter
-import com.patrykandpatrick.vico.core.axis.formatter.PercentageFormatAxisValueFormatter
 import com.patrykandpatrick.vico.core.chart.copy
 import com.patrykandpatrick.vico.core.component.text.textComponent
 import com.patrykandpatrick.vico.core.entry.entriesOf
@@ -128,7 +129,9 @@ fun PercentageGraph(
         data = graph.data,
         dataTransform = { it },
         verticalLabel = "%",
-        verticalAxisValueFormatter = PercentageFormatAxisValueFormatter(),
+        verticalAxisValueFormatter = { value, _ ->
+            "%.2f".format(value * 100)
+        },
         modifier = modifier
     )
 }
@@ -174,47 +177,55 @@ internal fun <T> VicoGraph(
         }
         entryModelOf(*entries.toTypedArray())
     }
-    Chart(
-        chart = lineChart(
-            lines = currentChartStyle.lineChart.lines.map { it.copy(lineBackgroundShader = null) }
-        ),
-        model = model,
-        startAxis = rememberStartAxis(
-            title = verticalLabel,
-            titleComponent = textComponent(),
-            valueFormatter = verticalAxisValueFormatter
-        ),
-        bottomAxis = rememberBottomAxis(
-            valueFormatter = { value, _ ->
-                data.dataSlices[value.toInt()].timestamp
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
-                    .let {
-                        "${it.hour}:${it.minute}"
-                    }
-            },
-            itemPlacer = remember { AxisItemPlacer.Horizontal.default(spacing = 2) }
-        ),
-        legend = horizontalLegend(
-            items = data.legend.mapIndexed { index, legend ->
-                legendItem(
-                    icon = shapeComponent(
-                        color = Color(
-                            currentChartStyle
-                                .lineChart
-                                .lines[currentChartStyle.lineChart.lines.lastIndex % (index + 1)]
-                                .lineColor
-                        )
-                    ),
-                    label = textComponent(),
-                    labelText = legend
-                )
-            },
-            iconSize = 8.dp,
-            iconPadding = MaterialThemeExt.paddings.tiny,
-            spacing = MaterialThemeExt.paddings.medium
-        ),
-        chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End),
-        isZoomEnabled = false,
-        modifier = modifier
-    )
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium)
+    ) {
+        Text(
+            text = data.name,
+            style = MaterialThemeExt.typography.titleMedium,
+        )
+        Chart(
+            chart = lineChart(
+                lines = currentChartStyle.lineChart.lines.map { it.copy(lineBackgroundShader = null) }
+            ),
+            model = model,
+            startAxis = rememberStartAxis(
+                title = verticalLabel,
+                titleComponent = textComponent(),
+                valueFormatter = verticalAxisValueFormatter
+            ),
+            bottomAxis = rememberBottomAxis(
+                valueFormatter = { value, _ ->
+                    data.dataSlices[value.toInt()].timestamp
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                        .let {
+                            "${it.hour}:${it.minute}"
+                        }
+                },
+                itemPlacer = remember { AxisItemPlacer.Horizontal.default(spacing = 2) }
+            ),
+            legend = horizontalLegend(
+                items = data.legend.mapIndexed { index, legend ->
+                    legendItem(
+                        icon = shapeComponent(
+                            color = Color(
+                                currentChartStyle
+                                    .lineChart
+                                    .lines[index % currentChartStyle.lineChart.lines.size]
+                                    .lineColor
+                            )
+                        ),
+                        label = textComponent(),
+                        labelText = legend
+                    )
+                },
+                iconSize = 8.dp,
+                iconPadding = MaterialThemeExt.paddings.tiny,
+                spacing = MaterialThemeExt.paddings.medium
+            ),
+            chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End),
+            isZoomEnabled = false,
+        )
+    }
 }

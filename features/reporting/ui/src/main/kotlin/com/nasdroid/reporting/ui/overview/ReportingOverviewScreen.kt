@@ -1,6 +1,8 @@
 package com.nasdroid.reporting.ui.overview
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -11,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -50,7 +53,9 @@ fun ReportingOverviewContent(
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 240.dp),
         modifier = modifier,
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
+        horizontalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.small),
+        verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.small)
     ) {
         item(span = { GridItemSpan(this.maxLineSpan) }) {
             ReportingCategorySelector(
@@ -66,7 +71,13 @@ fun ReportingOverviewContent(
         }
         items(graphs) { graph ->
             ElevatedCard {
-                Graph(graph)
+                Graph(
+                    graph = graph,
+                    modifier = Modifier.padding(
+                        horizontal = MaterialThemeExt.paddings.large,
+                        vertical = MaterialThemeExt.paddings.medium
+                    )
+                )
             }
         }
     }
