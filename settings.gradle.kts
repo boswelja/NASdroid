@@ -31,6 +31,7 @@ include(
     ":core:compose-logviewer",
     ":core:compose-segmentedprogressindicator",
     ":core:design",
+    ":core:percentage",
     ":core:strong-result",
     ":core:temperature",
     ":features:apps:data",
