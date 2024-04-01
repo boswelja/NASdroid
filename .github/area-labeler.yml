@@ -23,6 +23,8 @@ core:compose-segmentedprogressindicator:
   - core/compose-segmentedprogressindicator/**
 core:design:
   - core/design/**
+core:percentage:
+  - core/percentage/**
 core:strong-result:
   - core/strong-result/**
 core:temperature:
