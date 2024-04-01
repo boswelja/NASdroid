@@ -7,6 +7,8 @@ import com.nasdroid.capacity.Capacity
 import com.nasdroid.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Retrieves the data needed to display all memory-related graphs. See [invoke] for details.
@@ -19,7 +21,7 @@ class GetMemoryGraphs(
      * Retrieves a [MemoryGraphs] that describes all CPU-related graphs, or a [ReportingGraphError]
      * if something went wrong. The retrieved data represents the last hour of reporting data.
      */
-    suspend operator fun invoke(): StrongResult<MemoryGraphs, ReportingGraphError> {
+    suspend operator fun invoke(): StrongResult<MemoryGraphs, ReportingGraphError> = withContext(Dispatchers.Default) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = listOf(
@@ -40,9 +42,9 @@ class GetMemoryGraphs(
                 },
             )
 
-            return StrongResult.success(result)
+            return@withContext StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
-            return StrongResult.failure(ReportingGraphError.InvalidGraphData)
+            return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }

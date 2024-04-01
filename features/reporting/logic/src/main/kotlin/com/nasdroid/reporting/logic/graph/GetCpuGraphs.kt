@@ -7,6 +7,8 @@ import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
 import com.nasdroid.temperature.Temperature
 import com.nasdroid.temperature.Temperature.Companion.celsius
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Retrieves the data needed to display all CPU-related graphs. See [invoke] for details.
@@ -19,7 +21,7 @@ class GetCpuGraphs(
      * Retrieves a [CpuGraphs] that describes all CPU-related graphs, or a [ReportingGraphError] if
      * something went wrong. The retrieved data represents the last hour of reporting data.
      */
-    suspend operator fun invoke(): StrongResult<CpuGraphs, ReportingGraphError> {
+    suspend operator fun invoke(): StrongResult<CpuGraphs, ReportingGraphError> = withContext(Dispatchers.Default) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = listOf(
@@ -44,9 +46,9 @@ class GetCpuGraphs(
                 },
             )
 
-            return StrongResult.success(result)
+            return@withContext StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
-            return StrongResult.failure(ReportingGraphError.InvalidGraphData)
+            return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
