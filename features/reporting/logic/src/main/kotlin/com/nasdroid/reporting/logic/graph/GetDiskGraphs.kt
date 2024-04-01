@@ -9,6 +9,8 @@ import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
 import com.nasdroid.temperature.Temperature
 import com.nasdroid.temperature.Temperature.Companion.celsius
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Retrieves the data needed to display all disk-related graphs. See [invoke] for details.
@@ -25,7 +27,7 @@ class GetDiskGraphs(
      */
     suspend operator fun invoke(
         disks: List<String>
-    ): StrongResult<DiskGraphs, ReportingGraphError> {
+    ): StrongResult<DiskGraphs, ReportingGraphError> = withContext(Dispatchers.Default) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = disks.flatMap {
@@ -51,9 +53,9 @@ class GetDiskGraphs(
                 diskTemperatures = temperatureGraphs
             )
 
-            return StrongResult.success(result)
+            return@withContext StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
-            return StrongResult.failure(ReportingGraphError.InvalidGraphData)
+            return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
