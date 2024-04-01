@@ -48,7 +48,7 @@ fun Graph(
             is ReportingGraph.EventsPerSecondGraph -> EventsPerSecondGraph(graph = graph, modifier = modifier)
             is ReportingGraph.PercentageGraph -> PercentageGraph(graph = graph, modifier = modifier)
             is ReportingGraph.ProcessesGraph -> ProcessesGraph(graph = graph, modifier = modifier)
-            is ReportingGraph.TemperatureGraph -> {} //TemperatureGraph(graph = graph, modifier = modifier)
+            is ReportingGraph.TemperatureGraph -> TemperatureGraph(graph = graph, modifier = modifier)
         }
     }
 }
@@ -185,7 +185,7 @@ internal fun <T> VicoGraph(
                 valueFormatter = verticalAxisValueFormatter
             ),
             bottomAxis = rememberBottomAxis(
-                valueFormatter = { value, chartValues, verticalAxisPosition ->
+                valueFormatter = { value, _, _ ->
                     data.dataSlices[value.toInt()].timestamp
                         .toLocalDateTime(TimeZone.currentSystemDefault())
                         .let {
