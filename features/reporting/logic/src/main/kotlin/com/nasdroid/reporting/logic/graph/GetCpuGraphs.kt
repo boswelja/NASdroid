@@ -34,7 +34,7 @@ class GetCpuGraphs(
 
             val result = CpuGraphs(
                 cpuUsageGraph = cpuGraph.toGraphData { sliceData ->
-                    sliceData.map { dataPoint -> dataPoint.toFloat().coerceIn(0f, 1f) }
+                    sliceData.map { dataPoint -> dataPoint.toFloat() / 100 }
                 },
                 cpuTempGraph = cpuTempGraph.toGraphData { sliceData ->
                     sliceData.map { it.celsius }
