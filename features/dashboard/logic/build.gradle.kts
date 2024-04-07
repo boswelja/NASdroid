@@ -35,7 +35,7 @@ detekt {
 }
 
 dependencies {
-    api(projects.core.capacity)
+    api(libs.datatypes.capacity)
     api(libs.kotlinx.coroutines)
     api(libs.kotlinx.datetime)
 

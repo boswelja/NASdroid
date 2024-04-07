@@ -20,9 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nasdroid.capacity.Capacity.Companion.gigabytes
-import com.nasdroid.capacity.Capacity.Companion.terabytes
-import com.nasdroid.capacity.CapacityUnit
+import com.boswelja.capacity.Capacity.Companion.gigabytes
+import com.boswelja.capacity.Capacity.Companion.terabytes
+import com.boswelja.capacity.CapacityUnit
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.storage.logic.pool.PoolOverview
 

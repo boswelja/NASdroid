@@ -20,6 +20,8 @@ accompanist = "0.35.0-alpha"
 menuprovider = "1.2.2"
 markdown = "1.0.4"
 
+datatypes = "1.0.0"
+
 bignum = "0.3.9"
 
 sqldelight = "2.0.1"
@@ -67,6 +69,11 @@ compose-material3-windowsizeclass = { group = "androidx.compose.material3", name
 accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
 compose-markdown = { module = "io.github.boswelja.markdown:material3", version.ref = "markdown" }
 compose-menuprovider = { module = "io.github.boswelja.menuprovider:material3", version.ref = "menuprovider" }
+
+datatypes-bitrate = { module = "io.github.boswelja.datatypes:bitrate", version.ref = "datatypes" }
+datatypes-capacity = { module = "io.github.boswelja.datatypes:capacity", version.ref = "datatypes" }
+datatypes-percentage = { module = "io.github.boswelja.datatypes:percentage", version.ref = "datatypes" }
+datatypes-temperature = { module = "io.github.boswelja.datatypes:temperature", version.ref = "datatypes" }
 
 ionspin-bignum = { module = "com.ionspin.kotlin:bignum", version.ref = "bignum" }
 
