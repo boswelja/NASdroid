@@ -46,13 +46,10 @@ jobs:
       matrix:
         path:
           - core/api
-          - core/capacity
           - core/compose-logviewer
           - core/compose-segmentedprogressindicator
           - core/design
-          - core/percentage
           - core/strong-result
-          - core/temperature
           - features/apps
           - features/auth
           - features/credentials

@@ -36,9 +36,6 @@ jobs:
         variant: [Debug]
         module:
           - app
-          - core:capacity
-          - core:percentage
-          - core:temperature
           - features:apps:data
           - features:apps:logic
           - features:dashboard:logic
