@@ -1,9 +1,9 @@
 package com.nasdroid.dashboard.logic.dataloading.memory
 
+import com.boswelja.capacity.Capacity
+import com.boswelja.capacity.Capacity.Companion.bytes
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.system.SystemV2Api
-import com.nasdroid.capacity.Capacity
-import com.nasdroid.capacity.Capacity.Companion.bytes
 
 /**
  * Retrieves specifications for physical memory installed in the system. See [invoke] for details.

@@ -1,10 +1,10 @@
 package com.nasdroid.reporting.logic.graph
 
+import com.boswelja.capacity.Capacity
+import com.boswelja.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
-import com.nasdroid.capacity.Capacity
-import com.nasdroid.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
 import kotlinx.coroutines.CoroutineDispatcher

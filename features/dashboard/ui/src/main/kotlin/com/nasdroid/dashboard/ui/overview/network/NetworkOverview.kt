@@ -23,8 +23,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nasdroid.capacity.Capacity.Companion.bytes
-import com.nasdroid.capacity.CapacityUnit
+import com.boswelja.capacity.Capacity.Companion.bytes
+import com.boswelja.capacity.CapacityUnit
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkConfiguration
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkUsageData
 import com.nasdroid.dashboard.ui.R
