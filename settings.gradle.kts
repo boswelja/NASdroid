@@ -27,13 +27,10 @@ enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
 rootProject.name = "NASdroid"
 include(
     ":core:api",
-    ":core:capacity",
     ":core:compose-logviewer",
     ":core:compose-segmentedprogressindicator",
     ":core:design",
-    ":core:percentage",
     ":core:strong-result",
-    ":core:temperature",
     ":features:apps:data",
     ":features:apps:logic",
     ":features:apps:ui",
