@@ -1,12 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
+import com.boswelja.temperature.Temperature
+import com.boswelja.temperature.Temperature.Companion.celsius
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
-import com.nasdroid.temperature.Temperature
-import com.nasdroid.temperature.Temperature.Companion.celsius
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 

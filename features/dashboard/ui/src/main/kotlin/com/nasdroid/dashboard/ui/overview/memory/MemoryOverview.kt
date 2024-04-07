@@ -25,9 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nasdroid.capacity.Capacity
-import com.nasdroid.capacity.Capacity.Companion.gigabytes
-import com.nasdroid.capacity.CapacityUnit
+import com.boswelja.capacity.Capacity
+import com.boswelja.capacity.Capacity.Companion.gigabytes
+import com.boswelja.capacity.CapacityUnit
 import com.nasdroid.core.segmentedprogressindicator.SegmentedLinearProgressIndicator
 import com.nasdroid.dashboard.logic.dataloading.memory.MemorySpecs
 import com.nasdroid.dashboard.logic.dataloading.memory.MemoryUsageData

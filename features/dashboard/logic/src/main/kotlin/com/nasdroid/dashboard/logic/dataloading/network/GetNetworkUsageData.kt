@@ -1,10 +1,10 @@
 package com.nasdroid.dashboard.logic.dataloading.network
 
+import com.boswelja.capacity.Capacity.Companion.kilobytes
+import com.boswelja.capacity.CapacityUnit
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
-import com.nasdroid.capacity.Capacity.Companion.kilobytes
-import com.nasdroid.capacity.CapacityUnit
 import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds
 
