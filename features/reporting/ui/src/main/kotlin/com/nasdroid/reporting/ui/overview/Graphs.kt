@@ -8,10 +8,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.nasdroid.capacity.CapacityUnit
+import com.boswelja.capacity.CapacityUnit
+import com.boswelja.temperature.TemperatureUnit
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.reporting.logic.graph.GraphData
-import com.nasdroid.temperature.TemperatureUnit
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
