@@ -1,5 +1,7 @@
 package com.nasdroid.reporting.logic.graph
 
+import com.boswelja.percentage.Percentage
+import com.boswelja.percentage.Percentage.Companion.percent
 import com.boswelja.temperature.Temperature
 import com.boswelja.temperature.Temperature.Companion.celsius
 import com.nasdroid.api.v2.reporting.ReportingV2Api
@@ -36,8 +38,8 @@ class GetCpuGraphs(
             val (cpuGraph, cpuTempGraph, loadGraph) = reportingData
 
             val result = CpuGraphs(
-                cpuUsageGraph = cpuGraph.toGraphData(dropLines = listOf("idle")) { sliceData ->
-                    sliceData.map { dataPoint -> dataPoint.toFloat() / 100 }
+                cpuUsageGraph = cpuGraph.toGraphData { sliceData ->
+                    sliceData.map { dataPoint -> dataPoint.percent }
                 },
                 cpuTempGraph = cpuTempGraph.toGraphData { sliceData ->
                     sliceData.map { it.celsius }
@@ -62,7 +64,7 @@ class GetCpuGraphs(
  * @property systemLoadGraph Holds all data about system utilisation, designed to be shown as a graph.
  */
 data class CpuGraphs(
-    val cpuUsageGraph: GraphData<Float>,
+    val cpuUsageGraph: GraphData<Percentage>,
     val cpuTempGraph: GraphData<Temperature>,
     val systemLoadGraph: GraphData<Float>,
 )

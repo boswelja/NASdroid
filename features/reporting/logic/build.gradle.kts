@@ -38,6 +38,7 @@ dependencies {
     api(libs.kotlinx.coroutines)
     api(libs.kotlinx.datetime)
     api(libs.datatypes.capacity)
+    api(libs.datatypes.percentage)
     api(libs.datatypes.temperature)
     api(projects.core.strongResult)
 
