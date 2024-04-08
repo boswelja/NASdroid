@@ -142,7 +142,7 @@ internal fun AdapterInfo(
             modifier = Modifier.skeleton(adapterConfig == null)
         )
         if (adapterUtilisation != null) {
-            val chartModel = remember {
+            val chartModel = remember(adapterUtilisation) {
                 CartesianChartModelProducer.build {
                     columnSeries {
                         series(
