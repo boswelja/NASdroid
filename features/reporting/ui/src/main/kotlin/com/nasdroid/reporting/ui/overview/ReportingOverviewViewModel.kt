@@ -2,7 +2,9 @@ package com.nasdroid.reporting.ui.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nasdroid.capacity.Capacity
+import com.boswelja.capacity.Capacity
+import com.boswelja.percentage.Percentage
+import com.boswelja.temperature.Temperature
 import com.nasdroid.core.strongresult.fold
 import com.nasdroid.reporting.logic.graph.GetCpuGraphs
 import com.nasdroid.reporting.logic.graph.GetDiskGraphs
@@ -14,7 +16,6 @@ import com.nasdroid.reporting.logic.graph.GetSystemGraphs
 import com.nasdroid.reporting.logic.graph.GetZfsGraphs
 import com.nasdroid.reporting.logic.graph.GraphData
 import com.nasdroid.reporting.logic.graph.ReportingIdentifiersError
-import com.nasdroid.temperature.Temperature
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -165,7 +166,7 @@ sealed interface ReportingGraph {
     ): ReportingGraph
 
     data class PercentageGraph(
-        val data: GraphData<Float>
+        val data: GraphData<Percentage>
     ): ReportingGraph
 
     data class ProcessesGraph(

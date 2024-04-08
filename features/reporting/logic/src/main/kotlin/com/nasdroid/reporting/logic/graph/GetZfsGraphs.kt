@@ -2,6 +2,8 @@ package com.nasdroid.reporting.logic.graph
 
 import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.Capacity.Companion.mebibytes
+import com.boswelja.percentage.Percentage
+import com.boswelja.percentage.Percentage.Companion.percent
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
@@ -48,8 +50,8 @@ class GetZfsGraphs(
                 actualCacheHitRate = cacheHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
                 arcHitRate = arcHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
                 arcSize = arcSizeGraph.toGraphData { slice -> slice.map { it.mebibytes } },
-                arcDemandResult = arcResultDemandGraph.toGraphData { slice -> slice.map { (it / 100).toFloat() } },
-                arcPrefetchResult = arcResultPrefetchGraph.toGraphData { slice -> slice.map { (it / 100).toFloat() } }
+                arcDemandResult = arcResultDemandGraph.toGraphData { slice -> slice.map { it.percent } },
+                arcPrefetchResult = arcResultPrefetchGraph.toGraphData { slice -> slice.map { it.percent } }
             )
 
             return@withContext StrongResult.success(result)
@@ -72,6 +74,6 @@ data class ZfsGraphs(
     val actualCacheHitRate: GraphData<Float>,
     val arcHitRate: GraphData<Float>,
     val arcSize: GraphData<Capacity>,
-    val arcDemandResult: GraphData<Float>,
-    val arcPrefetchResult: GraphData<Float>
+    val arcDemandResult: GraphData<Percentage>,
+    val arcPrefetchResult: GraphData<Percentage>
 )
