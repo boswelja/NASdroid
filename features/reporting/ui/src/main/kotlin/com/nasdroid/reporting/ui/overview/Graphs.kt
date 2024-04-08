@@ -36,6 +36,13 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.DurationUnit
 
+/**
+ * Composable function that displays a variety of graphs based on the type of [ReportingGraph] provided.
+ *
+ * @param graph Instance of the sealed class [ReportingGraph]. This can be any subtype of
+ * [ReportingGraph], such as [ReportingGraph.BitrateGraph], [ReportingGraph.CapacityGraph], etc.
+ * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
+ */
 @Composable
 fun Graph(
     graph: ReportingGraph,
@@ -45,16 +52,25 @@ fun Graph(
         when (graph) {
             is ReportingGraph.BitrateGraph -> BitrateGraph(graph = graph, modifier = modifier)
             is ReportingGraph.CapacityGraph -> CapacityGraph(graph = graph, modifier = modifier)
-            is ReportingGraph.CapacityPerSecondGraph -> CapacityPerSecondGraph(graph = graph, modifier = modifier)
+            is ReportingGraph.CapacityPerSecondGraph -> CapacityPerSecondGraph(
+                graph = graph,
+                modifier = modifier
+            )
             is ReportingGraph.DurationGraph -> DurationGraph(graph = graph, modifier = modifier)
             is ReportingGraph.EventsPerSecondGraph -> EventsPerSecondGraph(graph = graph, modifier = modifier)
             is ReportingGraph.PercentageGraph -> PercentageGraph(graph = graph, modifier = modifier)
             is ReportingGraph.ProcessesGraph -> ProcessesGraph(graph = graph, modifier = modifier)
             is ReportingGraph.TemperatureGraph -> TemperatureGraph(graph = graph, modifier = modifier)
-        }
+         }
     }
 }
 
+/**
+ * Composable function that displays a [BitrateGraph]. This graph shows data in terms of Mibibyte/s.
+ *
+ * @param graph Instance of the subtype [ReportingGraph.BitrateGraph] representing bitrate data.
+ * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
+ */
 @Composable
 fun BitrateGraph(
     graph: ReportingGraph.BitrateGraph,
@@ -68,6 +84,12 @@ fun BitrateGraph(
     )
 }
 
+/**
+ * Composable function that displays a [CapacityGraph]. This graph shows data in terms of Gigabytes.
+ *
+ * @param graph Instance of the subtype [ReportingGraph.CapacityGraph] representing capacity data.
+ * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
+ */
 @Composable
 fun CapacityGraph(
     graph: ReportingGraph.CapacityGraph,
@@ -81,6 +103,14 @@ fun CapacityGraph(
     )
 }
 
+/**
+ * Composable function that displays a [CapacityPerSecondGraph]. This graph shows data in terms of
+ * Mebibytes per second.
+ *
+ * @param graph Instance of the subtype [ReportingGraph.CapacityPerSecondGraph] representing
+ * capacity per second data.
+ * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
+ */
 @Composable
 fun CapacityPerSecondGraph(
     graph: ReportingGraph.CapacityPerSecondGraph,
@@ -94,6 +124,12 @@ fun CapacityPerSecondGraph(
     )
 }
 
+/**
+ * Composable function that displays a [DurationGraph]. This graph shows data in terms of Days.
+ *
+ * @param graph Instance of the subtype [ReportingGraph.DurationGraph] representing duration data.
+ * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
+ */
 @Composable
 fun DurationGraph(
     graph: ReportingGraph.DurationGraph,
@@ -107,6 +143,14 @@ fun DurationGraph(
     )
 }
 
+/**
+ * Composable function that displays an [EventsPerSecondGraph]. This graph shows data in terms of
+ * Events per second.
+ *
+ * @param graph Instance of the subtype [ReportingGraph.EventsPerSecondGraph] representing events
+ * per second data.
+ * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
+ */
 @Composable
 fun EventsPerSecondGraph(
     graph: ReportingGraph.EventsPerSecondGraph,
@@ -120,6 +164,13 @@ fun EventsPerSecondGraph(
     )
 }
 
+/**
+ * Composable function that displays a [PercentageGraph]. This graph shows data in terms of
+ * percentage (%).
+ *
+ * @param graph Instance of the subtype [ReportingGraph.PercentageGraph] representing percentage data.
+ * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
+ */
 @Composable
 fun PercentageGraph(
     graph: ReportingGraph.PercentageGraph,
@@ -136,6 +187,12 @@ fun PercentageGraph(
     )
 }
 
+/**
+ * Composable function that displays a [ProcessesGraph]. This graph shows data in terms of Processes.
+ *
+ * @param graph Instance of the subtype [ReportingGraph.ProcessesGraph] representing processes data.
+ * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
+ */
 @Composable
 fun ProcessesGraph(
     graph: ReportingGraph.ProcessesGraph,
@@ -149,6 +206,14 @@ fun ProcessesGraph(
     )
 }
 
+/**
+ * Composable function that displays a [TemperatureGraph]. This graph shows data in terms of Celsius
+ * (°C).
+ *
+ * @param graph Instance of the subtype [ReportingGraph.TemperatureGraph] representing temperature
+ * data.
+ * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
+ */
 @Composable
 fun TemperatureGraph(
     graph: ReportingGraph.TemperatureGraph,
