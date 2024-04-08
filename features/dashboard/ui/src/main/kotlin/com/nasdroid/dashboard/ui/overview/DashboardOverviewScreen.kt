@@ -1,7 +1,6 @@
 package com.nasdroid.dashboard.ui.overview
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -46,33 +45,32 @@ fun DashboardOverviewScreen(
     val isEditing by remember(editingItems) {
         derivedStateOf { editingItems != null }
     }
-    Box(modifier) {
-        items?.getOrNull()?.let { dashboardItems ->
-            ProvideMenuItems(
-                if (isEditing) {
-                    MenuItem(
-                        label = "Stop Editing",
-                        imageVector = Icons.Default.EditOff,
-                        onClick = viewModel::stopEditing,
-                        isImportant = true,
-                    )
-                } else {
-                    MenuItem(
-                        label = "Edit",
-                        imageVector = Icons.Default.Edit,
-                        onClick = viewModel::startEditing,
-                        isImportant = true,
-                    )
-                }
-            )
-            DashboardOverviewList(
-                items = editingItems ?: dashboardItems,
-                isEditing = isEditing,
-                contentPadding = contentPadding,
-                onMoveItem = viewModel::moveDashboardEntry,
-                onStartEditing = viewModel::startEditing,
-            )
-        }
+    items?.getOrNull()?.let { dashboardItems ->
+        ProvideMenuItems(
+            if (isEditing) {
+                MenuItem(
+                    label = "Stop Editing",
+                    imageVector = Icons.Default.EditOff,
+                    onClick = viewModel::stopEditing,
+                    isImportant = true,
+                )
+            } else {
+                MenuItem(
+                    label = "Edit",
+                    imageVector = Icons.Default.Edit,
+                    onClick = viewModel::startEditing,
+                    isImportant = true,
+                )
+            }
+        )
+        DashboardOverviewList(
+            items = editingItems ?: dashboardItems,
+            isEditing = isEditing,
+            contentPadding = contentPadding,
+            onMoveItem = viewModel::moveDashboardEntry,
+            onStartEditing = viewModel::startEditing,
+            modifier = modifier
+        )
     }
 }
 

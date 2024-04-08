@@ -33,13 +33,14 @@ import com.nasdroid.dashboard.ui.overview.skeleton
 import com.nasdroid.design.MaterialThemeExt
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.column.columnChart
-import com.patrykandpatrick.vico.compose.component.textComponent
-import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
-import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
-import com.patrykandpatrick.vico.core.chart.column.ColumnChart
-import com.patrykandpatrick.vico.core.entry.entryModelOf
+import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
+import com.patrykandpatrick.vico.compose.chart.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.m3.theme.rememberM3VicoTheme
+import com.patrykandpatrick.vico.compose.theme.ProvideVicoTheme
+import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.model.columnSeries
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -141,30 +142,36 @@ internal fun AdapterInfo(
             modifier = Modifier.skeleton(adapterConfig == null)
         )
         if (adapterUtilisation != null) {
-            val chartModel = remember {
-                entryModelOf(
-                    adapterUtilisation.sentBits.bytes.toDouble(CapacityUnit.MEGABYTE),
-                    adapterUtilisation.receivedBits.bytes.toDouble(CapacityUnit.MEGABYTE)
-                )
+            val chartModel = remember(adapterUtilisation) {
+                CartesianChartModelProducer.build {
+                    columnSeries {
+                        series(
+                            adapterUtilisation.sentBits.bytes.toDouble(CapacityUnit.MEGABYTE),
+                            adapterUtilisation.receivedBits.bytes.toDouble(CapacityUnit.MEGABYTE)
+                        )
+                    }
+                }
             }
-            ProvideChartStyle(m3ChartStyle()) {
+            ProvideVicoTheme(rememberM3VicoTheme()) {
                 val context = LocalContext.current
-                Chart(
-                    chart = columnChart(mergeMode = ColumnChart.MergeMode.Grouped),
-                    model = chartModel,
-                    startAxis = rememberStartAxis(
-                        title = stringResource(R.string.network_data_rate_unit),
-                        titleComponent = textComponent(color = LocalContentColor.current)
-                    ),
-                    bottomAxis = rememberBottomAxis(
-                        valueFormatter = { value, _ ->
-                            if (value == 0f) {
-                                context.getString(R.string.network_outgoing_label)
-                            } else {
-                                context.getString(R.string.network_incoming_label)
+                CartesianChartHost(
+                    chart = rememberCartesianChart(
+                        rememberColumnCartesianLayer(),
+                        startAxis = rememberStartAxis(
+                            title = stringResource(R.string.network_data_rate_unit),
+                            titleComponent = rememberTextComponent(color = LocalContentColor.current)
+                        ),
+                        bottomAxis = rememberBottomAxis(
+                            valueFormatter = { value, _, _ ->
+                                if (value == 0f) {
+                                    context.getString(R.string.network_outgoing_label)
+                                } else {
+                                    context.getString(R.string.network_incoming_label)
+                                }
                             }
-                        }
-                    )
+                        )
+                    ),
+                    modelProducer = chartModel,
                 )
             }
         }
