@@ -68,6 +68,25 @@ internal class CatalogV2ApiImpl(
         }
         return request.body()
     }
+
+    override suspend fun getCatalogItemDetails(
+        id: String,
+        catalogName: String,
+        train: String
+    ): CatalogItem {
+        val request = httpClient.post("catalog/get_item_details") {
+            setBody(
+                CatalogItemDetailsBody(
+                    name = id,
+                    versionDetails = CatalogItemDetailsBody.VersionDetails(
+                        catalog = catalogName,
+                        train = train
+                    )
+                )
+            )
+        }
+        return request.body()
+    }
 }
 
 @Serializable
@@ -77,3 +96,19 @@ internal data class CatalogItemsBodyDto(
     @SerialName("options")
     val options: GetCatalogItemsOptions
 )
+
+@Serializable
+internal data class CatalogItemDetailsBody(
+    @SerialName("item_name")
+    val name: String,
+    @SerialName("item_version_details")
+    val versionDetails: VersionDetails
+) {
+    @Serializable
+    data class VersionDetails(
+        @SerialName("catalog")
+        val catalog: String,
+        @SerialName("train")
+        val train: String
+    )
+}
