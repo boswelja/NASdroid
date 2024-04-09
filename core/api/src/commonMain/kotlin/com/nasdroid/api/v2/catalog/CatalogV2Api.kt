@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.catalog
 
+import com.nasdroid.api.TimestampUnwrapper
 import com.nasdroid.api.exception.HttpNotOkException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -154,8 +155,9 @@ data class CatalogItem(
     val latestAppVersion: String,
     @SerialName("latest_human_version")
     val latestHumanVersion: String,
+    @Serializable(with = TimestampUnwrapper::class)
     @SerialName("last_update")
-    val lastUpdate: String,
+    val lastUpdate: Long,
     @SerialName("name")
     val name: String,
     @SerialName("recommended")
