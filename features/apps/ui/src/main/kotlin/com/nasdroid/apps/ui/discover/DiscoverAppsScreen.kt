@@ -45,6 +45,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscoverAppsScreen(
+    onAppClick: (appId: String, appCatalog: String, appTrain: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: DiscoverAppsViewModel = koinViewModel()
@@ -98,6 +99,9 @@ fun DiscoverAppsScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     LazyHorizontalAppList(
+                        onAppClick = {
+                            onAppClick(it.id, it.catalogName, it.catalogTrain)
+                        },
                         apps = appGroup.apps,
                         cellSize = DpSize(width = 300.dp, height = 120.dp),
                         contentPadding = cellPadding,
@@ -175,6 +179,7 @@ internal fun FilterChipRow(
 
 @Composable
 internal fun LazyHorizontalAppList(
+    onAppClick: (AvailableApp) -> Unit,
     apps: List<AvailableApp>,
     cellSize: DpSize,
     modifier: Modifier = Modifier,
@@ -193,6 +198,7 @@ internal fun LazyHorizontalAppList(
         ) {
             items(apps) { app ->
                 AvailableAppCard(
+                    onClick = { onAppClick(app) },
                     app = app,
                     modifier = Modifier.size(cellSize)
                 )
@@ -208,6 +214,7 @@ internal fun LazyHorizontalAppList(
         ) {
             items(apps) { app ->
                 AvailableAppCard(
+                    onClick = { onAppClick(app) },
                     app = app,
                     modifier = Modifier.size(cellSize)
                 )

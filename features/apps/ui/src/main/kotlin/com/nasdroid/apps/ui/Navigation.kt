@@ -41,6 +41,9 @@ fun NavGraphBuilder.appsGraph(
         }
         composable("discover") {
             DiscoverAppsScreen(
+                onAppClick = { appId, appCatalog, appTrain ->
+                    navController.navigate("discover/$appCatalog/$appTrain/$appId")
+                },
                 modifier = modifier,
                 contentPadding = contentPadding,
             )
