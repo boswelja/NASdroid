@@ -30,10 +30,6 @@ val AppsLogicModule = module {
 
     single { Clock.System } bind Clock::class
 
-    factoryOf(::GetAllAvailableApps)
-    factoryOf(::GetAvailableAppsLegacy)
-    factoryOf(::InstallApplication)
-
     factoryOf(::GetAvailableApps)
     factoryOf(::GetAvailableCatalogs)
     factoryOf(::GetAvailableCategories)
