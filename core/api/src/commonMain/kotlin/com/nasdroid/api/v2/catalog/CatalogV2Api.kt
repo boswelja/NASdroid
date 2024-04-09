@@ -44,6 +44,17 @@ interface CatalogV2Api {
     suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions = GetCatalogItemsOptions()): Int
 
     /**
+     * Retrieves details about a single catalog item.
+     *
+     * @param id The ID of the catalog item.
+     * @param catalogName The name of the catalog that this item should exist in.
+     * @param train The catalog train that this item should exist in.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun getCatalogItemDetails(id: String, catalogName: String, train: String): CatalogItem
+
+    /**
      * Delete a catalog by its [Catalog.id].
      *
      * @throws HttpNotOkException
