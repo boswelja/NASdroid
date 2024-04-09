@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.nasdroid.apps.ui.discover.DiscoverAppsScreen
+import com.nasdroid.apps.ui.discover.details.AvailableAppDetailsScreen
 import com.nasdroid.apps.ui.installed.InstalledAppsScreen
 import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsScreen
 import com.nasdroid.apps.ui.installed.overview.logs.LogsScreen
@@ -42,6 +43,28 @@ fun NavGraphBuilder.appsGraph(
             DiscoverAppsScreen(
                 modifier = modifier,
                 contentPadding = contentPadding,
+            )
+        }
+        composable(
+            route = "discover/{catalog}/{train}/{id}",
+            arguments = listOf(
+                navArgument("catalog") {
+                    type = NavType.StringType
+                    nullable = false
+                },
+                navArgument("train") {
+                    type = NavType.StringType
+                    nullable = false
+                },
+                navArgument("id") {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            )
+        ) {
+            AvailableAppDetailsScreen(
+                modifier = modifier,
+                contentPadding = contentPadding
             )
         }
         composable(
