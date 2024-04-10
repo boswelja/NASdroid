@@ -22,7 +22,7 @@ markdown = "1.0.4"
 
 datatypes = "1.0.0"
 
-sqldelight = "2.0.1"
+sqldelight = "2.0.2"
 
 coil = "2.6.0"
 
