@@ -1,9 +1,7 @@
 package com.nasdroid.apps.logic
 
 import com.nasdroid.apps.data.AppsDataModule
-import com.nasdroid.apps.logic.available.GetAllAvailableApps
-import com.nasdroid.apps.logic.available.GetAvailableApps as GetAvailableAppsLegacy
-import com.nasdroid.apps.logic.available.InstallApplication
+import com.nasdroid.apps.logic.discover.GetAvailableAppDetails
 import com.nasdroid.apps.logic.discover.GetAvailableApps
 import com.nasdroid.apps.logic.discover.GetAvailableCatalogs
 import com.nasdroid.apps.logic.discover.GetAvailableCategories
@@ -30,10 +28,7 @@ val AppsLogicModule = module {
 
     single { Clock.System } bind Clock::class
 
-    factoryOf(::GetAllAvailableApps)
-    factoryOf(::GetAvailableAppsLegacy)
-    factoryOf(::InstallApplication)
-
+    factoryOf(::GetAvailableAppDetails)
     factoryOf(::GetAvailableApps)
     factoryOf(::GetAvailableCatalogs)
     factoryOf(::GetAvailableCategories)

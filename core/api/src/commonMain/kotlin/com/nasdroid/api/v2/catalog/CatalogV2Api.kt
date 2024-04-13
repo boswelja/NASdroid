@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.catalog
 
+import com.nasdroid.api.TimestampUnwrapper
 import com.nasdroid.api.exception.HttpNotOkException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -42,6 +43,17 @@ interface CatalogV2Api {
      * @throws HttpNotOkException
      */
     suspend fun getCatalogItems(id: String, options: GetCatalogItemsOptions = GetCatalogItemsOptions()): Int
+
+    /**
+     * Retrieves details about a single catalog item.
+     *
+     * @param id The ID of the catalog item.
+     * @param catalogName The name of the catalog that this item should exist in.
+     * @param train The catalog train that this item should exist in.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun getCatalogItemDetails(id: String, catalogName: String, train: String): CatalogItem
 
     /**
      * Delete a catalog by its [Catalog.id].
@@ -143,8 +155,9 @@ data class CatalogItem(
     val latestAppVersion: String,
     @SerialName("latest_human_version")
     val latestHumanVersion: String,
+    @Serializable(with = TimestampUnwrapper::class)
     @SerialName("last_update")
-    val lastUpdate: String,
+    val lastUpdate: Long,
     @SerialName("name")
     val name: String,
     @SerialName("recommended")
