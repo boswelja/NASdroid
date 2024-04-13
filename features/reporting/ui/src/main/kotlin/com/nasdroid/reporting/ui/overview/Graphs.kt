@@ -6,9 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.capacity.CapacityUnit
+import com.boswelja.percentage.Percentage.Companion.percent
 import com.boswelja.percentage.PercentageStyle
+import com.boswelja.temperature.Temperature.Companion.celsius
 import com.boswelja.temperature.TemperatureUnit
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.reporting.logic.graph.GraphData
@@ -32,8 +35,12 @@ import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueForma
 import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.model.lineSeries
 import com.patrykandpatrick.vico.core.scroll.Scroll
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.random.Random
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
 /**
@@ -290,6 +297,137 @@ internal fun <T> VicoGraph(
             ),
             scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
             runInitialAnimation = false
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GraphsErrorPreview() {
+    val start = Instant.fromEpochSeconds(1712979780)
+    val end = Instant.fromEpochSeconds(1712983380)
+    val percentageData = remember {
+        val interval = 5.seconds
+        val count = ((end - start).inWholeSeconds / interval.inWholeSeconds).toInt()
+        (0 until count).map { iteration ->
+            GraphData.DataSlice(
+                timestamp = start + (interval * iteration),
+                data = listOf(
+                    Random.nextDouble(100.0).percent,
+                    Random.nextDouble(100.0).percent,
+                    Random.nextDouble(100.0).percent,
+                    Random.nextDouble(100.0).percent,
+                    Random.nextDouble(100.0).percent,
+                    Random.nextDouble(100.0).percent
+                )
+            )
+        }
+    }
+    val temperatureData = remember {
+        val interval = 5.seconds
+        val count = ((end - start).inWholeSeconds / interval.inWholeSeconds).toInt()
+        (0 until count).map { iteration ->
+            GraphData.DataSlice(
+                timestamp = start + (interval * iteration),
+                data = listOf(
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                    Random.nextInt(20, 35).celsius,
+                )
+            )
+        }
+    }
+    val processesData = remember {
+        val interval = 5.seconds
+        val count = ((end - start).inWholeSeconds / interval.inWholeSeconds).toInt()
+        (0 until count).map { iteration ->
+            GraphData.DataSlice(
+                timestamp = start + (interval * iteration),
+                data = listOf(
+                    Random.nextFloat(),
+                    Random.nextFloat(),
+                    Random.nextFloat()
+                )
+            )
+        }
+    }
+    Column {
+        PercentageGraph(
+            graph = ReportingGraph.PercentageGraph(
+                data = GraphData(
+                    dataSlices = percentageData,
+                    legend = listOf(
+                        "softirq",
+                        "user",
+                        "system",
+                        "nice",
+                        "iowait",
+                        "idle"
+                    ),
+                    name = "CPU Usage",
+                    identifier = null,
+                    start = start,
+                    end = end
+                )
+            )
+        )
+        TemperatureGraph(
+            graph = ReportingGraph.TemperatureGraph(
+                data = GraphData(
+                    dataSlices = temperatureData,
+                    legend = listOf(
+                        "0",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9",
+                        "10",
+                        "11",
+                        "12",
+                        "13",
+                        "14",
+                        "15"
+                    ),
+                    name = "CPU Temperature",
+                    identifier = null,
+                    start = start,
+                    end = end
+                )
+            )
+        )
+        ProcessesGraph(
+            graph = ReportingGraph.ProcessesGraph(
+                data = GraphData(
+                    dataSlices = processesData,
+                    legend = listOf(
+                        "shortterm",
+                        "midterm",
+                        "longterm"
+                    ),
+                    name = "System Load Average",
+                    identifier = null,
+                    start = start,
+                    end = end
+                )
+            )
         )
     }
 }
