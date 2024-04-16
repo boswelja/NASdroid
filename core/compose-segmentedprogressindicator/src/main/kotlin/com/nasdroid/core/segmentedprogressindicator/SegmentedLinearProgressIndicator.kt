@@ -51,7 +51,7 @@ fun SegmentedLinearProgressIndicator(
     ),
     trackColor: Color = ProgressIndicatorDefaults.linearTrackColor,
     strokeCap: StrokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
-    gapSize: Dp = ProgressIndicatorDefaults.LinearIndicatorTrackGapSize,
+    gapSize: Dp = 8.dp,
     drawStopIndicator: (DrawScope.() -> Unit)? = null,
 ) {
     Canvas(
