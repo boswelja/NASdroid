@@ -2,6 +2,8 @@ package com.nasdroid.reporting.ui.overview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -35,7 +37,6 @@ import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueForma
 import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.model.lineSeries
 import com.patrykandpatrick.vico.core.scroll.Scroll
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -296,7 +297,7 @@ internal fun <T> VicoGraph(
                 )
             ),
             scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
-            runInitialAnimation = false
+            runInitialAnimation = false,
         )
     }
 }
@@ -307,7 +308,7 @@ fun GraphsErrorPreview() {
     val start = Instant.fromEpochSeconds(1712979780)
     val end = Instant.fromEpochSeconds(1712983380)
     val percentageData = remember {
-        val interval = 5.seconds
+        val interval = 1.seconds
         val count = ((end - start).inWholeSeconds / interval.inWholeSeconds).toInt()
         (0 until count).map { iteration ->
             GraphData.DataSlice(
@@ -324,7 +325,7 @@ fun GraphsErrorPreview() {
         }
     }
     val temperatureData = remember {
-        val interval = 5.seconds
+        val interval = 1.seconds
         val count = ((end - start).inWholeSeconds / interval.inWholeSeconds).toInt()
         (0 until count).map { iteration ->
             GraphData.DataSlice(
@@ -351,7 +352,7 @@ fun GraphsErrorPreview() {
         }
     }
     val processesData = remember {
-        val interval = 5.seconds
+        val interval = 1.seconds
         val count = ((end - start).inWholeSeconds / interval.inWholeSeconds).toInt()
         (0 until count).map { iteration ->
             GraphData.DataSlice(
@@ -364,70 +365,80 @@ fun GraphsErrorPreview() {
             )
         }
     }
-    Column {
-        PercentageGraph(
-            graph = ReportingGraph.PercentageGraph(
-                data = GraphData(
-                    dataSlices = percentageData,
-                    legend = listOf(
-                        "softirq",
-                        "user",
-                        "system",
-                        "nice",
-                        "iowait",
-                        "idle"
-                    ),
-                    name = "CPU Usage",
-                    identifier = null,
-                    start = start,
-                    end = end
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 240.dp),
+        horizontalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.small),
+        verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.small)
+    ) {
+        item {
+            PercentageGraph(
+                graph = ReportingGraph.PercentageGraph(
+                    data = GraphData(
+                        dataSlices = percentageData,
+                        legend = listOf(
+                            "softirq",
+                            "user",
+                            "system",
+                            "nice",
+                            "iowait",
+                            "idle"
+                        ),
+                        name = "CPU Usage",
+                        identifier = null,
+                        start = start,
+                        end = end
+                    )
                 )
             )
-        )
-        TemperatureGraph(
-            graph = ReportingGraph.TemperatureGraph(
-                data = GraphData(
-                    dataSlices = temperatureData,
-                    legend = listOf(
-                        "0",
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12",
-                        "13",
-                        "14",
-                        "15"
-                    ),
-                    name = "CPU Temperature",
-                    identifier = null,
-                    start = start,
-                    end = end
+        }
+        item {
+            TemperatureGraph(
+                graph = ReportingGraph.TemperatureGraph(
+                    data = GraphData(
+                        dataSlices = temperatureData,
+                        legend = listOf(
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10",
+                            "11",
+                            "12",
+                            "13",
+                            "14",
+                            "15"
+                        ),
+                        name = "CPU Temperature",
+                        identifier = null,
+                        start = start,
+                        end = end
+                    )
                 )
             )
-        )
-        ProcessesGraph(
-            graph = ReportingGraph.ProcessesGraph(
-                data = GraphData(
-                    dataSlices = processesData,
-                    legend = listOf(
-                        "shortterm",
-                        "midterm",
-                        "longterm"
-                    ),
-                    name = "System Load Average",
-                    identifier = null,
-                    start = start,
-                    end = end
+        }
+        item {
+            ProcessesGraph(
+                graph = ReportingGraph.ProcessesGraph(
+                    data = GraphData(
+                        dataSlices = processesData,
+                        legend = listOf(
+                            "shortterm",
+                            "midterm",
+                            "longterm"
+                        ),
+                        name = "System Load Average",
+                        identifier = null,
+                        start = start,
+                        end = end
+                    )
                 )
             )
-        )
+        }
     }
 }
