@@ -44,8 +44,8 @@ data class GraphData<T>(
                 name.replace("{identifier}", it)
             } ?: name
             return GraphData(
-                dataSlices = data.map {
-                    val dataNoNulls = it.requireNoNulls()
+                dataSlices = data.map { data ->
+                    val dataNoNulls = data.requireNoNulls()
                     DataSlice(
                         timestamp = Instant.fromEpochMilliseconds(dataNoNulls.first().toLong()),
                         data = dataToType(dataNoNulls.drop(1))
