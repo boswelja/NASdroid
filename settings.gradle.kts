@@ -50,6 +50,7 @@ include(
     ":features:network:ui",
     ":features:power:logic",
     ":features:power:ui",
+    ":features:reporting:data",
     ":features:reporting:logic",
     ":features:reporting:ui",
     ":features:shares:logic",
