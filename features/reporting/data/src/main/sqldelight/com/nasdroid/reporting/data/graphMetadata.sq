@@ -1,0 +1,26 @@
+CREATE TABLE graphMetadata (
+    name TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    vertical_label TEXT NOT NULL
+);
+
+CREATE TABLE graphIdentifiers (
+    graph_name TEXT NOT NULL,
+    identifier TEXT NOT NULL,
+    FOREIGN KEY (graph_name) REFERENCES graphMetadata(name) ON DELETE CASCADE
+);
+
+getMetadata:
+SELECT *
+FROM graphMetadata
+INNER JOIN graphIdentifiers ON graphMetadata.name = graphIdentifiers.graph_name
+WHERE graphMetadata.name = ?;
+
+upsertGraphMetadata:
+INSERT OR REPLACE INTO graphMetadata VALUES (?, ?, ?);
+
+upsertGraphIdentifier:
+INSERT OR REPLACE INTO graphIdentifiers VALUES (?, ?);
+
+removeAll:
+DELETE FROM graphMetadata;
