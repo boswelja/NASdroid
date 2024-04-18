@@ -44,14 +44,13 @@ data class GraphData<T>(
                 name.replace("{identifier}", it)
             } ?: name
             return GraphData(
-                dataSlices = data
-                    .map {
-                        val dataNoNulls = it.requireNoNulls()
-                        DataSlice(
-                            timestamp = Instant.fromEpochSeconds(dataNoNulls.first().toLong()),
-                            data = dataToType(dataNoNulls.drop(1))
-                        )
-                    },
+                dataSlices = data.map { data ->
+                    val dataNoNulls = data.requireNoNulls()
+                    DataSlice(
+                        timestamp = Instant.fromEpochSeconds(dataNoNulls.first().toLong()),
+                        data = dataToType(dataNoNulls.drop(1))
+                    )
+                },
                 legend = legend.drop(1),
                 name = formattedName,
                 identifier = identifier,
