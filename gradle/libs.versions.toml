@@ -9,7 +9,7 @@ androidx-lifecycle = "2.7.0"
 androidx-navigation = "2.8.0-alpha06"
 androidx-window = "1.2.0"
 
-activity-compose = "1.9.0-rc01"
+activity-compose = "1.9.0"
 compose-animation = "1.7.0-alpha06"
 compose-compiler = "1.5.11"
 compose-foundation = "1.7.0-alpha06"
