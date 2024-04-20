@@ -52,7 +52,7 @@ data class GraphData<T>(
                         val timestampSeconds = dataNoNulls.first().toLong()
                         val roundedTimestamp = timestampSeconds - (timestampSeconds % TEMPORAL_AGGREGATION_SECONDS)
                         DataSlice(
-                            timestamp = Instant.fromEpochMilliseconds(roundedTimestamp),
+                            timestamp = Instant.fromEpochSeconds(roundedTimestamp),
                             data = dataToType(dataNoNulls.drop(1))
                         )
                     }
@@ -60,8 +60,8 @@ data class GraphData<T>(
                 legend = legend.drop(1),
                 name = formattedName,
                 identifier = identifier,
-                start = Instant.fromEpochMilliseconds(start),
-                end = Instant.fromEpochMilliseconds(end)
+                start = Instant.fromEpochSeconds(start),
+                end = Instant.fromEpochSeconds(end)
             )
         }
     }
