@@ -44,13 +44,17 @@ data class GraphData<T>(
                 name.replace("{identifier}", it)
             } ?: name
             return GraphData(
-                dataSlices = data.map { data ->
-                    val dataNoNulls = data.requireNoNulls()
-                    DataSlice(
-                        timestamp = Instant.fromEpochMilliseconds(dataNoNulls.first().toLong()),
-                        data = dataToType(dataNoNulls.drop(1))
-                    )
-                },
+                dataSlices = data
+                    .map { data ->
+                        val dataNoNulls = data.requireNoNulls()
+                        val timestampSeconds = dataNoNulls.first().toLong()
+                        val roundedTimestamp = timestampSeconds - (timestampSeconds % 30)
+                        DataSlice(
+                            timestamp = Instant.fromEpochMilliseconds(roundedTimestamp),
+                            data = dataToType(dataNoNulls.drop(1))
+                        )
+                    }
+                    .distinctBy { it.timestamp },
                 legend = legend.drop(1),
                 name = formattedName,
                 identifier = identifier,
