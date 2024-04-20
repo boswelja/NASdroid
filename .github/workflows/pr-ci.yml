@@ -39,7 +39,6 @@ jobs:
           - features:apps:data
           - features:apps:logic
           - features:dashboard:logic
-          - features:reporting:data
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
