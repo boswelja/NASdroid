@@ -22,13 +22,14 @@ class InMemoryGraphMetadataCache(
     override suspend fun submitGraphMetadata(graphMetadata: List<CachedGraphMetadata>) {
         withContext(Dispatchers.IO) {
             queries.transaction {
-                queries.removeAll()
+                queries.removeAllMetadata()
                 graphMetadata.forEach { metadata ->
                     queries.upsertGraphMetadata(
                         name = metadata.name,
                         title = metadata.title,
                         vertical_label = metadata.verticalLabel
                     )
+                    queries.removeIdentifiersFor(metadata.name)
                     metadata.identifiers?.forEach { identifier ->
                         queries.upsertGraphIdentifier(
                             graph_name = metadata.name,

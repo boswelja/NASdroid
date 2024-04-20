@@ -22,5 +22,8 @@ INSERT OR REPLACE INTO graphMetadata VALUES (?, ?, ?);
 upsertGraphIdentifier:
 INSERT OR REPLACE INTO graphIdentifiers VALUES (?, ?);
 
-removeAll:
+removeAllMetadata:
 DELETE FROM graphMetadata;
+
+removeIdentifiersFor:
+DELETE FROM graphIdentifiers WHERE graph_name = ?;
