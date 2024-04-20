@@ -3,6 +3,7 @@ package com.nasdroid.reporting.data.metadata
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.nasdroid.reporting.data.ReportingDatabase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -13,14 +14,15 @@ import kotlinx.coroutines.withContext
  * An implementation of [GraphMetadataCache] that stores data in an in-memory database.
  */
 class InMemoryGraphMetadataCache(
-    private val database: ReportingDatabase
+    private val database: ReportingDatabase,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : GraphMetadataCache {
 
     private val queries
         get() = database.graphMetadataQueries
 
     override suspend fun submitGraphMetadata(graphMetadata: List<CachedGraphMetadata>) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             queries.transaction {
                 queries.removeAllMetadata()
                 graphMetadata.forEach { metadata ->
@@ -44,7 +46,7 @@ class InMemoryGraphMetadataCache(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getGraphMetadata(graphName: String): Flow<CachedGraphMetadata> {
         return queries.getMetadata(graphName).asFlow()
-            .mapToList(Dispatchers.IO)
+            .mapToList(dispatcher)
             .mapLatest { metadata ->
                 val graphMetadata = metadata.first()
                 CachedGraphMetadata(
