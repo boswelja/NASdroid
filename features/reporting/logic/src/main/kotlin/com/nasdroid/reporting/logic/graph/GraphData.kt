@@ -47,15 +47,15 @@ data class GraphData<T>(
                 dataSlices = data.map { data ->
                     val dataNoNulls = data.requireNoNulls()
                     DataSlice(
-                        timestamp = Instant.fromEpochMilliseconds(dataNoNulls.first().toLong()),
+                        timestamp = Instant.fromEpochSeconds(dataNoNulls.first().toLong()),
                         data = dataToType(dataNoNulls.drop(1))
                     )
                 },
                 legend = legend.drop(1),
                 name = formattedName,
                 identifier = identifier,
-                start = Instant.fromEpochMilliseconds(start),
-                end = Instant.fromEpochMilliseconds(end)
+                start = Instant.fromEpochSeconds(start),
+                end = Instant.fromEpochSeconds(end)
             )
         }
     }
