@@ -11,9 +11,9 @@ CREATE TABLE graphIdentifiers (
 );
 
 getMetadata:
-SELECT *
+SELECT graphMetadata.name, graphMetadata.title, graphMetadata.vertical_label, graphIdentifiers.identifier
 FROM graphMetadata
-INNER JOIN graphIdentifiers ON graphMetadata.name = graphIdentifiers.graph_name
+LEFT JOIN graphIdentifiers ON graphMetadata.name = graphIdentifiers.graph_name
 WHERE graphMetadata.name = ?;
 
 upsertGraphMetadata:
