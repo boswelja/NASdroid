@@ -37,6 +37,8 @@ data class GraphData<T>(
     )
 
     companion object {
+        private const val TEMPORAL_AGGREGATION_SECONDS = 30
+
         internal fun <T> ReportingGraphData.toGraphData(
             dataToType: (List<Double>) -> List<T>
         ): GraphData<T> {
@@ -48,7 +50,7 @@ data class GraphData<T>(
                     .map { data ->
                         val dataNoNulls = data.requireNoNulls()
                         val timestampSeconds = dataNoNulls.first().toLong()
-                        val roundedTimestamp = timestampSeconds - (timestampSeconds % 30)
+                        val roundedTimestamp = timestampSeconds - (timestampSeconds % TEMPORAL_AGGREGATION_SECONDS)
                         DataSlice(
                             timestamp = Instant.fromEpochMilliseconds(roundedTimestamp),
                             data = dataToType(dataNoNulls.drop(1))
