@@ -43,6 +43,7 @@ dependencies {
     api(projects.core.strongResult)
 
     implementation(projects.core.api)
+    implementation(projects.features.reporting.data)
 
     implementation(libs.koin.core)
 
