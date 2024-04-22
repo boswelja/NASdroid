@@ -31,7 +31,7 @@ class GetGraphIdentifiers(
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend operator fun invoke(name: String): Flow<StrongResult<List<String>, ReportingIdentifiersError>> {
         return graphMetadataCache.getGraphMetadata(name)
-            .mapLatest { it.identifiers }
+            .mapLatest { it?.identifiers }
             .onEach {
                 if (it == null && !metadataRequestLock.isLocked) {
                     metadataRequestLock.withLock {

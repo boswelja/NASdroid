@@ -44,11 +44,11 @@ class InMemoryGraphMetadataCache(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getGraphMetadata(graphName: String): Flow<CachedGraphMetadata> {
+    override fun getGraphMetadata(graphName: String): Flow<CachedGraphMetadata?> {
         return queries.getMetadata(graphName).asFlow()
             .mapToList(dispatcher)
             .mapLatest { metadata ->
-                val graphMetadata = metadata.first()
+                val graphMetadata = metadata.firstOrNull() ?: return@mapLatest null
                 CachedGraphMetadata(
                     name = graphName,
                     title = graphMetadata.title,
