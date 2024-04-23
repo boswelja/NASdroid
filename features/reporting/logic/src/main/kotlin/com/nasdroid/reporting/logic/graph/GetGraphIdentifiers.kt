@@ -29,7 +29,7 @@ class GetGraphIdentifiers(
      * @param name The name of the graph whose identifiers we are interested in.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend operator fun invoke(name: String): Flow<StrongResult<List<String>, ReportingIdentifiersError>> {
+    operator fun invoke(name: String): Flow<StrongResult<List<String>, ReportingIdentifiersError>> {
         return graphMetadataCache.getGraphMetadata(name)
             .mapLatest { it?.identifiers }
             .onEach {
