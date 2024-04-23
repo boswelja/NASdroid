@@ -43,10 +43,12 @@ dependencies {
     api(projects.core.strongResult)
 
     implementation(projects.core.api)
+    implementation(projects.features.reporting.data)
 
     implementation(libs.koin.core)
 
     testImplementation(libs.kotlin.test)
+    testImplementation(libs.turbine)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
 }
