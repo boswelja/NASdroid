@@ -23,7 +23,7 @@ interface GraphMetadataCache {
      * @return A flow that emits the current [CachedGraphMetadata] when it's ready, as well as any
      * future metadata updates.
      */
-    fun getGraphMetadata(graphName: String): Flow<CachedGraphMetadata>
+    fun getGraphMetadata(graphName: String): Flow<CachedGraphMetadata?>
 }
 
 /**
