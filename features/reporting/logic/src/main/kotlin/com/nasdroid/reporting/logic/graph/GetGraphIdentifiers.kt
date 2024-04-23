@@ -6,6 +6,8 @@ import com.nasdroid.reporting.data.metadata.CachedGraphMetadata
 import com.nasdroid.reporting.data.metadata.GraphMetadataCache
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 
@@ -30,11 +32,16 @@ class GetGraphIdentifiers(
     operator fun invoke(name: String): Flow<StrongResult<List<String>, ReportingIdentifiersError>> {
         return graphMetadataCache.getGraphMetadata(name)
             .mapLatest { it?.identifiers }
-            .onEach { result ->
+            .distinctUntilChanged()
+            .map { result ->
                 if (result == null) {
                     val metadata = reportingV2Api.getReportingGraphs(null, null, null)
+                    var identifiers: List<String>? = null
                     graphMetadataCache.submitGraphMetadata(
                         metadata.map { reportingGraph ->
+                            if (reportingGraph.name == name) {
+                                identifiers = reportingGraph.identifiers
+                            }
                             CachedGraphMetadata(
                                 name = reportingGraph.name,
                                 title = reportingGraph.title,
@@ -43,6 +50,9 @@ class GetGraphIdentifiers(
                             )
                         }
                     )
+                    identifiers
+                } else {
+                    result
                 }
             }
             .mapLatest { result ->
