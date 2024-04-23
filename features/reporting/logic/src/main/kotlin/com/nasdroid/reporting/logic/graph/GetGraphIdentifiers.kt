@@ -33,20 +33,18 @@ class GetGraphIdentifiers(
         return graphMetadataCache.getGraphMetadata(name)
             .mapLatest { it?.identifiers }
             .onEach {
-                if (it == null && !metadataRequestLock.isLocked) {
-                    metadataRequestLock.withLock {
-                        val metadata = reportingV2Api.getReportingGraphs(null, null, null)
-                        graphMetadataCache.submitGraphMetadata(
-                            metadata.map { reportingGraph ->
-                                CachedGraphMetadata(
-                                    name = reportingGraph.name,
-                                    title = reportingGraph.title,
-                                    verticalLabel = reportingGraph.verticalLabel,
-                                    identifiers = reportingGraph.identifiers
-                                )
-                            }
-                        )
-                    }
+                if (it == null) {
+                    val metadata = reportingV2Api.getReportingGraphs(null, null, null)
+                    graphMetadataCache.submitGraphMetadata(
+                        metadata.map { reportingGraph ->
+                            CachedGraphMetadata(
+                                name = reportingGraph.name,
+                                title = reportingGraph.title,
+                                verticalLabel = reportingGraph.verticalLabel,
+                                identifiers = reportingGraph.identifiers
+                            )
+                        }
+                    )
                 }
             }
             .mapLatest {
@@ -56,9 +54,5 @@ class GetGraphIdentifiers(
                     StrongResult.failure(ReportingIdentifiersError.NoGroupFound)
                 }
             }
-    }
-
-    companion object {
-        private val metadataRequestLock = Mutex()
     }
 }
