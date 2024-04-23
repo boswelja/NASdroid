@@ -8,8 +8,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 /**
  * Retrieves a List of identifiers for a graph, if available. An "identifier" is an option for a
@@ -32,8 +30,8 @@ class GetGraphIdentifiers(
     operator fun invoke(name: String): Flow<StrongResult<List<String>, ReportingIdentifiersError>> {
         return graphMetadataCache.getGraphMetadata(name)
             .mapLatest { it?.identifiers }
-            .onEach {
-                if (it == null) {
+            .onEach { result ->
+                if (result == null) {
                     val metadata = reportingV2Api.getReportingGraphs(null, null, null)
                     graphMetadataCache.submitGraphMetadata(
                         metadata.map { reportingGraph ->
@@ -47,9 +45,9 @@ class GetGraphIdentifiers(
                     )
                 }
             }
-            .mapLatest {
-                if (it != null) {
-                    StrongResult.success(it)
+            .mapLatest { result ->
+                if (result != null) {
+                    StrongResult.success(result)
                 } else {
                     StrongResult.failure(ReportingIdentifiersError.NoGroupFound)
                 }
