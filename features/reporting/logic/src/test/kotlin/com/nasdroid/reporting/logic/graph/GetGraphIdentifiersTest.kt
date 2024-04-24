@@ -12,9 +12,11 @@ import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class GetGraphIdentifiersTest {
 
@@ -77,5 +79,34 @@ class GetGraphIdentifiersTest {
         getGraphIdentifiers("test").first()
 
         coVerify(inverse = true) { reportingV2Api.getReportingGraphs(any(), any(), any()) }
+    }
+
+    @Test
+    fun `given there is no data in cache, when cache updated, then new data is received`() = runTest {
+        val identifiers = listOf("one", "two", "three")
+        val cacheState = MutableStateFlow<List<CachedGraphMetadata>?>(null)
+        every { graphMetadataCache.getGraphMetadata(any()) } answers {
+            cacheState.map {
+                it?.firstOrNull { it.name == arg(0) }
+            }
+        }
+        coEvery { graphMetadataCache.submitGraphMetadata(any()) } answers {
+            cacheState.value = arg(0)
+        }
+        coEvery { reportingV2Api.getReportingGraphs(any(), any(), any()) } returns listOf(
+            ReportingGraph(
+                "name",
+                "title",
+                "verticalLabel",
+                identifiers
+            )
+        )
+
+        val result = getGraphIdentifiers("name").first()
+
+        assertEquals(
+            identifiers,
+            result.getOrNull()
+        )
     }
 }
