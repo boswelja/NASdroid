@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -231,10 +232,13 @@ internal fun <T> VicoGraph(
     dataTransform: (T) -> Number,
     verticalLabel: String,
     modifier: Modifier = Modifier,
-    verticalAxisValueFormatter: CartesianValueFormatter = CartesianValueFormatter.decimal(),
+    verticalAxisValueFormatter: CartesianValueFormatter = remember { CartesianValueFormatter.decimal() },
 ) {
-    val model = remember(data, dataTransform) {
-        CartesianChartModelProducer.build {
+    val modelProducer = remember {
+        CartesianChartModelProducer.build { }
+    }
+    LaunchedEffect(data, dataTransform) {
+        modelProducer.tryRunTransaction {
             lineSeries {
                 val lines = data.dataSlices.first().data.size
                 (0 until lines).map { lineIndex ->
@@ -252,7 +256,7 @@ internal fun <T> VicoGraph(
             style = MaterialThemeExt.typography.titleMedium,
         )
         CartesianChartHost(
-            modelProducer = model,
+            modelProducer = modelProducer,
             chart = rememberCartesianChart(
                 rememberLineCartesianLayer(),
                 startAxis = rememberStartAxis(
@@ -262,11 +266,12 @@ internal fun <T> VicoGraph(
                 ),
                 bottomAxis = rememberBottomAxis(
                     valueFormatter = { value, _, _ ->
-                        data.dataSlices[value.toInt()].timestamp
-                            .toLocalDateTime(TimeZone.currentSystemDefault())
-                            .let {
+                        data.dataSlices.getOrNull(value.toInt())?.timestamp
+                            ?.toLocalDateTime(TimeZone.currentSystemDefault())
+                            ?.let {
                                 "${it.hour}:${it.minute}"
                             }
+                            .orEmpty()
                     },
                     itemPlacer = remember { AxisItemPlacer.Horizontal.default(spacing = 2) }
                 ),
