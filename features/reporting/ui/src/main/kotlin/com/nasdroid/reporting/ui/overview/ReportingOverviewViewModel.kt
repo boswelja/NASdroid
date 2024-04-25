@@ -20,9 +20,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlin.time.Duration
 
 /**
@@ -39,7 +39,14 @@ class ReportingOverviewViewModel(
     private val getZfsGraphs: GetZfsGraphs
 ) : ViewModel() {
     private val _category = MutableStateFlow(ReportingCategory.CPU)
+    private val _availableDevicesState = MutableStateFlow<FilterOptionState>(FilterOptionState.NoOptions)
+    private val _availableMetricsState = MutableStateFlow<FilterOptionState>(FilterOptionState.NoOptions)
+    private val _selectedDevices = MutableStateFlow<List<String>>(emptyList())
+    private val _selectedMetrics = MutableStateFlow<List<String>>(emptyList())
 
+    /**
+     * Flows the currently selected [ReportingCategory].
+     */
     val category: StateFlow<ReportingCategory> = _category
         .stateIn(
             viewModelScope,
@@ -47,40 +54,28 @@ class ReportingOverviewViewModel(
             ReportingCategory.CPU
         )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val availableOptionsState: StateFlow<FilterOptionsState> = _category
-        .mapLatest {
-            val availableDeviceResult = when (it) {
-                ReportingCategory.CPU -> null
-                ReportingCategory.DISK -> getDisks()
-                ReportingCategory.MEMORY -> null
-                ReportingCategory.NETWORK -> getNetworkInterfaces()
-                ReportingCategory.SYSTEM -> null
-                ReportingCategory.ZFS -> null
-            }
-            availableDeviceResult?.fold(
-                onSuccess = {
-                    if (it.size <= 1) {
-                        FilterOptionsState.NoOptions
-                    } else {
-                        FilterOptionsState.HasOptions(it, emptyList())
-                    }
-                },
-                onFailure = {
-                    when (it) {
-                        ReportingIdentifiersError.NoGraphFound -> FilterOptionsState.Error.NoGraphFound
-                    }
-                }
-            ) ?: FilterOptionsState.NoOptions
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            FilterOptionsState.NoOptions
-        )
+    /**
+     * Flows a [FilterOptionState] representing the available devices filtering options.
+     */
+    val availableDevices: StateFlow<FilterOptionState> = _availableDevicesState
+
+    /**
+     * Flows a [FilterOptionState] representing the available metrics filtering options.
+     */
+    val availableMetrics: StateFlow<FilterOptionState> = _availableMetricsState
+
+    /**
+     * Flows a list of currently selected devices to be filtered by.
+     */
+    val selectedDevices: StateFlow<List<String>> = _selectedDevices
+
+    /**
+     * Flows a list of currently selected metrics to be filtered by.
+     */
+    val selectedMetrics: StateFlow<List<String>> = _selectedMetrics
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val graphs: StateFlow<List<ReportingGraph>> = availableOptionsState
+    val graphs: StateFlow<List<ReportingGraph>> = _category
         .mapLatest {
             when (category.value) {
                 ReportingCategory.CPU ->
@@ -95,7 +90,7 @@ class ReportingOverviewViewModel(
                         onFailure = { emptyList() }
                     )
                 ReportingCategory.DISK ->
-                    getDiskGraphs((it as FilterOptionsState.HasOptions).availableDevices).fold(
+                    getDiskGraphs(selectedDevices.value).fold(
                         onSuccess = {
                             it.diskTemperatures.map {
                                 ReportingGraph.TemperatureGraph(it)
@@ -116,7 +111,7 @@ class ReportingOverviewViewModel(
                         onFailure = { emptyList() }
                     )
                 ReportingCategory.NETWORK ->
-                    getNetworkGraphs((it as FilterOptionsState.HasOptions).availableDevices).fold(
+                    getNetworkGraphs(selectedDevices.value).fold(
                         onSuccess = {
                             it.networkInterfaces.map {
                                 ReportingGraph.BitrateGraph(it)
@@ -154,8 +149,49 @@ class ReportingOverviewViewModel(
             emptyList()
         )
 
+    /**
+     * Sets the currently selected category. This triggers an update on [category],
+     * [availableDevices], [availableMetrics], [selectedDevices] and [selectedMetrics].
+     */
     fun setCategory(category: ReportingCategory) {
-        _category.value = category
+        viewModelScope.launch {
+            _category.value = category
+            updateAvailableDevices(category)
+            updateAvailableMetrics()
+        }
+    }
+
+    private suspend fun updateAvailableDevices(category: ReportingCategory) {
+        _availableDevicesState.value = FilterOptionState.Loading
+        _selectedDevices.value = emptyList()
+        val availableDeviceResult = when (category) {
+            ReportingCategory.DISK -> getDisks()
+            ReportingCategory.NETWORK -> getNetworkInterfaces()
+            ReportingCategory.CPU,
+            ReportingCategory.MEMORY,
+            ReportingCategory.SYSTEM,
+            ReportingCategory.ZFS -> null
+        }
+        _availableDevicesState.value = availableDeviceResult?.fold(
+            onSuccess = { availableDevices ->
+                if (availableDevices.size <= 1) {
+                    FilterOptionState.NoOptions
+                } else {
+                    _selectedDevices.value = availableDevices
+                    FilterOptionState.HasOptions(availableDevices)
+                }
+            },
+            onFailure = {
+                when (it) {
+                    ReportingIdentifiersError.NoGraphFound -> FilterOptionState.Error.NoGraphFound
+                }
+            }
+        ) ?: FilterOptionState.NoOptions
+    }
+
+    private fun updateAvailableMetrics() {
+        _availableMetricsState.value = FilterOptionState.NoOptions
+        _selectedMetrics.value = emptyList()
     }
 }
 
@@ -193,6 +229,9 @@ sealed interface ReportingGraph {
     ): ReportingGraph
 }
 
+/**
+ * Encapsulates all possible categories for all reporting graphs.
+ */
 enum class ReportingCategory {
     CPU,
     DISK,
@@ -202,26 +241,40 @@ enum class ReportingCategory {
     ZFS
 }
 
-sealed interface FilterOptionsState {
+/**
+ * Encapsulates all possible states for an additional filter option category. For example, a
+ * [ReportingCategory] might allow filtering by physical device, which would be exposed here.
+ */
+sealed interface FilterOptionState {
+
+    /**
+     * Additional filter options are currently loading.
+     */
+    data object Loading : FilterOptionState
+
+    /**
+     * There are available options for the filter.
+     *
+     * @property availableOptions A list of all available options.
+     */
     data class HasOptions(
-        val availableDevices: List<Device>,
-        val availableMetrics: List<Metric>
-    ) : FilterOptionsState {
-        data class Device(
-            val name: String,
-            val selected: Boolean
-        )
+        val availableOptions: List<String>
+    ) : FilterOptionState
 
-        data class Metric(
-            val name: String,
-            val selected: Boolean
-        )
-    }
+    /**
+     * There are no selectable filter options.
+     */
+    data object NoOptions : FilterOptionState
 
-    data object NoOptions : FilterOptionsState
+    /**
+     * Encapsulates all possible errors that occurred when trying to retrieve additional filter
+     * options.
+     */
+    sealed interface Error : FilterOptionState {
 
-    sealed interface Error : FilterOptionsState {
-
+        /**
+         * Indicates that there was no matching graph found when trying to look up options.
+         */
         data object NoGraphFound : Error
     }
 }
