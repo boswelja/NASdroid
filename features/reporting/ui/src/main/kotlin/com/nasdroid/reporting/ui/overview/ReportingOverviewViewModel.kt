@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import kotlin.time.Duration
 
 /**
@@ -39,18 +38,37 @@ class ReportingOverviewViewModel(
     private val getSystemGraphs: GetSystemGraphs,
     private val getZfsGraphs: GetZfsGraphs
 ) : ViewModel() {
-    private val _filterState = MutableStateFlow(FilterState(ReportingCategory.CPU, emptyMap()))
+    private val _category = MutableStateFlow(ReportingCategory.CPU)
 
-    val category: StateFlow<ReportingCategory> = _filterState
-        .map { it.category }
+    val category: StateFlow<ReportingCategory> = _category
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
             ReportingCategory.CPU
         )
 
-    val extraOptions: StateFlow<Map<String, Boolean>> = _filterState
-        .map { it.extraOptions }
+    val extraOptions: StateFlow<Map<String, Boolean>> = _category
+        .mapLatest {
+            val optionsResult = when (it) {
+                ReportingCategory.CPU -> null
+                ReportingCategory.DISK -> getDisks()
+                ReportingCategory.MEMORY -> null
+                ReportingCategory.NETWORK -> getNetworkInterfaces()
+                ReportingCategory.SYSTEM -> null
+                ReportingCategory.ZFS -> null
+            }
+            optionsResult?.fold(
+                onSuccess = {
+                    it.associateWith { true }
+                },
+                onFailure = {
+                    when (it) {
+                        ReportingIdentifiersError.NoGroupFound -> TODO()
+                    }
+                    null
+                }
+            ).orEmpty()
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
@@ -58,7 +76,8 @@ class ReportingOverviewViewModel(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val graphs: StateFlow<List<ReportingGraph>> = _filterState
+    val graphs: StateFlow<List<ReportingGraph>> = extraOptions
+        .map { FilterState(category.value, it) }
         .mapLatest {
             when (it.category) {
                 ReportingCategory.CPU ->
@@ -133,30 +152,7 @@ class ReportingOverviewViewModel(
         )
 
     fun setCategory(category: ReportingCategory) {
-        if (_filterState.value.category != category) {
-            viewModelScope.launch {
-                val optionsResult = when (category) {
-                    ReportingCategory.CPU -> null
-                    ReportingCategory.DISK -> getDisks()
-                    ReportingCategory.MEMORY -> null
-                    ReportingCategory.NETWORK -> getNetworkInterfaces()
-                    ReportingCategory.SYSTEM -> null
-                    ReportingCategory.ZFS -> null
-                }
-                val newExtraOptions = optionsResult?.fold(
-                    onSuccess = {
-                        it.associateWith { true }
-                    },
-                    onFailure = {
-                        when (it) {
-                            ReportingIdentifiersError.NoGroupFound -> TODO()
-                        }
-                        null
-                    }
-                )
-                _filterState.emit(FilterState(category, newExtraOptions.orEmpty()))
-            }
-        }
+        _category.value = category
     }
 }
 
