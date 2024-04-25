@@ -25,14 +25,14 @@ fun ReportingOverviewScreen(
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: ReportingOverviewViewModel = koinViewModel()
 ) {
-    val category by viewModel.category.collectAsState()
-    val extraOptions by viewModel.extraOptions.collectAsState()
+    val selectedCategory by viewModel.category.collectAsState()
+    val availableFilterOptions by viewModel.availableOptionsState.collectAsState()
     val graphs by viewModel.graphs.collectAsState()
 
     ReportingOverviewContent(
-        selectedCategory = category,
+        selectedCategory = selectedCategory,
         onCategoryClick = viewModel::setCategory,
-        extraOptions = extraOptions,
+        extraOptions = availableFilterOptions,
         onExtraOptionClick = {},
         graphs = graphs,
         modifier = modifier,
@@ -44,7 +44,7 @@ fun ReportingOverviewScreen(
 fun ReportingOverviewContent(
     selectedCategory: ReportingCategory,
     onCategoryClick: (ReportingCategory) -> Unit,
-    extraOptions: Map<String, Boolean>,
+    extraOptions: FilterOptionsState,
     onExtraOptionClick: (String) -> Unit,
     graphs: List<ReportingGraph>,
     modifier: Modifier = Modifier,
@@ -61,7 +61,7 @@ fun ReportingOverviewContent(
             ReportingFilterRow(
                 category = selectedCategory,
                 onCategoryChange = onCategoryClick,
-                extraOptions = extraOptions,
+                optionsState = extraOptions,
                 onExtraOptionChange = onExtraOptionClick
             )
         }

@@ -47,9 +47,10 @@ class ReportingOverviewViewModel(
             ReportingCategory.CPU
         )
 
-    val extraOptions: StateFlow<Map<String, Boolean>> = _category
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val availableOptionsState: StateFlow<FilterOptionsState> = _category
         .mapLatest {
-            val optionsResult = when (it) {
+            val availableDeviceResult = when (it) {
                 ReportingCategory.CPU -> null
                 ReportingCategory.DISK -> getDisks()
                 ReportingCategory.MEMORY -> null
@@ -57,29 +58,31 @@ class ReportingOverviewViewModel(
                 ReportingCategory.SYSTEM -> null
                 ReportingCategory.ZFS -> null
             }
-            optionsResult?.fold(
+            availableDeviceResult?.fold(
                 onSuccess = {
-                    it.associateWith { true }
+                    if (it.size <= 1) {
+                        FilterOptionsState.NoOptions
+                    } else {
+                        FilterOptionsState.HasOptions(it, emptyList())
+                    }
                 },
                 onFailure = {
                     when (it) {
-                        ReportingIdentifiersError.NoGroupFound -> TODO()
+                        ReportingIdentifiersError.NoGraphFound -> FilterOptionsState.Error.NoGraphFound
                     }
-                    null
                 }
-            ).orEmpty()
+            ) ?: FilterOptionsState.NoOptions
         }
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
-            emptyMap()
+            FilterOptionsState.NoOptions
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val graphs: StateFlow<List<ReportingGraph>> = extraOptions
-        .map { FilterState(category.value, it) }
+    val graphs: StateFlow<List<ReportingGraph>> = availableOptionsState
         .mapLatest {
-            when (it.category) {
+            when (category.value) {
                 ReportingCategory.CPU ->
                     getCpuGraphs().fold(
                         onSuccess = {
@@ -92,7 +95,7 @@ class ReportingOverviewViewModel(
                         onFailure = { emptyList() }
                     )
                 ReportingCategory.DISK ->
-                    getDiskGraphs(it.extraOptions.filter { it.value }.keys.toList()).fold(
+                    getDiskGraphs((it as FilterOptionsState.HasOptions).availableDevices).fold(
                         onSuccess = {
                             it.diskTemperatures.map {
                                 ReportingGraph.TemperatureGraph(it)
@@ -113,7 +116,7 @@ class ReportingOverviewViewModel(
                         onFailure = { emptyList() }
                     )
                 ReportingCategory.NETWORK ->
-                    getNetworkGraphs(it.extraOptions.filter { it.value }.keys.toList()).fold(
+                    getNetworkGraphs((it as FilterOptionsState.HasOptions).availableDevices).fold(
                         onSuccess = {
                             it.networkInterfaces.map {
                                 ReportingGraph.BitrateGraph(it)
@@ -190,11 +193,6 @@ sealed interface ReportingGraph {
     ): ReportingGraph
 }
 
-data class FilterState(
-    val category: ReportingCategory,
-    val extraOptions: Map<String, Boolean>
-)
-
 enum class ReportingCategory {
     CPU,
     DISK,
@@ -202,4 +200,28 @@ enum class ReportingCategory {
     NETWORK,
     SYSTEM,
     ZFS
+}
+
+sealed interface FilterOptionsState {
+    data class HasOptions(
+        val availableDevices: List<Device>,
+        val availableMetrics: List<Metric>
+    ) : FilterOptionsState {
+        data class Device(
+            val name: String,
+            val selected: Boolean
+        )
+
+        data class Metric(
+            val name: String,
+            val selected: Boolean
+        )
+    }
+
+    data object NoOptions : FilterOptionsState
+
+    sealed interface Error : FilterOptionsState {
+
+        data object NoGraphFound : Error
+    }
 }

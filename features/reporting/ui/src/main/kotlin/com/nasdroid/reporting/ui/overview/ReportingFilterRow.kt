@@ -36,42 +36,50 @@ import com.nasdroid.design.MaterialThemeExt
 fun ReportingFilterRow(
     category: ReportingCategory,
     onCategoryChange: (ReportingCategory) -> Unit,
-    extraOptions: Map<String, Boolean>,
+    optionsState: FilterOptionsState,
     onExtraOptionChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
-    val extraOptionsList = remember(extraOptions) {
-        extraOptions.toList()
-    }
     LazyRow(
         modifier = modifier,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium)
     ) {
         item {
-            CategoryFilterChip(category = category, onCategoryChange = onCategoryChange)
-        }
-        items(extraOptionsList) { (name, state) ->
-            FilterChip(
-                selected = state,
-                onClick = { onExtraOptionChange(name) },
-                label = { Text(name) },
-                leadingIcon = {
-                    AnimatedVisibility(
-                        visible = state,
-                        enter = expandHorizontally(expandFrom = Alignment.Start),
-                        exit = shrinkHorizontally(shrinkTowards = Alignment.Start)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
-                },
+            CategoryFilterChip(
+                category = category,
+                onCategoryChange = onCategoryChange,
             )
         }
+        when (optionsState) {
+            FilterOptionsState.Error.NoGraphFound -> TODO()
+            is FilterOptionsState.HasOptions -> {
+                items(optionsState.availableDevices) { device ->
+                    FilterChip(
+                        selected = device.selected,
+                        onClick = { onExtraOptionChange(device.name) },
+                        label = { Text(device.name) },
+                        leadingIcon = {
+                            AnimatedVisibility(
+                                visible = device.selected,
+                                enter = expandHorizontally(expandFrom = Alignment.Start),
+                                exit = shrinkHorizontally(shrinkTowards = Alignment.Start)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                        },
+                        modifier = Modifier.animateItem()
+                    )
+                }
+            }
+            FilterOptionsState.NoOptions -> TODO()
+        }
+
     }
 }
 
@@ -146,7 +154,7 @@ fun ReportingFilterRowPreview() {
     ReportingFilterRow(
         category = selectedCategory,
         onCategoryChange = { selectedCategory = it },
-        extraOptions = extraOptions,
+        optionsState = extraOptions,
         onExtraOptionChange = { extraOptions[it] = !extraOptions[it]!! }
     )
 }
