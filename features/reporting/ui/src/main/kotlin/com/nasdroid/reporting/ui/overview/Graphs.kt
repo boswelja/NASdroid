@@ -2,46 +2,36 @@ package com.nasdroid.reporting.ui.overview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boswelja.capacity.CapacityUnit
-import com.boswelja.percentage.Percentage.Companion.percent
 import com.boswelja.percentage.PercentageStyle
-import com.boswelja.temperature.Temperature.Companion.celsius
 import com.boswelja.temperature.TemperatureUnit
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.reporting.logic.graph.GraphData
-import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
-import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
-import com.patrykandpatrick.vico.compose.chart.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.chart.scroll.rememberVicoScrollState
-import com.patrykandpatrick.vico.compose.component.rememberShapeComponent
-import com.patrykandpatrick.vico.compose.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.legend.rememberHorizontalLegend
-import com.patrykandpatrick.vico.compose.legend.rememberLegendItem
-import com.patrykandpatrick.vico.compose.m3.theme.rememberM3VicoTheme
-import com.patrykandpatrick.vico.compose.theme.ProvideVicoTheme
-import com.patrykandpatrick.vico.compose.theme.vicoTheme
-import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
-import com.patrykandpatrick.vico.core.axis.AxisPosition
-import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
-import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueFormatter
-import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.model.lineSeries
-import com.patrykandpatrick.vico.core.scroll.Scroll
-import kotlinx.datetime.Instant
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
+import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
+import com.patrykandpatrick.vico.compose.common.rememberLegendItem
+import com.patrykandpatrick.vico.compose.common.vicoTheme
+import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
+import com.patrykandpatrick.vico.core.cartesian.Scroll
+import com.patrykandpatrick.vico.core.cartesian.axis.AxisItemPlacer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.random.Random
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
 /**
@@ -241,7 +231,7 @@ internal fun <T> VicoGraph(
     dataTransform: (T) -> Number,
     verticalLabel: String,
     modifier: Modifier = Modifier,
-    verticalAxisValueFormatter: AxisValueFormatter<AxisPosition.Vertical.Start> = DecimalFormatAxisValueFormatter(),
+    verticalAxisValueFormatter: CartesianValueFormatter = CartesianValueFormatter.decimal(),
 ) {
     val model = remember(data, dataTransform) {
         CartesianChartModelProducer.build {
@@ -285,7 +275,7 @@ internal fun <T> VicoGraph(
                         rememberLegendItem(
                             icon = rememberShapeComponent(
                                 color = vicoTheme
-                                    .cartesianLayerColors[index % vicoTheme.cartesianLayerColors.size]
+                                    .lineCartesianLayerColors[index % vicoTheme.lineCartesianLayerColors.size]
                             ),
                             label = rememberTextComponent(),
                             labelText = legend
