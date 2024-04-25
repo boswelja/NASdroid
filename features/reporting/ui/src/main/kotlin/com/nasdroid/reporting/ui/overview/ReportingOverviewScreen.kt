@@ -58,15 +58,11 @@ fun ReportingOverviewContent(
         verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.small)
     ) {
         item(span = { GridItemSpan(this.maxLineSpan) }) {
-            ReportingCategorySelector(
-                selectedCategory = selectedCategory,
-                onCategoryClick = onCategoryClick
-            )
-        }
-        item(span = { GridItemSpan(this.maxLineSpan) }) {
-            ReportingExtraOptionsSelector(
+            ReportingFilterRow(
+                category = selectedCategory,
+                onCategoryChange = onCategoryClick,
                 extraOptions = extraOptions,
-                onOptionClick = onExtraOptionClick
+                onExtraOptionChange = onExtraOptionClick
             )
         }
         items(graphs) { graph ->
