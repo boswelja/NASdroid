@@ -40,8 +40,7 @@ import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModel
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.core.cartesian.data.ColumnCartesianLayerModel
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -144,14 +143,22 @@ internal fun AdapterInfo(
         )
         if (adapterUtilisation != null) {
             val chartModel = remember(adapterUtilisation) {
-                CartesianChartModelProducer.build {
-                    columnSeries {
-                        series(
-                            adapterUtilisation.sentBits.bytes.toDouble(CapacityUnit.MEGABYTE),
-                            adapterUtilisation.receivedBits.bytes.toDouble(CapacityUnit.MEGABYTE)
+                CartesianChartModel(
+                    ColumnCartesianLayerModel(
+                        listOf(
+                            listOf(
+                                ColumnCartesianLayerModel.Entry(
+                                    x = adapterUtilisation.sentBits.bytes.toDouble(CapacityUnit.MEGABYTE),
+                                    y = 0
+                                ),
+                                ColumnCartesianLayerModel.Entry(
+                                    x = adapterUtilisation.receivedBits.bytes.toDouble(CapacityUnit.MEGABYTE),
+                                    y = 1
+                                )
+                            )
                         )
-                    }
-                }
+                    )
+                )
             }
             ProvideVicoTheme(rememberM3VicoTheme()) {
                 val context = LocalContext.current
@@ -172,7 +179,7 @@ internal fun AdapterInfo(
                             }
                         )
                     ),
-                    modelProducer = chartModel,
+                    model = chartModel,
                 )
             }
         }
