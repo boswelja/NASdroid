@@ -73,18 +73,18 @@ fun ReportingFilterRow(
         item {
             CategoryChip(category = category, onCategoryChange = onCategoryChange)
         }
-        items((availableDevicesState as? FilterOptionState.HasOptions)?.availableOptions.orEmpty()) {
+        items((availableDevicesState as? FilterOptionState.HasOptions)?.availableOptions.orEmpty()) { availableDevice ->
             OptionChip(
-                optionName = it,
-                selected = selectedDevices.contains(it),
-                onClick = { onDeviceClick(it) }
+                optionName = availableDevice,
+                selected = selectedDevices.contains(availableDevice),
+                onClick = { onDeviceClick(availableDevice) }
             )
         }
-        items((availableMetricsState as? FilterOptionState.HasOptions)?.availableOptions.orEmpty()) {
+        items((availableMetricsState as? FilterOptionState.HasOptions)?.availableOptions.orEmpty()) { availableMetric ->
             OptionChip(
-                optionName = it,
-                selected = selectedMetrics.contains(it),
-                onClick = { onMetricClick(it) }
+                optionName = availableMetric,
+                selected = selectedMetrics.contains(availableMetric),
+                onClick = { onMetricClick(availableMetric) }
             )
         }
     }
@@ -140,17 +140,17 @@ fun CategoryChip(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    var pickerExpanded by remember {
+    var isPickerExpanded by remember {
         mutableStateOf(false)
     }
     ExposedDropdownMenuBox(
-        expanded = pickerExpanded,
-        onExpandedChange = { pickerExpanded = !pickerExpanded },
+        expanded = isPickerExpanded,
+        onExpandedChange = { isPickerExpanded = !isPickerExpanded },
         modifier = modifier
     ) {
         FilterChip(
             selected = true,
-            onClick = { pickerExpanded = true },
+            onClick = { isPickerExpanded = true },
             enabled = enabled,
             label = {
                 Text(category.label())
@@ -163,7 +163,7 @@ fun CategoryChip(
                 )
             },
             trailingIcon = {
-                AnimatedContent(targetState = pickerExpanded, label = "Dropdown Indicator") { expanded ->
+                AnimatedContent(targetState = isPickerExpanded, label = "Dropdown Indicator") { expanded ->
                     if (expanded) {
                         Icon(
                             imageVector = Icons.Default.ArrowDropUp,
@@ -183,15 +183,15 @@ fun CategoryChip(
                 .menuAnchor(MenuAnchorType.PrimaryNotEditable)
         )
         ExposedDropdownMenu(
-            expanded = pickerExpanded,
-            onDismissRequest = { pickerExpanded = false }
+            expanded = isPickerExpanded,
+            onDismissRequest = { isPickerExpanded = false }
         ) {
             ReportingCategory.entries.forEach { reportingCategory ->
                 DropdownMenuItem(
                     text = { Text(reportingCategory.label()) },
                     onClick = {
                         onCategoryChange(reportingCategory)
-                        pickerExpanded = false
+                        isPickerExpanded = false
                     }
                 )
             }
@@ -200,7 +200,7 @@ fun CategoryChip(
 }
 
 /**
- * An opinionated [FilterChip] designed to show catalogs as a single toggle-able chip.
+ * An opinionated [FilterChip] designed to show various options as a single toggle-able chip.
  */
 @Composable
 fun OptionChip(

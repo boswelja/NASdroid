@@ -79,12 +79,12 @@ class ReportingOverviewViewModel(
             ReportingCategory.ZFS -> null
         }
         _availableDevicesState.value = availableDeviceResult?.fold(
-            onSuccess = {
-                if (it.size <= 1) {
+            onSuccess = { availableDevices ->
+                if (availableDevices.size <= 1) {
                     FilterOptionState.NoOptions
                 } else {
-                    _selectedDevices.value = it
-                    FilterOptionState.HasOptions(it)
+                    _selectedDevices.value = availableDevices
+                    FilterOptionState.HasOptions(availableDevices)
                 }
             },
             onFailure = {

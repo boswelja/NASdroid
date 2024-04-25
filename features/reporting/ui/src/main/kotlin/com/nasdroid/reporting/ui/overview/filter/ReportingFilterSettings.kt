@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,10 +26,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Hardware
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
@@ -101,11 +104,11 @@ internal fun CategorySelector(
         modifier = modifier
     ) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            ReportingCategory.entries.forEach {
+            ReportingCategory.entries.forEach { reportingCategory ->
                 FilterChip(
-                    selected = it == category,
-                    onClick = { onCategoryChange(it) },
-                    label = it.label()
+                    selected = reportingCategory == category,
+                    onClick = { onCategoryChange(reportingCategory) },
+                    label = reportingCategory.label()
                 )
             }
         }
@@ -164,6 +167,8 @@ internal fun OptionsSelector(
         AnimatedContent(
             targetState = optionsState,
             transitionSpec = {
+                // Since individual items will animate themselves, we need to disable state
+                // animations for this specific case.
                 if (initialState is FilterOptionState.HasOptions && targetState is FilterOptionState.HasOptions) {
                     EnterTransition.None togetherWith ExitTransition.None
                 } else {
@@ -171,49 +176,56 @@ internal fun OptionsSelector(
                 }
             },
             label = "$label state"
-        ) {
-            when (it) {
+        ) { state ->
+            when (state) {
                 is FilterOptionState.Error -> {
-                    ListItem(
-                        headlineContent = {
-                            Text(stringResource(R.string.filter_load_failed))
-                        },
-                        leadingContent = { Icon(Icons.Default.Info, contentDescription = null) },
-                        colors = ListItemDefaults.colors(
-                            headlineColor = MaterialThemeExt.colorScheme.error,
-                            leadingIconColor = MaterialThemeExt.colorScheme.error,
-                            containerColor = Color.Transparent
-                        )
+                    FilterOptionMessage(
+                        icon = Icons.Default.Error,
+                        message = stringResource(R.string.filter_load_failed),
+                        color = MaterialThemeExt.colorScheme.error
                     )
                 }
                 is FilterOptionState.HasOptions -> {
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        it.availableOptions.forEach {
+                        state.availableOptions.forEach { option ->
                             FilterChip(
-                                selected = selectedOptions.contains(it),
-                                onClick = { onOptionClick(it) },
-                                label = it
+                                selected = selectedOptions.contains(option),
+                                onClick = { onOptionClick(option) },
+                                label = option
                             )
                         }
                     }
                 }
-                FilterOptionState.Loading -> { /* TODO */ }
+                FilterOptionState.Loading -> { LinearProgressIndicator(Modifier.fillMaxWidth()) }
                 FilterOptionState.NoOptions -> {
-                    ListItem(
-                        headlineContent = {
-                            Text(stringResource(R.string.filter_no_options))
-                        },
-                        leadingContent = { Icon(Icons.Default.Info, contentDescription = null) },
-                        colors = ListItemDefaults.colors(
-                            headlineColor = MaterialThemeExt.colorScheme.onSurfaceVariant,
-                            leadingIconColor = MaterialThemeExt.colorScheme.onSurfaceVariant,
-                            containerColor = Color.Transparent
-                        )
+                    FilterOptionMessage(
+                        icon = Icons.Default.Info,
+                        message = stringResource(R.string.filter_no_options),
+                        color = MaterialThemeExt.colorScheme.onSurfaceVariant
                     )
                 }
             }
         }
     }
+}
+
+@Composable
+internal fun FilterOptionMessage(
+    icon: ImageVector,
+    message: String,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    ListItem(
+        headlineContent = { Text(message) },
+        leadingContent = { Icon(icon, contentDescription = null) },
+        colors = ListItemDefaults.colors(
+            headlineColor = color,
+            leadingIconColor = color,
+            containerColor = Color.Transparent
+        ),
+        modifier = modifier
+    )
 }
 
 @Composable
