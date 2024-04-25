@@ -153,7 +153,7 @@ fun CategoryChip(
             onClick = { pickerExpanded = true },
             enabled = enabled,
             label = {
-                Text(category.name)
+                Text(category.label())
             },
             leadingIcon = {
                 Icon(
@@ -186,11 +186,11 @@ fun CategoryChip(
             expanded = pickerExpanded,
             onDismissRequest = { pickerExpanded = false }
         ) {
-            ReportingCategory.entries.forEach { sortMode ->
+            ReportingCategory.entries.forEach { reportingCategory ->
                 DropdownMenuItem(
-                    text = { Text(sortMode.name) },
+                    text = { Text(reportingCategory.label()) },
                     onClick = {
-                        onCategoryChange(sortMode)
+                        onCategoryChange(reportingCategory)
                         pickerExpanded = false
                     }
                 )

@@ -42,9 +42,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.reporting.ui.R
 import com.nasdroid.reporting.ui.overview.FilterOptionState
 import com.nasdroid.reporting.ui.overview.ReportingCategory
 
@@ -94,7 +96,7 @@ internal fun CategorySelector(
     modifier: Modifier = Modifier
 ) {
     FilterCategory(
-        label = "Category",
+        label = stringResource(R.string.filter_category),
         icon = Icons.Default.Category,
         modifier = modifier
     ) {
@@ -103,7 +105,7 @@ internal fun CategorySelector(
                 FilterChip(
                     selected = it == category,
                     onClick = { onCategoryChange(it) },
-                    label = it.name
+                    label = it.label()
                 )
             }
         }
@@ -118,7 +120,7 @@ internal fun MetricsSelector(
     modifier: Modifier = Modifier
 ) {
     OptionsSelector(
-        label = "Metrics",
+        label = stringResource(R.string.filter_metrics),
         icon = Icons.Default.AutoGraph,
         optionsState = availableMetricsState,
         selectedOptions = selectedMetrics,
@@ -135,7 +137,7 @@ internal fun DeviceSelector(
     modifier: Modifier = Modifier
 ) {
     OptionsSelector(
-        label = "Devices",
+        label = stringResource(R.string.filter_devices),
         icon = Icons.Default.Hardware,
         optionsState = availableDevicesState,
         selectedOptions = selectedDevices,
@@ -171,7 +173,19 @@ internal fun OptionsSelector(
             label = "$label state"
         ) {
             when (it) {
-                is FilterOptionState.Error -> { /* TODO */ }
+                is FilterOptionState.Error -> {
+                    ListItem(
+                        headlineContent = {
+                            Text(stringResource(R.string.filter_load_failed))
+                        },
+                        leadingContent = { Icon(Icons.Default.Info, contentDescription = null) },
+                        colors = ListItemDefaults.colors(
+                            headlineColor = MaterialThemeExt.colorScheme.error,
+                            leadingIconColor = MaterialThemeExt.colorScheme.error,
+                            containerColor = Color.Transparent
+                        )
+                    )
+                }
                 is FilterOptionState.HasOptions -> {
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         it.availableOptions.forEach {
@@ -187,7 +201,7 @@ internal fun OptionsSelector(
                 FilterOptionState.NoOptions -> {
                     ListItem(
                         headlineContent = {
-                            Text(text = "The selected category does not support filtering by ${label.lowercase()}")
+                            Text(stringResource(R.string.filter_no_options))
                         },
                         leadingContent = { Icon(Icons.Default.Info, contentDescription = null) },
                         colors = ListItemDefaults.colors(

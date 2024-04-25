@@ -6,4 +6,10 @@
     <string name="graph_type_network">Network</string>
     <string name="graph_type_system">System</string>
     <string name="graph_type_zfs">ZFS</string>
+
+    <string name="filter_category">Category</string>
+    <string name="filter_devices">Devices</string>
+    <string name="filter_metrics">Metrics</string>
+    <string name="filter_no_options">The selected category does not support filtering by this type</string>
+    <string name="filter_load_failed">Failed to load options for this filter</string>
 </resources>
