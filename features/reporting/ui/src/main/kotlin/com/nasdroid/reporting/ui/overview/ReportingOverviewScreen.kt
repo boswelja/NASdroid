@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.reporting.ui.overview.filter.ReportingFilterRow
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -26,14 +27,21 @@ fun ReportingOverviewScreen(
     viewModel: ReportingOverviewViewModel = koinViewModel()
 ) {
     val selectedCategory by viewModel.category.collectAsState()
-    val availableFilterOptions by viewModel.availableOptionsState.collectAsState()
+    val availableDevicesState by viewModel.availableDevices.collectAsState()
+    val availableMetricsState by viewModel.availableMetrics.collectAsState()
+    val selectedDevices by viewModel.selectedDevices.collectAsState()
+    val selectedMetrics by viewModel.selectedMetrics.collectAsState()
     val graphs by viewModel.graphs.collectAsState()
 
     ReportingOverviewContent(
         selectedCategory = selectedCategory,
         onCategoryClick = viewModel::setCategory,
-        extraOptions = availableFilterOptions,
-        onExtraOptionClick = {},
+        availableDevicesState = availableDevicesState,
+        availableMetricsState = availableMetricsState,
+        selectedDevices = selectedDevices,
+        onDeviceClick = {},
+        selectedMetrics = selectedMetrics,
+        onMetricClick = {},
         graphs = graphs,
         modifier = modifier,
         contentPadding = contentPadding
@@ -44,8 +52,12 @@ fun ReportingOverviewScreen(
 fun ReportingOverviewContent(
     selectedCategory: ReportingCategory,
     onCategoryClick: (ReportingCategory) -> Unit,
-    extraOptions: FilterOptionsState,
-    onExtraOptionClick: (String) -> Unit,
+    availableDevicesState: FilterOptionState,
+    availableMetricsState: FilterOptionState,
+    selectedDevices: List<String>,
+    onDeviceClick: (String) -> Unit,
+    selectedMetrics: List<String>,
+    onMetricClick: (String) -> Unit,
     graphs: List<ReportingGraph>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
@@ -61,8 +73,9 @@ fun ReportingOverviewContent(
             ReportingFilterRow(
                 category = selectedCategory,
                 onCategoryChange = onCategoryClick,
-                optionsState = extraOptions,
-                onExtraOptionChange = onExtraOptionClick
+                availableDevicesState = availableDevicesState,
+                availableMetricsState = availableMetricsState,
+                selectedDevices = selectedDevices, onDeviceClick, selectedMetrics, onMetricClick
             )
         }
         items(graphs) { graph ->
