@@ -89,7 +89,7 @@ class ReportingOverviewViewModel(
             },
             onFailure = {
                 when (it) {
-                    ReportingIdentifiersError.NoGroupFound -> FilterOptionState.Error.NoGraphFound
+                    ReportingIdentifiersError.NoGraphFound -> FilterOptionState.Error.NoGraphFound
                 }
             }
         ) ?: FilterOptionState.NoOptions
