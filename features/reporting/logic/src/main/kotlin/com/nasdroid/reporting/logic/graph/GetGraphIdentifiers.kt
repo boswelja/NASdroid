@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.onEach
 
 /**
  * Retrieves a List of identifiers for a graph, if available. An "identifier" is an option for a
@@ -59,7 +58,7 @@ class GetGraphIdentifiers(
                 if (result != null) {
                     StrongResult.success(result)
                 } else {
-                    StrongResult.failure(ReportingIdentifiersError.NoGroupFound)
+                    StrongResult.failure(ReportingIdentifiersError.NoGraphFound)
                 }
             }
     }

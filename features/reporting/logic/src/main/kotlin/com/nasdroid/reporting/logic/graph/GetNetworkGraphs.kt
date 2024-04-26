@@ -1,7 +1,7 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.capacity.Capacity
-import com.boswelja.capacity.Capacity.Companion.kilobytes
+import com.boswelja.bitrate.Bitrate
+import com.boswelja.bitrate.Bitrate.Companion.kilobits
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
@@ -37,7 +37,7 @@ class GetNetworkGraphs(
             )
             val result = NetworkGraphs(
                 reportingData.map { graph ->
-                    graph.toGraphData { slice -> slice.map { it.kilobytes } }
+                    graph.toGraphData { slice -> slice.map { it.kilobits } }
                 }
             )
 
@@ -55,5 +55,5 @@ class GetNetworkGraphs(
  * shown as multiple graph.
  */
 data class NetworkGraphs(
-    val networkInterfaces: List<GraphData<Capacity>>
+    val networkInterfaces: List<GraphData<Bitrate>>
 )
