@@ -2,6 +2,7 @@ package com.nasdroid.reporting.ui.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.boswelja.bitrate.Bitrate
 import com.boswelja.capacity.Capacity
 import com.boswelja.percentage.Percentage
 import com.boswelja.temperature.Temperature
@@ -217,7 +218,7 @@ sealed interface ReportingGraph {
     ): ReportingGraph
 
     data class BitrateGraph(
-        val data: GraphData<Capacity>
+        val data: GraphData<Bitrate>
     ): ReportingGraph
 
     data class DurationGraph(
