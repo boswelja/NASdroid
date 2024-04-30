@@ -1,14 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.Capacity.Companion.kibibytes
-import com.boswelja.temperature.Temperature
-import com.boswelja.temperature.Temperature.Companion.celsius
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.reporting.logic.graph.CapacityGraph.Companion.toCapacityGraph
+import com.nasdroid.reporting.logic.graph.TemperatureGraph.Companion.toTemperatureGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -40,13 +38,13 @@ class GetDiskGraphs(
                 unit = Units.HOUR,
                 page = 1
             )
-            val utilisationGraphs = emptyList<GraphData<Capacity>>().toMutableList()
-            val temperatureGraphs = emptyList<GraphData<Temperature>>().toMutableList()
+            val utilisationGraphs = emptyList<CapacityGraph>().toMutableList()
+            val temperatureGraphs = emptyList<TemperatureGraph>().toMutableList()
             reportingData.forEach { graph ->
                 if (graph.name == "disk") {
-                    utilisationGraphs += graph.toGraphData { slice -> slice.map { it.kibibytes } }
+                    utilisationGraphs += graph.toCapacityGraph { it.kibibytes }
                 } else {
-                    temperatureGraphs += graph.toGraphData { slice -> slice.map { it.celsius } }
+                    temperatureGraphs += graph.toTemperatureGraph()
                 }
             }
             val result = DiskGraphs(
@@ -68,6 +66,6 @@ class GetDiskGraphs(
  * @property diskTemperatures Holds temperature data for all requested disks.
  */
 data class DiskGraphs(
-    val diskUtilisations: List<GraphData<Capacity>>,
-    val diskTemperatures: List<GraphData<Temperature>>
+    val diskUtilisations: List<CapacityGraph>,
+    val diskTemperatures: List<TemperatureGraph>
 )
