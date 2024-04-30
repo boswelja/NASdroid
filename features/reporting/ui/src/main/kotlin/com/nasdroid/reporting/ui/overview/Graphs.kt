@@ -8,11 +8,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.boswelja.bitrate.BitrateUnit
 import com.boswelja.capacity.CapacityUnit
 import com.boswelja.percentage.PercentageStyle
 import com.boswelja.temperature.TemperatureUnit
 import com.nasdroid.design.MaterialThemeExt
-import com.nasdroid.reporting.logic.graph.GraphData
+import com.nasdroid.reporting.logic.graph.BitrateGraph
+import com.nasdroid.reporting.logic.graph.CapacityGraph
+import com.nasdroid.reporting.logic.graph.DurationGraph
+import com.nasdroid.reporting.logic.graph.FloatGraph
+import com.nasdroid.reporting.logic.graph.Graph
+import com.nasdroid.reporting.logic.graph.PercentageGraph
+import com.nasdroid.reporting.logic.graph.TemperatureGraph
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
@@ -44,23 +51,18 @@ import kotlin.time.DurationUnit
  */
 @Composable
 fun Graph(
-    graph: ReportingGraph,
+    graph: Graph<*>,
     modifier: Modifier = Modifier
 ) {
     ProvideVicoTheme(theme = rememberM3VicoTheme()) {
         when (graph) {
-            is ReportingGraph.BitrateGraph -> BitrateGraph(graph = graph, modifier = modifier)
-            is ReportingGraph.CapacityGraph -> CapacityGraph(graph = graph, modifier = modifier)
-            is ReportingGraph.CapacityPerSecondGraph -> CapacityPerSecondGraph(
-                graph = graph,
-                modifier = modifier
-            )
-            is ReportingGraph.DurationGraph -> DurationGraph(graph = graph, modifier = modifier)
-            is ReportingGraph.EventsPerSecondGraph -> EventsPerSecondGraph(graph = graph, modifier = modifier)
-            is ReportingGraph.PercentageGraph -> PercentageGraph(graph = graph, modifier = modifier)
-            is ReportingGraph.ProcessesGraph -> ProcessesGraph(graph = graph, modifier = modifier)
-            is ReportingGraph.TemperatureGraph -> TemperatureGraph(graph = graph, modifier = modifier)
-         }
+            is BitrateGraph -> BitrateGraph(graph = graph, modifier = modifier)
+            is CapacityGraph -> CapacityGraph(graph = graph, modifier = modifier)
+            is DurationGraph -> DurationGraph(graph = graph, modifier = modifier)
+            is PercentageGraph -> PercentageGraph(graph = graph, modifier = modifier)
+            is TemperatureGraph -> TemperatureGraph(graph = graph, modifier = modifier)
+            is FloatGraph -> FloatGraph(graph = graph, modifier = modifier)
+        }
     }
 }
 
@@ -72,12 +74,12 @@ fun Graph(
  */
 @Composable
 fun BitrateGraph(
-    graph: ReportingGraph.BitrateGraph,
+    graph: BitrateGraph,
     modifier: Modifier = Modifier
 ) {
     VicoGraph(
-        data = graph.data,
-        dataTransform = { it.toDouble(CapacityUnit.MEBIBYTE) },
+        graph = graph,
+        dataTransform = { it.toDouble(BitrateUnit.MEBIBITS) },
         verticalLabel = "Mibibyte/s",
         modifier = modifier
     )
@@ -91,34 +93,13 @@ fun BitrateGraph(
  */
 @Composable
 fun CapacityGraph(
-    graph: ReportingGraph.CapacityGraph,
+    graph: CapacityGraph,
     modifier: Modifier = Modifier
 ) {
     VicoGraph(
-        data = graph.data,
+        graph = graph,
         dataTransform = { it.toDouble(CapacityUnit.GIGABYTE) },
         verticalLabel = "Gigabytes",
-        modifier = modifier
-    )
-}
-
-/**
- * Composable function that displays a [CapacityPerSecondGraph]. This graph shows data in terms of
- * Mebibytes per second.
- *
- * @param graph Instance of the subtype [ReportingGraph.CapacityPerSecondGraph] representing
- * capacity per second data.
- * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
- */
-@Composable
-fun CapacityPerSecondGraph(
-    graph: ReportingGraph.CapacityPerSecondGraph,
-    modifier: Modifier = Modifier
-) {
-    VicoGraph(
-        data = graph.data,
-        dataTransform = { it.toDouble(CapacityUnit.MEBIBYTE) },
-        verticalLabel = "Mebibyte/s",
         modifier = modifier
     )
 }
@@ -131,11 +112,11 @@ fun CapacityPerSecondGraph(
  */
 @Composable
 fun DurationGraph(
-    graph: ReportingGraph.DurationGraph,
+    graph: DurationGraph,
     modifier: Modifier = Modifier
 ) {
     VicoGraph(
-        data = graph.data,
+        graph = graph,
         dataTransform = { it.toDouble(DurationUnit.DAYS) },
         verticalLabel = "Days",
         modifier = modifier
@@ -143,7 +124,7 @@ fun DurationGraph(
 }
 
 /**
- * Composable function that displays an [EventsPerSecondGraph]. This graph shows data in terms of
+ * Composable function that displays an [FloatGraph]. This graph shows data in terms of
  * Events per second.
  *
  * @param graph Instance of the subtype [ReportingGraph.EventsPerSecondGraph] representing events
@@ -151,14 +132,14 @@ fun DurationGraph(
  * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
  */
 @Composable
-fun EventsPerSecondGraph(
-    graph: ReportingGraph.EventsPerSecondGraph,
+fun FloatGraph(
+    graph: FloatGraph,
     modifier: Modifier = Modifier
 ) {
     VicoGraph(
-        data = graph.data,
+        graph = graph,
         dataTransform = { it },
-        verticalLabel = "Event/s",
+        verticalLabel = graph.verticalLabel,
         modifier = modifier
     )
 }
@@ -172,35 +153,16 @@ fun EventsPerSecondGraph(
  */
 @Composable
 fun PercentageGraph(
-    graph: ReportingGraph.PercentageGraph,
+    graph: PercentageGraph,
     modifier: Modifier = Modifier
 ) {
     VicoGraph(
-        data = graph.data,
+        graph = graph,
         dataTransform = { it.toDouble(PercentageStyle.FULL) },
         verticalLabel = "%",
         verticalAxisValueFormatter = { value, _, _ ->
             "%.2f".format(value)
         },
-        modifier = modifier
-    )
-}
-
-/**
- * Composable function that displays a [ProcessesGraph]. This graph shows data in terms of Processes.
- *
- * @param graph Instance of the subtype [ReportingGraph.ProcessesGraph] representing processes data.
- * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
- */
-@Composable
-fun ProcessesGraph(
-    graph: ReportingGraph.ProcessesGraph,
-    modifier: Modifier = Modifier
-) {
-    VicoGraph(
-        data = graph.data,
-        dataTransform = { it },
-        verticalLabel = "Processes",
         modifier = modifier
     )
 }
@@ -215,11 +177,11 @@ fun ProcessesGraph(
  */
 @Composable
 fun TemperatureGraph(
-    graph: ReportingGraph.TemperatureGraph,
+    graph: TemperatureGraph,
     modifier: Modifier = Modifier
 ) {
     VicoGraph(
-        data = graph.data,
+        graph = graph,
         dataTransform = { it.toDouble(TemperatureUnit.CELSIUS) },
         verticalLabel = "°C",
         modifier = modifier
@@ -228,21 +190,21 @@ fun TemperatureGraph(
 
 @Composable
 internal fun <T> VicoGraph(
-    data: GraphData<T>,
+    graph: Graph<T>,
     dataTransform: (T) -> Number,
     verticalLabel: String,
     modifier: Modifier = Modifier,
     verticalAxisValueFormatter: CartesianValueFormatter = remember { CartesianValueFormatter.decimal() },
 ) {
-    val modelProducer = remember {
+    val modelProducer = remember(graph.name) {
         CartesianChartModelProducer.build { }
     }
-    LaunchedEffect(data, dataTransform) {
+    LaunchedEffect(graph, dataTransform) {
         modelProducer.tryRunTransaction {
             lineSeries {
-                val lines = data.dataSlices.first().data.size
+                val lines = graph.dataSlices.first().data.size
                 (0 until lines).map { lineIndex ->
-                    series(data.dataSlices.map { dataTransform(it.data[lineIndex]) })
+                    series(graph.dataSlices.map { dataTransform(it.data[lineIndex]) })
                 }
             }
         }
@@ -252,7 +214,7 @@ internal fun <T> VicoGraph(
         verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium)
     ) {
         Text(
-            text = data.name,
+            text = graph.name,
             style = MaterialThemeExt.typography.titleMedium,
         )
         CartesianChartHost(
@@ -266,7 +228,7 @@ internal fun <T> VicoGraph(
                 ),
                 bottomAxis = rememberBottomAxis(
                     valueFormatter = { value, _, _ ->
-                        data.dataSlices.getOrNull(value.toInt())?.timestamp
+                        graph.dataSlices.getOrNull(value.toInt())?.timestamp
                             ?.toLocalDateTime(TimeZone.currentSystemDefault())
                             ?.let {
                                 "${it.hour}:${it.minute}"
@@ -276,7 +238,7 @@ internal fun <T> VicoGraph(
                     itemPlacer = remember { AxisItemPlacer.Horizontal.default(spacing = 2) }
                 ),
                 legend = rememberHorizontalLegend(
-                    items = data.legend.mapIndexed { index, legend ->
+                    items = graph.legend.mapIndexed { index, legend ->
                         rememberLegendItem(
                             icon = rememberShapeComponent(
                                 color = vicoTheme
