@@ -78,6 +78,9 @@ data class PercentageGraph(
     override val end: Instant
 ): Graph<Percentage> {
     companion object {
+        /**
+         * Maps this [ReportingGraphData] to a new [PercentageGraph].
+         */
         fun ReportingGraphData.toPercentageGraph(): PercentageGraph {
             return PercentageGraph(
                 dataSlices = data
@@ -113,6 +116,9 @@ data class TemperatureGraph(
     override val end: Instant
 ): Graph<Temperature> {
     companion object {
+        /**
+         * Maps this [ReportingGraphData] to a new [TemperatureGraph].
+         */
         fun ReportingGraphData.toTemperatureGraph(): TemperatureGraph {
             return TemperatureGraph(
                 dataSlices = data
@@ -148,6 +154,12 @@ data class CapacityGraph(
     override val end: Instant
 ): Graph<Capacity> {
     companion object {
+        /**
+         * Maps this [ReportingGraphData] to a new [CapacityGraph].
+         *
+         * @param transform Defines for data is transformed into a [Capacity]. By default, it is
+         * assumed that data is in mebibytes.
+         */
         fun ReportingGraphData.toCapacityGraph(transform: (Double) -> Capacity = { it.mebibytes }): CapacityGraph {
             return CapacityGraph(
                 dataSlices = data
@@ -183,6 +195,9 @@ data class BitrateGraph(
     override val end: Instant
 ): Graph<Bitrate> {
     companion object {
+        /**
+         * Maps this [ReportingGraphData] to a new [BitrateGraph].
+         */
         fun ReportingGraphData.toBitrateGraph(): BitrateGraph {
             return BitrateGraph(
                 dataSlices = data
@@ -218,6 +233,12 @@ data class DurationGraph(
     override val end: Instant
 ): Graph<Duration> {
     companion object {
+        /**
+         * Maps this [ReportingGraphData] to a new [DurationGraph].
+         *
+         * @param transform Defines for data is transformed into a [Duration]. By default, it is
+         * assumed that data is in seconds.
+         */
         fun ReportingGraphData.toDurationGraph(transform: (Double) -> Duration = { it.seconds }): DurationGraph {
             return DurationGraph(
                 dataSlices = data
@@ -257,6 +278,11 @@ data class FloatGraph(
     val verticalLabel: String,
 ): Graph<Float> {
     companion object {
+        /**
+         * Maps this [ReportingGraphData] to a new [FloatGraph].
+         *
+         * @param verticalLabel The label for the vertical axis data.
+         */
         fun ReportingGraphData.toFloatGraph(verticalLabel: String): FloatGraph {
             return FloatGraph(
                 dataSlices = data

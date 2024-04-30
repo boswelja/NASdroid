@@ -1,7 +1,5 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.bitrate.Bitrate
-import com.boswelja.bitrate.Bitrate.Companion.kilobits
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
