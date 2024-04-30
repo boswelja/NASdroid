@@ -17,10 +17,11 @@ class GetSystemGraphs(
 ) {
 
     /**
-     * Retrieves a [CpuGraphs] that describes all system-related graphs, or a [ReportingGraphError]
-     * if something went wrong. The retrieved data represents the last hour of reporting data.
+     * Retrieves a list of [Graph] that describes all system-related graphs, or a
+     * [ReportingGraphError] if something went wrong. The retrieved data represents the last hour of
+     * reporting data.
      */
-    suspend operator fun invoke(): StrongResult<SystemGraphs, ReportingGraphError> =
+    suspend operator fun invoke(): StrongResult<List<Graph<*>>, ReportingGraphError> =
         withContext(calculationDispatcher) {
             try {
                 val reportingData = reportingV2Api.getGraphData(
@@ -32,22 +33,9 @@ class GetSystemGraphs(
                 )
                 val (uptimeGraph) = reportingData
 
-                val result = SystemGraphs(
-                    uptime = uptimeGraph.toDurationGraph()
-                )
-
-                return@withContext StrongResult.success(result)
+                return@withContext StrongResult.success(listOf(uptimeGraph.toDurationGraph()))
             } catch (_: IllegalArgumentException) {
                 return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
             }
         }
 }
-
-/**
- * Holds the state of all CPU-related data.
- *
- * @property uptime Holds all data about system uptime, designed to be shown as a graph.
- */
-data class SystemGraphs(
-    val uptime: DurationGraph,
-)

@@ -19,10 +19,11 @@ class GetCpuGraphs(
 ) {
 
     /**
-     * Retrieves a [CpuGraphs] that describes all CPU-related graphs, or a [ReportingGraphError] if
-     * something went wrong. The retrieved data represents the last hour of reporting data.
+     * Retrieves a list of [Graph] that describes all CPU-related graphs, or a [ReportingGraphError]
+     * if something went wrong. The retrieved data represents the last hour of reporting data.
      */
-    suspend operator fun invoke(): StrongResult<CpuGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
+    suspend operator fun invoke():
+            StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = listOf(
@@ -35,28 +36,15 @@ class GetCpuGraphs(
             )
             val (cpuGraph, cpuTempGraph, loadGraph) = reportingData
 
-            val result = CpuGraphs(
-                cpuUsageGraph = cpuGraph.toPercentageGraph(),
-                cpuTempGraph = cpuTempGraph.toTemperatureGraph(),
-                systemLoadGraph = loadGraph.toFloatGraph("Processes"),
+            return@withContext StrongResult.success(
+                listOf(
+                    cpuGraph.toPercentageGraph(),
+                    cpuTempGraph.toTemperatureGraph(),
+                    loadGraph.toFloatGraph("Processes"),
+                )
             )
-
-            return@withContext StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
             return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
-
-/**
- * Holds the state of all CPU-related data.
- *
- * @property cpuUsageGraph Holds all data about CPU utilisation, designed to be shown as a graph.
- * @property cpuTempGraph Holds all data about CPU core temperature, designed to be shown as a graph.
- * @property systemLoadGraph Holds all data about system utilisation, designed to be shown as a graph.
- */
-data class CpuGraphs(
-    val cpuUsageGraph: PercentageGraph,
-    val cpuTempGraph: TemperatureGraph,
-    val systemLoadGraph: FloatGraph,
-)
