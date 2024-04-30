@@ -1,14 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.percentage.Percentage
-import com.boswelja.percentage.Percentage.Companion.percent
-import com.boswelja.temperature.Temperature
-import com.boswelja.temperature.Temperature.Companion.celsius
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.reporting.logic.graph.FloatGraph.Companion.toFloatGraph
+import com.nasdroid.reporting.logic.graph.PercentageGraph.Companion.toPercentageGraph
+import com.nasdroid.reporting.logic.graph.TemperatureGraph.Companion.toTemperatureGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -38,15 +36,9 @@ class GetCpuGraphs(
             val (cpuGraph, cpuTempGraph, loadGraph) = reportingData
 
             val result = CpuGraphs(
-                cpuUsageGraph = cpuGraph.toGraphData { sliceData ->
-                    sliceData.map { dataPoint -> dataPoint.percent }
-                },
-                cpuTempGraph = cpuTempGraph.toGraphData { sliceData ->
-                    sliceData.map { it.celsius }
-                },
-                systemLoadGraph = loadGraph.toGraphData { sliceData ->
-                    sliceData.map { dataPoint -> dataPoint.toFloat() }
-                },
+                cpuUsageGraph = cpuGraph.toPercentageGraph(),
+                cpuTempGraph = cpuTempGraph.toTemperatureGraph(),
+                systemLoadGraph = loadGraph.toFloatGraph("Processes"),
             )
 
             return@withContext StrongResult.success(result)
@@ -64,7 +56,7 @@ class GetCpuGraphs(
  * @property systemLoadGraph Holds all data about system utilisation, designed to be shown as a graph.
  */
 data class CpuGraphs(
-    val cpuUsageGraph: GraphData<Percentage>,
-    val cpuTempGraph: GraphData<Temperature>,
-    val systemLoadGraph: GraphData<Float>,
+    val cpuUsageGraph: PercentageGraph,
+    val cpuTempGraph: TemperatureGraph,
+    val systemLoadGraph: FloatGraph,
 )

@@ -1,12 +1,10 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.capacity.Capacity
-import com.boswelja.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.reporting.logic.graph.CapacityGraph.Companion.toCapacityGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -35,16 +33,12 @@ class GetMemoryGraphs(
                 )
                 val (memoryGraph, swapGraph) = reportingData
 
-                val result = MemoryGraphs(
-                    memoryUtilisation = memoryGraph.toGraphData { sliceData ->
-                        sliceData.map { it.mebibytes }
-                    },
-                    swapUtilisation = swapGraph.toGraphData { sliceData ->
-                        sliceData.map { it.mebibytes }
-                    },
+                return@withContext StrongResult.success(
+                    MemoryGraphs(
+                        memoryUtilisation = memoryGraph.toCapacityGraph(),
+                        swapUtilisation = swapGraph.toCapacityGraph(),
+                    )
                 )
-
-                return@withContext StrongResult.success(result)
             } catch (_: IllegalArgumentException) {
                 return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
             }
@@ -60,6 +54,6 @@ class GetMemoryGraphs(
  * graph.
  */
 data class MemoryGraphs(
-    val memoryUtilisation: GraphData<Capacity>,
-    val swapUtilisation: GraphData<Capacity>,
+    val memoryUtilisation: CapacityGraph,
+    val swapUtilisation: CapacityGraph,
 )

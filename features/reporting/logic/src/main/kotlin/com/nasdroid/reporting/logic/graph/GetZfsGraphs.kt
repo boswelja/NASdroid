@@ -1,14 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.capacity.Capacity
-import com.boswelja.capacity.Capacity.Companion.mebibytes
-import com.boswelja.percentage.Percentage
-import com.boswelja.percentage.Percentage.Companion.percent
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.reporting.logic.graph.CapacityGraph.Companion.toCapacityGraph
+import com.nasdroid.reporting.logic.graph.FloatGraph.Companion.toFloatGraph
+import com.nasdroid.reporting.logic.graph.PercentageGraph.Companion.toPercentageGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -47,11 +45,11 @@ class GetZfsGraphs(
             ) = reportingData
 
             val result = ZfsGraphs(
-                actualCacheHitRate = cacheHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
-                arcHitRate = arcHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
-                arcSize = arcSizeGraph.toGraphData { slice -> slice.map { it.mebibytes } },
-                arcDemandResult = arcResultDemandGraph.toGraphData { slice -> slice.map { it.percent } },
-                arcPrefetchResult = arcResultPrefetchGraph.toGraphData { slice -> slice.map { it.percent } }
+                actualCacheHitRate = cacheHitRateGraph.toFloatGraph("Events/s"),
+                arcHitRate = arcHitRateGraph.toFloatGraph("Events/s"),
+                arcSize = arcSizeGraph.toCapacityGraph(),
+                arcDemandResult = arcResultDemandGraph.toPercentageGraph(),
+                arcPrefetchResult = arcResultPrefetchGraph.toPercentageGraph()
             )
 
             return@withContext StrongResult.success(result)
@@ -71,9 +69,9 @@ class GetZfsGraphs(
  * @property arcPrefetchResult TODO
  */
 data class ZfsGraphs(
-    val actualCacheHitRate: GraphData<Float>,
-    val arcHitRate: GraphData<Float>,
-    val arcSize: GraphData<Capacity>,
-    val arcDemandResult: GraphData<Percentage>,
-    val arcPrefetchResult: GraphData<Percentage>
+    val actualCacheHitRate: FloatGraph,
+    val arcHitRate: FloatGraph,
+    val arcSize: CapacityGraph,
+    val arcDemandResult: PercentageGraph,
+    val arcPrefetchResult: PercentageGraph
 )

@@ -1,12 +1,10 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.bitrate.Bitrate
-import com.boswelja.bitrate.Bitrate.Companion.kilobits
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.reporting.logic.graph.BitrateGraph.Companion.toBitrateGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -37,7 +35,7 @@ class GetNetworkGraphs(
             )
             val result = NetworkGraphs(
                 reportingData.map { graph ->
-                    graph.toGraphData { slice -> slice.map { it.kilobits } }
+                    graph.toBitrateGraph()
                 }
             )
 
@@ -55,5 +53,5 @@ class GetNetworkGraphs(
  * shown as multiple graph.
  */
 data class NetworkGraphs(
-    val networkInterfaces: List<GraphData<Bitrate>>
+    val networkInterfaces: List<BitrateGraph>
 )
