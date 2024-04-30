@@ -17,10 +17,11 @@ class GetMemoryGraphs(
 ) {
 
     /**
-     * Retrieves a [MemoryGraphs] that describes all CPU-related graphs, or a [ReportingGraphError]
-     * if something went wrong. The retrieved data represents the last hour of reporting data.
+     * Retrieves a list of [Graph] that describes all memory-related graphs, or a
+     * [ReportingGraphError] if something went wrong. The retrieved data represents the last hour of
+     * reporting data.
      */
-    suspend operator fun invoke(): StrongResult<MemoryGraphs, ReportingGraphError> =
+    suspend operator fun invoke(): StrongResult<List<Graph<*>>, ReportingGraphError> =
         withContext(calculationDispatcher) {
             try {
                 val reportingData = reportingV2Api.getGraphData(
@@ -34,9 +35,9 @@ class GetMemoryGraphs(
                 val (memoryGraph, swapGraph) = reportingData
 
                 return@withContext StrongResult.success(
-                    MemoryGraphs(
-                        memoryUtilisation = memoryGraph.toCapacityGraph(),
-                        swapUtilisation = swapGraph.toCapacityGraph(),
+                    listOf(
+                        memoryGraph.toCapacityGraph(),
+                        swapGraph.toCapacityGraph(),
                     )
                 )
             } catch (_: IllegalArgumentException) {
@@ -44,16 +45,3 @@ class GetMemoryGraphs(
             }
         }
 }
-
-/**
- * Holds the state of all memory-related data.
- *
- * @property memoryUtilisation Holds all data about physical memory utilisation, designed to be
- * shown as a graph.
- * @property swapUtilisation Holds all data about SWAP space utilisation, designed to be shown as a
- * graph.
- */
-data class MemoryGraphs(
-    val memoryUtilisation: CapacityGraph,
-    val swapUtilisation: CapacityGraph,
-)

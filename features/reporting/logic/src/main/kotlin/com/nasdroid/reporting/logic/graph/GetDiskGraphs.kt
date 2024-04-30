@@ -19,14 +19,14 @@ class GetDiskGraphs(
 ) {
 
     /**
-     * Retrieves a [DiskGraphs] that describes all disk-related graphs, or a [ReportingGraphError]
+     * Retrieves a list of [Graph] that describes all disk-related graphs, or a [ReportingGraphError]
      * if something went wrong. The retrieved data represents the last hour of reporting data.
      *
      * @param disks A list of disk identifiers whose utilisation graphs should be retrieved.
      */
     suspend operator fun invoke(
         disks: List<String>
-    ): StrongResult<DiskGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
+    ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = disks.flatMap {
@@ -47,25 +47,12 @@ class GetDiskGraphs(
                     temperatureGraphs += graph.toTemperatureGraph()
                 }
             }
-            val result = DiskGraphs(
-                diskUtilisations = utilisationGraphs,
-                diskTemperatures = temperatureGraphs
-            )
 
-            return@withContext StrongResult.success(result)
+            return@withContext StrongResult.success(
+                utilisationGraphs + temperatureGraphs
+            )
         } catch (_: IllegalArgumentException) {
             return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
-
-/**
- * Holds the state of all network-related data.
- *
- * @property diskUtilisations Holds utilisation data for all requested disks.
- * @property diskTemperatures Holds temperature data for all requested disks.
- */
-data class DiskGraphs(
-    val diskUtilisations: List<CapacityGraph>,
-    val diskTemperatures: List<TemperatureGraph>
-)
