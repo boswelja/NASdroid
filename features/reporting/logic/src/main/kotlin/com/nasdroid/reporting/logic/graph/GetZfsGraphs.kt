@@ -19,11 +19,12 @@ class GetZfsGraphs(
 ) {
 
     /**
-     * Retrieves a [ZfsGraphs] that describes all ZFS-related graphs, or a [ReportingGraphError] if
-     * something went wrong. The retrieved data represents the last hour of reporting data.
+     * Retrieves a list of [Graph] that describes all ZFS-related graphs, or a [ReportingGraphError]
+     * if something went wrong. The retrieved data represents the last hour of reporting data.
      */
     @Suppress("DestructuringDeclarationWithTooManyEntries") // This is intentional here
-    suspend operator fun invoke(): StrongResult<ZfsGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
+    suspend operator fun invoke():
+            StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = listOf(
@@ -44,34 +45,17 @@ class GetZfsGraphs(
                 arcResultPrefetchGraph
             ) = reportingData
 
-            val result = ZfsGraphs(
-                actualCacheHitRate = cacheHitRateGraph.toFloatGraph("Events/s"),
-                arcHitRate = arcHitRateGraph.toFloatGraph("Events/s"),
-                arcSize = arcSizeGraph.toCapacityGraph(),
-                arcDemandResult = arcResultDemandGraph.toPercentageGraph(),
-                arcPrefetchResult = arcResultPrefetchGraph.toPercentageGraph()
+            return@withContext StrongResult.success(
+                listOf(
+                    cacheHitRateGraph.toFloatGraph("Events/s"),
+                    arcHitRateGraph.toFloatGraph("Events/s"),
+                    arcSizeGraph.toCapacityGraph(),
+                    arcResultDemandGraph.toPercentageGraph(),
+                    arcResultPrefetchGraph.toPercentageGraph()
+                )
             )
-
-            return@withContext StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
             return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
-
-/**
- * Holds the state of all CPU-related data.
- *
- * @property actualCacheHitRate Holds the hit rate of the ZFS cache, measured in events per second.
- * @property arcHitRate The hit rate of the ZFS ARC, measured in events per second.
- * @property arcSize The size of the ZFS ARC.
- * @property arcDemandResult TODO
- * @property arcPrefetchResult TODO
- */
-data class ZfsGraphs(
-    val actualCacheHitRate: FloatGraph,
-    val arcHitRate: FloatGraph,
-    val arcSize: CapacityGraph,
-    val arcDemandResult: PercentageGraph,
-    val arcPrefetchResult: PercentageGraph
-)
