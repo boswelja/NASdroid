@@ -96,58 +96,16 @@ class ReportingOverviewViewModel(
     private suspend fun updateGraphs() {
         _graphs.value = emptyList()
         val newGraphs = when (category.value) {
-            ReportingCategory.CPU ->
-                getCpuGraphs().fold(
-                    onSuccess = {
-                        listOf(
-                            it.cpuUsageGraph,
-                            it.cpuTempGraph,
-                            it.systemLoadGraph
-                        )
-                    },
-                    onFailure = { emptyList() }
-                )
-            ReportingCategory.DISK ->
-                getDiskGraphs(selectedDevices.value).fold(
-                    onSuccess = {
-                        it.diskTemperatures + it.diskUtilisations
-                    },
-                    onFailure = { emptyList() }
-                )
-            ReportingCategory.MEMORY ->
-                getMemoryGraphs().fold(
-                    onSuccess = {
-                        listOf(
-                            it.memoryUtilisation,
-                            it.swapUtilisation
-                        )
-                    },
-                    onFailure = { emptyList() }
-                )
-            ReportingCategory.NETWORK ->
-                getNetworkGraphs(selectedDevices.value).fold(
-                    onSuccess = { it.networkInterfaces },
-                    onFailure = { emptyList() }
-                )
-            ReportingCategory.SYSTEM ->
-                getSystemGraphs().fold(
-                    onSuccess = { listOf(it.uptime) },
-                    onFailure = { emptyList() }
-                )
-            ReportingCategory.ZFS ->
-                getZfsGraphs().fold(
-                    onSuccess = {
-                        listOf(
-                            it.actualCacheHitRate,
-                            it.arcHitRate,
-                            it.arcSize,
-                            it.arcDemandResult,
-                            it.arcPrefetchResult
-                        )
-                    },
-                    onFailure = { emptyList() }
-                )
-        }
+            ReportingCategory.CPU -> getCpuGraphs()
+            ReportingCategory.DISK -> getDiskGraphs(selectedDevices.value)
+            ReportingCategory.MEMORY -> getMemoryGraphs()
+            ReportingCategory.NETWORK -> getNetworkGraphs(selectedDevices.value)
+            ReportingCategory.SYSTEM -> getSystemGraphs()
+            ReportingCategory.ZFS -> getZfsGraphs()
+        }.fold(
+            onSuccess = { it },
+            onFailure = { emptyList() }
+        )
         _graphs.value = newGraphs
     }
 
