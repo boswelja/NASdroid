@@ -101,7 +101,7 @@ internal class ReportingV2ApiImpl(
 internal data class ReportingGraphDataRequestDto(
     @SerialName("graphs")
     val graphs: List<RequestedGraph>,
-    @SerialName("reporting_query_netdata")
+    @SerialName("reporting_query")
     val reportingQuery: ReportingQuery,
 ) {
     @Serializable
