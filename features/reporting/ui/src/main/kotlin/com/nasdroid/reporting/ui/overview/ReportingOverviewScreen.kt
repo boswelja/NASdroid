@@ -76,7 +76,10 @@ fun ReportingOverviewContent(
                 onCategoryChange = onCategoryClick,
                 availableDevicesState = availableDevicesState,
                 availableMetricsState = availableMetricsState,
-                selectedDevices = selectedDevices, onDeviceClick, selectedMetrics, onMetricClick
+                selectedDevices = selectedDevices,
+                onDeviceClick = onDeviceClick,
+                selectedMetrics = selectedMetrics,
+                onMetricClick = onMetricClick
             )
         }
         items(graphs) { graph ->
