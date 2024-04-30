@@ -13,12 +13,12 @@ import com.nasdroid.reporting.logic.graph.GetSystemGraphs
 import com.nasdroid.reporting.logic.graph.GetZfsGraphs
 import com.nasdroid.reporting.logic.graph.Graph
 import com.nasdroid.reporting.logic.graph.ReportingIdentifiersError
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 
 /**
@@ -39,6 +39,7 @@ class ReportingOverviewViewModel(
     private val _availableMetricsState = MutableStateFlow<FilterOptionState>(FilterOptionState.NoOptions)
     private val _selectedDevices = MutableStateFlow<List<String>>(emptyList())
     private val _selectedMetrics = MutableStateFlow<List<String>>(emptyList())
+    private val _graphs = MutableStateFlow<List<Graph<*>>>(emptyList())
 
     /**
      * Flows the currently selected [ReportingCategory].
@@ -70,68 +71,11 @@ class ReportingOverviewViewModel(
      */
     val selectedMetrics: StateFlow<List<String>> = _selectedMetrics
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val graphs: StateFlow<List<Graph<*>>> = _category
-        .mapLatest {
-            when (category.value) {
-                ReportingCategory.CPU ->
-                    getCpuGraphs().fold(
-                        onSuccess = {
-                            listOf(
-                                it.cpuUsageGraph,
-                                it.cpuTempGraph,
-                                it.systemLoadGraph
-                            )
-                        },
-                        onFailure = { emptyList() }
-                    )
-                ReportingCategory.DISK ->
-                    getDiskGraphs(selectedDevices.value).fold(
-                        onSuccess = {
-                            it.diskTemperatures + it.diskUtilisations
-                        },
-                        onFailure = { emptyList() }
-                    )
-                ReportingCategory.MEMORY ->
-                    getMemoryGraphs().fold(
-                        onSuccess = {
-                            listOf(
-                                it.memoryUtilisation,
-                                it.swapUtilisation
-                            )
-                        },
-                        onFailure = { emptyList() }
-                    )
-                ReportingCategory.NETWORK ->
-                    getNetworkGraphs(selectedDevices.value).fold(
-                        onSuccess = { it.networkInterfaces },
-                        onFailure = { emptyList() }
-                    )
-                ReportingCategory.SYSTEM ->
-                    getSystemGraphs().fold(
-                        onSuccess = { listOf(it.uptime) },
-                        onFailure = { emptyList() }
-                    )
-                ReportingCategory.ZFS ->
-                    getZfsGraphs().fold(
-                        onSuccess = {
-                            listOf(
-                                it.actualCacheHitRate,
-                                it.arcHitRate,
-                                it.arcSize,
-                                it.arcDemandResult,
-                                it.arcPrefetchResult
-                            )
-                        },
-                        onFailure = { emptyList() }
-                    )
-            }
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            emptyList()
-        )
+    val graphs: StateFlow<List<Graph<*>>> = _graphs
+
+    init {
+        setCategory(ReportingCategory.CPU)
+    }
 
     /**
      * Sets the currently selected category. This triggers an update on [category],
@@ -140,9 +84,71 @@ class ReportingOverviewViewModel(
     fun setCategory(category: ReportingCategory) {
         viewModelScope.launch {
             _category.value = category
-            updateAvailableDevices(category)
-            updateAvailableMetrics()
+            val updateFilters = listOf(
+                async { updateAvailableDevices(category) },
+                async { updateAvailableMetrics() }
+            )
+            updateFilters.joinAll()
+            updateGraphs()
         }
+    }
+
+    private suspend fun updateGraphs() {
+        _graphs.value = emptyList()
+        val newGraphs = when (category.value) {
+            ReportingCategory.CPU ->
+                getCpuGraphs().fold(
+                    onSuccess = {
+                        listOf(
+                            it.cpuUsageGraph,
+                            it.cpuTempGraph,
+                            it.systemLoadGraph
+                        )
+                    },
+                    onFailure = { emptyList() }
+                )
+            ReportingCategory.DISK ->
+                getDiskGraphs(selectedDevices.value).fold(
+                    onSuccess = {
+                        it.diskTemperatures + it.diskUtilisations
+                    },
+                    onFailure = { emptyList() }
+                )
+            ReportingCategory.MEMORY ->
+                getMemoryGraphs().fold(
+                    onSuccess = {
+                        listOf(
+                            it.memoryUtilisation,
+                            it.swapUtilisation
+                        )
+                    },
+                    onFailure = { emptyList() }
+                )
+            ReportingCategory.NETWORK ->
+                getNetworkGraphs(selectedDevices.value).fold(
+                    onSuccess = { it.networkInterfaces },
+                    onFailure = { emptyList() }
+                )
+            ReportingCategory.SYSTEM ->
+                getSystemGraphs().fold(
+                    onSuccess = { listOf(it.uptime) },
+                    onFailure = { emptyList() }
+                )
+            ReportingCategory.ZFS ->
+                getZfsGraphs().fold(
+                    onSuccess = {
+                        listOf(
+                            it.actualCacheHitRate,
+                            it.arcHitRate,
+                            it.arcSize,
+                            it.arcDemandResult,
+                            it.arcPrefetchResult
+                        )
+                    },
+                    onFailure = { emptyList() }
+                )
+        }
+        _graphs.value = newGraphs
     }
 
     private suspend fun updateAvailableDevices(category: ReportingCategory) {
