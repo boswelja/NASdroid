@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.reporting.logic.graph.Graph
 import com.nasdroid.reporting.ui.overview.filter.ReportingFilterRow
 import org.koin.androidx.compose.koinViewModel
 
@@ -58,7 +59,7 @@ fun ReportingOverviewContent(
     onDeviceClick: (String) -> Unit,
     selectedMetrics: List<String>,
     onMetricClick: (String) -> Unit,
-    graphs: List<ReportingGraph>,
+    graphs: List<Graph<*>>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {

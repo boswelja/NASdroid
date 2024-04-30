@@ -2,10 +2,6 @@ package com.nasdroid.reporting.ui.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boswelja.bitrate.Bitrate
-import com.boswelja.capacity.Capacity
-import com.boswelja.percentage.Percentage
-import com.boswelja.temperature.Temperature
 import com.nasdroid.core.strongresult.fold
 import com.nasdroid.reporting.logic.graph.GetCpuGraphs
 import com.nasdroid.reporting.logic.graph.GetDiskGraphs
@@ -15,7 +11,7 @@ import com.nasdroid.reporting.logic.graph.GetNetworkGraphs
 import com.nasdroid.reporting.logic.graph.GetNetworkInterfaces
 import com.nasdroid.reporting.logic.graph.GetSystemGraphs
 import com.nasdroid.reporting.logic.graph.GetZfsGraphs
-import com.nasdroid.reporting.logic.graph.GraphData
+import com.nasdroid.reporting.logic.graph.Graph
 import com.nasdroid.reporting.logic.graph.ReportingIdentifiersError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +20,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlin.time.Duration
 
 /**
  * A ViewModel that provides the necessary data for the reporting dashboard.
@@ -76,16 +71,16 @@ class ReportingOverviewViewModel(
     val selectedMetrics: StateFlow<List<String>> = _selectedMetrics
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val graphs: StateFlow<List<ReportingGraph>> = _category
+    val graphs: StateFlow<List<Graph<*>>> = _category
         .mapLatest {
             when (category.value) {
                 ReportingCategory.CPU ->
                     getCpuGraphs().fold(
                         onSuccess = {
                             listOf(
-                                ReportingGraph.PercentageGraph(it.cpuUsageGraph),
-                                ReportingGraph.TemperatureGraph(it.cpuTempGraph),
-                                ReportingGraph.ProcessesGraph(it.systemLoadGraph)
+                                it.cpuUsageGraph,
+                                it.cpuTempGraph,
+                                it.systemLoadGraph
                             )
                         },
                         onFailure = { emptyList() }
@@ -93,11 +88,7 @@ class ReportingOverviewViewModel(
                 ReportingCategory.DISK ->
                     getDiskGraphs(selectedDevices.value).fold(
                         onSuccess = {
-                            it.diskTemperatures.map {
-                                ReportingGraph.TemperatureGraph(it)
-                            } + it.diskUtilisations.map {
-                                ReportingGraph.CapacityPerSecondGraph(it)
-                            }
+                            it.diskTemperatures + it.diskUtilisations
                         },
                         onFailure = { emptyList() }
                     )
@@ -105,39 +96,31 @@ class ReportingOverviewViewModel(
                     getMemoryGraphs().fold(
                         onSuccess = {
                             listOf(
-                                ReportingGraph.CapacityGraph(it.memoryUtilisation),
-                                ReportingGraph.CapacityGraph(it.swapUtilisation)
+                                it.memoryUtilisation,
+                                it.swapUtilisation
                             )
                         },
                         onFailure = { emptyList() }
                     )
                 ReportingCategory.NETWORK ->
                     getNetworkGraphs(selectedDevices.value).fold(
-                        onSuccess = {
-                            it.networkInterfaces.map {
-                                ReportingGraph.BitrateGraph(it)
-                            }
-                        },
+                        onSuccess = { it.networkInterfaces },
                         onFailure = { emptyList() }
                     )
                 ReportingCategory.SYSTEM ->
                     getSystemGraphs().fold(
-                        onSuccess = {
-                            listOf(
-                                ReportingGraph.DurationGraph(it.uptime)
-                            )
-                        },
+                        onSuccess = { listOf(it.uptime) },
                         onFailure = { emptyList() }
                     )
                 ReportingCategory.ZFS ->
                     getZfsGraphs().fold(
                         onSuccess = {
                             listOf(
-                                ReportingGraph.EventsPerSecondGraph(it.actualCacheHitRate),
-                                ReportingGraph.EventsPerSecondGraph(it.arcHitRate),
-                                ReportingGraph.CapacityGraph(it.arcSize),
-                                ReportingGraph.PercentageGraph(it.arcDemandResult),
-                                ReportingGraph.PercentageGraph(it.arcPrefetchResult)
+                                it.actualCacheHitRate,
+                                it.arcHitRate,
+                                it.arcSize,
+                                it.arcDemandResult,
+                                it.arcPrefetchResult
                             )
                         },
                         onFailure = { emptyList() }
@@ -194,40 +177,6 @@ class ReportingOverviewViewModel(
         _availableMetricsState.value = FilterOptionState.NoOptions
         _selectedMetrics.value = emptyList()
     }
-}
-
-sealed interface ReportingGraph {
-    data class TemperatureGraph(
-        val data: GraphData<Temperature>
-    ): ReportingGraph
-
-    data class PercentageGraph(
-        val data: GraphData<Percentage>
-    ): ReportingGraph
-
-    data class ProcessesGraph(
-        val data: GraphData<Float>
-    ): ReportingGraph
-
-    data class CapacityPerSecondGraph(
-        val data: GraphData<Capacity>
-    ): ReportingGraph
-
-    data class CapacityGraph(
-        val data: GraphData<Capacity>
-    ): ReportingGraph
-
-    data class BitrateGraph(
-        val data: GraphData<Bitrate>
-    ): ReportingGraph
-
-    data class DurationGraph(
-        val data: GraphData<Duration>
-    ): ReportingGraph
-
-    data class EventsPerSecondGraph(
-        val data: GraphData<Float>
-    ): ReportingGraph
 }
 
 /**
