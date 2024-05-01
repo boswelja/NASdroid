@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 
@@ -89,6 +90,22 @@ class ReportingOverviewViewModel(
                 async { updateAvailableMetrics() }
             )
             updateFilters.joinAll()
+            updateGraphs()
+        }
+    }
+
+    /**
+     * Toggles whether [device] is selected. This updates [selectedDevices].
+     */
+    fun toggleDeviceSelected(device: String) {
+        _selectedDevices.update {
+            if (it.contains(device)) {
+                it - device
+            } else {
+                it + device
+            }
+        }
+        viewModelScope.launch {
             updateGraphs()
         }
     }

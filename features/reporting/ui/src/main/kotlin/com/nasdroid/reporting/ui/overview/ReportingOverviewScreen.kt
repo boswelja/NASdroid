@@ -40,7 +40,7 @@ fun ReportingOverviewScreen(
         availableDevicesState = availableDevicesState,
         availableMetricsState = availableMetricsState,
         selectedDevices = selectedDevices,
-        onDeviceClick = {},
+        onDeviceClick = viewModel::toggleDeviceSelected,
         selectedMetrics = selectedMetrics,
         onMetricClick = {},
         graphs = graphs,
