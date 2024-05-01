@@ -48,14 +48,14 @@ class GetNetworkGraphsTest {
     }
 
     @Test
-    fun `when zero disks are requested, then result is empty success`() = runTest {
+    fun `when zero interfaces are requested, then result is empty success`() = runTest {
         val result = getNetworkGraphs(emptyList())
 
         assertEquals(StrongResult.success(emptyList()), result)
     }
 
     @Test
-    fun `when one disk is requested, then result is one item success`() = runTest {
+    fun `when one interface is requested, then result is one item success`() = runTest {
         val result = getNetworkGraphs(listOf("eno1"))
 
         assertEquals(

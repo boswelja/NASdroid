@@ -47,7 +47,7 @@ class GetMemoryGraphsTest {
     }
 
     @Test
-    fun `when one disk is requested, then result is two item success`() = runTest {
+    fun `when graphs are requested, then result is two item success`() = runTest {
         val result = getMemoryGraphs()
 
         kotlin.test.assertEquals(

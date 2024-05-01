@@ -48,7 +48,7 @@ class GetCpuGraphsTest {
     }
 
     @Test
-    fun `when one disk is requested, then result is three item success`() = runTest {
+    fun `when graphs are requested, then result is three item success`() = runTest {
         val result = getCpuGraphs()
 
         assertEquals(
