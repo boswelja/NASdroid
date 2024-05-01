@@ -13,13 +13,12 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class GetCpuGraphsTest {
+class GetMemoryGraphsTest {
 
     private lateinit var reportingV2Api: ReportingV2Api
 
-    private lateinit var getCpuGraphs: GetCpuGraphs
+    private lateinit var getMemoryGraphs: GetMemoryGraphs
 
     @BeforeTest
     fun setUp() {
@@ -44,40 +43,31 @@ class GetCpuGraphsTest {
             }
         }
 
-        getCpuGraphs = GetCpuGraphs(reportingV2Api, Dispatchers.Default)
+        getMemoryGraphs = GetMemoryGraphs(reportingV2Api, Dispatchers.Default)
     }
 
     @Test
-    fun `when one disk is requested, then result is three item success`() = runTest {
-        val result = getCpuGraphs()
+    fun `when one disk is requested, then result is two item success`() = runTest {
+        val result = getMemoryGraphs()
 
-        assertEquals(
+        kotlin.test.assertEquals(
             StrongResult.success(
                 listOf(
-                    PercentageGraph(
+                    CapacityGraph(
                         dataSlices = emptyList(),
                         legend = emptyList(),
-                        name = "cpu",
+                        name = "memory",
                         identifier = null,
                         start = Instant.fromEpochSeconds(1714556421),
                         end = Instant.fromEpochSeconds(1714556421)
                     ),
-                    TemperatureGraph(
+                    CapacityGraph(
                         dataSlices = emptyList(),
                         legend = emptyList(),
-                        name = "cputemp",
+                        name = "swap",
                         identifier = null,
                         start = Instant.fromEpochSeconds(1714556421),
                         end = Instant.fromEpochSeconds(1714556421)
-                    ),
-                    FloatGraph(
-                        dataSlices = emptyList(),
-                        legend = emptyList(),
-                        name = "load",
-                        identifier = null,
-                        start = Instant.fromEpochSeconds(1714556421),
-                        end = Instant.fromEpochSeconds(1714556421),
-                        verticalLabel = "Processes"
                     )
                 )
             ),
