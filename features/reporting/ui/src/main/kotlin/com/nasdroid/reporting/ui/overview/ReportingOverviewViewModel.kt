@@ -84,9 +84,9 @@ class ReportingOverviewViewModel(
 
             emit(result)
         }
-        .onEach {
-            if (it is FilterOptionState.HasOptions) {
-                _selectedDevices.value = it.availableOptions
+        .onEach { filterOptionState ->
+            if (filterOptionState is FilterOptionState.HasOptions) {
+                _selectedDevices.value = filterOptionState.availableOptions
             }
         }
         .stateIn(
@@ -148,11 +148,11 @@ class ReportingOverviewViewModel(
      * Toggles whether [device] is selected. This updates [selectedDevices].
      */
     fun toggleDeviceSelected(device: String) {
-        _selectedDevices.update {
-            if (it.contains(device)) {
-                it - device
+        _selectedDevices.update { selectedDevices ->
+            if (selectedDevices.contains(device)) {
+                selectedDevices - device
             } else {
-                it + device
+                selectedDevices + device
             }
         }
     }
