@@ -23,9 +23,11 @@ import com.nasdroid.reporting.logic.graph.TemperatureGraph
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
+import com.patrykandpatrick.vico.compose.cartesian.fullWidth
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
@@ -33,20 +35,32 @@ import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.compose.common.rememberLegendItem
 import com.patrykandpatrick.vico.compose.common.vicoTheme
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
+import com.patrykandpatrick.vico.core.cartesian.HorizontalLayout
 import com.patrykandpatrick.vico.core.cartesian.Scroll
 import com.patrykandpatrick.vico.core.cartesian.axis.AxisItemPlacer
+import com.patrykandpatrick.vico.core.cartesian.data.AxisValueOverrider
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.common.data.ExtraStore
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.sign
 import kotlin.time.DurationUnit
 
 /**
- * Composable function that displays a variety of graphs based on the type of [ReportingGraph] provided.
+ * Composable function that displays a variety of graphs based on the type of [Graph] provided.
  *
- * @param graph Instance of the sealed class [ReportingGraph]. This can be any subtype of
- * [ReportingGraph], such as [ReportingGraph.BitrateGraph], [ReportingGraph.CapacityGraph], etc.
+ * @param graph Instance of the sealed class [Graph]. This can be any subtype of [Graph], such as
+ * [BitrateGraph], [CapacityGraph], etc.
  * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
  */
 @Composable
@@ -54,22 +68,20 @@ fun Graph(
     graph: Graph<*>,
     modifier: Modifier = Modifier
 ) {
-    ProvideVicoTheme(theme = rememberM3VicoTheme()) {
-        when (graph) {
-            is BitrateGraph -> BitrateGraph(graph = graph, modifier = modifier)
-            is CapacityGraph -> CapacityGraph(graph = graph, modifier = modifier)
-            is DurationGraph -> DurationGraph(graph = graph, modifier = modifier)
-            is PercentageGraph -> PercentageGraph(graph = graph, modifier = modifier)
-            is TemperatureGraph -> TemperatureGraph(graph = graph, modifier = modifier)
-            is FloatGraph -> FloatGraph(graph = graph, modifier = modifier)
-        }
+    when (graph) {
+        is BitrateGraph -> BitrateGraph(graph = graph, modifier = modifier)
+        is CapacityGraph -> CapacityGraph(graph = graph, modifier = modifier)
+        is DurationGraph -> DurationGraph(graph = graph, modifier = modifier)
+        is PercentageGraph -> PercentageGraph(graph = graph, modifier = modifier)
+        is TemperatureGraph -> TemperatureGraph(graph = graph, modifier = modifier)
+        is FloatGraph -> FloatGraph(graph = graph, modifier = modifier)
     }
 }
 
 /**
  * Composable function that displays a [BitrateGraph]. This graph shows data in terms of Mibibyte/s.
  *
- * @param graph Instance of the subtype [ReportingGraph.BitrateGraph] representing bitrate data.
+ * @param graph Instance of the subtype [BitrateGraph] representing bitrate data.
  * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
  */
 @Composable
@@ -88,7 +100,7 @@ fun BitrateGraph(
 /**
  * Composable function that displays a [CapacityGraph]. This graph shows data in terms of Gigabytes.
  *
- * @param graph Instance of the subtype [ReportingGraph.CapacityGraph] representing capacity data.
+ * @param graph Instance of the subtype [CapacityGraph] representing capacity data.
  * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
  */
 @Composable
@@ -107,7 +119,7 @@ fun CapacityGraph(
 /**
  * Composable function that displays a [DurationGraph]. This graph shows data in terms of Days.
  *
- * @param graph Instance of the subtype [ReportingGraph.DurationGraph] representing duration data.
+ * @param graph Instance of the subtype [DurationGraph] representing duration data.
  * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
  */
 @Composable
@@ -127,8 +139,7 @@ fun DurationGraph(
  * Composable function that displays an [FloatGraph]. This graph shows data in terms of
  * Events per second.
  *
- * @param graph Instance of the subtype [ReportingGraph.EventsPerSecondGraph] representing events
- * per second data.
+ * @param graph Instance of the subtype [FloatGraph] representing events per second.
  * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
  */
 @Composable
@@ -148,7 +159,7 @@ fun FloatGraph(
  * Composable function that displays a [PercentageGraph]. This graph shows data in terms of
  * percentage (%).
  *
- * @param graph Instance of the subtype [ReportingGraph.PercentageGraph] representing percentage data.
+ * @param graph Instance of the subtype [PercentageGraph] representing percentage data.
  * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
  */
 @Composable
@@ -171,7 +182,7 @@ fun PercentageGraph(
  * Composable function that displays a [TemperatureGraph]. This graph shows data in terms of Celsius
  * (°C).
  *
- * @param graph Instance of the subtype [ReportingGraph.TemperatureGraph] representing temperature
+ * @param graph Instance of the subtype [TemperatureGraph] representing temperature
  * data.
  * @param modifier Modifier to be applied to this composable. Defaults to [Modifier] if not provided.
  */
@@ -184,7 +195,8 @@ fun TemperatureGraph(
         graph = graph,
         dataTransform = { it.toDouble(TemperatureUnit.CELSIUS) },
         verticalLabel = "°C",
-        modifier = modifier
+        modifier = modifier,
+        constraintAtZero = false
     )
 }
 
@@ -195,9 +207,17 @@ internal fun <T> VicoGraph(
     verticalLabel: String,
     modifier: Modifier = Modifier,
     verticalAxisValueFormatter: CartesianValueFormatter = remember { CartesianValueFormatter.decimal() },
+    constraintAtZero: Boolean = true
 ) {
-    val modelProducer = remember(graph.name) {
+    val modelProducer = remember {
         CartesianChartModelProducer.build { }
+    }
+    val timeFormatter = remember {
+        LocalDateTime.Format {
+            hour()
+            char(':')
+            minute()
+        }
     }
     LaunchedEffect(graph, dataTransform) {
         modelProducer.tryRunTransaction {
@@ -217,44 +237,82 @@ internal fun <T> VicoGraph(
             text = graph.name,
             style = MaterialThemeExt.typography.titleMedium,
         )
-        CartesianChartHost(
-            modelProducer = modelProducer,
-            chart = rememberCartesianChart(
-                rememberLineCartesianLayer(),
-                startAxis = rememberStartAxis(
-                    title = verticalLabel,
-                    titleComponent = rememberTextComponent(),
-                    valueFormatter = verticalAxisValueFormatter
-                ),
-                bottomAxis = rememberBottomAxis(
-                    valueFormatter = { value, _, _ ->
-                        graph.dataSlices.getOrNull(value.toInt())?.timestamp
-                            ?.toLocalDateTime(TimeZone.currentSystemDefault())
-                            ?.let {
-                                "${it.hour}:${it.minute}"
+
+        ProvideVicoTheme(theme = rememberM3VicoTheme()) {
+            CartesianChartHost(
+                modelProducer = modelProducer,
+                chart = rememberCartesianChart(
+                    rememberLineCartesianLayer(
+                        axisValueOverrider = remember(constraintAtZero) {
+                            if (constraintAtZero) {
+                                AxisValueOverrider.auto()
+                            } else {
+                                autoNoConstraints()
                             }
-                            .orEmpty()
-                    },
-                    itemPlacer = remember { AxisItemPlacer.Horizontal.default(spacing = 2) }
+                        }
+                    ),
+                    startAxis = rememberStartAxis(
+                        title = verticalLabel,
+                        titleComponent = rememberTextComponent(),
+                        valueFormatter = verticalAxisValueFormatter,
+                    ),
+                    bottomAxis = rememberBottomAxis(
+                        valueFormatter = { value, _, _ ->
+                            graph.dataSlices.getOrNull(value.toInt())?.timestamp
+                                ?.toLocalDateTime(TimeZone.currentSystemDefault())
+                                ?.let {
+                                    timeFormatter.format(it)
+                                }
+                                .orEmpty()
+                        },
+                        itemPlacer = remember { AxisItemPlacer.Horizontal.default(spacing = 2) }
+                    ),
+                    legend = rememberHorizontalLegend(
+                        items = graph.legend.mapIndexed { index, legend ->
+                            rememberLegendItem(
+                                icon = rememberShapeComponent(
+                                    color = vicoTheme
+                                        .lineCartesianLayerColors[index % vicoTheme.lineCartesianLayerColors.size]
+                                ),
+                                label = rememberTextComponent(),
+                                labelText = legend
+                            )
+                        },
+                        iconSize = 8.dp,
+                        iconPadding = MaterialThemeExt.paddings.tiny,
+                        spacing = MaterialThemeExt.paddings.medium
+                    )
                 ),
-                legend = rememberHorizontalLegend(
-                    items = graph.legend.mapIndexed { index, legend ->
-                        rememberLegendItem(
-                            icon = rememberShapeComponent(
-                                color = vicoTheme
-                                    .lineCartesianLayerColors[index % vicoTheme.lineCartesianLayerColors.size]
-                            ),
-                            label = rememberTextComponent(),
-                            labelText = legend
-                        )
-                    },
-                    iconSize = 8.dp,
-                    iconPadding = MaterialThemeExt.paddings.tiny,
-                    spacing = MaterialThemeExt.paddings.medium
-                )
-            ),
-            scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
-            runInitialAnimation = false,
-        )
+                scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
+                runInitialAnimation = false,
+                diffAnimationSpec = null,
+                horizontalLayout = HorizontalLayout.fullWidth(),
+                zoomState = rememberVicoZoomState(false)
+            )
+        }
     }
 }
+
+internal fun autoNoConstraints(): AxisValueOverrider =
+    object : AxisValueOverrider {
+        override fun getMinY(
+            minY: Float,
+            maxY: Float,
+            extraStore: ExtraStore,
+        ) = if (minY == 0f && maxY == 0f) 0f else minY.round(maxY)
+
+        override fun getMaxY(
+            minY: Float,
+            maxY: Float,
+            extraStore: ExtraStore,
+        ) = when {
+            minY == 0f && maxY == 0f -> 1f
+            else -> maxY.round(minY)
+        }
+
+        private fun Float.round(other: Float): Float {
+            val absoluteValue = abs(this)
+            val base = 10f.pow(floor(log10(max(absoluteValue, abs(other)))) - 1)
+            return sign * ceil(absoluteValue / base) * base
+        }
+    }
