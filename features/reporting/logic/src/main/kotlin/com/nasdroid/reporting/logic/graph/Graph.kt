@@ -87,13 +87,11 @@ data class PercentageGraph(
                     .map { data ->
                         val dataNoNulls = data.requireNoNulls()
                         val timestampSeconds = dataNoNulls.first().toLong()
-                        val roundedTimestamp = timestampSeconds - (timestampSeconds % TEMPORAL_AGGREGATION_SECONDS)
                         Graph.DataSlice(
-                            timestamp = Instant.fromEpochSeconds(roundedTimestamp),
+                            timestamp = Instant.fromEpochSeconds(timestampSeconds),
                             data = dataNoNulls.drop(1).map { it.percent }
                         )
-                    }
-                    .distinctBy { it.timestamp },
+                    },
                 legend = legend.drop(1),
                 name = name,
                 identifier = identifier,
@@ -125,13 +123,11 @@ data class TemperatureGraph(
                     .map { data ->
                         val dataNoNulls = data.requireNoNulls()
                         val timestampSeconds = dataNoNulls.first().toLong()
-                        val roundedTimestamp = timestampSeconds - (timestampSeconds % TEMPORAL_AGGREGATION_SECONDS)
                         Graph.DataSlice(
-                            timestamp = Instant.fromEpochSeconds(roundedTimestamp),
+                            timestamp = Instant.fromEpochSeconds(timestampSeconds),
                             data = dataNoNulls.drop(1).map { it.celsius }
                         )
-                    }
-                    .distinctBy { it.timestamp },
+                    },
                 legend = legend.drop(1),
                 name = name,
                 identifier = identifier,
@@ -166,13 +162,11 @@ data class CapacityGraph(
                     .map { data ->
                         val dataNoNulls = data.requireNoNulls()
                         val timestampSeconds = dataNoNulls.first().toLong()
-                        val roundedTimestamp = timestampSeconds - (timestampSeconds % TEMPORAL_AGGREGATION_SECONDS)
                         Graph.DataSlice(
-                            timestamp = Instant.fromEpochSeconds(roundedTimestamp),
+                            timestamp = Instant.fromEpochSeconds(timestampSeconds),
                             data = dataNoNulls.drop(1).map { transform(it) }
                         )
-                    }
-                    .distinctBy { it.timestamp },
+                    },
                 legend = legend.drop(1),
                 name = name,
                 identifier = identifier,
@@ -204,13 +198,11 @@ data class BitrateGraph(
                     .map { data ->
                         val dataNoNulls = data.requireNoNulls()
                         val timestampSeconds = dataNoNulls.first().toLong()
-                        val roundedTimestamp = timestampSeconds - (timestampSeconds % TEMPORAL_AGGREGATION_SECONDS)
                         Graph.DataSlice(
-                            timestamp = Instant.fromEpochSeconds(roundedTimestamp),
+                            timestamp = Instant.fromEpochSeconds(timestampSeconds),
                             data = dataNoNulls.drop(1).map { it.kilobits }
                         )
-                    }
-                    .distinctBy { it.timestamp },
+                    },
                 legend = legend.drop(1),
                 name = name,
                 identifier = identifier,
@@ -245,13 +237,11 @@ data class DurationGraph(
                     .map { data ->
                         val dataNoNulls = data.requireNoNulls()
                         val timestampSeconds = dataNoNulls.first().toLong()
-                        val roundedTimestamp = timestampSeconds - (timestampSeconds % TEMPORAL_AGGREGATION_SECONDS)
                         Graph.DataSlice(
-                            timestamp = Instant.fromEpochSeconds(roundedTimestamp),
+                            timestamp = Instant.fromEpochSeconds(timestampSeconds),
                             data = dataNoNulls.drop(1).map { transform(it) }
                         )
-                    }
-                    .distinctBy { it.timestamp },
+                    },
                 legend = legend.drop(1),
                 name = name,
                 identifier = identifier,
@@ -289,13 +279,11 @@ data class FloatGraph(
                     .map { data ->
                         val dataNoNulls = data.requireNoNulls()
                         val timestampSeconds = dataNoNulls.first().toLong()
-                        val roundedTimestamp = timestampSeconds - (timestampSeconds % TEMPORAL_AGGREGATION_SECONDS)
                         Graph.DataSlice(
-                            timestamp = Instant.fromEpochSeconds(roundedTimestamp),
+                            timestamp = Instant.fromEpochSeconds(timestampSeconds),
                             data = dataNoNulls.drop(1).map { it.toFloat() }
                         )
-                    }
-                    .distinctBy { it.timestamp },
+                    },
                 legend = legend.drop(1),
                 name = name,
                 identifier = identifier,
