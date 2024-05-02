@@ -13,8 +13,6 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-private const val TEMPORAL_AGGREGATION_SECONDS = 30
-
 /**
  * Holds all data needed to display a graph.
  *
