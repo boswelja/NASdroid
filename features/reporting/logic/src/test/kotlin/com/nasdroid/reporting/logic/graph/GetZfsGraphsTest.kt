@@ -1,11 +1,8 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.nasdroid.api.v2.reporting.ReportingGraphData
 import com.nasdroid.api.v2.reporting.ReportingV2Api
-import com.nasdroid.api.v2.reporting.RequestedGraph
-import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import io.mockk.coEvery
+import com.nasdroid.reporting.logic.mockGetGraphData
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
@@ -22,22 +19,7 @@ class GetZfsGraphsTest {
     @BeforeTest
     fun setUp() {
         reportingV2Api = mockk()
-        coEvery {
-            reportingV2Api.getGraphData(not(emptyList()), Units.HOUR, 1)
-        } answers {
-            arg<List<RequestedGraph>>(0).map {
-                ReportingGraphData(
-                    name = it.name,
-                    identifier = it.identifier,
-                    data = emptyList(),
-                    start = 1714556421,
-                    end = 1714556421,
-                    step = null,
-                    legend = emptyList(),
-                    aggregations = null
-                )
-            }
-        }
+        mockGetGraphData(reportingV2Api)
 
         getZfsGraphs = GetZfsGraphs(reportingV2Api, Dispatchers.Default)
     }
