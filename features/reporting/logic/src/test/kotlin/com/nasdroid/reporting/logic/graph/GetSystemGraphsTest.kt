@@ -3,6 +3,7 @@ package com.nasdroid.reporting.logic.graph
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.DEFAULT_VALID_DATA
+import com.nasdroid.reporting.logic.mockInvalidGetGraphData
 import com.nasdroid.reporting.logic.mockValidGetGraphData
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +11,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
 
 class GetSystemGraphsTest {
@@ -49,6 +51,18 @@ class GetSystemGraphsTest {
                     )
                 )
             ),
+            result
+        )
+    }
+
+    @Test
+    fun `given invalid data, when graphs requested, then error invalid data returned`() = runTest {
+        mockInvalidGetGraphData(reportingV2Api)
+
+        val result = getSystemGraphs()
+
+        assertEquals(
+            StrongResult.failure<List<Graph<*>>, ReportingGraphError>(ReportingGraphError.InvalidGraphData),
             result
         )
     }

@@ -7,6 +7,7 @@ import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.DEFAULT_END_SECONDS
 import com.nasdroid.reporting.logic.DEFAULT_START_SECONDS
 import com.nasdroid.reporting.logic.DEFAULT_VALID_DATA
+import com.nasdroid.reporting.logic.mockInvalidGetGraphData
 import com.nasdroid.reporting.logic.mockValidGetGraphData
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -80,6 +81,18 @@ class GetCpuGraphsTest {
                     )
                 )
             ),
+            result
+        )
+    }
+
+    @Test
+    fun `given invalid data, when graphs requested, then error invalid data returned`() = runTest {
+        mockInvalidGetGraphData(reportingV2Api)
+
+        val result = getCpuGraphs()
+
+        assertEquals(
+            StrongResult.failure<List<Graph<*>>, ReportingGraphError>(ReportingGraphError.InvalidGraphData),
             result
         )
     }

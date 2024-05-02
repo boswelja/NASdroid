@@ -36,6 +36,30 @@ fun mockValidGetGraphData(
 }
 
 /**
+ * Mocks [ReportingV2Api.getGraphData] to function with invalid, unexpected graph data.
+ */
+fun mockInvalidGetGraphData(
+    target: ReportingV2Api
+) {
+    mockGetGraphData(target) {
+        ReportingGraphData(
+            name = it.name,
+            identifier = it.identifier,
+            data = listOf(
+                listOf(DEFAULT_START_SECONDS.toDouble(), 1.0, null, 3.0),
+                listOf(DEFAULT_END_SECONDS.toDouble(), null, 3.0, 4.0),
+                emptyList()
+            ),
+            start = DEFAULT_START_SECONDS,
+            end = DEFAULT_END_SECONDS,
+            step = null,
+            legend = emptyList(),
+            aggregations = null
+        )
+    }
+}
+
+/**
  * Mocks [ReportingV2Api.getGraphData] to function as expected. By default, the graphs returned by
  * the mock will have no data.
  */
