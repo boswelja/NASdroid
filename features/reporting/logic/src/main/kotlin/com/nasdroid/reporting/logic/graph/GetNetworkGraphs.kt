@@ -26,6 +26,9 @@ class GetNetworkGraphs(
     suspend operator fun invoke(
         interfaces: List<String>
     ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
+        if (interfaces.isEmpty()) {
+            return@withContext StrongResult.success(emptyList())
+        }
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = interfaces.map {

@@ -13,14 +13,15 @@ import com.nasdroid.reporting.logic.graph.GetSystemGraphs
 import com.nasdroid.reporting.logic.graph.GetZfsGraphs
 import com.nasdroid.reporting.logic.graph.Graph
 import com.nasdroid.reporting.logic.graph.ReportingIdentifiersError
-import kotlinx.coroutines.async
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
 
 /**
  * A ViewModel that provides the necessary data for the reporting dashboard.
@@ -36,11 +37,8 @@ class ReportingOverviewViewModel(
     private val getZfsGraphs: GetZfsGraphs
 ) : ViewModel() {
     private val _category = MutableStateFlow(ReportingCategory.CPU)
-    private val _availableDevicesState = MutableStateFlow<FilterOptionState>(FilterOptionState.NoOptions)
-    private val _availableMetricsState = MutableStateFlow<FilterOptionState>(FilterOptionState.NoOptions)
     private val _selectedDevices = MutableStateFlow<List<String>>(emptyList())
     private val _selectedMetrics = MutableStateFlow<List<String>>(emptyList())
-    private val _graphs = MutableStateFlow<List<Graph<*>>>(emptyList())
 
     /**
      * Flows the currently selected [ReportingCategory].
@@ -55,12 +53,52 @@ class ReportingOverviewViewModel(
     /**
      * Flows a [FilterOptionState] representing the available devices filtering options.
      */
-    val availableDevices: StateFlow<FilterOptionState> = _availableDevicesState
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val availableDevices: StateFlow<FilterOptionState> = _category
+        .transformLatest { reportingCategory ->
+            emit(FilterOptionState.Loading)
+
+            val availableDeviceResult = when (reportingCategory) {
+                ReportingCategory.DISK -> getDisks()
+                ReportingCategory.NETWORK -> getNetworkInterfaces()
+                ReportingCategory.CPU,
+                ReportingCategory.MEMORY,
+                ReportingCategory.SYSTEM,
+                ReportingCategory.ZFS -> null
+            }
+            val result = availableDeviceResult?.fold(
+                onSuccess = { availableDevices ->
+                    if (availableDevices.size <= 1) {
+                        FilterOptionState.NoOptions
+                    } else {
+                        _selectedDevices.value = availableDevices
+                        FilterOptionState.HasOptions(availableDevices)
+                    }
+                },
+                onFailure = { error ->
+                    when (error) {
+                        ReportingIdentifiersError.NoGraphFound -> FilterOptionState.Error.NoGraphFound
+                    }
+                }
+            ) ?: FilterOptionState.NoOptions
+
+            emit(result)
+        }
+        .onEach { filterOptionState ->
+            if (filterOptionState is FilterOptionState.HasOptions) {
+                _selectedDevices.value = filterOptionState.availableOptions
+            }
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            FilterOptionState.Loading
+        )
 
     /**
      * Flows a [FilterOptionState] representing the available metrics filtering options.
      */
-    val availableMetrics: StateFlow<FilterOptionState> = _availableMetricsState
+    val availableMetrics: StateFlow<FilterOptionState> = MutableStateFlow(FilterOptionState.NoOptions)
 
     /**
      * Flows a list of currently selected devices to be filtered by.
@@ -72,91 +110,51 @@ class ReportingOverviewViewModel(
      */
     val selectedMetrics: StateFlow<List<String>> = _selectedMetrics
 
-    val graphs: StateFlow<List<Graph<*>>> = _graphs
-
-    init {
-        setCategory(ReportingCategory.CPU)
-    }
-
     /**
-     * Sets the currently selected category. This triggers an update on [category],
-     * [availableDevices], [availableMetrics], [selectedDevices] and [selectedMetrics].
+     * Flows a list of [Graph]s to be displayed.
      */
-    fun setCategory(category: ReportingCategory) {
-        viewModelScope.launch {
-            _category.value = category
-            val updateFilters = listOf(
-                async { updateAvailableDevices(category) },
-                async { updateAvailableMetrics() }
-            )
-            updateFilters.joinAll()
-            updateGraphs()
-        }
-    }
-
-    /**
-     * Toggles whether [device] is selected. This updates [selectedDevices].
-     */
-    fun toggleDeviceSelected(device: String) {
-        _selectedDevices.update {
-            if (it.contains(device)) {
-                it - device
-            } else {
-                it + device
-            }
-        }
-        viewModelScope.launch {
-            updateGraphs()
-        }
-    }
-
-    private suspend fun updateGraphs() {
-        _graphs.value = emptyList()
-        val newGraphs = when (category.value) {
+    val graphs: StateFlow<List<Graph<*>>> = combineTransform(
+        category,
+        selectedDevices,
+        selectedMetrics
+    ) { category, selectedDevices, _ ->
+        val result = when (category) {
             ReportingCategory.CPU -> getCpuGraphs()
-            ReportingCategory.DISK -> getDiskGraphs(selectedDevices.value)
+            ReportingCategory.DISK -> getDiskGraphs(selectedDevices)
             ReportingCategory.MEMORY -> getMemoryGraphs()
-            ReportingCategory.NETWORK -> getNetworkGraphs(selectedDevices.value)
+            ReportingCategory.NETWORK -> getNetworkGraphs(selectedDevices)
             ReportingCategory.SYSTEM -> getSystemGraphs()
             ReportingCategory.ZFS -> getZfsGraphs()
         }.fold(
             onSuccess = { it },
             onFailure = { emptyList() }
         )
-        _graphs.value = newGraphs
+        emit(result)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.Eagerly,
+        emptyList()
+    )
+
+    /**
+     * Sets the currently selected category. This triggers an update on [category],
+     * [availableDevices], [availableMetrics], [selectedDevices] and [selectedMetrics].
+     */
+    fun setCategory(category: ReportingCategory) {
+        _category.value = category
     }
 
-    private suspend fun updateAvailableDevices(category: ReportingCategory) {
-        _availableDevicesState.value = FilterOptionState.Loading
-        _selectedDevices.value = emptyList()
-        val availableDeviceResult = when (category) {
-            ReportingCategory.DISK -> getDisks()
-            ReportingCategory.NETWORK -> getNetworkInterfaces()
-            ReportingCategory.CPU,
-            ReportingCategory.MEMORY,
-            ReportingCategory.SYSTEM,
-            ReportingCategory.ZFS -> null
-        }
-        _availableDevicesState.value = availableDeviceResult?.fold(
-            onSuccess = { availableDevices ->
-                if (availableDevices.size <= 1) {
-                    FilterOptionState.NoOptions
-                } else {
-                    _selectedDevices.value = availableDevices
-                    FilterOptionState.HasOptions(availableDevices)
-                }
-            },
-            onFailure = {
-                when (it) {
-                    ReportingIdentifiersError.NoGraphFound -> FilterOptionState.Error.NoGraphFound
-                }
+    /**
+     * Toggles whether [device] is selected. This updates [selectedDevices].
+     */
+    fun toggleDeviceSelected(device: String) {
+        _selectedDevices.update { selectedDevices ->
+            if (selectedDevices.contains(device)) {
+                selectedDevices - device
+            } else {
+                selectedDevices + device
             }
-        ) ?: FilterOptionState.NoOptions
-    }
-
-    private fun updateAvailableMetrics() {
-        _availableMetricsState.value = FilterOptionState.NoOptions
-        _selectedMetrics.value = emptyList()
+        }
     }
 }
 

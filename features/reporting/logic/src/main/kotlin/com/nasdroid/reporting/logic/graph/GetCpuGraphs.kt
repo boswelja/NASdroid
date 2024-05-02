@@ -24,18 +24,18 @@ class GetCpuGraphs(
      */
     suspend operator fun invoke():
             StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
-        try {
-            val reportingData = reportingV2Api.getGraphData(
-                graphs = listOf(
-                    RequestedGraph("cpu", null),
-                    RequestedGraph("cputemp", null),
-                    RequestedGraph("load", null)
-                ),
-                unit = Units.HOUR,
-                page = 1
-            )
-            val (cpuGraph, cpuTempGraph, loadGraph) = reportingData
+        val reportingData = reportingV2Api.getGraphData(
+            graphs = listOf(
+                RequestedGraph("cpu", null),
+                RequestedGraph("cputemp", null),
+                RequestedGraph("load", null)
+            ),
+            unit = Units.HOUR,
+            page = 1
+        )
+        val (cpuGraph, cpuTempGraph, loadGraph) = reportingData
 
+        try {
             return@withContext StrongResult.success(
                 listOf(
                     cpuGraph.toPercentageGraph(),

@@ -27,17 +27,21 @@ class GetDiskGraphs(
     suspend operator fun invoke(
         disks: List<String>
     ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
+        if (disks.isEmpty()) {
+            return@withContext StrongResult.success(emptyList())
+        }
+        val reportingData = reportingV2Api.getGraphData(
+            graphs = disks.flatMap {
+                listOf(
+                    RequestedGraph("disk", it),
+                    RequestedGraph("disktemp", it)
+                )
+            },
+            unit = Units.HOUR,
+            page = 1
+        )
+
         try {
-            val reportingData = reportingV2Api.getGraphData(
-                graphs = disks.flatMap {
-                    listOf(
-                        RequestedGraph("disk", it),
-                        RequestedGraph("disktemp", it)
-                    )
-                },
-                unit = Units.HOUR,
-                page = 1
-            )
             val utilisationGraphs = emptyList<CapacityGraph>().toMutableList()
             val temperatureGraphs = emptyList<TemperatureGraph>().toMutableList()
             reportingData.forEach { graph ->
