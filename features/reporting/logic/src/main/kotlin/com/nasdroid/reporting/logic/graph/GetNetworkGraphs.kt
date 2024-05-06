@@ -24,7 +24,8 @@ class GetNetworkGraphs(
      * @param interfaces A list of network interfaces whose utilisation graphs should be retrieved.
      */
     suspend operator fun invoke(
-        interfaces: List<String>
+        interfaces: List<String>,
+        timeframe: GraphTimeframe = GraphTimeframe.Hour
     ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
         if (interfaces.isEmpty()) {
             return@withContext StrongResult.success(emptyList())
@@ -34,7 +35,13 @@ class GetNetworkGraphs(
                 graphs = interfaces.map {
                     RequestedGraph("interface", it)
                 },
-                unit = Units.HOUR,
+                unit = when (timeframe) {
+                    GraphTimeframe.Hour -> Units.HOUR
+                    GraphTimeframe.Day -> Units.DAY
+                    GraphTimeframe.Week -> Units.WEEK
+                    GraphTimeframe.Month -> Units.MONTH
+                    GraphTimeframe.Year -> Units.YEAR
+                },
                 page = 1
             )
 

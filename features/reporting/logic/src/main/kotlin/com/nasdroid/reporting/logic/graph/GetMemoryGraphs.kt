@@ -21,15 +21,22 @@ class GetMemoryGraphs(
      * [ReportingGraphError] if something went wrong. The retrieved data represents the last hour of
      * reporting data.
      */
-    suspend operator fun invoke(): StrongResult<List<Graph<*>>, ReportingGraphError> =
-        withContext(calculationDispatcher) {
+    suspend operator fun invoke(
+        timeframe: GraphTimeframe = GraphTimeframe.Hour
+    ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
             try {
                 val reportingData = reportingV2Api.getGraphData(
                     graphs = listOf(
                         RequestedGraph("memory", null),
                         RequestedGraph("swap", null),
                     ),
-                    unit = Units.HOUR,
+                    unit = when (timeframe) {
+                        GraphTimeframe.Hour -> Units.HOUR
+                        GraphTimeframe.Day -> Units.DAY
+                        GraphTimeframe.Week -> Units.WEEK
+                        GraphTimeframe.Month -> Units.MONTH
+                        GraphTimeframe.Year -> Units.YEAR
+                    },
                     page = 1
                 )
                 val (memoryGraph, swapGraph) = reportingData
