@@ -23,9 +23,11 @@ class GetDiskGraphs(
      * if something went wrong. The retrieved data represents the last hour of reporting data.
      *
      * @param disks A list of disk identifiers whose utilisation graphs should be retrieved.
+     * @param timeframe The frame of time for which the graph data is returned for.
      */
     suspend operator fun invoke(
-        disks: List<String>
+        disks: List<String>,
+        timeframe: GraphTimeframe = GraphTimeframe.Hour
     ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
         if (disks.isEmpty()) {
             return@withContext StrongResult.success(emptyList())
@@ -37,7 +39,13 @@ class GetDiskGraphs(
                     RequestedGraph("disktemp", it)
                 )
             },
-            unit = Units.HOUR,
+            unit = when (timeframe) {
+                GraphTimeframe.Hour -> Units.HOUR
+                GraphTimeframe.Day -> Units.DAY
+                GraphTimeframe.Week -> Units.WEEK
+                GraphTimeframe.Month -> Units.MONTH
+                GraphTimeframe.Year -> Units.YEAR
+            },
             page = 1
         )
 

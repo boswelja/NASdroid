@@ -21,9 +21,12 @@ class GetCpuGraphs(
     /**
      * Retrieves a list of [Graph] that describes all CPU-related graphs, or a [ReportingGraphError]
      * if something went wrong. The retrieved data represents the last hour of reporting data.
+     *
+     * @param timeframe The frame of time for which the graph data is returned for.
      */
-    suspend operator fun invoke():
-            StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
+    suspend operator fun invoke(
+        timeframe: GraphTimeframe = GraphTimeframe.Hour
+    ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
         val reportingData = reportingV2Api.getGraphData(
             graphs = listOf(
                 RequestedGraph("cpu", null),
@@ -31,7 +34,13 @@ class GetCpuGraphs(
                 RequestedGraph("load", null),
                 RequestedGraph("processes", null)
             ),
-            unit = Units.HOUR,
+            unit = when (timeframe) {
+                GraphTimeframe.Hour -> Units.HOUR
+                GraphTimeframe.Day -> Units.DAY
+                GraphTimeframe.Week -> Units.WEEK
+                GraphTimeframe.Month -> Units.MONTH
+                GraphTimeframe.Year -> Units.YEAR
+            },
             page = 1
         )
         val (cpuGraph, cpuTempGraph, loadGraph, processesGraph) = reportingData
