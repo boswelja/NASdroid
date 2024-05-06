@@ -38,19 +38,6 @@ class GetSystemGraphsTest {
         assertEquals(
             StrongResult.success(
                 listOf(
-                    DurationGraph(
-                        dataSlices = DEFAULT_VALID_DATA.map {
-                            Graph.DataSlice(
-                                timestamp = Instant.fromEpochSeconds(it.first().toLong()),
-                                data = it.drop(1).map { it.seconds }
-                            )
-                        },
-                        legend = emptyList(),
-                        name = "uptime",
-                        identifier = null,
-                        start = Instant.fromEpochSeconds(DEFAULT_START_SECONDS),
-                        end = Instant.fromEpochSeconds(DEFAULT_END_SECONDS)
-                    ),
                     FloatGraph(
                         dataSlices = DEFAULT_VALID_DATA.map {
                             Graph.DataSlice(
@@ -64,6 +51,19 @@ class GetSystemGraphsTest {
                         start = Instant.fromEpochSeconds(DEFAULT_START_SECONDS),
                         end = Instant.fromEpochSeconds(DEFAULT_END_SECONDS),
                         verticalLabel = "Processes"
+                    ),
+                    DurationGraph(
+                        dataSlices = DEFAULT_VALID_DATA.map {
+                            Graph.DataSlice(
+                                timestamp = Instant.fromEpochSeconds(it.first().toLong()),
+                                data = it.drop(1).map { it.seconds }
+                            )
+                        },
+                        legend = emptyList(),
+                        name = "uptime",
+                        identifier = null,
+                        start = Instant.fromEpochSeconds(DEFAULT_START_SECONDS),
+                        end = Instant.fromEpochSeconds(DEFAULT_END_SECONDS)
                     )
                 )
             ),
