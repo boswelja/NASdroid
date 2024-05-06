@@ -49,6 +49,10 @@ fun ReportingOverviewScreen(
     )
 }
 
+/**
+ * The content for the "Reporting Overview" screen. This displays a vertical-scrolling grid of
+ * reporting graphs, as well as letting users adjust configurations for displayed data.
+ */
 @Composable
 fun ReportingOverviewContent(
     selectedCategory: ReportingCategory,
