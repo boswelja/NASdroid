@@ -31,7 +31,7 @@ class GetCpuGraphsTest {
     }
 
     @Test
-    fun `given data is valid, when graphs are requested, then result is three item success`() = runTest {
+    fun `given data is valid, when graphs are requested, then result is four item success`() = runTest {
         mockValidGetGraphData(reportingV2Api)
 
         val result = getCpuGraphs()
@@ -74,6 +74,20 @@ class GetCpuGraphsTest {
                         },
                         legend = emptyList(),
                         name = "load",
+                        identifier = null,
+                        start = Instant.fromEpochSeconds(DEFAULT_START_SECONDS),
+                        end = Instant.fromEpochSeconds(DEFAULT_END_SECONDS),
+                        verticalLabel = "Load"
+                    ),
+                    FloatGraph(
+                        dataSlices = DEFAULT_VALID_DATA.map {
+                            Graph.DataSlice(
+                                timestamp = Instant.fromEpochSeconds(it.first().toLong()),
+                                data = it.drop(1).map { it.toFloat() }
+                            )
+                        },
+                        legend = emptyList(),
+                        name = "processes",
                         identifier = null,
                         start = Instant.fromEpochSeconds(DEFAULT_START_SECONDS),
                         end = Instant.fromEpochSeconds(DEFAULT_END_SECONDS),
