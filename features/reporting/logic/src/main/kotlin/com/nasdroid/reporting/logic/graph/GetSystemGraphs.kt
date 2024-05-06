@@ -5,6 +5,7 @@ import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.reporting.logic.graph.DurationGraph.Companion.toDurationGraph
+import com.nasdroid.reporting.logic.graph.FloatGraph.Companion.toFloatGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -26,14 +27,20 @@ class GetSystemGraphs(
             try {
                 val reportingData = reportingV2Api.getGraphData(
                     graphs = listOf(
+                        RequestedGraph("processes", null),
                         RequestedGraph("uptime", null),
                     ),
                     unit = Units.HOUR,
                     page = 1
                 )
-                val (uptimeGraph) = reportingData
+                val (processesGraph, uptimeGraph) = reportingData
 
-                return@withContext StrongResult.success(listOf(uptimeGraph.toDurationGraph()))
+                return@withContext StrongResult.success(
+                    listOf(
+                        processesGraph.toFloatGraph("Processes"),
+                        uptimeGraph.toDurationGraph()
+                    )
+                )
             } catch (_: IllegalArgumentException) {
                 return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
             }

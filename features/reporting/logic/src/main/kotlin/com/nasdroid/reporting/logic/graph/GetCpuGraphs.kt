@@ -28,19 +28,21 @@ class GetCpuGraphs(
             graphs = listOf(
                 RequestedGraph("cpu", null),
                 RequestedGraph("cputemp", null),
-                RequestedGraph("load", null)
+                RequestedGraph("load", null),
+                RequestedGraph("processes", null)
             ),
             unit = Units.HOUR,
             page = 1
         )
-        val (cpuGraph, cpuTempGraph, loadGraph) = reportingData
+        val (cpuGraph, cpuTempGraph, loadGraph, processesGraph) = reportingData
 
         try {
             return@withContext StrongResult.success(
                 listOf(
                     cpuGraph.toPercentageGraph(),
                     cpuTempGraph.toTemperatureGraph(),
-                    loadGraph.toFloatGraph("Processes"),
+                    loadGraph.toFloatGraph("Load"),
+                    processesGraph.toFloatGraph("Processes")
                 )
             )
         } catch (_: IllegalArgumentException) {

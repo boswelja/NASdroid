@@ -2,6 +2,8 @@ package com.nasdroid.reporting.logic.graph
 
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.core.strongresult.StrongResult
+import com.nasdroid.reporting.logic.DEFAULT_END_SECONDS
+import com.nasdroid.reporting.logic.DEFAULT_START_SECONDS
 import com.nasdroid.reporting.logic.DEFAULT_VALID_DATA
 import com.nasdroid.reporting.logic.mockInvalidGetGraphData
 import com.nasdroid.reporting.logic.mockValidGetGraphData
@@ -28,12 +30,12 @@ class GetSystemGraphsTest {
     }
 
     @Test
-    fun `given data is valid, when graphs requested, then result is one item success`() = runTest {
+    fun `given data is valid, when graphs requested, then result is two item success`() = runTest {
         mockValidGetGraphData(reportingV2Api)
 
         val result = getSystemGraphs()
 
-        kotlin.test.assertEquals(
+        assertEquals(
             StrongResult.success(
                 listOf(
                     DurationGraph(
@@ -46,8 +48,22 @@ class GetSystemGraphsTest {
                         legend = emptyList(),
                         name = "uptime",
                         identifier = null,
-                        start = Instant.fromEpochSeconds(1714556421),
-                        end = Instant.fromEpochSeconds(1714556421)
+                        start = Instant.fromEpochSeconds(DEFAULT_START_SECONDS),
+                        end = Instant.fromEpochSeconds(DEFAULT_END_SECONDS)
+                    ),
+                    FloatGraph(
+                        dataSlices = DEFAULT_VALID_DATA.map {
+                            Graph.DataSlice(
+                                timestamp = Instant.fromEpochSeconds(it.first().toLong()),
+                                data = it.drop(1).map { it.toFloat() }
+                            )
+                        },
+                        legend = emptyList(),
+                        name = "processes",
+                        identifier = null,
+                        start = Instant.fromEpochSeconds(DEFAULT_START_SECONDS),
+                        end = Instant.fromEpochSeconds(DEFAULT_END_SECONDS),
+                        verticalLabel = "Processes"
                     )
                 )
             ),
