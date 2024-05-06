@@ -201,6 +201,7 @@ fun TemperatureGraph(
 }
 
 @Composable
+@Suppress("LongMethod") // We don't have much of a choice here unfortunately.
 internal fun <T> VicoGraph(
     graph: Graph<T>,
     dataTransform: (T) -> Number,
