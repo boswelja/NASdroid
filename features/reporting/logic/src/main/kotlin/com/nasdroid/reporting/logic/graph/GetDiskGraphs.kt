@@ -23,6 +23,7 @@ class GetDiskGraphs(
      * if something went wrong. The retrieved data represents the last hour of reporting data.
      *
      * @param disks A list of disk identifiers whose utilisation graphs should be retrieved.
+     * @param timeframe The frame of time for which the graph data is returned for.
      */
     suspend operator fun invoke(
         disks: List<String>,

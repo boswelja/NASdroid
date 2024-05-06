@@ -22,6 +22,7 @@ class GetNetworkGraphs(
      * reporting data.
      *
      * @param interfaces A list of network interfaces whose utilisation graphs should be retrieved.
+     * @param timeframe The frame of time for which the graph data is returned for.
      */
     suspend operator fun invoke(
         interfaces: List<String>,

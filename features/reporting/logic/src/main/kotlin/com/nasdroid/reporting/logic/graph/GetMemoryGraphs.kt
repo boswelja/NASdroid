@@ -20,6 +20,8 @@ class GetMemoryGraphs(
      * Retrieves a list of [Graph] that describes all memory-related graphs, or a
      * [ReportingGraphError] if something went wrong. The retrieved data represents the last hour of
      * reporting data.
+     *
+     * @param timeframe The frame of time for which the graph data is returned for.
      */
     suspend operator fun invoke(
         timeframe: GraphTimeframe = GraphTimeframe.Hour
