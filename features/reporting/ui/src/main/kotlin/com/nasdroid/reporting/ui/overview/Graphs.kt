@@ -275,7 +275,9 @@ internal fun <T> VicoGraph(
                                     color = vicoTheme
                                         .lineCartesianLayerColors[index % vicoTheme.lineCartesianLayerColors.size]
                                 ),
-                                label = rememberTextComponent(),
+                                label = rememberTextComponent(
+                                    color = MaterialThemeExt.colorScheme.onSurface
+                                ),
                                 labelText = legend
                             )
                         },
