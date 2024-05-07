@@ -1,14 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.percentage.Percentage
-import com.boswelja.percentage.Percentage.Companion.percent
-import com.boswelja.temperature.Temperature
-import com.boswelja.temperature.Temperature.Companion.celsius
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.reporting.logic.graph.FloatGraph.Companion.toFloatGraph
+import com.nasdroid.reporting.logic.graph.PercentageGraph.Companion.toPercentageGraph
+import com.nasdroid.reporting.logic.graph.TemperatureGraph.Companion.toTemperatureGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -21,50 +19,43 @@ class GetCpuGraphs(
 ) {
 
     /**
-     * Retrieves a [CpuGraphs] that describes all CPU-related graphs, or a [ReportingGraphError] if
-     * something went wrong. The retrieved data represents the last hour of reporting data.
+     * Retrieves a list of [Graph] that describes all CPU-related graphs, or a [ReportingGraphError]
+     * if something went wrong. The retrieved data represents the last hour of reporting data.
+     *
+     * @param timeframe The frame of time for which the graph data is returned for.
      */
-    suspend operator fun invoke(): StrongResult<CpuGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
+    suspend operator fun invoke(
+        timeframe: GraphTimeframe = GraphTimeframe.Hour
+    ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
+        val reportingData = reportingV2Api.getGraphData(
+            graphs = listOf(
+                RequestedGraph("cpu", null),
+                RequestedGraph("cputemp", null),
+                RequestedGraph("load", null),
+                RequestedGraph("processes", null)
+            ),
+            unit = when (timeframe) {
+                GraphTimeframe.Hour -> Units.HOUR
+                GraphTimeframe.Day -> Units.DAY
+                GraphTimeframe.Week -> Units.WEEK
+                GraphTimeframe.Month -> Units.MONTH
+                GraphTimeframe.Year -> Units.YEAR
+            },
+            page = 1
+        )
+        val (cpuGraph, cpuTempGraph, loadGraph, processesGraph) = reportingData
+
         try {
-            val reportingData = reportingV2Api.getGraphData(
-                graphs = listOf(
-                    RequestedGraph("cpu", null),
-                    RequestedGraph("cputemp", null),
-                    RequestedGraph("load", null)
-                ),
-                unit = Units.HOUR,
-                page = 1
+            return@withContext StrongResult.success(
+                listOf(
+                    cpuGraph.toPercentageGraph(),
+                    cpuTempGraph.toTemperatureGraph(),
+                    loadGraph.toFloatGraph("Load"),
+                    processesGraph.toFloatGraph("Processes")
+                )
             )
-            val (cpuGraph, cpuTempGraph, loadGraph) = reportingData
-
-            val result = CpuGraphs(
-                cpuUsageGraph = cpuGraph.toGraphData { sliceData ->
-                    sliceData.map { dataPoint -> dataPoint.percent }
-                },
-                cpuTempGraph = cpuTempGraph.toGraphData { sliceData ->
-                    sliceData.map { it.celsius }
-                },
-                systemLoadGraph = loadGraph.toGraphData { sliceData ->
-                    sliceData.map { dataPoint -> dataPoint.toFloat() }
-                },
-            )
-
-            return@withContext StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
             return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
-
-/**
- * Holds the state of all CPU-related data.
- *
- * @property cpuUsageGraph Holds all data about CPU utilisation, designed to be shown as a graph.
- * @property cpuTempGraph Holds all data about CPU core temperature, designed to be shown as a graph.
- * @property systemLoadGraph Holds all data about system utilisation, designed to be shown as a graph.
- */
-data class CpuGraphs(
-    val cpuUsageGraph: GraphData<Percentage>,
-    val cpuTempGraph: GraphData<Temperature>,
-    val systemLoadGraph: GraphData<Float>,
-)

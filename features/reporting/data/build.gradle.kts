@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.sqldelight)
 
     alias(libs.plugins.detekt)
 }
 
 android {
-    namespace = "com.nasdroid.reporting.logic"
+    namespace = "com.nasdroid.reporting.data"
 
     buildTypes {
         release {
@@ -28,6 +29,12 @@ kotlin {
     jvmToolchain(17)
 }
 
+sqldelight {
+    databases {
+        create("ReportingDatabase")
+    }
+}
+
 detekt {
     buildUponDefaultConfig = true
     config.setFrom("$rootDir/config/detekt.yml")
@@ -35,21 +42,14 @@ detekt {
 }
 
 dependencies {
-    api(libs.kotlinx.coroutines)
-    api(libs.kotlinx.datetime)
-    api(libs.datatypes.bitrate)
-    api(libs.datatypes.capacity)
-    api(libs.datatypes.percentage)
-    api(libs.datatypes.temperature)
-    api(projects.core.strongResult)
-
-    implementation(projects.core.api)
-    implementation(projects.features.reporting.data)
-
+    implementation(libs.kotlinx.coroutines)
     implementation(libs.koin.core)
 
+    implementation(libs.sqldelight.driver.android)
+    implementation(libs.sqldelight.extensions.coroutines)
+
     testImplementation(libs.kotlin.test)
-    testImplementation(libs.turbine)
-    testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.sqldelight.driver.jvm)
 }

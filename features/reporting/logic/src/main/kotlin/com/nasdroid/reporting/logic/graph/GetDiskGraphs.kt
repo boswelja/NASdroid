@@ -1,14 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.Capacity.Companion.kibibytes
-import com.boswelja.temperature.Temperature
-import com.boswelja.temperature.Temperature.Companion.celsius
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.reporting.logic.graph.CapacityGraph.Companion.toCapacityGraph
+import com.nasdroid.reporting.logic.graph.TemperatureGraph.Companion.toTemperatureGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -21,53 +19,52 @@ class GetDiskGraphs(
 ) {
 
     /**
-     * Retrieves a [DiskGraphs] that describes all disk-related graphs, or a [ReportingGraphError]
+     * Retrieves a list of [Graph] that describes all disk-related graphs, or a [ReportingGraphError]
      * if something went wrong. The retrieved data represents the last hour of reporting data.
      *
      * @param disks A list of disk identifiers whose utilisation graphs should be retrieved.
+     * @param timeframe The frame of time for which the graph data is returned for.
      */
     suspend operator fun invoke(
-        disks: List<String>
-    ): StrongResult<DiskGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
+        disks: List<String>,
+        timeframe: GraphTimeframe = GraphTimeframe.Hour
+    ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
+        if (disks.isEmpty()) {
+            return@withContext StrongResult.success(emptyList())
+        }
+        val reportingData = reportingV2Api.getGraphData(
+            graphs = disks.flatMap {
+                listOf(
+                    RequestedGraph("disk", it),
+                    RequestedGraph("disktemp", it)
+                )
+            },
+            unit = when (timeframe) {
+                GraphTimeframe.Hour -> Units.HOUR
+                GraphTimeframe.Day -> Units.DAY
+                GraphTimeframe.Week -> Units.WEEK
+                GraphTimeframe.Month -> Units.MONTH
+                GraphTimeframe.Year -> Units.YEAR
+            },
+            page = 1
+        )
+
         try {
-            val reportingData = reportingV2Api.getGraphData(
-                graphs = disks.flatMap {
-                    listOf(
-                        RequestedGraph("disk", it),
-                        RequestedGraph("disktemp", it)
-                    )
-                },
-                unit = Units.HOUR,
-                page = 1
-            )
-            val utilisationGraphs = emptyList<GraphData<Capacity>>().toMutableList()
-            val temperatureGraphs = emptyList<GraphData<Temperature>>().toMutableList()
+            val utilisationGraphs = emptyList<CapacityGraph>().toMutableList()
+            val temperatureGraphs = emptyList<TemperatureGraph>().toMutableList()
             reportingData.forEach { graph ->
                 if (graph.name == "disk") {
-                    utilisationGraphs += graph.toGraphData { slice -> slice.map { it.kibibytes } }
+                    utilisationGraphs += graph.toCapacityGraph { it.kibibytes }
                 } else {
-                    temperatureGraphs += graph.toGraphData { slice -> slice.map { it.celsius } }
+                    temperatureGraphs += graph.toTemperatureGraph()
                 }
             }
-            val result = DiskGraphs(
-                diskUtilisations = utilisationGraphs,
-                diskTemperatures = temperatureGraphs
-            )
 
-            return@withContext StrongResult.success(result)
+            return@withContext StrongResult.success(
+                utilisationGraphs + temperatureGraphs
+            )
         } catch (_: IllegalArgumentException) {
             return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
-
-/**
- * Holds the state of all network-related data.
- *
- * @property diskUtilisations Holds utilisation data for all requested disks.
- * @property diskTemperatures Holds temperature data for all requested disks.
- */
-data class DiskGraphs(
-    val diskUtilisations: List<GraphData<Capacity>>,
-    val diskTemperatures: List<GraphData<Temperature>>
-)

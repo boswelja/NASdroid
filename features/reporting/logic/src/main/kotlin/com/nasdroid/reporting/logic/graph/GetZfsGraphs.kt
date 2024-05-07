@@ -1,12 +1,12 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.capacity.Capacity
-import com.boswelja.capacity.Capacity.Companion.mebibytes
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.reporting.logic.graph.CapacityGraph.Companion.toCapacityGraph
+import com.nasdroid.reporting.logic.graph.FloatGraph.Companion.toFloatGraph
+import com.nasdroid.reporting.logic.graph.PercentageGraph.Companion.toPercentageGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -19,11 +19,15 @@ class GetZfsGraphs(
 ) {
 
     /**
-     * Retrieves a [ZfsGraphs] that describes all ZFS-related graphs, or a [ReportingGraphError] if
-     * something went wrong. The retrieved data represents the last hour of reporting data.
+     * Retrieves a list of [Graph] that describes all ZFS-related graphs, or a [ReportingGraphError]
+     * if something went wrong. The retrieved data represents the last hour of reporting data.
+     *
+     * @param timeframe The frame of time for which the graph data is returned for.
      */
     @Suppress("DestructuringDeclarationWithTooManyEntries") // This is intentional here
-    suspend operator fun invoke(): StrongResult<ZfsGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
+    suspend operator fun invoke(
+        timeframe: GraphTimeframe = GraphTimeframe.Hour
+    ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = listOf(
@@ -33,7 +37,13 @@ class GetZfsGraphs(
                     RequestedGraph("arcresult", "demand_data"),
                     RequestedGraph("arcresult", "prefetch_data")
                 ),
-                unit = Units.HOUR,
+                unit = when (timeframe) {
+                    GraphTimeframe.Hour -> Units.HOUR
+                    GraphTimeframe.Day -> Units.DAY
+                    GraphTimeframe.Week -> Units.WEEK
+                    GraphTimeframe.Month -> Units.MONTH
+                    GraphTimeframe.Year -> Units.YEAR
+                },
                 page = 1
             )
             val (
@@ -44,34 +54,17 @@ class GetZfsGraphs(
                 arcResultPrefetchGraph
             ) = reportingData
 
-            val result = ZfsGraphs(
-                actualCacheHitRate = cacheHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
-                arcHitRate = arcHitRateGraph.toGraphData { slice -> slice.map { it.toFloat() } },
-                arcSize = arcSizeGraph.toGraphData { slice -> slice.map { it.mebibytes } },
-                arcDemandResult = arcResultDemandGraph.toGraphData { slice -> slice.map { (it / 100).toFloat() } },
-                arcPrefetchResult = arcResultPrefetchGraph.toGraphData { slice -> slice.map { (it / 100).toFloat() } }
+            return@withContext StrongResult.success(
+                listOf(
+                    cacheHitRateGraph.toFloatGraph("Events/s"),
+                    arcHitRateGraph.toFloatGraph("Events/s"),
+                    arcSizeGraph.toCapacityGraph(),
+                    arcResultDemandGraph.toPercentageGraph(),
+                    arcResultPrefetchGraph.toPercentageGraph()
+                )
             )
-
-            return@withContext StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
             return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
-
-/**
- * Holds the state of all CPU-related data.
- *
- * @property actualCacheHitRate Holds the hit rate of the ZFS cache, measured in events per second.
- * @property arcHitRate The hit rate of the ZFS ARC, measured in events per second.
- * @property arcSize The size of the ZFS ARC.
- * @property arcDemandResult TODO
- * @property arcPrefetchResult TODO
- */
-data class ZfsGraphs(
-    val actualCacheHitRate: GraphData<Float>,
-    val arcHitRate: GraphData<Float>,
-    val arcSize: GraphData<Capacity>,
-    val arcDemandResult: GraphData<Float>,
-    val arcPrefetchResult: GraphData<Float>
-)

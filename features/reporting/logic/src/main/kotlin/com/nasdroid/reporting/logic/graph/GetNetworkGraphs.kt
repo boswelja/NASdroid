@@ -1,12 +1,10 @@
 package com.nasdroid.reporting.logic.graph
 
-import com.boswelja.capacity.Capacity
-import com.boswelja.capacity.Capacity.Companion.kilobytes
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph
 import com.nasdroid.api.v2.reporting.Units
 import com.nasdroid.core.strongresult.StrongResult
-import com.nasdroid.reporting.logic.graph.GraphData.Companion.toGraphData
+import com.nasdroid.reporting.logic.graph.BitrateGraph.Companion.toBitrateGraph
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -19,41 +17,42 @@ class GetNetworkGraphs(
 ) {
 
     /**
-     * Retrieves a [NetworkGraphs] that describes all CPU-related graphs, or a [ReportingGraphError] if
-     * something went wrong. The retrieved data represents the last hour of reporting data.
+     * Retrieves a list of [Graph] that describes all network-related graphs, or a
+     * [ReportingGraphError] if something went wrong. The retrieved data represents the last hour of
+     * reporting data.
      *
      * @param interfaces A list of network interfaces whose utilisation graphs should be retrieved.
+     * @param timeframe The frame of time for which the graph data is returned for.
      */
     suspend operator fun invoke(
-        interfaces: List<String>
-    ): StrongResult<NetworkGraphs, ReportingGraphError> = withContext(calculationDispatcher) {
+        interfaces: List<String>,
+        timeframe: GraphTimeframe = GraphTimeframe.Hour
+    ): StrongResult<List<Graph<*>>, ReportingGraphError> = withContext(calculationDispatcher) {
+        if (interfaces.isEmpty()) {
+            return@withContext StrongResult.success(emptyList())
+        }
         try {
             val reportingData = reportingV2Api.getGraphData(
                 graphs = interfaces.map {
                     RequestedGraph("interface", it)
                 },
-                unit = Units.HOUR,
+                unit = when (timeframe) {
+                    GraphTimeframe.Hour -> Units.HOUR
+                    GraphTimeframe.Day -> Units.DAY
+                    GraphTimeframe.Week -> Units.WEEK
+                    GraphTimeframe.Month -> Units.MONTH
+                    GraphTimeframe.Year -> Units.YEAR
+                },
                 page = 1
             )
-            val result = NetworkGraphs(
+
+            return@withContext StrongResult.success(
                 reportingData.map { graph ->
-                    graph.toGraphData { slice -> slice.map { it.kilobytes } }
+                    graph.toBitrateGraph()
                 }
             )
-
-            return@withContext StrongResult.success(result)
         } catch (_: IllegalArgumentException) {
             return@withContext StrongResult.failure(ReportingGraphError.InvalidGraphData)
         }
     }
 }
-
-/**
- * Holds the state of all network-related data.
- *
- * @property networkInterfaces Holds all data about network interface utilisation, designed to be
- * shown as multiple graph.
- */
-data class NetworkGraphs(
-    val networkInterfaces: List<GraphData<Capacity>>
-)
