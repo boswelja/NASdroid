@@ -56,6 +56,7 @@ fun ModalNavigationDrawerLayout(
                     .fillMaxHeight()
                     .verticalScroll(drawerScrollState),
                 headerContent = headerContent,
+                drawerState = drawerState,
             )
         },
         drawerState = drawerState,
@@ -67,12 +68,14 @@ fun ModalNavigationDrawerLayout(
 
 @Composable
 internal fun TopLevelModalDrawerSheet(
+    drawerState: DrawerState,
     selectedDestination: TopLevelDestination?,
     onClick: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
     headerContent: @Composable () -> Unit = {}
 ) {
     ModalDrawerSheet(
+        drawerState = drawerState,
         modifier = modifier
     ) {
         headerContent()
