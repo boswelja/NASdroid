@@ -16,12 +16,15 @@ enum class NavigationMode {
 }
 
 /**
- * A [CompositionLocal] that provides the current [NavigationMode].
+ * A [ProvidableCompositionLocal] that provides the current [NavigationMode].
  */
 val LocalNavigationMode = compositionLocalOf<NavigationMode> {
     error("Tried accessing LocalNavigationMode before it was set!")
 }
 
+/**
+ * Holds various default states and utilities related to [NavigationMode].
+ */
 object NavigationModeDefaults {
     /**
      * Returns the expected [NavigationMode] according to the provided [WindowAdaptiveInfo].

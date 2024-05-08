@@ -13,6 +13,10 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
+/**
+ * Displays either a [PermanentNavigationDrawer], or a [ModalNavigationDrawer], depending on the
+ * state of [navigationMode].
+ */
 @Composable
 fun NavigationDrawerLayout(
     drawerContent: @Composable ColumnScope.() -> Unit,
@@ -55,10 +59,20 @@ fun NavigationDrawerLayout(
     }
 }
 
-data class ModalDrawerController(
+/**
+ * Holds various functions for controlling the state of the modal navigation drawer provided by
+ * [NavigationDrawerLayout], if possible.
+ *
+ * @property openDrawer Opens the navigation drawer. This will suspend until the animation completes.
+ */
+internal data class ModalDrawerController(
     val openDrawer: suspend () -> Unit,
 )
 
-val LocalModalDrawerController = compositionLocalOf<ModalDrawerController> {
-    error("Attempted to use ModalDrawerController without creating it!")
+/**
+ * Provides a [ModalDrawerController]. The default value throws an exception if there is no drawer,
+ * and a function is called.
+ */
+internal val LocalModalDrawerController = compositionLocalOf {
+    ModalDrawerController { error("No drawer attached!") }
 }
