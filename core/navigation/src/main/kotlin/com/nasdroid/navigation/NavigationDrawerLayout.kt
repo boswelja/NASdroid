@@ -22,8 +22,10 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun NavigationDrawerLayout(
     drawerHeaderContent: @Composable () -> Unit,
+    onNavigationItemClick: (NavigationItem) -> Unit,
     modifier: Modifier = Modifier,
-    drawerItems: List<NavigationItem>,
+    selectedItem: NavigationItem? = LocalSelectedNavigationItem.current,
+    drawerItems: List<NavigationItem> = LocalNavigationDrawerItems.current,
     navigationMode: NavigationMode = LocalNavigationMode.current,
     content: @Composable () -> Unit
 ) {
@@ -33,7 +35,11 @@ fun NavigationDrawerLayout(
                 PermanentDrawerSheet {
                     drawerHeaderContent()
                     drawerItems.forEach { item ->
-                        NavigationDrawerItem(item = item, selected = false, onClick = { /*TODO*/ })
+                        NavigationDrawerItem(
+                            item = item,
+                            selected = item == selectedItem,
+                            onClick = { onNavigationItemClick(item) }
+                        )
                     }
                 }
             },
@@ -55,7 +61,11 @@ fun NavigationDrawerLayout(
                     ModalDrawerSheet(drawerState = drawerState) {
                         drawerHeaderContent()
                         drawerItems.forEach { item ->
-                            NavigationDrawerItem(item = item, selected = false, onClick = { /*TODO*/ })
+                            NavigationDrawerItem(
+                                item = item,
+                                selected = item == selectedItem,
+                                onClick = { onNavigationItemClick(item) }
+                            )
                         }
                     }
                 },

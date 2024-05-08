@@ -35,6 +35,7 @@ fun NavigationSuiteScaffold(
     onNavigationItemClick: (NavigationItem) -> Unit,
     modifier: Modifier = Modifier,
     navigationMode: NavigationMode = LocalNavigationMode.current,
+    selectedItem: NavigationItem? = LocalSelectedNavigationItem.current,
     navigationBarItems: List<NavigationItem> = LocalBottomNavigationItems.current,
     navigationRailItems: List<NavigationItem> = LocalNavigationRailItems.current,
     menuHost: MenuHost = LocalMenuHost.current,
@@ -60,7 +61,7 @@ fun NavigationSuiteScaffold(
                 navigationRailItems.forEach { item ->
                     NavigationRailItem(
                         item = item,
-                        selected = false,
+                        selected = item == selectedItem,
                         onClick = { onNavigationItemClick(item) }
                     )
                 }
@@ -85,7 +86,7 @@ fun NavigationSuiteScaffold(
                         navigationBarItems.forEach { item ->
                             BottomNavigationItem(
                                 item = item,
-                                selected = false,
+                                selected = item == selectedItem,
                                 onClick = { onNavigationItemClick(item) }
                             )
                         }

@@ -31,6 +31,8 @@ internal val LocalNavigationDrawerItems = compositionLocalOf<List<NavigationItem
     emptyList()
 }
 
+internal val LocalSelectedNavigationItem = compositionLocalOf<NavigationItem?> { null }
+
 /**
  * Provides all variants of [NavigationItem]s required to display navigation components. It's
  * required that this is used at least once before [NavigationDrawerLayout] and
@@ -38,12 +40,14 @@ internal val LocalNavigationDrawerItems = compositionLocalOf<List<NavigationItem
  */
 @Composable
 fun ProvideNavigationItems(
+    selectedNavigationItem: NavigationItem,
     bottomNavigationItems: List<NavigationItem>,
     navigationRailItems: List<NavigationItem>,
     navigationDrawerItems: List<NavigationItem>,
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
+        LocalSelectedNavigationItem provides selectedNavigationItem,
         LocalBottomNavigationItems provides bottomNavigationItems,
         LocalNavigationRailItems provides navigationRailItems,
         LocalNavigationDrawerItems provides navigationDrawerItems,
