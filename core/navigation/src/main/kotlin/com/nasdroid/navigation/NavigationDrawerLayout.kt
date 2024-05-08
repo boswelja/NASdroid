@@ -1,17 +1,19 @@
 package com.nasdroid.navigation
 
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 
 /**
  * Displays either a [PermanentNavigationDrawer], or a [ModalNavigationDrawer], depending on the
@@ -19,17 +21,21 @@ import androidx.compose.ui.Modifier
  */
 @Composable
 fun NavigationDrawerLayout(
-    drawerContent: @Composable ColumnScope.() -> Unit,
+    drawerHeaderContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    drawerItems: List<NavigationItem>,
     navigationMode: NavigationMode = LocalNavigationMode.current,
     content: @Composable () -> Unit
 ) {
     if (navigationMode == NavigationMode.PermanentNavigationDrawer) {
         PermanentNavigationDrawer(
             drawerContent = {
-                PermanentDrawerSheet(
-                    content = drawerContent
-                )
+                PermanentDrawerSheet {
+                    drawerHeaderContent()
+                    drawerItems.forEach { item ->
+                        NavigationDrawerItem(item = item, selected = false, onClick = { /*TODO*/ })
+                    }
+                }
             },
             content = content,
             modifier = modifier
@@ -46,10 +52,12 @@ fun NavigationDrawerLayout(
         ) {
             ModalNavigationDrawer(
                 drawerContent = {
-                    ModalDrawerSheet(
-                        drawerState = drawerState,
-                        content = drawerContent
-                    )
+                    ModalDrawerSheet(drawerState = drawerState) {
+                        drawerHeaderContent()
+                        drawerItems.forEach { item ->
+                            NavigationDrawerItem(item = item, selected = false, onClick = { /*TODO*/ })
+                        }
+                    }
                 },
                 drawerState = drawerState,
                 content = content,
@@ -57,6 +65,22 @@ fun NavigationDrawerLayout(
             )
         }
     }
+}
+
+@Composable
+internal fun NavigationDrawerItem(
+    item: NavigationItem,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    androidx.compose.material3.NavigationDrawerItem(
+        icon = { Icon(item.icon, contentDescription = null) },
+        label = { Text(stringResource(item.labelRes)) },
+        selected = selected,
+        onClick = onClick,
+        modifier = modifier
+    )
 }
 
 /**

@@ -1,6 +1,5 @@
 package com.nasdroid.navigation
 
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -10,12 +9,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.boswelja.menuprovider.LocalMenuHost
 import com.boswelja.menuprovider.MenuHost
 import com.boswelja.menuprovider.material3.AnimatedTopAppBarMenuItems
@@ -23,16 +26,17 @@ import kotlinx.coroutines.launch
 
 /**
  * An opinionated Scaffold that determines which mode of navigation is displayed based on
- * [navigationMode].
+ * [navigationMode]. Make sure to call [ProvideNavigationItems] before use!
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationSuiteScaffold(
     title: @Composable () -> Unit,
-    navigationBarContent: @Composable RowScope.() -> Unit,
-    navigationRailContent: @Composable ColumnScope.() -> Unit,
+    onNavigationItemClick: (NavigationItem) -> Unit,
     modifier: Modifier = Modifier,
     navigationMode: NavigationMode = LocalNavigationMode.current,
+    navigationBarItems: List<NavigationItem> = LocalBottomNavigationItems.current,
+    navigationRailItems: List<NavigationItem> = LocalNavigationRailItems.current,
     menuHost: MenuHost = LocalMenuHost.current,
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -51,9 +55,16 @@ fun NavigationSuiteScaffold(
                     ) {
                         Icon(Icons.Default.Menu, contentDescription = "TODO")
                     }
-                },
-                content = navigationRailContent
-            )
+                }
+            ) {
+                navigationRailItems.forEach { item ->
+                    NavigationRailItem(
+                        item = item,
+                        selected = false,
+                        onClick = { onNavigationItemClick(item) }
+                    )
+                }
+            }
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -70,7 +81,15 @@ fun NavigationSuiteScaffold(
         Scaffold(
             bottomBar = {
                 if (navigationMode == NavigationMode.NavigationBar) {
-                    NavigationBar(content = navigationBarContent)
+                    NavigationBar {
+                        navigationBarItems.forEach { item ->
+                            BottomNavigationItem(
+                                item = item,
+                                selected = false,
+                                onClick = { onNavigationItemClick(item) }
+                            )
+                        }
+                    }
                 }
             },
             topBar = {
@@ -91,4 +110,43 @@ fun NavigationSuiteScaffold(
             content = content
         )
     }
+}
+
+@Composable
+internal fun NavigationRailItem(
+    item: NavigationItem,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    androidx.compose.material3.NavigationRailItem(
+        selected = selected,
+        onClick = onClick,
+        icon = { Icon(item.icon, contentDescription = null) },
+        label = { Text(stringResource(item.labelRes)) },
+        modifier = modifier
+    )
+}
+
+@Composable
+internal fun RowScope.BottomNavigationItem(
+    item: NavigationItem,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    NavigationBarItem(
+        selected = selected,
+        onClick = onClick,
+        icon = { Icon(imageVector = item.icon, contentDescription = null) },
+        label = {
+            Text(
+                text = stringResource(item.labelRes),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        alwaysShowLabel = true,
+        modifier = modifier
+    )
 }
