@@ -34,18 +34,18 @@ object NavigationModeDefaults {
      */
     @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     fun calculateFromAdaptiveInfo(adaptiveInfo: WindowAdaptiveInfo): NavigationMode {
-        // TODO Update logic
         return with(adaptiveInfo) {
             if (windowPosture.isTabletop ||
-                windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact
+                windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact ||
+                windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
             ) {
                 NavigationMode.NavigationBar
-            } else if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded ||
-                windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium
+            } else if (windowSizeClass.widthSizeClass <= WindowWidthSizeClass.Expanded ||
+                windowSizeClass.heightSizeClass <= WindowHeightSizeClass.Medium
             ) {
                 NavigationMode.NavigationRail
             } else {
-                NavigationMode.NavigationBar
+                NavigationMode.PermanentNavigationDrawer
             }
         }
     }
