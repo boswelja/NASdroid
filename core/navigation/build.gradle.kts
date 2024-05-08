@@ -39,6 +39,8 @@ detekt {
 }
 
 dependencies {
+    api(libs.compose.menuprovider)
+
     implementation(libs.compose.material3)
     implementation(libs.compose.material3.adaptive)
     implementation(libs.compose.material3.windowsizeclass)
