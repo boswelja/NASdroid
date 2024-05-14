@@ -6,7 +6,6 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
-import kotlin.jvm.JvmName
 
 /**
  * A discriminated union that encapsulates a successful outcome with a value of type [T]
@@ -73,16 +72,12 @@ public value class StrongResult<out T, E> @PublishedApi internal constructor(
         /**
          * Returns an instance that encapsulates the given [value] as successful value.
          */
-        @Suppress("INAPPLICABLE_JVM_NAME")
-        @JvmName("success")
         public fun <R, E> success(value: R): StrongResult<R, E> =
             StrongResult(value)
 
         /**
          * Returns an instance that encapsulates the given [E] [error] as failure.
          */
-        @Suppress("INAPPLICABLE_JVM_NAME")
-        @JvmName("failure")
         public fun <R, E> failure(error: E): StrongResult<R, E> =
             StrongResult(createFailure(error))
     }
