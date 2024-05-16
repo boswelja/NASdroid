@@ -80,6 +80,7 @@ detekt {
 dependencies {
     implementation(projects.core.api)
     implementation(projects.core.design)
+    implementation(projects.core.navigation)
 
     implementation(projects.features.apps.ui)
     implementation(projects.features.auth.ui)

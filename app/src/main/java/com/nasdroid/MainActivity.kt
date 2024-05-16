@@ -33,11 +33,11 @@ import com.nasdroid.auth.ui.selector.DrawerServerSelector
 import com.nasdroid.dashboard.ui.dashboardGraph
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.design.NasDroidTheme
+import com.nasdroid.navigation.NavigationDrawerLayout
 import com.nasdroid.power.ui.PowerOptionsDialog
 import com.nasdroid.reporting.ui.reportingGraph
 import com.nasdroid.storage.ui.storageGraph
 import com.nasdroid.ui.navigation.TopLevelDestination
-import com.nasdroid.ui.navigation.TopLevelNavigation
 
 /**
  * The main entrypoint of the app. See [MainScreen] for content.
@@ -65,43 +65,22 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     windowSizeClass: WindowSizeClass
 ) {
-    val navController = rememberNavController()
-    val currentBackstackEntry by navController.currentBackStackEntryAsState()
     val destinations = remember {
         TopLevelDestination.entries
     }
-    val canNavigateBack = remember(navController, currentBackstackEntry) {
-        navController.previousBackStackEntry != null
-    }
+
+    val navController = rememberNavController()
+    val currentBackstackEntry by navController.currentBackStackEntryAsState()
     val selectedDestination by remember {
         derivedStateOf {
             val currentRoute = currentBackstackEntry?.destination?.parent?.route
             destinations.firstOrNull { it.getRoute() == currentRoute }
         }
     }
-    val isNavigationVisible by remember {
-        derivedStateOf {
-            val currentRoute = currentBackstackEntry?.destination?.parent?.route
-            destinations.any { it.getRoute() == currentRoute }
-        }
-    }
+
     var isPowerOptionsVisible by rememberSaveable { mutableStateOf(false) }
 
-    TopLevelNavigation(
-        windowSizeClass = windowSizeClass,
-        selectedDestination = selectedDestination,
-        navigateTo = { destination ->
-            navController.navigate(destination.getRoute()) {
-                selectedDestination?.getRoute()?.let { selectedDestinationRoute ->
-                    popUpTo(selectedDestinationRoute) {
-                        inclusive = true
-                    }
-                }
-            }
-        },
-        navigationVisible = isNavigationVisible,
-        canNavigateBack = canNavigateBack,
-        navigateBack = navController::popBackStack,
+    NavigationDrawerLayout(
         drawerHeaderContent = {
             DrawerServerSelector(
                 onLogout = {
@@ -120,19 +99,18 @@ fun MainScreen(
                     }
                 }
             )
-        }
+        },
+        onNavigationItemClick = { navController.navigate(it.route) }
     ) {
         MainNavHost(
             navController = navController,
             destinations = destinations,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
+                .fillMaxSize(),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
             windowSizeClass = windowSizeClass,
         )
     }
-
     if (isPowerOptionsVisible) {
         PowerOptionsDialog(
             onDismiss = { isPowerOptionsVisible = false }
