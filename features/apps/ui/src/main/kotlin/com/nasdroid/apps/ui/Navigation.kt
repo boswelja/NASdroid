@@ -40,6 +40,7 @@ fun NavGraphBuilder.appsGraph(
         }
         composable("discover") {
             DiscoverAppsScreen(
+                navigateBack = { navController.popBackStack() },
                 modifier = modifier,
                 contentPadding = contentPadding,
             )
