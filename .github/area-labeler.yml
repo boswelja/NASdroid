@@ -12,6 +12,7 @@ logic:
 ui-ux:
   - features/*/ui/**
   - core/design
+  - core/navigation
 
 core:api:
   - core/api/**
@@ -21,6 +22,8 @@ core:compose-segmentedprogressindicator:
   - core/compose-segmentedprogressindicator/**
 core:design:
   - core/design/**
+core:navigation:
+  - core/navigation/**
 core:strong-result:
   - core/strong-result/**
 

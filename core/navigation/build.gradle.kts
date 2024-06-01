@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nasdroid.dashboard.ui"
+    namespace = "com.nasdroid.navigation"
 
     buildTypes {
         release {
@@ -36,17 +36,9 @@ detekt {
 }
 
 dependencies {
-    implementation(projects.core.design)
-    implementation(projects.core.composeSegmentedprogressindicator)
-    implementation(projects.core.navigation)
-    implementation(projects.features.dashboard.logic)
+    api(libs.compose.menuprovider)
 
-    implementation(libs.androidx.navigation)
-    implementation(libs.bundles.compose)
-    implementation(libs.compose.menuprovider)
-    implementation(libs.vico)
-    debugImplementation(libs.bundles.compose.tooling)
-
-    implementation(libs.koin.android)
-    implementation(libs.koin.android.compose)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material3.adaptive)
+    implementation(libs.compose.material3.windowsizeclass)
 }

@@ -101,8 +101,8 @@ internal fun ServerAddressTextField(
         label = { Text(stringResource(R.string.server_label)) },
         leadingIcon = { Icon(Icons.Default.Dns, contentDescription = null) },
         keyboardOptions = KeyboardOptions(
+            autoCorrectEnabled = false,
             keyboardType = KeyboardType.Uri,
-            autoCorrect = false,
             imeAction = ImeAction.Next
         ),
         singleLine = true,

@@ -77,9 +77,9 @@ internal fun UsernameTextField(
         onValueChange = onUsernameChange,
         label = { Text(stringResource(R.string.username_label)) },
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            autoCorrect = false,
             capitalization = KeyboardCapitalization.None,
+            autoCorrectEnabled = false,
+            keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
         ),
         leadingIcon = {

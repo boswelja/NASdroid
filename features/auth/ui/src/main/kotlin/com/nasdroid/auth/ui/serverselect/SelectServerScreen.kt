@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -49,7 +50,6 @@ fun SelectServerScreen(
     onAddServer: () -> Unit,
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
     viewModel: SelectServerViewModel = koinViewModel()
 ) {
     val authenticatedServers by viewModel.authenticatedServers.collectAsState()
@@ -60,15 +60,17 @@ fun SelectServerScreen(
         }
     }
 
-    SelectServerContent(
-        isLoading = loginState == LoginState.Loading || loginState == LoginState.LoginSuccess,
-        servers = authenticatedServers,
-        onServerClick = viewModel::tryLogIn,
-        onAddServerClick = onAddServer,
-        windowSizeClass = windowSizeClass,
-        modifier = modifier,
-        contentPadding = contentPadding,
-    )
+    Scaffold {
+        SelectServerContent(
+            isLoading = loginState == LoginState.Loading || loginState == LoginState.LoginSuccess,
+            servers = authenticatedServers,
+            onServerClick = viewModel::tryLogIn,
+            onAddServerClick = onAddServer,
+            windowSizeClass = windowSizeClass,
+            modifier = modifier,
+            contentPadding = it,
+        )
+    }
 
     (loginState as? LoginState.Error)?.let {
         SelectServerErrorDialog(onDismissRequest = viewModel::clearPendingEvent, error = it)
