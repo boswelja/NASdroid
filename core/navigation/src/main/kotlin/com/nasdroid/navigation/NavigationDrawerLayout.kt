@@ -1,5 +1,8 @@
 package com.nasdroid.navigation
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
@@ -14,6 +17,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
 /**
  * Displays either a [PermanentNavigationDrawer], or a [ModalNavigationDrawer], depending on the
@@ -34,11 +38,13 @@ fun NavigationDrawerLayout(
             drawerContent = {
                 PermanentDrawerSheet {
                     drawerHeaderContent()
+                    Spacer(Modifier.height(16.dp))
                     drawerItems.forEach { item ->
                         NavigationDrawerItem(
                             item = item,
                             selected = item == selectedItem,
-                            onClick = { onNavigationItemClick(item) }
+                            onClick = { onNavigationItemClick(item) },
+                            modifier = Modifier.padding(horizontal = 12.dp)
                         )
                     }
                 }
@@ -60,11 +66,13 @@ fun NavigationDrawerLayout(
                 drawerContent = {
                     ModalDrawerSheet(drawerState = drawerState) {
                         drawerHeaderContent()
+                        Spacer(Modifier.height(16.dp))
                         drawerItems.forEach { item ->
                             NavigationDrawerItem(
                                 item = item,
                                 selected = item == selectedItem,
-                                onClick = { onNavigationItemClick(item) }
+                                onClick = { onNavigationItemClick(item) },
+                                modifier = Modifier.padding(horizontal = 12.dp)
                             )
                         }
                     }

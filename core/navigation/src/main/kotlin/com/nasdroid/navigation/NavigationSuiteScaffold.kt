@@ -3,6 +3,8 @@ package com.nasdroid.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import com.boswelja.menuprovider.LocalMenuHost
 import com.boswelja.menuprovider.MenuHost
 import com.boswelja.menuprovider.material3.AnimatedTopAppBarMenuItems
@@ -91,6 +94,7 @@ fun NavigationSuiteScaffold(
             bottomBar = {
                 if (navigationMode == NavigationMode.NavigationBar) {
                     NavigationBar {
+                        Spacer(Modifier.width(12.dp))
                         navigationBarItems.forEach { item ->
                             BottomNavigationItem(
                                 item = item,
@@ -98,6 +102,7 @@ fun NavigationSuiteScaffold(
                                 onClick = { /* TODO */ }
                             )
                         }
+                        Spacer(Modifier.width(8.dp))
                     }
                 }
             },
