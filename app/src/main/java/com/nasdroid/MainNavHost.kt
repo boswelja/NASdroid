@@ -26,7 +26,11 @@ fun MainNavHost(
         startDestination = "dashboard",
         modifier = modifier
     ) {
-        dashboardGraph(route = "dashboard", contentPadding = contentPadding)
+        dashboardGraph(
+            route = "dashboard",
+            contentPadding = contentPadding,
+            navController = navController
+        )
         storageGraph(
             navController = navController,
             windowSizeClass = windowSizeClass,
@@ -41,7 +45,8 @@ fun MainNavHost(
         )
         reportingGraph(
             route = "reporting",
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
+            navController = navController
         )
     }
 }

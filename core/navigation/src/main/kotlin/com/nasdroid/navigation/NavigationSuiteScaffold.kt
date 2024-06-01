@@ -16,10 +16,13 @@ import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,6 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NavigationSuiteScaffold(
     title: @Composable () -> Unit,
+    onNavigate: (route: String) -> Unit,
     modifier: Modifier = Modifier,
     navigationMode: NavigationMode = LocalNavigationMode.current,
     selectedItem: NavigationItem? = LocalSelectedNavigationItem.current,
@@ -52,6 +56,7 @@ fun NavigationSuiteScaffold(
             content(paddingValues)
         }
     }
+    val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     if (navigationMode == NavigationMode.NavigationRail) {
         val coroutineScope = rememberCoroutineScope()
         val modalDrawerController = LocalModalDrawerController.current
@@ -73,7 +78,7 @@ fun NavigationSuiteScaffold(
                     NavigationRailItem(
                         item = item,
                         selected = item == selectedItem,
-                        onClick = { /* TODO */ }
+                        onClick = { onNavigate(item.route) }
                     )
                 }
             }
@@ -83,9 +88,11 @@ fun NavigationSuiteScaffold(
                         title = title,
                         actions = {
                             AnimatedTopAppBarMenuItems(menuHost = menuHost)
-                        }
+                        },
+                        scrollBehavior = topBarScrollBehavior
                     )
                 },
+                modifier = Modifier.nestedScroll(topBarScrollBehavior.nestedScrollConnection),
                 content = contentWithProviders
             )
         }
@@ -99,7 +106,7 @@ fun NavigationSuiteScaffold(
                             BottomNavigationItem(
                                 item = item,
                                 selected = item == selectedItem,
-                                onClick = { /* TODO */ }
+                                onClick = { onNavigate(item.route) }
                             )
                         }
                         Spacer(Modifier.width(8.dp))
@@ -108,19 +115,20 @@ fun NavigationSuiteScaffold(
             },
             topBar = {
                 if (navigationMode == NavigationMode.PermanentNavigationDrawer) {
-                    // A permanent navigation drawer cannot be opened or closed, s owe don't show the
+                    // A permanent navigation drawer cannot be opened or closed, so we don't show the
                     // option
                     TopAppBar(
                         title = title,
                         actions = {
                             AnimatedTopAppBarMenuItems(menuHost = menuHost)
-                        }
+                        },
+                        scrollBehavior = topBarScrollBehavior
                     )
                 } else {
-                    NavigableTopAppBar(title = title, menuHost = menuHost)
+                    NavigableTopAppBar(title = title, menuHost = menuHost, scrollBehavior = topBarScrollBehavior)
                 }
             },
-            modifier = modifier,
+            modifier = modifier.nestedScroll(topBarScrollBehavior.nestedScrollConnection),
             content = contentWithProviders
         )
     }

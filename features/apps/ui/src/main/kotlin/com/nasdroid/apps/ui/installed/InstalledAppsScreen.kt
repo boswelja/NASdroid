@@ -46,6 +46,7 @@ fun InstalledAppsScreen(
 ) {
     NavigationSuiteScaffold(
         title = { Text("Installed Apps") },
+        onNavigate = onNavigate,
         modifier = modifier
     ) {
         if (windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium) {

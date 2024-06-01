@@ -1,6 +1,9 @@
 package com.nasdroid.apps.ui.discover
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -59,6 +62,7 @@ fun DiscoverAppsScreen(
     var isFilterSettingsVisible by rememberSaveable { mutableStateOf(false) }
     AnimatedContent(
         targetState = isFilterLoading || isAppListLoading,
+        transitionSpec = { fadeIn() togetherWith fadeOut() },
         label = ""
     ) { isLoading ->
         if (isLoading) {

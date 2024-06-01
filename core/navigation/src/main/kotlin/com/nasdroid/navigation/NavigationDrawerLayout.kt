@@ -15,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
 /**
  * Displays either a [PermanentNavigationDrawer], or a [ModalNavigationDrawer], depending on the
@@ -59,6 +61,7 @@ fun NavigationDrawerLayout(
                 openDrawer = drawerState::open
             )
         }
+        val coroutineScope = rememberCoroutineScope()
         CompositionLocalProvider(
             LocalModalDrawerController provides controller
         ) {
@@ -71,7 +74,10 @@ fun NavigationDrawerLayout(
                             NavigationDrawerItem(
                                 item = item,
                                 selected = item == selectedItem,
-                                onClick = { onNavigationItemClick(item) },
+                                onClick = {
+                                    onNavigationItemClick(item)
+                                    coroutineScope.launch { drawerState.close() }
+                                },
                                 modifier = Modifier.padding(horizontal = 12.dp)
                             )
                         }

@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.navigation.NavigationSuiteScaffold
 import com.nasdroid.reporting.logic.graph.Graph
@@ -25,6 +26,7 @@ import org.koin.androidx.compose.koinViewModel
  */
 @Composable
 fun ReportingOverviewScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: ReportingOverviewViewModel = koinViewModel()
@@ -37,7 +39,8 @@ fun ReportingOverviewScreen(
     val graphs by viewModel.graphs.collectAsState()
 
     NavigationSuiteScaffold(
-        title = { Text("Reporting") }
+        title = { Text("Reporting") },
+        onNavigate = { navController.navigate(it) }
     ) {
         ReportingOverviewContent(
             selectedCategory = selectedCategory,

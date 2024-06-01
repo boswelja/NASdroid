@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.dashboard.logic.configuration.DashboardItem
@@ -38,6 +39,7 @@ import org.koin.androidx.compose.koinViewModel
  */
 @Composable
 fun DashboardOverviewScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: OverviewViewModel = koinViewModel()
@@ -49,6 +51,7 @@ fun DashboardOverviewScreen(
     }
     NavigationSuiteScaffold(
         title = { Text("Dashboard") },
+        onNavigate = { navController.navigate(it) },
         modifier = modifier
     ) {
         items?.getOrNull()?.let { dashboardItems ->
