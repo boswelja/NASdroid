@@ -1,6 +1,5 @@
 package com.nasdroid.auth.ui
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
@@ -19,7 +18,6 @@ fun NavGraphBuilder.authNavigation(
     windowSizeClass: WindowSizeClass,
     onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
 ) {
     navigation(
         startDestination = "picker",
@@ -32,7 +30,6 @@ fun NavGraphBuilder.authNavigation(
                     navController.navigate("addServer")
                 },
                 modifier = modifier,
-                contentPadding = contentPadding,
                 windowSizeClass = windowSizeClass,
             )
         }
@@ -43,8 +40,8 @@ fun NavGraphBuilder.authNavigation(
                         popUpTo("picker")
                     }
                 },
+                onNavigateBack = { navController.popBackStack() },
                 modifier = modifier,
-                contentPadding = contentPadding,
                 windowSizeClass = windowSizeClass,
             )
         }

@@ -6,11 +6,13 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.nasdroid.core.logviewer.LogViewer
+import com.nasdroid.navigation.BackNavigationScaffold
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -43,20 +46,28 @@ fun LogsScreen(
         mutableStateOf(selectedLogOption == null)
     }
 
-    AnimatedContent(
-        targetState = logs,
-        label = "Log transition",
-        transitionSpec = { fadeIn() togetherWith fadeOut() }
-    ) { currentLogs ->
-        if (currentLogs != null) {
-            LogViewer(
-                logContents = currentLogs,
-                modifier = modifier,
-                contentPadding = contentPadding
-            )
-        } else {
-            Box(modifier = modifier) {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+    BackNavigationScaffold(
+        title = {
+            Text("Logs")
+        },
+        onNavigateBack = {},
+        modifier = modifier
+    ) {
+        AnimatedContent(
+            targetState = logs,
+            label = "Log transition",
+            transitionSpec = { fadeIn() togetherWith fadeOut() }
+        ) { currentLogs ->
+            if (currentLogs != null) {
+                LogViewer(
+                    logContents = currentLogs,
+                    modifier = Modifier.fillMaxSize().padding(it),
+                    contentPadding = contentPadding
+                )
+            } else {
+                Box(modifier = Modifier.fillMaxSize().padding(it)) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
             }
         }
     }
