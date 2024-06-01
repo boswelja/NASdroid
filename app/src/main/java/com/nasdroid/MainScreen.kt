@@ -36,10 +36,10 @@ import androidx.navigation.compose.rememberNavController
 import com.nasdroid.auth.ui.selector.DrawerServerSelector
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.navigation.LocalNavigationMode
-import com.nasdroid.navigation.NavigationDrawerLayout
 import com.nasdroid.navigation.NavigationItem
 import com.nasdroid.navigation.NavigationModeDefaults.calculateFromAdaptiveInfo
 import com.nasdroid.navigation.ProvideNavigationItems
+import com.nasdroid.navigation.drawer.NavigationDrawerLayout
 import com.nasdroid.power.ui.PowerOptionsDialog
 
 internal val NavigationDrawerItems = listOf(

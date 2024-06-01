@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import com.boswelja.menuprovider.LocalMenuHost
 import com.boswelja.menuprovider.MenuHost
 import com.boswelja.menuprovider.material3.AnimatedTopAppBarMenuItems
-import com.nasdroid.navigation.LocalModalDrawerController
-import com.nasdroid.navigation.ModalDrawerController
+import com.nasdroid.navigation.drawer.LocalModalDrawerController
+import com.nasdroid.navigation.drawer.ModalDrawerController
 
 /**
  * An opinionated TopAppBar that allows the user to open a modal navigation drawer via its

@@ -58,9 +58,7 @@ fun NavigationSuiteScaffold(
                 topBar = {
                     TopAppBar(
                         title = title,
-                        actions = {
-                            AnimatedTopAppBarMenuItems(menuHost = menuHost)
-                        },
+                        actions = { AnimatedTopAppBarMenuItems(menuHost = menuHost) },
                         scrollBehavior = topBarScrollBehavior
                     )
                 },

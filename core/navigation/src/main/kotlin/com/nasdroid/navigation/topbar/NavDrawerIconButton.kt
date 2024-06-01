@@ -7,7 +7,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.nasdroid.navigation.ModalDrawerController
+import com.nasdroid.navigation.drawer.ModalDrawerController
 import kotlinx.coroutines.launch
 
 @Composable
