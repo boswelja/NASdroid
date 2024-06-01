@@ -49,7 +49,6 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun InstalledAppsOverviewScreen(
     onAppClick: (appName: String) -> Unit,
-    onNavigate: (route: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: InstalledAppsOverviewViewModel = koinViewModel()
@@ -99,16 +98,6 @@ fun InstalledAppsOverviewScreen(
             item {
                 Spacer(Modifier.height(56.dp)) // TODO Don't use Spacer for extended FAB padding
             }
-        }
-
-        ExtendedFloatingActionButton(
-            onClick = { onNavigate("discover") },
-            modifier = Modifier
-                .padding(contentPadding)
-                .align(Alignment.BottomEnd)
-        ) {
-            Icon(Icons.Default.GetApp, contentDescription = null)
-            Text("Discover Apps")
         }
     }
 }

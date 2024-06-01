@@ -41,7 +41,6 @@ fun MainNavHost(
             windowSizeClass = windowSizeClass,
             navController = navController,
             route = "apps",
-            contentPadding = contentPadding
         )
         reportingGraph(
             route = "reporting",

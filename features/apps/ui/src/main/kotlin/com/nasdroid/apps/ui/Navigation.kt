@@ -22,7 +22,6 @@ fun NavGraphBuilder.appsGraph(
     navController: NavController,
     route: String,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
 ) {
     navigation(
         startDestination = "installed",
@@ -35,14 +34,12 @@ fun NavGraphBuilder.appsGraph(
                     navController.navigate(route)
                 },
                 modifier = modifier,
-                contentPadding = contentPadding,
             )
         }
         composable("discover") {
             DiscoverAppsScreen(
                 navigateBack = { navController.popBackStack() },
                 modifier = modifier,
-                contentPadding = contentPadding,
             )
         }
         composable(
@@ -54,10 +51,7 @@ fun NavGraphBuilder.appsGraph(
                 }
             )
         ) {
-            LogsScreen(
-                modifier = modifier,
-                contentPadding = contentPadding
-            )
+            LogsScreen(modifier = modifier)
         }
         composable(
             route = "details/{appName}",
@@ -73,7 +67,6 @@ fun NavGraphBuilder.appsGraph(
                     navController.popBackStack()
                 },
                 modifier = modifier,
-                contentPadding = contentPadding
             )
         }
     }

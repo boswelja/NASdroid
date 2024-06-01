@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.GetApp
 import androidx.compose.material.icons.twotone.Image
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -42,10 +44,17 @@ fun InstalledAppsScreen(
     windowSizeClass: WindowSizeClass,
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
 ) {
     NavigationSuiteScaffold(
         title = { Text("Installed Apps") },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = { onNavigate("discover") }
+            ) {
+                Icon(Icons.Default.GetApp, contentDescription = null)
+                Text("Discover Apps")
+            }
+        },
         onNavigate = onNavigate,
         modifier = modifier
     ) {
@@ -57,11 +66,10 @@ fun InstalledAppsScreen(
                     onAppClick = {
                         detailsViewModel.setAppName(it)
                     },
-                    onNavigate = onNavigate,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
-                    contentPadding = contentPadding,
+                    contentPadding = PaddingValues(horizontal = 16.dp)
                 )
                 VerticalDivider()
                 AnimatedContent(
@@ -74,15 +82,10 @@ fun InstalledAppsScreen(
                         InstalledAppDetailsScreen(
                             navigateUp = { detailsViewModel.setAppName(null) },
                             modifier = Modifier.fillMaxSize(),
-                            contentPadding = contentPadding,
                             viewModel = detailsViewModel
                         )
                     } else {
-                        SelectAppHint(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(contentPadding)
-                        )
+                        SelectAppHint(modifier = Modifier.fillMaxSize())
                     }
                 }
             }
@@ -91,9 +94,8 @@ fun InstalledAppsScreen(
                 onAppClick = {
                     onNavigate("details/$it")
                 },
-                onNavigate = onNavigate,
                 modifier = Modifier.padding(it),
-                contentPadding = contentPadding,
+                contentPadding = PaddingValues(horizontal = 16.dp)
             )
         }
     }

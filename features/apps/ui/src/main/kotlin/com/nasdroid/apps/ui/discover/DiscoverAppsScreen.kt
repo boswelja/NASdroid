@@ -21,16 +21,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.discover.AvailableApp
 import com.nasdroid.apps.logic.discover.SortMode
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.navigation.BackNavigationScaffold
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -57,7 +52,6 @@ import org.koin.androidx.compose.koinViewModel
 fun DiscoverAppsScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
     viewModel: DiscoverAppsViewModel = koinViewModel()
 ) {
     val isFilterLoading by viewModel.isFilterLoading.collectAsState()
@@ -68,20 +62,10 @@ fun DiscoverAppsScreen(
     val sortMode by viewModel.sortMode.collectAsState()
 
     var isFilterSettingsVisible by rememberSaveable { mutableStateOf(false) }
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text("Discover Apps")
-                },
-                navigationIcon = {
-                    IconButton(onClick = navigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
-                    }
-                }
-            )
-        }
+    BackNavigationScaffold(
+        title = { Text("Discover Apps") },
+        onNavigateBack = navigateBack,
+        modifier = modifier
     ) {
         AnimatedContent(
             targetState = isFilterLoading || isAppListLoading,
@@ -92,17 +76,8 @@ fun DiscoverAppsScreen(
                 Box(modifier = Modifier.fillMaxSize().padding(it), contentAlignment = Alignment.Center
                 ) { CircularProgressIndicator() }
             } else {
-                val layoutDirection = LocalLayoutDirection.current
-                val cellPadding = PaddingValues(
-                    start = contentPadding.calculateStartPadding(layoutDirection),
-                    end = contentPadding.calculateEndPadding(layoutDirection)
-                )
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(it),
-                    contentPadding = PaddingValues(
-                        top = contentPadding.calculateTopPadding(),
-                        bottom = contentPadding.calculateBottomPadding()
-                    ),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
@@ -114,20 +89,20 @@ fun DiscoverAppsScreen(
                             catalogFilters = catalogFiltering,
                             onRemoveSelectedCategory = viewModel::removeSelectedCategory,
                             selectedCategories = selectedCategories,
-                            contentPadding = cellPadding
+                            contentPadding = PaddingValues(horizontal = 16.dp)
                         )
                     }
                     items(availableAppGroups) { appGroup ->
                         Text(
                             text = appGroup.groupTitle,
                             style = MaterialThemeExt.typography.titleLarge,
-                            modifier = Modifier.padding(cellPadding)
+                            modifier = Modifier.padding(horizontal = 16.dp)
                         )
                         Spacer(Modifier.height(4.dp))
                         LazyHorizontalAppList(
                             apps = appGroup.apps,
                             cellSize = DpSize(width = 300.dp, height = 120.dp),
-                            contentPadding = cellPadding,
+                            contentPadding = PaddingValues(horizontal = 16.dp),
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
