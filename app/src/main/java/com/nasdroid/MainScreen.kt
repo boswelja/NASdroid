@@ -1,3 +1,4 @@
+@file:Suppress("StringLiteralDuplication") // No plans to deal with this at the moment.
 package com.nasdroid
 
 import androidx.compose.foundation.layout.PaddingValues

@@ -77,7 +77,7 @@ fun RegisterServerScreen(
         title = { Text("Add Server") },
         onNavigateBack = onNavigateBack,
         modifier = modifier
-    ) {
+    ) { contentPadding ->
         RegisterServerContent(
             serverAddress = serverAddress,
             onServerAddressChange = { newAuthData ->
@@ -110,7 +110,7 @@ fun RegisterServerScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
-            contentPadding = it,
+            contentPadding = contentPadding,
             loading = isLoading,
             serverAddressError = registerState is RegisterState.AddressError,
             authDataError = registerState is RegisterState.AuthError

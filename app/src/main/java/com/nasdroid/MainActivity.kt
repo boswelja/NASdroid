@@ -32,6 +32,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * The main app content, including authentication and post-auth content.
+ */
 @Composable
 fun AppContent(windowSizeClass: WindowSizeClass) {
     val navController = rememberNavController()
