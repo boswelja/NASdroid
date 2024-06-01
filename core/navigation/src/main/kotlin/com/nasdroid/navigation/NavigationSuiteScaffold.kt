@@ -3,34 +3,26 @@ package com.nasdroid.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import com.boswelja.menuprovider.LocalMenuHost
 import com.boswelja.menuprovider.MenuHost
+import com.boswelja.menuprovider.ProvideMenuHost
 import com.boswelja.menuprovider.material3.AnimatedTopAppBarMenuItems
 import com.boswelja.menuprovider.rememberCumulativeMenuHost
-import kotlinx.coroutines.launch
+import com.nasdroid.navigation.navbar.BottomNavBar
+import com.nasdroid.navigation.navrail.StartNavRail
+import com.nasdroid.navigation.topbar.NavigableTopAppBar
 
 /**
  * An opinionated Scaffold that determines which mode of navigation is displayed based on
@@ -50,38 +42,18 @@ fun NavigationSuiteScaffold(
     content: @Composable (PaddingValues) -> Unit
 ) {
     val contentWithProviders = @Composable { paddingValues: PaddingValues ->
-        CompositionLocalProvider(
-            LocalMenuHost provides menuHost
-        ) {
+        ProvideMenuHost(menuHost) {
             content(paddingValues)
         }
     }
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     if (navigationMode.secondaryNavigationMode == SecondaryNavigationMode.Rail) {
-        val coroutineScope = rememberCoroutineScope()
-        val modalDrawerController = LocalModalDrawerController.current
         Row(modifier) {
-            NavigationRail(
-                header = {
-                    IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                modalDrawerController.openDrawer()
-                            }
-                        }
-                    ) {
-                        Icon(Icons.Default.Menu, contentDescription = "TODO")
-                    }
-                }
-            ) {
-                navigationRailItems.forEach { item ->
-                    NavigationRailItem(
-                        item = item,
-                        selected = item == selectedItem,
-                        onClick = { onNavigate(item.route) }
-                    )
-                }
-            }
+            StartNavRail(
+                items = navigationRailItems,
+                selectedItem = selectedItem,
+                onItemClick = { onNavigate(it.route) }
+            )
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -100,17 +72,11 @@ fun NavigationSuiteScaffold(
         Scaffold(
             bottomBar = {
                 if (navigationMode.secondaryNavigationMode == SecondaryNavigationMode.Bar) {
-                    NavigationBar {
-                        Spacer(Modifier.width(12.dp))
-                        navigationBarItems.forEach { item ->
-                            BottomNavigationItem(
-                                item = item,
-                                selected = item == selectedItem,
-                                onClick = { onNavigate(item.route) }
-                            )
-                        }
-                        Spacer(Modifier.width(8.dp))
-                    }
+                    BottomNavBar(
+                        items = navigationBarItems,
+                        selectedItem = selectedItem,
+                        onItemClick = { onNavigate(it.route) }
+                    )
                 }
             },
             topBar = {
@@ -119,9 +85,7 @@ fun NavigationSuiteScaffold(
                     // option
                     TopAppBar(
                         title = title,
-                        actions = {
-                            AnimatedTopAppBarMenuItems(menuHost = menuHost)
-                        },
+                        actions = { AnimatedTopAppBarMenuItems(menuHost = menuHost) },
                         scrollBehavior = topBarScrollBehavior
                     )
                 } else {
