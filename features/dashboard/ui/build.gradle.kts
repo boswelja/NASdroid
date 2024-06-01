@@ -38,6 +38,7 @@ detekt {
 dependencies {
     implementation(projects.core.design)
     implementation(projects.core.composeSegmentedprogressindicator)
+    implementation(projects.core.navigation)
     implementation(projects.features.dashboard.logic)
 
     implementation(libs.androidx.navigation)

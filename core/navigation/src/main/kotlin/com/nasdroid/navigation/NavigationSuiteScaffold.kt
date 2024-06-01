@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.boswelja.menuprovider.LocalMenuHost
 import com.boswelja.menuprovider.MenuHost
 import com.boswelja.menuprovider.material3.AnimatedTopAppBarMenuItems
+import com.boswelja.menuprovider.rememberCumulativeMenuHost
 import kotlinx.coroutines.launch
 
 /**
@@ -32,15 +34,21 @@ import kotlinx.coroutines.launch
 @Composable
 fun NavigationSuiteScaffold(
     title: @Composable () -> Unit,
-    onNavigationItemClick: (NavigationItem) -> Unit,
     modifier: Modifier = Modifier,
     navigationMode: NavigationMode = LocalNavigationMode.current,
     selectedItem: NavigationItem? = LocalSelectedNavigationItem.current,
     navigationBarItems: List<NavigationItem> = LocalBottomNavigationItems.current,
     navigationRailItems: List<NavigationItem> = LocalNavigationRailItems.current,
-    menuHost: MenuHost = LocalMenuHost.current,
+    menuHost: MenuHost = rememberCumulativeMenuHost(),
     content: @Composable (PaddingValues) -> Unit
 ) {
+    val contentWithProviders = @Composable { paddingValues: PaddingValues ->
+        CompositionLocalProvider(
+            LocalMenuHost provides menuHost
+        ) {
+            content(paddingValues)
+        }
+    }
     if (navigationMode == NavigationMode.NavigationRail) {
         val coroutineScope = rememberCoroutineScope()
         val modalDrawerController = LocalModalDrawerController.current
@@ -62,7 +70,7 @@ fun NavigationSuiteScaffold(
                     NavigationRailItem(
                         item = item,
                         selected = item == selectedItem,
-                        onClick = { onNavigationItemClick(item) }
+                        onClick = { /* TODO */ }
                     )
                 }
             }
@@ -75,7 +83,7 @@ fun NavigationSuiteScaffold(
                         }
                     )
                 },
-                content = content
+                content = contentWithProviders
             )
         }
     } else {
@@ -87,7 +95,7 @@ fun NavigationSuiteScaffold(
                             BottomNavigationItem(
                                 item = item,
                                 selected = item == selectedItem,
-                                onClick = { onNavigationItemClick(item) }
+                                onClick = { /* TODO */ }
                             )
                         }
                     }
@@ -108,7 +116,7 @@ fun NavigationSuiteScaffold(
                 }
             },
             modifier = modifier,
-            content = content
+            content = contentWithProviders
         )
     }
 }

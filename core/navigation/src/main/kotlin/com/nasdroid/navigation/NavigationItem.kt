@@ -40,7 +40,7 @@ internal val LocalSelectedNavigationItem = compositionLocalOf<NavigationItem?> {
  */
 @Composable
 fun ProvideNavigationItems(
-    selectedNavigationItem: NavigationItem,
+    selectedNavigationItem: NavigationItem?,
     bottomNavigationItems: List<NavigationItem>,
     navigationRailItems: List<NavigationItem>,
     navigationDrawerItems: List<NavigationItem>,

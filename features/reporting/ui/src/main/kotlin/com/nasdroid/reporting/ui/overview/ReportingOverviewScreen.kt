@@ -37,8 +37,7 @@ fun ReportingOverviewScreen(
     val graphs by viewModel.graphs.collectAsState()
 
     NavigationSuiteScaffold(
-        title = { Text("Reporting") },
-        onNavigationItemClick = {}
+        title = { Text("Reporting") }
     ) {
         ReportingOverviewContent(
             selectedCategory = selectedCategory,

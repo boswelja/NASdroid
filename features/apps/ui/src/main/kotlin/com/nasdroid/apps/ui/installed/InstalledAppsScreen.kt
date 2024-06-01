@@ -30,6 +30,7 @@ import com.nasdroid.apps.ui.R
 import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsScreen
 import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsViewModel
 import com.nasdroid.apps.ui.installed.overview.InstalledAppsOverviewScreen
+import com.nasdroid.navigation.NavigationSuiteScaffold
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -43,52 +44,57 @@ fun InstalledAppsScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
-    if (windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium) {
-        val detailsViewModel: InstalledAppDetailsViewModel = koinViewModel()
-        val selectedAppName by detailsViewModel.appName.collectAsState()
-        Row(modifier) {
-            InstalledAppsOverviewScreen(
-                onAppClick = {
-                    detailsViewModel.setAppName(it)
-                },
-                onNavigate = onNavigate,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
-                contentPadding = contentPadding,
-            )
-            VerticalDivider()
-            AnimatedContent(
-                targetState = selectedAppName != null,
-                label = "Installed app details pane",
-                modifier = Modifier
-                    .weight(1f)
-            ) { hasApp ->
-                if (hasApp) {
-                    InstalledAppDetailsScreen(
-                        navigateUp = { detailsViewModel.setAppName(null) },
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = contentPadding,
-                        viewModel = detailsViewModel
-                    )
-                } else {
-                    SelectAppHint(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(contentPadding)
-                    )
+    NavigationSuiteScaffold(
+        title = { Text("Installed Apps") },
+        modifier = modifier
+    ) {
+        if (windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium) {
+            val detailsViewModel: InstalledAppDetailsViewModel = koinViewModel()
+            val selectedAppName by detailsViewModel.appName.collectAsState()
+            Row(Modifier.padding(it)) {
+                InstalledAppsOverviewScreen(
+                    onAppClick = {
+                        detailsViewModel.setAppName(it)
+                    },
+                    onNavigate = onNavigate,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    contentPadding = contentPadding,
+                )
+                VerticalDivider()
+                AnimatedContent(
+                    targetState = selectedAppName != null,
+                    label = "Installed app details pane",
+                    modifier = Modifier
+                        .weight(1f)
+                ) { hasApp ->
+                    if (hasApp) {
+                        InstalledAppDetailsScreen(
+                            navigateUp = { detailsViewModel.setAppName(null) },
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = contentPadding,
+                            viewModel = detailsViewModel
+                        )
+                    } else {
+                        SelectAppHint(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(contentPadding)
+                        )
+                    }
                 }
             }
+        } else {
+            InstalledAppsOverviewScreen(
+                onAppClick = {
+                    onNavigate("details/$it")
+                },
+                onNavigate = onNavigate,
+                modifier = Modifier.padding(it),
+                contentPadding = contentPadding,
+            )
         }
-    } else {
-        InstalledAppsOverviewScreen(
-            onAppClick = {
-                onNavigate("details/$it")
-            },
-            onNavigate = onNavigate,
-            modifier = modifier,
-            contentPadding = contentPadding,
-        )
     }
 }
 

@@ -97,6 +97,7 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
     implementation(libs.compose.menuprovider)
+    implementation(libs.compose.material3.adaptive)
     debugImplementation(libs.bundles.compose.tooling)
     androidTestImplementation(libs.compose.ui.test.junit4)
 
