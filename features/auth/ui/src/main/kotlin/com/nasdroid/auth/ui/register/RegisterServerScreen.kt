@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.navigation.BackNavigationScaffold
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -51,9 +52,9 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RegisterServerScreen(
     onServerRegistered: () -> Unit,
+    onNavigateBack: () -> Unit,
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
     viewModel: RegisterServerViewModel = koinViewModel()
 ) {
     val registerState by viewModel.registerState.collectAsState()
@@ -72,43 +73,49 @@ fun RegisterServerScreen(
         }
     }
 
-    RegisterServerContent(
-        serverAddress = serverAddress,
-        onServerAddressChange = { newAuthData ->
-            serverAddress = newAuthData
-            viewModel.clearPendingState()
-        },
-        authData = authData,
-        onAuthDataChange = { newAuthData ->
-            authData = newAuthData
-            viewModel.clearPendingState()
-        },
-        onRegisterClick = {
-            authData.let { auth ->
-                when (auth) {
-                    is AuthData.ApiKey -> viewModel.tryRegisterServer(
-                        serverAddress = serverAddress,
-                        apiKey = auth.key
-                    )
-                    is AuthData.Basic -> viewModel.tryRegisterServer(
-                        serverAddress = serverAddress,
-                        username = auth.username,
-                        password = auth.password
-                    )
+    BackNavigationScaffold(
+        title = { Text("Add Server") },
+        onNavigateBack = onNavigateBack,
+        modifier = modifier
+    ) {
+        RegisterServerContent(
+            serverAddress = serverAddress,
+            onServerAddressChange = { newAuthData ->
+                serverAddress = newAuthData
+                viewModel.clearPendingState()
+            },
+            authData = authData,
+            onAuthDataChange = { newAuthData ->
+                authData = newAuthData
+                viewModel.clearPendingState()
+            },
+            onRegisterClick = {
+                authData.let { auth ->
+                    when (auth) {
+                        is AuthData.ApiKey -> viewModel.tryRegisterServer(
+                            serverAddress = serverAddress,
+                            apiKey = auth.key
+                        )
+                        is AuthData.Basic -> viewModel.tryRegisterServer(
+                            serverAddress = serverAddress,
+                            username = auth.username,
+                            password = auth.password
+                        )
+                    }
                 }
-            }
-        },
-        registerEnabled = serverAddress.isNotBlank() && !isLoading,
-        windowSizeClass = windowSizeClass,
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .then(modifier),
-        contentPadding = contentPadding,
-        loading = isLoading,
-        serverAddressError = registerState is RegisterState.AddressError,
-        authDataError = registerState is RegisterState.AuthError
-    )
+            },
+            registerEnabled = serverAddress.isNotBlank() && !isLoading,
+            windowSizeClass = windowSizeClass,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            contentPadding = it,
+            loading = isLoading,
+            serverAddressError = registerState is RegisterState.AddressError,
+            authDataError = registerState is RegisterState.AuthError
+        )
+    }
 }
 
 /**
