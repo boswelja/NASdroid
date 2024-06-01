@@ -57,15 +57,13 @@ fun InstalledAppsScreen(
         },
         onNavigate = onNavigate,
         modifier = modifier
-    ) {
+    ) { contentPadding ->
         if (windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium) {
             val detailsViewModel: InstalledAppDetailsViewModel = koinViewModel()
             val selectedAppName by detailsViewModel.appName.collectAsState()
-            Row(Modifier.padding(it)) {
+            Row(Modifier.padding(contentPadding)) {
                 InstalledAppsOverviewScreen(
-                    onAppClick = {
-                        detailsViewModel.setAppName(it)
-                    },
+                    onAppClick = { detailsViewModel.setAppName(it) },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
@@ -94,7 +92,7 @@ fun InstalledAppsScreen(
                 onAppClick = {
                     onNavigate("details/$it")
                 },
-                modifier = Modifier.padding(it),
+                modifier = Modifier.padding(contentPadding),
                 contentPadding = PaddingValues(horizontal = 16.dp)
             )
         }
