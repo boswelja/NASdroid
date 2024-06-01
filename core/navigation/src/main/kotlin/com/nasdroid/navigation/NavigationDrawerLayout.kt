@@ -35,7 +35,7 @@ fun NavigationDrawerLayout(
     navigationMode: NavigationMode = LocalNavigationMode.current,
     content: @Composable () -> Unit
 ) {
-    if (navigationMode == NavigationMode.PermanentNavigationDrawer) {
+    if (navigationMode.primaryNavigationMode == PrimaryNavigationMode.Permanent) {
         PermanentNavigationDrawer(
             drawerContent = {
                 PermanentDrawerSheet {

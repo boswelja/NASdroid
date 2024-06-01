@@ -57,7 +57,7 @@ fun NavigationSuiteScaffold(
         }
     }
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    if (navigationMode == NavigationMode.NavigationRail) {
+    if (navigationMode.secondaryNavigationMode == SecondaryNavigationMode.Rail) {
         val coroutineScope = rememberCoroutineScope()
         val modalDrawerController = LocalModalDrawerController.current
         Row(modifier) {
@@ -99,7 +99,7 @@ fun NavigationSuiteScaffold(
     } else {
         Scaffold(
             bottomBar = {
-                if (navigationMode == NavigationMode.NavigationBar) {
+                if (navigationMode.secondaryNavigationMode == SecondaryNavigationMode.Bar) {
                     NavigationBar {
                         Spacer(Modifier.width(12.dp))
                         navigationBarItems.forEach { item ->
@@ -114,7 +114,7 @@ fun NavigationSuiteScaffold(
                 }
             },
             topBar = {
-                if (navigationMode == NavigationMode.PermanentNavigationDrawer) {
+                if (navigationMode.primaryNavigationMode == PrimaryNavigationMode.Permanent) {
                     // A permanent navigation drawer cannot be opened or closed, so we don't show the
                     // option
                     TopAppBar(

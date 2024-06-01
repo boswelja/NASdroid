@@ -7,12 +7,31 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.compositionLocalOf
 
 /**
- * Encapsulates all possible modes for NASdroid navigation UI.
+ * Describes the state of navigation components on the screen.
+ *
+ * @property primaryNavigationMode The mode of the primary form of navigation.
+ * @property secondaryNavigationMode The mode of the secondary form of navigation.
  */
-enum class NavigationMode {
-    NavigationBar,
-    NavigationRail,
-    PermanentNavigationDrawer
+data class NavigationMode(
+    val primaryNavigationMode: PrimaryNavigationMode,
+    val secondaryNavigationMode: SecondaryNavigationMode
+)
+
+/**
+ * All possible states for the apps primary mode of navigation.
+ */
+enum class PrimaryNavigationMode {
+    Modal,
+    Permanent
+}
+
+/**
+ * All possible states for the apps secondary mode of navigation.
+ */
+enum class SecondaryNavigationMode {
+    None,
+    Bar,
+    Rail
 }
 
 /**
@@ -39,13 +58,13 @@ object NavigationModeDefaults {
                 windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact ||
                 windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
             ) {
-                NavigationMode.NavigationBar
+                NavigationMode(PrimaryNavigationMode.Modal, SecondaryNavigationMode.Bar)
             } else if (windowSizeClass.widthSizeClass <= WindowWidthSizeClass.Expanded ||
                 windowSizeClass.heightSizeClass <= WindowHeightSizeClass.Medium
             ) {
-                NavigationMode.NavigationRail
+                NavigationMode(PrimaryNavigationMode.Modal, SecondaryNavigationMode.Rail)
             } else {
-                NavigationMode.PermanentNavigationDrawer
+                NavigationMode(PrimaryNavigationMode.Permanent, SecondaryNavigationMode.None)
             }
         }
     }
