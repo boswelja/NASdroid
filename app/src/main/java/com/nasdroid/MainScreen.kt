@@ -4,7 +4,18 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Computer
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Dataset
+import androidx.compose.material.icons.filled.FolderShared
+import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Lan
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SettingsPower
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -30,8 +41,135 @@ import com.nasdroid.navigation.NavigationItem
 import com.nasdroid.navigation.NavigationModeDefaults.calculateFromAdaptiveInfo
 import com.nasdroid.navigation.ProvideNavigationItems
 import com.nasdroid.power.ui.PowerOptionsDialog
-import com.nasdroid.ui.navigation.TopLevelDestination
 
+internal val NavigationDrawerItems = listOf(
+    NavigationItem(
+        icon = Icons.Default.Dashboard,
+        labelRes = R.string.feature_dashboard,
+        route = "dashboard"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Storage,
+        labelRes = R.string.feature_storage,
+        route = "storage"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Dataset,
+        labelRes = R.string.feature_datasets,
+        route = "datasets"
+    ),
+    NavigationItem(
+        icon = Icons.Default.FolderShared,
+        labelRes = R.string.feature_shares,
+        route = "shares"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Security,
+        labelRes = R.string.feature_data_protection,
+        route = "data_protection"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Lan,
+        labelRes = R.string.feature_network,
+        route = "network"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Key,
+        labelRes = R.string.feature_credentials,
+        route = "credentials"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Computer,
+        labelRes = R.string.feature_virtualization,
+        route = "virtualization"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Apps,
+        labelRes = R.string.feature_apps,
+        route = "apps"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Analytics,
+        labelRes = R.string.feature_reporting,
+        route = "reporting"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Settings,
+        labelRes = R.string.feature_system_settings,
+        route = "system_settings"
+    ),
+)
+
+internal val NavigationRailItems = listOf(
+    NavigationItem(
+        icon = Icons.Default.Dashboard,
+        labelRes = R.string.feature_dashboard,
+        route = "dashboard"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Dataset,
+        labelRes = R.string.feature_datasets,
+        route = "datasets"
+    ),
+    NavigationItem(
+        icon = Icons.Default.FolderShared,
+        labelRes = R.string.feature_shares,
+        route = "shares"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Security,
+        labelRes = R.string.feature_data_protection,
+        route = "data_protection"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Lan,
+        labelRes = R.string.feature_network,
+        route = "network"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Key,
+        labelRes = R.string.feature_credentials,
+        route = "credentials"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Apps,
+        labelRes = R.string.feature_apps,
+        route = "apps"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Settings,
+        labelRes = R.string.feature_system_settings,
+        route = "system_settings"
+    ),
+)
+
+internal val BottomNavigationItems = listOf(
+    NavigationItem(
+        icon = Icons.Default.Dashboard,
+        labelRes = R.string.feature_dashboard,
+        route = "dashboard"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Storage,
+        labelRes = R.string.feature_storage,
+        route = "storage"
+    ),
+    NavigationItem(
+        icon = Icons.Default.FolderShared,
+        labelRes = R.string.feature_shares,
+        route = "shares"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Lan,
+        labelRes = R.string.feature_network,
+        route = "network"
+    ),
+    NavigationItem(
+        icon = Icons.Default.Apps,
+        labelRes = R.string.feature_apps,
+        route = "apps"
+    ),
+)
 
 /**
  * The main content of the app. This Composable displays navigation-related elements, and contains a
@@ -44,26 +182,23 @@ fun MainScreen(
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier
 ) {
-    val destinations = remember {
-        TopLevelDestination.entries
-    }
 
     val navController = rememberNavController()
     val currentBackstackEntry by navController.currentBackStackEntryAsState()
     val selectedDestination by remember {
         derivedStateOf {
             val currentRoute = currentBackstackEntry?.destination?.parent?.route
-            destinations.firstOrNull { it.getRoute() == currentRoute }
+            NavigationDrawerItems.firstOrNull { it.route == currentRoute }
         }
     }
 
     var isPowerOptionsVisible by rememberSaveable { mutableStateOf(false) }
 
     ProvideNavigationItems(
-        selectedNavigationItem = selectedDestination?.let { NavigationItem(it.icon, it.labelRes, it.getRoute()) },
-        bottomNavigationItems = emptyList(),
-        navigationRailItems = emptyList(),
-        navigationDrawerItems = emptyList()
+        selectedNavigationItem = selectedDestination,
+        bottomNavigationItems = BottomNavigationItems,
+        navigationRailItems = NavigationRailItems,
+        navigationDrawerItems = NavigationDrawerItems
     ) {
         CompositionLocalProvider(
             LocalNavigationMode provides calculateFromAdaptiveInfo(currentWindowAdaptiveInfo()),
@@ -85,7 +220,6 @@ fun MainScreen(
             ) {
                 MainNavHost(
                     navController = navController,
-                    destinations = destinations,
                     modifier = Modifier
                         .fillMaxSize(),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
