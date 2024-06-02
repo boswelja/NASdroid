@@ -38,7 +38,6 @@ fun MainNavHost(
             contentPadding = contentPadding
         )
         appsGraph(
-            windowSizeClass = windowSizeClass,
             navController = navController,
             route = "apps",
         )
