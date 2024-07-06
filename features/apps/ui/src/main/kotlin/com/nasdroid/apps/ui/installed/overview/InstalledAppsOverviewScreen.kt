@@ -5,11 +5,9 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -39,6 +37,7 @@ import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.apps.ui.R
 import com.nasdroid.apps.ui.installed.overview.item.ApplicationOverviewItem
+import com.nasdroid.navigation.NavigationSuiteScaffold
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import kotlin.time.Duration.Companion.milliseconds
@@ -49,54 +48,68 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun InstalledAppsOverviewScreen(
     onAppClick: (appName: String) -> Unit,
+    onNavigate: (route: String) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
     viewModel: InstalledAppsOverviewViewModel = koinViewModel()
 ) {
-    ProvideMenuItems(
-        MenuItem(
-            label = stringResource(R.string.menu_item_refresh),
-            imageVector = Icons.Default.Refresh,
-            onClick = viewModel::refresh,
-            isImportant = true
-        )
-    )
-
     val installedApps by viewModel.installedApps.collectAsState()
     val searchTerm by viewModel.searchTerm.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    Box(modifier) {
-        LoadingIndicator(
-            visible = isLoading,
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
-        LazyColumn(
-            contentPadding = contentPadding,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            item {
-                SearchField(
-                    value = searchTerm,
-                    onValueChange = viewModel::setSearchTerm,
-                    modifier = Modifier.fillMaxWidth()
-                )
+    NavigationSuiteScaffold(
+        title = { Text("Installed Apps") },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = { onNavigate("discover") }
+            ) {
+                Icon(Icons.Default.GetApp, contentDescription = null)
+                Text("Discover Apps")
             }
-            installedApps?.let { apps ->
-                items(
-                    items = apps,
-                    key = { it.name }
-                ) { applicationOverview ->
-                    ApplicationOverviewItem(
-                        installedAppOverview = applicationOverview,
-                        onClick = { onAppClick(applicationOverview.name) },
-                        onAppStartRequest = { viewModel.start(applicationOverview.name) },
-                        onAppStopRequest = { viewModel.stop(applicationOverview.name) },
+        },
+        onNavigate = onNavigate,
+        modifier = modifier
+    ) { contentPadding ->
+        ProvideMenuItems(
+            MenuItem(
+                label = stringResource(R.string.menu_item_refresh),
+                imageVector = Icons.Default.Refresh,
+                onClick = viewModel::refresh,
+                isImportant = true
+            )
+        )
+
+        Box {
+            LoadingIndicator(
+                visible = isLoading,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+            LazyColumn(
+                contentPadding = contentPadding,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                item {
+                    SearchField(
+                        value = searchTerm,
+                        onValueChange = viewModel::setSearchTerm,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
-            }
-            item {
-                Spacer(Modifier.height(56.dp)) // TODO Don't use Spacer for extended FAB padding
+                installedApps?.let { apps ->
+                    items(
+                        items = apps,
+                        key = { it.name }
+                    ) { applicationOverview ->
+                        ApplicationOverviewItem(
+                            installedAppOverview = applicationOverview,
+                            onClick = { onAppClick(applicationOverview.name) },
+                            onAppStartRequest = { viewModel.start(applicationOverview.name) },
+                            onAppStopRequest = { viewModel.stop(applicationOverview.name) },
+                        )
+                    }
+                }
+                item {
+                    Spacer(Modifier.height(56.dp)) // TODO Don't use Spacer for extended FAB padding
+                }
             }
         }
     }

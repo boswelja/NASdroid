@@ -49,21 +49,5 @@ fun NavGraphBuilder.appsGraph(
         ) {
             LogsScreen(modifier = modifier)
         }
-        composable(
-            route = "details/{appName}",
-            arguments = listOf(
-                navArgument("appName") {
-                    nullable = false
-                    type = NavType.StringType
-                }
-            )
-        ) {
-            InstalledAppDetailsScreen(
-                navigateUp = {
-                    navController.popBackStack()
-                },
-                modifier = modifier,
-            )
-        }
     }
 }
