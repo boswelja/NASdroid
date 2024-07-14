@@ -44,6 +44,7 @@ dependencies {
 
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
+    implementation(libs.compose.material3.adaptive.navigation)
     implementation(libs.compose.markdown)
     implementation(libs.compose.menuprovider)
     debugImplementation(libs.bundles.compose.tooling)
