@@ -64,11 +64,11 @@ fun InstalledAppsScreen(
         },
         detailPane = {
             AnimatedPane {
-                navigator.currentDestination?.content?.let {
+                navigator.currentDestination?.content?.let { appName ->
                     // TODO Nope
                     val detailsViewModel: InstalledAppDetailsViewModel = koinViewModel()
-                    LaunchedEffect(detailsViewModel, it) {
-                        detailsViewModel.setAppName(it)
+                    LaunchedEffect(detailsViewModel, appName) {
+                        detailsViewModel.setAppName(appName)
                     }
                     if (navigator.scaffoldValue[ListDetailPaneScaffoldRole.List] == PaneAdaptedValue.Hidden) {
                         InstalledAppDetailsScreen(
