@@ -1,4 +1,3 @@
-import com.android.build.api.dsl.SettingsExtension
 import org.gradle.api.internal.FeaturePreviews
 
 pluginManagement {
@@ -31,7 +30,7 @@ dependencyResolutionManagement {
 
 plugins {
     id("com.gradle.enterprise") version("3.16")
-    id("com.android.settings") version("8.2.0")
+    id("com.android.settings") version("8.5.1")
 }
 
 enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
@@ -87,8 +86,8 @@ gradleEnterprise {
     }
 }
 
-configure<SettingsExtension> {
-    buildToolsVersion = "34.0.0"
-    compileSdk = 34
+android {
+    buildToolsVersion = "35.0.0"
+    compileSdk = 35
     minSdk = 28
 }

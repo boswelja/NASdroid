@@ -1,28 +1,25 @@
 package com.nasdroid.apps.ui.installed
 
-import androidx.compose.animation.AnimatedContent
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.GetApp
 import androidx.compose.material.icons.twotone.Image
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,71 +29,64 @@ import com.nasdroid.apps.ui.R
 import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsScreen
 import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsViewModel
 import com.nasdroid.apps.ui.installed.overview.InstalledAppsOverviewScreen
-import com.nasdroid.navigation.NavigationSuiteScaffold
+import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 
 /**
  * An adaptive screen that will display [InstalledAppsOverviewScreen] on all screen sizes, and
  * [InstalledAppDetailsScreen] on larger devices in a split view.
  */
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun InstalledAppsScreen(
-    windowSizeClass: WindowSizeClass,
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    NavigationSuiteScaffold(
-        title = { Text("Installed Apps") },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = { onNavigate("discover") }
+    val navigator = rememberListDetailPaneScaffoldNavigator<String>()
+
+    BackHandler(navigator.canNavigateBack()) {
+        navigator.navigateBack()
+    }
+
+    ListDetailPaneScaffold(
+        directive = navigator.scaffoldDirective,
+        value = navigator.scaffoldValue,
+        listPane = {
+            AnimatedPane(
+                modifier = Modifier.preferredWidth(460.dp)
             ) {
-                Icon(Icons.Default.GetApp, contentDescription = null)
-                Text("Discover Apps")
+                InstalledAppsOverviewScreen(
+                    onAppClick = { navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, it) },
+                    onNavigate = onNavigate,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         },
-        onNavigate = onNavigate,
-        modifier = modifier
-    ) { contentPadding ->
-        if (windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium) {
-            val detailsViewModel: InstalledAppDetailsViewModel = koinViewModel()
-            val selectedAppName by detailsViewModel.appName.collectAsState()
-            Row(Modifier.padding(contentPadding)) {
-                InstalledAppsOverviewScreen(
-                    onAppClick = { detailsViewModel.setAppName(it) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                )
-                VerticalDivider()
-                AnimatedContent(
-                    targetState = selectedAppName != null,
-                    label = "Installed app details pane",
-                    modifier = Modifier
-                        .weight(1f)
-                ) { hasApp ->
-                    if (hasApp) {
+        detailPane = {
+            AnimatedPane {
+                navigator.currentDestination?.content?.let { appName ->
+                    // TODO Nope
+                    val detailsViewModel: InstalledAppDetailsViewModel = koinViewModel()
+                    LaunchedEffect(detailsViewModel, appName) {
+                        detailsViewModel.setAppName(appName)
+                    }
+                    if (navigator.scaffoldValue[ListDetailPaneScaffoldRole.List] == PaneAdaptedValue.Hidden) {
                         InstalledAppDetailsScreen(
-                            navigateUp = { detailsViewModel.setAppName(null) },
+                            navigateUp = navigator::navigateBack,
                             modifier = Modifier.fillMaxSize(),
                             viewModel = detailsViewModel
                         )
                     } else {
-                        SelectAppHint(modifier = Modifier.fillMaxSize())
+                        InstalledAppDetailsScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            viewModel = detailsViewModel
+                        )
                     }
-                }
+                } ?: SelectAppHint(Modifier.fillMaxSize())
             }
-        } else {
-            InstalledAppsOverviewScreen(
-                onAppClick = {
-                    onNavigate("details/$it")
-                },
-                modifier = Modifier.padding(contentPadding),
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            )
-        }
-    }
+        },
+        modifier = modifier.background(MaterialThemeExt.colorScheme.background)
+    )
 }
 
 @Composable
