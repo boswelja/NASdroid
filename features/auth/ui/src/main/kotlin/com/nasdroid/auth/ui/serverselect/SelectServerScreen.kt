@@ -99,8 +99,7 @@ fun SelectServerContent(
                 servers = servers,
                 onServerClick = onServerClick,
                 onAddServerClick = onAddServerClick,
-                modifier = modifier,
-                contentPadding = contentPadding,
+                modifier = modifier.padding(contentPadding),
             )
         }
         windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded &&
@@ -110,8 +109,7 @@ fun SelectServerContent(
                 servers = servers,
                 onServerClick = onServerClick,
                 onAddServerClick = onAddServerClick,
-                modifier = modifier,
-                contentPadding = contentPadding,
+                modifier = modifier.padding(contentPadding),
             )
         }
         else -> {
@@ -120,8 +118,7 @@ fun SelectServerContent(
                 servers = servers,
                 onServerClick = onServerClick,
                 onAddServerClick = onAddServerClick,
-                modifier = modifier,
-                contentPadding = contentPadding,
+                modifier = modifier.padding(contentPadding),
             )
         }
     }
@@ -138,7 +135,6 @@ fun SelectServerVerticalContent(
     onServerClick: (Server) -> Unit,
     onAddServerClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
 ) {
     Column(
         modifier = modifier,
@@ -148,7 +144,6 @@ fun SelectServerVerticalContent(
             modifier = Modifier
                 .weight(1f)
                 .heightIn(min = 120.dp)
-                .padding(contentPadding)
         )
         ServerSelectorCard(
             servers = servers,
@@ -174,7 +169,6 @@ fun SelectServerHorizontalContent(
     onServerClick: (Server) -> Unit,
     onAddServerClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
 ) {
     Row(
         modifier = modifier,
@@ -184,7 +178,6 @@ fun SelectServerHorizontalContent(
             modifier = Modifier
                 .weight(1f)
                 .heightIn(min = 120.dp)
-                .padding(contentPadding)
         )
         ServerSelectorCard(
             servers = servers,
@@ -209,7 +202,6 @@ fun SelectServerCenteredContent(
     onServerClick: (Server) -> Unit,
     onAddServerClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
 ) {
     Column(
         modifier = modifier,
@@ -219,7 +211,6 @@ fun SelectServerCenteredContent(
         AppBranding(
             modifier = Modifier
                 .height(180.dp)
-                .padding(contentPadding)
         )
         ServerSelectorCard(
             servers = servers,
