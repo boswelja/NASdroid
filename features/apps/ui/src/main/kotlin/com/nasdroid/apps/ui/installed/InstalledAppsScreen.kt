@@ -1,6 +1,7 @@
 package com.nasdroid.apps.ui.installed
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +13,10 @@ import androidx.compose.material.icons.twotone.Image
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
-import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +29,7 @@ import com.nasdroid.apps.ui.R
 import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsScreen
 import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsViewModel
 import com.nasdroid.apps.ui.installed.overview.InstalledAppsOverviewScreen
+import com.nasdroid.design.MaterialThemeExt
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -48,28 +52,41 @@ fun InstalledAppsScreen(
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         listPane = {
-            InstalledAppsOverviewScreen(
-                onAppClick = { navigator.navigateTo(ThreePaneScaffoldRole.Primary, it) },
-                onNavigate = onNavigate,
-                modifier = Modifier.fillMaxSize(),
-            )
+            AnimatedPane(
+                modifier = Modifier.preferredWidth(460.dp)
+            ) {
+                InstalledAppsOverviewScreen(
+                    onAppClick = { navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, it) },
+                    onNavigate = onNavigate,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         },
         detailPane = {
-            navigator.currentDestination?.content?.let {
-                val detailsViewModel: InstalledAppDetailsViewModel = koinViewModel()
-                LaunchedEffect(detailsViewModel, it) {
-                    detailsViewModel.setAppName(it)
-                }
-                InstalledAppDetailsScreen(
-                    navigateUp = { navigator.navigateBack() },
-                    modifier = Modifier.fillMaxSize(),
-                    viewModel = detailsViewModel
-                )
-            } ?: SelectAppHint(Modifier.fillMaxSize())
+            AnimatedPane {
+                navigator.currentDestination?.content?.let {
+                    // TODO Nope
+                    val detailsViewModel: InstalledAppDetailsViewModel = koinViewModel()
+                    LaunchedEffect(detailsViewModel, it) {
+                        detailsViewModel.setAppName(it)
+                    }
+                    if (navigator.scaffoldValue[ListDetailPaneScaffoldRole.List] == PaneAdaptedValue.Hidden) {
+                        InstalledAppDetailsScreen(
+                            navigateUp = navigator::navigateBack,
+                            modifier = Modifier.fillMaxSize(),
+                            viewModel = detailsViewModel
+                        )
+                    } else {
+                        InstalledAppDetailsScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            viewModel = detailsViewModel
+                        )
+                    }
+                } ?: SelectAppHint(Modifier.fillMaxSize())
+            }
         },
-        modifier = modifier
+        modifier = modifier.background(MaterialThemeExt.colorScheme.background)
     )
-
 }
 
 @Composable

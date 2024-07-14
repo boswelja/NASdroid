@@ -5,9 +5,11 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -37,6 +39,7 @@ import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.apps.ui.R
 import com.nasdroid.apps.ui.installed.overview.item.ApplicationOverviewItem
+import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.navigation.NavigationSuiteScaffold
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
@@ -78,13 +81,16 @@ fun InstalledAppsOverviewScreen(
             )
         )
 
-        Box {
+        Box(modifier = Modifier.padding(contentPadding)) {
             LoadingIndicator(
                 visible = isLoading,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
             LazyColumn(
-                contentPadding = contentPadding,
+                contentPadding = PaddingValues(
+                    horizontal = MaterialThemeExt.paddings.large,
+                    vertical = MaterialThemeExt.paddings.medium
+                ),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 item {

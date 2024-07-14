@@ -18,6 +18,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -68,7 +69,12 @@ fun InstalledAppDetailsScreen(
                     onRollbackClick = {
                         isShowRollbackDialog = true
                     },
-                    modifier = Modifier.fillMaxSize().padding(horizontal = MaterialThemeExt.paddings.large),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            horizontal = MaterialThemeExt.paddings.large,
+                            vertical = MaterialThemeExt.paddings.medium
+                        ),
                     contentPadding = it,
                 )
             } else {
@@ -77,6 +83,63 @@ fun InstalledAppDetailsScreen(
                 }
             }
         }
+    }
+
+    if (isShowRollbackDialog) {
+        val rollbackOptions by viewModel.rollbackOptions.collectAsState()
+        RollbackAppDialog(
+            availableVersions = rollbackOptions?.availableVersions.orEmpty(),
+            onConfirm = { version, rollbackSnapshots ->
+                viewModel.tryRollBackApp(version, rollbackSnapshots)
+                isShowRollbackDialog = false
+            },
+            onDismiss = { isShowRollbackDialog = false },
+            loading = rollbackOptions == null
+        )
+    }
+}
+
+/**
+ * A screen that displays detailed information about a single installed application.
+ */
+@Composable
+fun InstalledAppDetailsScreen(
+    modifier: Modifier = Modifier,
+    viewModel: InstalledAppDetailsViewModel = koinViewModel()
+) {
+    val appDetails by viewModel.appDetails.collectAsState()
+    var isShowRollbackDialog by rememberSaveable(appDetails) { mutableStateOf(false) }
+
+    Scaffold(modifier = modifier) {
+        AnimatedContent(
+            targetState = appDetails,
+            label = "Installed App Details Content",
+            transitionSpec = { fadeIn() togetherWith fadeOut() }
+        ) { installedAppDetails ->
+            if (installedAppDetails != null) {
+                InstalledAppDetailsContent(
+                    installedAppDetails = installedAppDetails,
+                    onDeleteClick = {
+                        viewModel.tryDeleteApp(true)
+                    },
+                    onRollbackClick = {
+                        isShowRollbackDialog = true
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            horizontal = MaterialThemeExt.paddings.large,
+                            vertical = MaterialThemeExt.paddings.medium
+                        ),
+                    contentPadding = it
+                )
+            } else {
+                Box(Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                }
+            }
+        }
+
     }
 
     if (isShowRollbackDialog) {
