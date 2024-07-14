@@ -3,6 +3,7 @@ package com.nasdroid.dashboard.ui.overview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.boswelja.menuprovider.MenuItem
 import com.boswelja.menuprovider.ProvideMenuItems
 import com.nasdroid.dashboard.logic.configuration.DashboardItem
@@ -28,6 +30,7 @@ import com.nasdroid.dashboard.ui.overview.cpu.CpuOverview
 import com.nasdroid.dashboard.ui.overview.memory.MemoryOverview
 import com.nasdroid.dashboard.ui.overview.network.NetworkOverview
 import com.nasdroid.dashboard.ui.overview.system.SystemInformationOverview
+import com.nasdroid.navigation.NavigationSuiteScaffold
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -36,6 +39,7 @@ import org.koin.androidx.compose.koinViewModel
  */
 @Composable
 fun DashboardOverviewScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: OverviewViewModel = koinViewModel()
@@ -45,32 +49,38 @@ fun DashboardOverviewScreen(
     val isEditing by remember(editingItems) {
         derivedStateOf { editingItems != null }
     }
-    items?.getOrNull()?.let { dashboardItems ->
-        ProvideMenuItems(
-            if (isEditing) {
-                MenuItem(
-                    label = "Stop Editing",
-                    imageVector = Icons.Default.EditOff,
-                    onClick = viewModel::stopEditing,
-                    isImportant = true,
-                )
-            } else {
-                MenuItem(
-                    label = "Edit",
-                    imageVector = Icons.Default.Edit,
-                    onClick = viewModel::startEditing,
-                    isImportant = true,
-                )
-            }
-        )
-        DashboardOverviewList(
-            items = editingItems ?: dashboardItems,
-            isEditing = isEditing,
-            contentPadding = contentPadding,
-            onMoveItem = viewModel::moveDashboardEntry,
-            onStartEditing = viewModel::startEditing,
-            modifier = modifier
-        )
+    NavigationSuiteScaffold(
+        title = { Text("Dashboard") },
+        onNavigate = { navController.navigate(it) },
+        modifier = modifier
+    ) {
+        items?.getOrNull()?.let { dashboardItems ->
+            ProvideMenuItems(
+                if (isEditing) {
+                    MenuItem(
+                        label = "Stop Editing",
+                        imageVector = Icons.Default.EditOff,
+                        onClick = viewModel::stopEditing,
+                        isImportant = true,
+                    )
+                } else {
+                    MenuItem(
+                        label = "Edit",
+                        imageVector = Icons.Default.Edit,
+                        onClick = viewModel::startEditing,
+                        isImportant = true,
+                    )
+                }
+            )
+            DashboardOverviewList(
+                items = editingItems ?: dashboardItems,
+                isEditing = isEditing,
+                contentPadding = contentPadding,
+                onMoveItem = viewModel::moveDashboardEntry,
+                onStartEditing = viewModel::startEditing,
+                modifier = Modifier.padding(it)
+            )
+        }
     }
 }
 

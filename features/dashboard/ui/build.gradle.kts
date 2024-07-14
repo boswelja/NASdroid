@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose)
 
     alias(libs.plugins.detekt)
 }
@@ -18,10 +19,6 @@ android {
         }
     }
 
-    buildFeatures.compose = true
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     lint {
         sarifReport = true
         htmlReport = false
@@ -41,6 +38,7 @@ detekt {
 dependencies {
     implementation(projects.core.design)
     implementation(projects.core.composeSegmentedprogressindicator)
+    implementation(projects.core.navigation)
     implementation(projects.features.dashboard.logic)
 
     implementation(libs.androidx.navigation)

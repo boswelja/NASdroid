@@ -1,12 +1,16 @@
 package com.nasdroid.apps.ui.discover
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.discover.AvailableApp
 import com.nasdroid.apps.logic.discover.SortMode
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.navigation.BackNavigationScaffold
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -46,8 +51,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun DiscoverAppsScreen(
     onAppClick: (appId: String, appCatalog: String, appTrain: String) -> Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
     viewModel: DiscoverAppsViewModel = koinViewModel()
 ) {
     val isFilterLoading by viewModel.isFilterLoading.collectAsState()
@@ -58,55 +63,53 @@ fun DiscoverAppsScreen(
     val sortMode by viewModel.sortMode.collectAsState()
 
     var isFilterSettingsVisible by rememberSaveable { mutableStateOf(false) }
-    AnimatedContent(
-        targetState = isFilterLoading || isAppListLoading,
-        label = ""
-    ) { isLoading ->
-        if (isLoading) {
-            Box(modifier = modifier, contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator() }
-        } else {
-            val layoutDirection = LocalLayoutDirection.current
-            val cellPadding = PaddingValues(
-                start = contentPadding.calculateStartPadding(layoutDirection),
-                end = contentPadding.calculateEndPadding(layoutDirection)
-            )
-            LazyColumn(
-                modifier = modifier,
-                contentPadding = PaddingValues(
-                    top = contentPadding.calculateTopPadding(),
-                    bottom = contentPadding.calculateBottomPadding()
-                ),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                item {
-                    FilterChipRow(
-                        onFilterSettingsClick = { isFilterSettingsVisible = true },
-                        onSortModeChange = viewModel::setSortMode,
-                        sortMode = sortMode,
-                        onCatalogFilterChange = { catalogName, _ -> viewModel.toggleCatalogFiltered(catalogName) },
-                        catalogFilters = catalogFiltering,
-                        onRemoveSelectedCategory = viewModel::removeSelectedCategory,
-                        selectedCategories = selectedCategories,
-                        contentPadding = cellPadding
-                    )
-                }
-                items(availableAppGroups) { appGroup ->
-                    Text(
-                        text = appGroup.groupTitle,
-                        style = MaterialThemeExt.typography.titleLarge,
-                        modifier = Modifier.padding(cellPadding)
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    LazyHorizontalAppList(
-                        onAppClick = {
-                            onAppClick(it.id, it.catalogName, it.catalogTrain)
-                        },
-                        apps = appGroup.apps,
-                        cellSize = DpSize(width = 300.dp, height = 120.dp),
-                        contentPadding = cellPadding,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+    BackNavigationScaffold(
+        title = { Text("Discover Apps") },
+        onNavigateBack = navigateBack,
+        modifier = modifier
+    ) {
+        AnimatedContent(
+            targetState = isFilterLoading || isAppListLoading,
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
+            label = ""
+        ) { isLoading ->
+            if (isLoading) {
+                Box(modifier = Modifier.fillMaxSize().padding(it), contentAlignment = Alignment.Center
+                ) { CircularProgressIndicator() }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(it),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    item {
+                        FilterChipRow(
+                            onFilterSettingsClick = { isFilterSettingsVisible = true },
+                            onSortModeChange = viewModel::setSortMode,
+                            sortMode = sortMode,
+                            onCatalogFilterChange = { catalogName, _ -> viewModel.toggleCatalogFiltered(catalogName) },
+                            catalogFilters = catalogFiltering,
+                            onRemoveSelectedCategory = viewModel::removeSelectedCategory,
+                            selectedCategories = selectedCategories,
+                            contentPadding = PaddingValues(horizontal = 16.dp)
+                        )
+                    }
+                    items(availableAppGroups) { appGroup ->
+                        Text(
+                            text = appGroup.groupTitle,
+                            style = MaterialThemeExt.typography.titleLarge,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        LazyHorizontalAppList(
+                            onAppClick = {
+                                onAppClick(it.id, it.catalogName, it.catalogTrain)
+                            },
+                            apps = appGroup.apps,
+                            cellSize = DpSize(width = 300.dp, height = 120.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }

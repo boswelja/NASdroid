@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose)
 
     alias(libs.plugins.detekt)
 }
@@ -50,10 +51,6 @@ android {
         }
     }
 
-    buildFeatures.compose = true
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     packaging {
         resources {
             excludes += listOf(
@@ -83,6 +80,7 @@ detekt {
 dependencies {
     implementation(projects.core.api)
     implementation(projects.core.design)
+    implementation(projects.core.navigation)
 
     implementation(projects.features.apps.ui)
     implementation(projects.features.auth.ui)
@@ -99,6 +97,7 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
     implementation(libs.compose.menuprovider)
+    implementation(libs.compose.material3.adaptive)
     debugImplementation(libs.bundles.compose.tooling)
     androidTestImplementation(libs.compose.ui.test.junit4)
 

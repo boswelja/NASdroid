@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose)
 
     alias(libs.plugins.detekt)
 }
@@ -18,10 +19,6 @@ android {
         }
     }
 
-    buildFeatures.compose = true
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     lint {
         sarifReport = true
         htmlReport = false
@@ -41,11 +38,13 @@ detekt {
 dependencies {
     implementation(projects.core.composeLogviewer)
     implementation(projects.core.design)
+    implementation(projects.core.navigation)
 
     implementation(projects.features.apps.logic)
 
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
+    implementation(libs.compose.material3.adaptive.navigation)
     implementation(libs.compose.markdown)
     implementation(libs.compose.menuprovider)
     debugImplementation(libs.bundles.compose.tooling)

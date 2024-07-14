@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -49,7 +50,6 @@ fun SelectServerScreen(
     onAddServer: () -> Unit,
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
     viewModel: SelectServerViewModel = koinViewModel()
 ) {
     val authenticatedServers by viewModel.authenticatedServers.collectAsState()
@@ -60,15 +60,17 @@ fun SelectServerScreen(
         }
     }
 
-    SelectServerContent(
-        isLoading = loginState == LoginState.Loading || loginState == LoginState.LoginSuccess,
-        servers = authenticatedServers,
-        onServerClick = viewModel::tryLogIn,
-        onAddServerClick = onAddServer,
-        windowSizeClass = windowSizeClass,
-        modifier = modifier,
-        contentPadding = contentPadding,
-    )
+    Scaffold {
+        SelectServerContent(
+            isLoading = loginState == LoginState.Loading || loginState == LoginState.LoginSuccess,
+            servers = authenticatedServers,
+            onServerClick = viewModel::tryLogIn,
+            onAddServerClick = onAddServer,
+            windowSizeClass = windowSizeClass,
+            modifier = modifier,
+            contentPadding = it,
+        )
+    }
 
     (loginState as? LoginState.Error)?.let {
         SelectServerErrorDialog(onDismissRequest = viewModel::clearPendingEvent, error = it)
@@ -97,8 +99,7 @@ fun SelectServerContent(
                 servers = servers,
                 onServerClick = onServerClick,
                 onAddServerClick = onAddServerClick,
-                modifier = modifier,
-                contentPadding = contentPadding,
+                modifier = modifier.padding(contentPadding),
             )
         }
         windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded &&
@@ -108,8 +109,7 @@ fun SelectServerContent(
                 servers = servers,
                 onServerClick = onServerClick,
                 onAddServerClick = onAddServerClick,
-                modifier = modifier,
-                contentPadding = contentPadding,
+                modifier = modifier.padding(contentPadding),
             )
         }
         else -> {
@@ -118,8 +118,7 @@ fun SelectServerContent(
                 servers = servers,
                 onServerClick = onServerClick,
                 onAddServerClick = onAddServerClick,
-                modifier = modifier,
-                contentPadding = contentPadding,
+                modifier = modifier.padding(contentPadding),
             )
         }
     }
@@ -136,7 +135,6 @@ fun SelectServerVerticalContent(
     onServerClick: (Server) -> Unit,
     onAddServerClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
 ) {
     Column(
         modifier = modifier,
@@ -146,7 +144,6 @@ fun SelectServerVerticalContent(
             modifier = Modifier
                 .weight(1f)
                 .heightIn(min = 120.dp)
-                .padding(contentPadding)
         )
         ServerSelectorCard(
             servers = servers,
@@ -172,7 +169,6 @@ fun SelectServerHorizontalContent(
     onServerClick: (Server) -> Unit,
     onAddServerClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
 ) {
     Row(
         modifier = modifier,
@@ -182,7 +178,6 @@ fun SelectServerHorizontalContent(
             modifier = Modifier
                 .weight(1f)
                 .heightIn(min = 120.dp)
-                .padding(contentPadding)
         )
         ServerSelectorCard(
             servers = servers,
@@ -207,7 +202,6 @@ fun SelectServerCenteredContent(
     onServerClick: (Server) -> Unit,
     onAddServerClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
 ) {
     Column(
         modifier = modifier,
@@ -217,7 +211,6 @@ fun SelectServerCenteredContent(
         AppBranding(
             modifier = Modifier
                 .height(180.dp)
-                .padding(contentPadding)
         )
         ServerSelectorCard(
             servers = servers,
