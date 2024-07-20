@@ -36,10 +36,14 @@ import kotlinx.datetime.Instant
  */
 @Composable
 fun AvailableAppCard(
+    onClick: () -> Unit,
     app: AvailableApp,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier) {
+    Card(
+        modifier = modifier,
+        onClick = onClick
+    ) {
         Row(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Column {
                 AsyncImage(
@@ -96,6 +100,7 @@ fun AvailableAppCardPreview() {
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
         AvailableAppCard(
+            onClick = {},
             app = AvailableApp(
                 id = "app",
                 title = "App",
