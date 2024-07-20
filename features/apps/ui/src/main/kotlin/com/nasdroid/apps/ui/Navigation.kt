@@ -59,8 +59,8 @@ fun NavGraphBuilder.appsGraph(
             )
         ) {
             AvailableAppDetailsScreen(
-                modifier = modifier,
-                contentPadding = contentPadding
+                onNavigateBack = navController::popBackStack,
+                modifier = modifier
             )
         }
         composable(

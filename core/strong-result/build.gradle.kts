@@ -29,7 +29,7 @@ android {
 kotlin {
     androidTarget()
     jvm()
-    jvmToolchain(17)
+    jvmToolchain(21)
     explicitApi = ExplicitApiMode.Strict
 }
 
