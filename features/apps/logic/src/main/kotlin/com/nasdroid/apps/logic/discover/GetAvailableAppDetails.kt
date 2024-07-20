@@ -10,7 +10,8 @@ import kotlinx.datetime.Instant
  * [invoke] for details.
  */
 class GetAvailableAppDetails(
-    private val catalogV2Api: CatalogV2Api
+    private val catalogV2Api: CatalogV2Api,
+    private val stripHtmlTags: StripHtmlTags
 ) {
 
     /**
@@ -40,7 +41,7 @@ class GetAvailableAppDetails(
             version = catalogDetails.latestAppVersion,
             tags = catalogDetails.tags,
             homepage = catalogDetails.homeUrl,
-            description = catalogDetails.appReadme,
+            description = stripHtmlTags(catalogDetails.appReadme),
             screenshots = catalogDetails.screenshotUrls,
             sources = catalogDetails.sourceUrls,
             lastUpdatedAt = Instant.fromEpochMilliseconds(catalogDetails.lastUpdate),

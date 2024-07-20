@@ -97,10 +97,7 @@ fun AvailableAppDetailsVerticalContent(
                         .size(128.dp)
                         .clip(MaterialThemeExt.shapes.medium)
                 )
-                MarkdownDocument(
-                    markdown = details.description,
-                    modifier = Modifier.widthIn(min = 120.dp, max = 480.dp)
-                )
+                Text(text = details.description)
             }
         }
         if (details.screenshots.isNotEmpty()) {
