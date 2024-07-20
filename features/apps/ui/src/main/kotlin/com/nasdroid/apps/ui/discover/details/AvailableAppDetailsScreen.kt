@@ -10,12 +10,9 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
@@ -23,14 +20,12 @@ import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.boswelja.markdown.material3.MarkdownDocument
 import com.nasdroid.apps.logic.discover.AvailableApp
 import com.nasdroid.apps.logic.discover.AvailableAppDetails
 import com.nasdroid.apps.ui.discover.AvailableAppCard
@@ -63,9 +58,9 @@ fun AvailableAppDetailsScreen(
                 onSimilarAppClick = {
                     onNavigateToAppDetails(it.id, it.catalogName, it.catalogTrain)
                 },
-                modifier = modifier.padding(it),
+                modifier = modifier,
                 contentPadding = PaddingValues(
-                    horizontal = MaterialThemeExt.paddings.medium,
+                    horizontal = MaterialThemeExt.paddings.large,
                     vertical = MaterialThemeExt.paddings.small
                 )
             )
@@ -102,27 +97,23 @@ fun AvailableAppDetailsVerticalContent(
         }
         if (details.screenshots.isNotEmpty()) {
             item {
-                Text("Screenshots")
+                Column {
+                    Text("Screenshots")
+                    ScreenshotCarousel(details.screenshots)
+                }
             }
-            item {
-                ScreenshotCarousel(details.screenshots)
-            }
-        }
-        item {
-            Text("Application Info")
         }
         item {
             Column {
+                Text("Application Info")
                 Text("Version: ${details.version}")
                 Text("Source: ${details.sources.first()}")
                 Text("Last App Update: ${details.lastUpdatedAt}")
             }
         }
         item {
-            Text("Helm Chart Info")
-        }
-        item {
             Column {
+                Text("Helm Chart Info")
                 Text("Catalog: ${details.chartDetails.catalog}")
                 Text("Train: ${details.chartDetails.train}")
                 Text("Chart Version: ${details.chartDetails.chartVersion}")
@@ -167,11 +158,10 @@ internal fun ScreenshotCarousel(
             contentDescription = null,
             loading = {
                 Box(
-                    modifier = Modifier.fillMaxHeight().aspectRatio(16/9f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .aspectRatio(16/9f),
+                )
             }
         )
     }
