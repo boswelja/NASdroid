@@ -60,6 +60,9 @@ fun NavGraphBuilder.appsGraph(
         ) {
             AvailableAppDetailsScreen(
                 onNavigateBack = navController::popBackStack,
+                onNavigateToAppDetails = { id, catalog, train ->
+                    navController.navigate("discover/${catalog}/${train}/${id}")
+                },
                 modifier = modifier
             )
         }
