@@ -29,8 +29,8 @@ import com.nasdroid.dashboard.logic.dataloading.network.NetworkConfiguration
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkUsageData
 import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
-import com.nasdroid.dashboard.ui.overview.skeleton
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.skeleton.skeleton
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
