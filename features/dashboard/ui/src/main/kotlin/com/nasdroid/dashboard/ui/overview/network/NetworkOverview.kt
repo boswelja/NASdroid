@@ -171,7 +171,7 @@ internal fun AdapterInfo(
                         ),
                         bottomAxis = rememberBottomAxis(
                             valueFormatter = { value, _, _ ->
-                                if (value == 0f) {
+                                if (value == 0.0) {
                                     context.getString(R.string.network_outgoing_label)
                                 } else {
                                     context.getString(R.string.network_incoming_label)
