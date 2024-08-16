@@ -1,5 +1,9 @@
 package com.nasdroid.apps.ui.discover.details
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,11 +12,14 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
@@ -20,6 +27,7 @@ import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -50,21 +58,42 @@ fun AvailableAppDetailsScreen(
         title = {
             appDetails?.name?.let { Text(it) }
         },
-        onNavigateBack = onNavigateBack
-    ) {
-        appDetails?.let { details ->
-            AvailableAppDetailsVerticalContent(
-                details = details,
-                similarApps = similarApps,
-                onSimilarAppClick = {
-                    onNavigateToAppDetails(it.id, it.catalogName, it.catalogTrain)
-                },
-                modifier = modifier,
-                contentPadding = PaddingValues(
-                    horizontal = MaterialThemeExt.paddings.large,
-                    vertical = MaterialThemeExt.paddings.small
-                ) + it
-            )
+        onNavigateBack = onNavigateBack,
+        modifier = modifier
+    ) { contentPadding ->
+        AnimatedContent(
+            targetState = state,
+            label = "details content",
+            transitionSpec = { fadeIn() togetherWith fadeOut() }
+        ) { targetState ->
+            when (targetState) {
+                AvailableAppDetailsViewModel.State.Error.AppNotFound -> {
+                    // TODO
+                }
+                AvailableAppDetailsViewModel.State.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(contentPadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                AvailableAppDetailsViewModel.State.Success -> {
+                    appDetails?.let { details ->
+                        AvailableAppDetailsVerticalContent(
+                            details = details,
+                            similarApps = similarApps,
+                            onSimilarAppClick = {
+                                onNavigateToAppDetails(it.id, it.catalogName, it.catalogTrain)
+                            },
+                            contentPadding = PaddingValues(
+                                horizontal = MaterialThemeExt.paddings.large,
+                                vertical = MaterialThemeExt.paddings.small
+                            ) + contentPadding
+                        )
+                    }
+                }
+            }
         }
     }
 }
