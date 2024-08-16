@@ -49,6 +49,8 @@ jobs:
           - core/compose-logviewer
           - core/compose-segmentedprogressindicator
           - core/design
+          - core/navigation
+          - core/skeleton
           - core/strong-result
           - features/apps
           - features/auth

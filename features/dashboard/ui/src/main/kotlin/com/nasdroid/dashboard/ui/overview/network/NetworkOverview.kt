@@ -29,8 +29,8 @@ import com.nasdroid.dashboard.logic.dataloading.network.NetworkConfiguration
 import com.nasdroid.dashboard.logic.dataloading.network.NetworkUsageData
 import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
-import com.nasdroid.dashboard.ui.overview.skeleton
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.skeleton.skeleton
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
@@ -171,7 +171,7 @@ internal fun AdapterInfo(
                         ),
                         bottomAxis = rememberBottomAxis(
                             valueFormatter = { value, _, _ ->
-                                if (value == 0f) {
+                                if (value == 0.0) {
                                     context.getString(R.string.network_outgoing_label)
                                 } else {
                                     context.getString(R.string.network_incoming_label)

@@ -31,8 +31,8 @@ import com.nasdroid.dashboard.logic.dataloading.cpu.CpuSpecs
 import com.nasdroid.dashboard.logic.dataloading.cpu.CpuUsageData
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.dashboard.ui.R
-import com.nasdroid.dashboard.ui.overview.skeleton
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.skeleton.skeleton
 import org.koin.androidx.compose.koinViewModel
 import java.text.NumberFormat
 
