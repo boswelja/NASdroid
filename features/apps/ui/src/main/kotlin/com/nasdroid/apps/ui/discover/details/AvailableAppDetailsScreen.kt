@@ -31,6 +31,7 @@ import com.nasdroid.apps.logic.discover.AvailableAppDetails
 import com.nasdroid.apps.ui.discover.AvailableAppCard
 import com.nasdroid.apps.ui.installed.details.AppIcon
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.design.plus
 import com.nasdroid.navigation.BackNavigationScaffold
 import org.koin.androidx.compose.koinViewModel
 
@@ -62,7 +63,7 @@ fun AvailableAppDetailsScreen(
                 contentPadding = PaddingValues(
                     horizontal = MaterialThemeExt.paddings.large,
                     vertical = MaterialThemeExt.paddings.small
-                )
+                ) + it
             )
         }
     }
