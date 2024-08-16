@@ -31,17 +31,19 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.common.component.shapeComponent
+import com.patrykandpatrick.vico.compose.common.data.rememberExtraLambda
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
-import com.patrykandpatrick.vico.compose.common.rememberLegendItem
 import com.patrykandpatrick.vico.compose.common.vicoTheme
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
 import com.patrykandpatrick.vico.core.cartesian.HorizontalLayout
 import com.patrykandpatrick.vico.core.cartesian.Scroll
-import com.patrykandpatrick.vico.core.cartesian.axis.AxisItemPlacer
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.AxisValueOverrider
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.common.LegendItem
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -211,7 +213,7 @@ internal fun <T> VicoGraph(
     constraintAtZero: Boolean = true
 ) {
     val modelProducer = remember {
-        CartesianChartModelProducer.build { }
+        CartesianChartModelProducer()
     }
     val timeFormatter = remember {
         LocalDateTime.Format {
@@ -220,8 +222,12 @@ internal fun <T> VicoGraph(
             minute()
         }
     }
+    val theme = vicoTheme
+    val legendTextComponent = rememberTextComponent(
+        color = MaterialThemeExt.colorScheme.onSurface
+    )
     LaunchedEffect(graph, dataTransform) {
-        modelProducer.tryRunTransaction {
+        modelProducer.runTransaction {
             lineSeries {
                 val lines = graph.dataSlices.first().data.size
                 (0 until lines).map { lineIndex ->
@@ -266,20 +272,22 @@ internal fun <T> VicoGraph(
                                 }
                                 .orEmpty()
                         },
-                        itemPlacer = remember { AxisItemPlacer.Horizontal.default(spacing = 2) }
+                        itemPlacer = remember { HorizontalAxis.ItemPlacer.default(spacing = 2) }
                     ),
                     legend = rememberHorizontalLegend(
-                        items = graph.legend.mapIndexed { index, legend ->
-                            rememberLegendItem(
-                                icon = rememberShapeComponent(
-                                    color = vicoTheme
-                                        .lineCartesianLayerColors[index % vicoTheme.lineCartesianLayerColors.size]
-                                ),
-                                label = rememberTextComponent(
-                                    color = MaterialThemeExt.colorScheme.onSurface
-                                ),
-                                labelText = legend
-                            )
+                        items = rememberExtraLambda {
+                            graph.legend.mapIndexed { index, legend ->
+                                add(
+                                    LegendItem(
+                                        icon = shapeComponent(
+                                            color = theme
+                                                .lineCartesianLayerColors[index % theme.lineCartesianLayerColors.size]
+                                        ),
+                                        labelComponent = legendTextComponent,
+                                        label = legend
+                                    )
+                                )
+                            }
                         },
                         iconSize = 8.dp,
                         iconPadding = MaterialThemeExt.paddings.tiny,
@@ -288,8 +296,6 @@ internal fun <T> VicoGraph(
                 ),
                 scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
                 runInitialAnimation = false,
-                diffAnimationSpec = null,
-                horizontalLayout = HorizontalLayout.fullWidth(),
                 zoomState = rememberVicoZoomState(false)
             )
         }
@@ -298,24 +304,19 @@ internal fun <T> VicoGraph(
 
 internal fun autoNoConstraints(): AxisValueOverrider =
     object : AxisValueOverrider {
-        override fun getMinY(
-            minY: Float,
-            maxY: Float,
-            extraStore: ExtraStore,
-        ) = if (minY == 0f && maxY == 0f) 0f else minY.round(maxY)
+        override fun getMinY(minY: Double, maxY: Double, extraStore: ExtraStore): Double = when {
+            minY == 0.0 && maxY == 0.0 -> 0.0
+            else -> minY.round(maxY)
+        }
 
-        override fun getMaxY(
-            minY: Float,
-            maxY: Float,
-            extraStore: ExtraStore,
-        ) = when {
-            minY == 0f && maxY == 0f -> 1f
+        override fun getMaxY(minY: Double, maxY: Double, extraStore: ExtraStore): Double = when {
+            minY == 0.0 && maxY == 0.0 -> 1.0
             else -> maxY.round(minY)
         }
 
-        private fun Float.round(other: Float): Float {
+        private fun Double.round(other: Double): Double {
             val absoluteValue = abs(this)
-            val base = 10f.pow(floor(log10(max(absoluteValue, abs(other)))) - 1)
+            val base = 10.0.pow(floor(log10(max(absoluteValue, abs(other)))) - 1)
             return sign * ceil(absoluteValue / base) * base
         }
     }
