@@ -11,20 +11,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 
+/**
+ * A simple skeleton animation for use in place of real content.
+ */
 @Composable
 fun rememberSkeletonAnimation(
     baseColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     pulseColor: Color = baseColor.copy(alpha = 0.3f), // TODO Don't use alpha changes
     pulseInMillis: Int = 500
 ): Color {
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "skeleton transition")
     val color by infiniteTransition.animateColor(
         initialValue = baseColor,
         targetValue = pulseColor,
         animationSpec = infiniteRepeatable(
             animation = tween(pulseInMillis, easing = LinearEasing, delayMillis = 1000),
             repeatMode = RepeatMode.Reverse
-        )
+        ),
+        label = "skeleton color"
     )
     return color
 }

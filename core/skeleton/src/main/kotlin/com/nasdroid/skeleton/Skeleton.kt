@@ -21,7 +21,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 
 /**
- * An implementation of Material 3 [Skeleton Loaders](https://m3.material.io/styles/motion/transitions/transition-patterns#f7ff608a-087d-4a4e-9e83-f1af69184487).
+ * An implementation of Material 3
+ * [Skeleton Loaders](https://m3.material.io/styles/motion/transitions/transition-patterns#f7ff608a-087d-4a4e-9e83-f1af69184487).
  * This Composable allows you to place a skeleton shape in your Composition hierarchy.
  */
 @Composable
@@ -32,7 +33,15 @@ fun Skeleton(
     pulseColor: Color = baseColor.copy(alpha = 0.3f),
     pulseInMillis: Int = 500,
 ) {
-    Box(modifier.skeleton(true, shape, baseColor, pulseColor, pulseInMillis))
+    Box(
+        modifier.skeleton(
+            loading = true,
+            shape = shape,
+            baseColor = baseColor,
+            pulseColor = pulseColor,
+            pulseInMillis = pulseInMillis
+        )
+    )
 }
 
 @PreviewLightDark
@@ -42,7 +51,10 @@ fun SkeletonPreview() {
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
         Scaffold {
-            Column(Modifier.padding(it).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(
+                modifier = Modifier.padding(it).padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
                 Skeleton(
                     shape = CircleShape,
                     modifier = Modifier.size(64.dp)
