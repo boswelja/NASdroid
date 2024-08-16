@@ -30,7 +30,7 @@ room = "2.6.1"
 
 ktor = "2.3.12"
 
-kotlinx-coroutines = "1.9.0-RC"
+kotlinx-coroutines = "1.9.0-RC.2"
 kotlinx-datetime = "0.6.0"
 kotlinx-serialization-formats = "1.7.1"
 
