@@ -52,7 +52,7 @@ fun ReportingOverviewScreen(
             selectedMetrics = selectedMetrics,
             onMetricClick = {},
             graphs = graphs,
-            modifier = modifier,
+            modifier = modifier.padding(it),
             contentPadding = contentPadding
         )
     }
