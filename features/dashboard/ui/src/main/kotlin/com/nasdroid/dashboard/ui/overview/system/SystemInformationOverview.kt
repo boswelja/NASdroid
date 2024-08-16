@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import com.nasdroid.dashboard.logic.dataloading.system.SystemInformation
 import com.nasdroid.dashboard.ui.R
 import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
-import com.nasdroid.dashboard.ui.overview.skeleton
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.skeleton.skeleton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.datetime.Clock
@@ -158,6 +158,17 @@ fun SystemInformationOverviewPreview() {
                 minute = 33
             )
         ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SystemInformationOverviewLoadingPreview() {
+    SystemInformationOverview(
+        systemInformation = null,
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)

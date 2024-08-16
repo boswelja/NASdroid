@@ -24,6 +24,8 @@ core:design:
   - core/design/**
 core:navigation:
   - core/navigation/**
+core:skeleton:
+  - core/skeleton/**
 core:strong-result:
   - core/strong-result/**
 
