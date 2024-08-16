@@ -42,6 +42,7 @@ include(
     ":core:compose-segmentedprogressindicator",
     ":core:design",
     ":core:navigation",
+    ":core:skeleton",
     ":core:strong-result",
     ":features:apps:data",
     ":features:apps:logic",
