@@ -1,13 +1,5 @@
 package com.nasdroid.skeleton
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.StartOffset
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -41,17 +32,7 @@ fun Skeleton(
     pulseColor: Color = baseColor.copy(alpha = 0.3f),
     pulseInMillis: Int = 500,
 ) {
-    val infiniteTransition = rememberInfiniteTransition()
-    val color by infiniteTransition.animateColor(
-        initialValue = baseColor,
-        targetValue = pulseColor,
-        animationSpec = infiniteRepeatable(
-            animation = tween(pulseInMillis, easing = LinearEasing, delayMillis = 1000),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    Box(modifier.background(color, shape))
+    Box(modifier.skeleton(true, shape, baseColor, pulseColor, pulseInMillis))
 }
 
 @PreviewLightDark
