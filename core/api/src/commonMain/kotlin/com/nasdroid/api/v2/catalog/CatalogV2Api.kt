@@ -133,7 +133,7 @@ value class CatalogItems(
  * @property screenshotUrls A list of URLs for available screenshots of the app this item runs.
  * @property sourceUrls A list of URLs for available source code this catalog item uses.
  * @property iconUrl The URL of the catalog item icon.
- * @property versions Contains all metadata for available versions. TODO Main this.
+ * @property versions Contains all metadata for available versions.
  */
 @Serializable
 data class CatalogItem(

@@ -39,6 +39,7 @@ dependencies {
     implementation(projects.core.composeLogviewer)
     implementation(projects.core.design)
     implementation(projects.core.navigation)
+    implementation(projects.core.skeleton)
 
     implementation(projects.features.apps.logic)
 
