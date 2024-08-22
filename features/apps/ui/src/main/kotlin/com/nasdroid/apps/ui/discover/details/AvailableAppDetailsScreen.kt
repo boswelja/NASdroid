@@ -46,6 +46,9 @@ import com.nasdroid.navigation.BackNavigationScaffold
 import kotlinx.datetime.Instant
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * Displays details about a single app that is available to install from a chart.
+ */
 @Composable
 fun AvailableAppDetailsScreen(
     onNavigateBack: () -> Unit,
@@ -101,6 +104,9 @@ fun AvailableAppDetailsScreen(
     }
 }
 
+/**
+ * Displays details about a single installable app in a vertically scrolling layout.
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AvailableAppDetailsVerticalContent(
@@ -120,7 +126,8 @@ fun AvailableAppDetailsVerticalContent(
     )
     LazyColumn(
         modifier = modifier,
-        contentPadding = lazyListPadding
+        contentPadding = lazyListPadding,
+        verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.small)
     ) {
         item {
             FlowRow(
@@ -136,11 +143,13 @@ fun AvailableAppDetailsVerticalContent(
                 Text(text = details.description)
             }
         }
-        item {
-            KeywordsRow(
-                keywords = details.tags,
-                modifier = Modifier.padding(itemHorizontalPadding)
-            )
+        if (details.tags.isNotEmpty()) {
+            item {
+                KeywordsRow(
+                    keywords = details.tags,
+                    modifier = Modifier.padding(itemHorizontalPadding)
+                )
+            }
         }
         if (details.screenshots.isNotEmpty()) {
             item {
@@ -151,20 +160,13 @@ fun AvailableAppDetailsVerticalContent(
             }
         }
         item {
-            Column(Modifier.padding(itemHorizontalPadding)) {
-                AvailableAppListItem(
-                    label = "Version",
-                    content = details.version
-                )
-                AvailableAppListItem(
-                    label = "Last Updated",
-                    content = details.lastUpdatedAt.toString()
-                )
-                AvailableAppListItem(
-                    label = "Source",
-                    content = details.sources.first()
-                )
-            }
+            AppInfo(
+                homepage = details.homepage,
+                version = details.version,
+                lastUpdatedAt = details.lastUpdatedAt,
+                sources = details.sources,
+                modifier = Modifier.padding(itemHorizontalPadding)
+            )
         }
         item {
             HelmChartInfo(

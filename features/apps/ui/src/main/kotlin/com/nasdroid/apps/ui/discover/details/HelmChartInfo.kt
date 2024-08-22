@@ -8,7 +8,7 @@ import com.nasdroid.apps.logic.discover.AvailableAppDetails
 import com.nasdroid.design.MaterialThemeExt
 
 @Composable
-fun HelmChartInfo(
+internal fun HelmChartInfo(
     chartInfo: AvailableAppDetails.ChartDetails,
     modifier: Modifier = Modifier
 ) {
