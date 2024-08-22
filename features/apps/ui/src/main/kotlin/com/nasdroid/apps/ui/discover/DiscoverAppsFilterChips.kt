@@ -100,16 +100,16 @@ fun SortModeChip(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    var pickerExpanded by remember {
+    var isPickerExpanded by remember {
         mutableStateOf(false)
     }
     ExposedDropdownMenuBox(
-        expanded = pickerExpanded,
-        onExpandedChange = { pickerExpanded = !pickerExpanded }
+        expanded = isPickerExpanded,
+        onExpandedChange = { isPickerExpanded = !isPickerExpanded }
     ) {
         FilterChip(
             selected = true,
-            onClick = { pickerExpanded = true },
+            onClick = { isPickerExpanded = true },
             enabled = enabled,
             label = {
                 Text(sortMode.label())
@@ -122,7 +122,7 @@ fun SortModeChip(
                 )
             },
             trailingIcon = {
-                AnimatedContent(targetState = pickerExpanded, label = "Dropdown Indicator") { expanded ->
+                AnimatedContent(targetState = isPickerExpanded, label = "Dropdown Indicator") { expanded ->
                     if (expanded) {
                         Icon(
                             imageVector = Icons.Default.ArrowDropUp,
@@ -143,15 +143,15 @@ fun SortModeChip(
                 .then(modifier)
         )
         ExposedDropdownMenu(
-            expanded = pickerExpanded,
-            onDismissRequest = { pickerExpanded = false }
+            expanded = isPickerExpanded,
+            onDismissRequest = { isPickerExpanded = false }
         ) {
             SortMode.entries.forEach { sortMode ->
                 DropdownMenuItem(
                     text = { Text(sortMode.label()) },
                     onClick = {
                         onSortModeChange(sortMode)
-                        pickerExpanded = false
+                        isPickerExpanded = false
                     }
                 )
             }

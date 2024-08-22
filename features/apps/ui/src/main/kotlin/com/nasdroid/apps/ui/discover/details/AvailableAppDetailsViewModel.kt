@@ -46,15 +46,15 @@ class AvailableAppDetailsViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val appDetails: StateFlow<AvailableAppDetails?> = _refreshEvent
-        .mapLatest {
+        .mapLatest { _ ->
             _state.value = State.Loading
             getAvailableAppDetails(appId, catalog, train).fold(
-                onSuccess = {
+                onSuccess = { details ->
                     _state.value = State.Success
-                    it
+                    details
                 },
-                onFailure = {
-                    _state.value = when (it) {
+                onFailure = { error ->
+                    _state.value = when (error) {
                         AvailableAppDetailsError.AppNotFound -> State.Error.AppNotFound
                     }
                     null
