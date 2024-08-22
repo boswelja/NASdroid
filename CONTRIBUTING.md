@@ -2,7 +2,7 @@
 
 We are accepting pull requests! Please follow the etiquette outlined below to avoid duplicate, discarded or ignored work:
 
-- Check for an existing issue on [our board](./issues)
+- Check for an existing issue on [our board](https://github.com/boswelja/NASdroid/issues)
   - If an issue already exists, check whether anyone is assigned, or if there is open work
     - If there is an open pull request, review it
     - If there is someone assigned, drop them a comment asking if you can help
