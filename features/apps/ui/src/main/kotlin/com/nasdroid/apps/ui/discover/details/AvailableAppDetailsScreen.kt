@@ -32,11 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.nasdroid.apps.logic.discover.AvailableApp
 import com.nasdroid.apps.logic.discover.AvailableAppDetails
+import com.nasdroid.apps.ui.R
 import com.nasdroid.apps.ui.discover.AvailableAppCard
 import com.nasdroid.apps.ui.installed.details.AppIcon
 import com.nasdroid.design.MaterialThemeExt
@@ -177,7 +179,7 @@ fun AvailableAppDetailsVerticalContent(
         if (similarApps.isNotEmpty()) {
             item {
                 Text(
-                    text = "Similar Apps",
+                    text = stringResource(R.string.discover_details_similar_apps_title),
                     style = MaterialThemeExt.typography.titleMedium,
                     modifier = Modifier.padding(itemHorizontalPadding)
                 )

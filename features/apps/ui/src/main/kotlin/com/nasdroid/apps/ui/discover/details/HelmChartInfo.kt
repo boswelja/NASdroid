@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.nasdroid.apps.logic.discover.AvailableAppDetails
+import com.nasdroid.apps.ui.R
 import com.nasdroid.design.MaterialThemeExt
 
 @Composable
@@ -14,23 +16,23 @@ internal fun HelmChartInfo(
 ) {
     Column(modifier) {
         Text(
-            text = "Helm Chart Info",
+            text = stringResource(R.string.discover_details_helm_chart_info_title),
             style = MaterialThemeExt.typography.titleMedium
         )
         AvailableAppListItem(
-            label = "Catalog",
+            label = stringResource(R.string.discover_details_catalog_label),
             content = chartInfo.catalog
         )
         AvailableAppListItem(
-            label = "Train",
+            label = stringResource(R.string.discover_details_train_label),
             content = chartInfo.train
         )
         AvailableAppListItem(
-            label = "Chart Version",
+            label = stringResource(R.string.discover_details_chart_version_label),
             content = chartInfo.chartVersion
         )
         AvailableAppListItem(
-            label = "Maintainer",
+            label = stringResource(R.string.discover_details_maintainer_label),
             content = "${chartInfo.maintainers.first().name} (${chartInfo.maintainers.first().email})"
         )
     }
