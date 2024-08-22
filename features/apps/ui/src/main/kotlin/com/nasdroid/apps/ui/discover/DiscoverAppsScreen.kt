@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,7 +32,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -50,6 +47,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscoverAppsScreen(
+    onAppClick: (appId: String, appCatalog: String, appTrain: String) -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiscoverAppsViewModel = koinViewModel()
@@ -100,6 +98,9 @@ fun DiscoverAppsScreen(
                         )
                         Spacer(Modifier.height(4.dp))
                         LazyHorizontalAppList(
+                            onAppClick = {
+                                onAppClick(it.id, it.catalogName, it.catalogTrain)
+                            },
                             apps = appGroup.apps,
                             cellSize = DpSize(width = 300.dp, height = 120.dp),
                             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -110,7 +111,6 @@ fun DiscoverAppsScreen(
             }
         }
     }
-
 
     if (isFilterSettingsVisible) {
         val categories by viewModel.availableCategories.collectAsState()
@@ -179,6 +179,7 @@ internal fun FilterChipRow(
 
 @Composable
 internal fun LazyHorizontalAppList(
+    onAppClick: (AvailableApp) -> Unit,
     apps: List<AvailableApp>,
     cellSize: DpSize,
     modifier: Modifier = Modifier,
@@ -197,6 +198,7 @@ internal fun LazyHorizontalAppList(
         ) {
             items(apps) { app ->
                 AvailableAppCard(
+                    onClick = { onAppClick(app) },
                     app = app,
                     modifier = Modifier.size(cellSize)
                 )
@@ -212,6 +214,7 @@ internal fun LazyHorizontalAppList(
         ) {
             items(apps) { app ->
                 AvailableAppCard(
+                    onClick = { onAppClick(app) },
                     app = app,
                     modifier = Modifier.size(cellSize)
                 )

@@ -51,4 +51,15 @@
     <string name="discover_filter_sort_name">App Name</string>
     <string name="discover_filter_sort_catalog">Catalog Name</string>
     <string name="discover_filter_sort_updated">Updated Date</string>
+
+    <string name="discover_details_homepage_label">Homepage</string>
+    <string name="discover_details_version_label">Version</string>
+    <string name="discover_details_updated_label">Last Updated</string>
+    <string name="discover_details_sources_label">Sources</string>
+    <string name="discover_details_helm_chart_info_title">Helm Chart Info</string>
+    <string name="discover_details_catalog_label">Catalog</string>
+    <string name="discover_details_train_label">Train</string>
+    <string name="discover_details_chart_version_label">Chart Version</string>
+    <string name="discover_details_maintainer_label">Maintainer</string>
+    <string name="discover_details_similar_apps_title">Similar Apps</string>
 </resources>
