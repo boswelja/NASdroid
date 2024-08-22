@@ -42,8 +42,14 @@ class AvailableAppDetailsViewModel(
 
     private val _state = MutableStateFlow<State>(State.Loading)
 
+    /**
+     * Flows the latest [State] of the screen.
+     */
     val state: StateFlow<State> = _state
 
+    /**
+     * Flows an [AvailableAppDetails] for the app that should be displayed.
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     val appDetails: StateFlow<AvailableAppDetails?> = _refreshEvent
         .mapLatest { _ ->
@@ -67,6 +73,10 @@ class AvailableAppDetailsViewModel(
             null
         )
 
+    /**
+     * Flows a list of [AvailableApp]s that are similar to the app that this ViewModel is providing
+     * details for.
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     val similarApps: StateFlow<List<AvailableApp>> = _refreshEvent
         .mapLatest {
@@ -82,17 +92,38 @@ class AvailableAppDetailsViewModel(
         refresh()
     }
 
+    /**
+     * Triggers a refresh of [appDetails] and [similarApps].
+     */
     fun refresh() {
         viewModelScope.launch {
             _refreshEvent.emit(Unit)
         }
     }
 
+    /**
+     * Encapsulates possible states of the ViewModel.
+     */
     sealed interface State {
+
+        /**
+         * Indicates that data is being loaded.
+         */
         data object Loading : State
+
+        /**
+         * Indicates that data was successfully loaded.
+         */
         data object Success : State
 
+        /**
+         * Encapsulates all possible failures that can occur during the loading process.
+         */
         sealed interface Error : State {
+
+            /**
+             * Indicates that there was no matching app to be found on the server.
+             */
             data object AppNotFound : Error
         }
     }
