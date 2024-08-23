@@ -84,6 +84,19 @@ internal class PoolV2ApiImpl(
         return response.body()
     }
 
+    override suspend fun findPoolsToImport(): Int {
+        val response = httpClient.get("pool/import_find")
+        return response.body()
+    }
+
+    override suspend fun importPool(params: ImportPoolParams): Boolean {
+        val response = httpClient.post("pool/import_pool") {
+            contentType(ContentType.Application.Json)
+            setBody(params)
+        }
+        return response.body()
+    }
+
     override suspend fun isPoolUpgraded(id: Int): Boolean {
         val response = httpClient.post("pool/id/$id/is_upgraded")
         return response.body()
@@ -114,6 +127,14 @@ internal class PoolV2ApiImpl(
         val response = httpClient.post("pool/id/$id/remove") {
             contentType(ContentType.Application.Json)
             setBody(mapOf("label" to label))
+        }
+        return response.body()
+    }
+
+    override suspend fun replaceDiskInPool(id: Int, params: ReplaceDiskParams): Boolean {
+        val response = httpClient.post("pool/id/$id/replace") {
+            contentType(ContentType.Application.Json)
+            setBody(params)
         }
         return response.body()
     }

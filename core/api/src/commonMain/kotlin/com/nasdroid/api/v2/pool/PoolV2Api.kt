@@ -100,6 +100,23 @@ interface PoolV2Api {
     suspend fun getPoolDisks(id: Int): List<String>
 
     /**
+     * Finds any pools that are available to be imported.
+     *
+     * @return An ID for running a job. The result of the job will be `List<ImportablePool>`. See
+     * [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun findPoolsToImport(): Int
+
+    /**
+     * Import a pool found with [findPoolsToImport].
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun importPool(params: ImportPoolParams): Boolean
+
+    /**
      * Returns whether or not the pool is on the latest version and with all feature flags enabled.
      *
      * @throws HttpNotOkException
@@ -144,6 +161,13 @@ interface PoolV2Api {
     suspend fun removeDiskFromPool(id: Int, label: String)
 
     /**
+     * Replace a disk in a pool.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun replaceDiskInPool(id: Int, params: ReplaceDiskParams): Boolean
+
+    /**
      * Performs a scrub action on a pool.
      *
      * @throws HttpNotOkException
@@ -164,6 +188,64 @@ interface PoolV2Api {
      */
     suspend fun validatePoolName(name: String): Boolean
 }
+
+/**
+ * Represents the parameters for replacing a disk in a pool.
+ *
+ * @property label The ZFS guid or a device name.
+ * @property disk The identifier of the disk.
+ * @property force Whether the replace operation should be forced.
+ * @property preserveSettings Whether settings (power management, S.M.A.R.T., etc.) of the disk
+ * being replaced should be applied to the new disk.
+ */
+@Serializable
+data class ReplaceDiskParams(
+    @SerialName("label")
+    val label: String,
+    @SerialName("disk")
+    val disk: String,
+    @SerialName("force")
+    val force: Boolean = false,
+    @SerialName("preserve_settings")
+    val preserveSettings: Boolean = true
+)
+/**
+ * Represents the parameters for importing a pool.
+ *
+ * @property guid The [ImportablePool.guid].
+ * @property name The name of the pool. If not provided, it will default to the [ImportablePool.name].
+ * @property enableAttachments Whether attachments that were disabled during pool export should be
+ * re-enabled.
+ */
+@Serializable
+data class ImportPoolParams(
+    @SerialName("guid")
+    val guid: String,
+    @SerialName("name")
+    val name: String? = null,
+    @SerialName("enable_attachments")
+    val enableAttachments: Boolean
+)
+
+/**
+ * Describes a pool that is available to be imported.
+ *
+ * @property name The name of the pool to be imported.
+ * @property guid The pools unique identifier.
+ * @property status The current status of the pool.
+ * @property hostname TODO
+ */
+@Serializable
+data class ImportablePool(
+    @SerialName("name")
+    val name: String,
+    @SerialName("guid")
+    val guid: String,
+    @SerialName("status")
+    val status: String,
+    @SerialName("hostname")
+    val hostname: String,
+)
 
 /**
  * Possible pool scrub actions that can be executed. Invoke these by calling [PoolV2Api.scrubPool].
