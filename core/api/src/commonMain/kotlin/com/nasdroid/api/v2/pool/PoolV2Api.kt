@@ -42,11 +42,189 @@ interface PoolV2Api {
     suspend fun getPool(id: Int): Pool
 
     /**
+     * target_vdev is the GUID of the vdev where the disk needs to be attached. In case of STRIPED
+     * vdev, this is the STRIPED disk GUID which will be converted to mirror. If target_vdev is
+     * mirror, it will be converted into a n-way mirror.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun attachDiskToPool(params: AttachPoolParams)
+
+    /**
+     * Return a list of services dependent of this pool.
+     * Responsible for telling the user whether there is a related share, asking for confirmation.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun getPoolAttachments(id: Int): List<PoolAttachment>
+
+    /**
+     * Detach a disk from a pool.
+     *
+     * @param id The ID of the pool to detach from.
+     * @param label The VDev GUID or device name of the disk to detach.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun detachDiskFromPool(id: Int, label: String): Boolean
+
+    /**
+     * Expand a pool to fit all available disk space.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun expandPool(id: Int)
+
+    /**
+     * Export a pool.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun exportPool(id: Int, params: ExportPoolParams)
+
+    /**
+     * Returns all available datasets, except the following:
+     * 1. system datasets
+     * 2. application(s) internal datasets
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun getFilesystemChoices(types: List<FileSystemType> = FileSystemType.entries): List<String>
+
+    /**
+     * Get disks in use by a pool.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun getPoolDisks(id: Int): List<String>
+
+    /**
+     * Returns whether or not the pool is on the latest version and with all feature flags enabled.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun isPoolUpgraded(id: Int): Boolean
+
+    /**
+     * Offline a disk from a pool.
+     *
+     * @param id The ID of the pool to offline from.
+     * @param label The VDev GUID or device name of the disk to offline.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun offlineDiskFromPool(id: Int, label: String): Boolean
+
+    /**
+     * Online a disk from a pool.
+     *
+     * @param id The ID of the pool to online from.
+     * @param label The VDev GUID or device name of the disk to online.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun onlineDiskFromPool(id: Int, label: String): Boolean
+
+    /**
+     * Get a list of running processes using the pool.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun getPoolProcesses(id: Int): List<String>
+
+    /**
+     * Remove a disk from a pool.
+     *
+     * @param id The ID of the pool to remove from.
+     * @param label The VDev GUID or device name of the disk to remove.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun removeDiskFromPool(id: Int, label: String)
+
+    /**
+     * Performs a scrub action on a pool.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun scrubPool(id: Int, action: ScrubAction)
+
+    /**
+     * Upgrade a pool to the latest version with all feature flags.
+     *
+     * @throws HttpNotOkException
+     */
+    suspend fun upgradePool(id: Int): Boolean
+
+    /**
      * Validates [name] is a valid name for a pool.
      *
      * @throws HttpNotOkException
      */
     suspend fun validatePoolName(name: String): Boolean
+}
+
+@Serializable
+enum class ScrubAction {
+    @SerialName("START")
+    Start,
+    @SerialName("STOP")
+    Stop,
+    @SerialName("PAUSE")
+    Pause
+}
+
+@Serializable
+enum class FileSystemType {
+    @SerialName("FILESYSTEM")
+    FileSystem,
+    @SerialName("VOLUME")
+    Volume
+}
+
+/**
+ * Represents parameters for exporting a pool.
+ *
+ * @property cascade will delete all attachments of the given pool.
+ * @property restartServices will restart all services using the given pool.
+ * @property destroy will PERMANENTLY destroy the pool and all its data.
+ */
+@Serializable
+data class ExportPoolParams(
+    @SerialName("cascade")
+    val cascade : Boolean = false,
+    @SerialName("restart_services")
+    val restartServices: Boolean = false,
+    @SerialName("destroy")
+    val destroy: Boolean = false
+)
+
+@Serializable
+data class PoolAttachment(
+    @SerialName("type")
+    val type: String,
+    @SerialName("service")
+    val service: String,
+    @SerialName("attachments")
+    val attachments: List<String>
+)
+
+@Serializable
+data class AttachPoolParams(
+    @SerialName("oid")
+    val oid: Int,
+    @SerialName("pool_attach")
+    val poolAttach: PoolAttach
+) {
+    @Serializable
+    data class PoolAttach(
+        @SerialName("target_vdev")
+        val targetVdev: String,
+        @SerialName("new_disk")
+        val newDisk: String,
+        @SerialName("allow_duplicate_serials")
+        val allowDuplicateSerials: Boolean = false
+    )
 }
 
 @Serializable
