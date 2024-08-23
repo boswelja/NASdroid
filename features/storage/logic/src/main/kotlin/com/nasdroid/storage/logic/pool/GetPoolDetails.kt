@@ -3,8 +3,8 @@ package com.nasdroid.storage.logic.pool
 import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.Capacity.Companion.bytes
 import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.pool.Pool
 import com.nasdroid.api.v2.pool.PoolV2Api
-import com.nasdroid.api.v2.pool.VDev
 import kotlinx.datetime.Instant
 
 /**
@@ -63,7 +63,7 @@ class GetPoolDetails(
         }
     }
 
-    private fun List<VDev>.toTopologyDescriptor(): PoolDetails.Topology.TopologyDescriptor? {
+    private fun List<Pool.VDev>.toTopologyDescriptor(): PoolDetails.Topology.TopologyDescriptor? {
         if (isEmpty()) return null
         return PoolDetails.Topology.TopologyDescriptor(
             deviceCount = count(),

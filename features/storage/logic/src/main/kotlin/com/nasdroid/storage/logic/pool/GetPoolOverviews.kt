@@ -5,7 +5,6 @@ import com.boswelja.capacity.Capacity.Companion.bytes
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.pool.Pool
 import com.nasdroid.api.v2.pool.PoolV2Api
-import com.nasdroid.api.v2.pool.Topology
 
 /**
  * Gets a list of all pools and their status. See [invoke] for details.
@@ -38,7 +37,7 @@ class GetPoolOverviews(
         }
     }
 
-    private fun Topology.isHealthy(): Boolean {
+    private fun Pool.Topology.isHealthy(): Boolean {
         // TODO This should ideally be a separate use case
         return data.all { it.status == STATUS_ONLINE } &&
                 special.all { it.status == STATUS_ONLINE } &&
