@@ -2,6 +2,7 @@ package com.nasdroid.api.v2.pool
 
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.core.UnwrappingDateSerializer
+import com.nasdroid.api.v2.pool.NewPoolTopology.SpecialVDev.Type
 import com.nasdroid.api.v2.pool.Pool.Autotrim
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -164,6 +165,9 @@ interface PoolV2Api {
     suspend fun validatePoolName(name: String): Boolean
 }
 
+/**
+ * Possible pool scrub actions that can be executed. Invoke these by calling [PoolV2Api.scrubPool].
+ */
 @Serializable
 enum class ScrubAction {
     @SerialName("START")
@@ -174,6 +178,10 @@ enum class ScrubAction {
     Pause
 }
 
+/**
+ * Different types to retrieve file system choices for. Pass any combination of these to
+ * [PoolV2Api.getFilesystemChoices] to get the possible filesystems.
+ */
 @Serializable
 enum class FileSystemType {
     @SerialName("FILESYSTEM")
@@ -199,6 +207,13 @@ data class ExportPoolParams(
     val destroy: Boolean = false
 )
 
+/**
+ * Represents a service that is attached to a pool.
+ *
+ * @property type The type of the service.
+ * @property service The name of the service.
+ * @property attachments TODO
+ */
 @Serializable
 data class PoolAttachment(
     @SerialName("type")
@@ -209,6 +224,12 @@ data class PoolAttachment(
     val attachments: List<String>
 )
 
+/**
+ * Parameters for attaching a disk to an existing pool.
+ *
+ * @property oid TODO
+ * @property poolAttach Describes the disk to be attached. See [PoolAttach].
+ */
 @Serializable
 data class AttachPoolParams(
     @SerialName("oid")
@@ -216,6 +237,15 @@ data class AttachPoolParams(
     @SerialName("pool_attach")
     val poolAttach: PoolAttach
 ) {
+    /**
+     * Describes a disk to be attached to a pool.
+     *
+     * @property targetVdev The GUID of the vdev to which the disk will be attached. In case of
+     * STRIPED vdev, this is the STRIPED disk GUID which will be converted to mirror. If the vdev is
+     * mirror, it will be converted into a n-way mirror.
+     * @property newDisk The serial number of the disk to attach.
+     * @property allowDuplicateSerials Whether duplicate disk serials are allowed.
+     */
     @Serializable
     data class PoolAttach(
         @SerialName("target_vdev")
@@ -227,6 +257,13 @@ data class AttachPoolParams(
     )
 }
 
+/**
+ * Describes an updated topology and settings for an existing pool.
+ *
+ * @property topology The new topology configuration for the pool. See [NewPoolTopology].
+ * @property allowDuplicateSerials Whether duplicate disk serials are allowed.
+ * @property autotrim The desired state of the pool's autotrim feature. See [AutotrimMode].
+ */
 @Serializable
 data class UpdatePoolParams(
     @SerialName("topology")
@@ -236,6 +273,9 @@ data class UpdatePoolParams(
     @SerialName("autotrim")
     val autotrim: AutotrimMode
 ) {
+    /**
+     * Encapsulates all possible autotrim modes.
+     */
     @Serializable
     enum class AutotrimMode {
         @SerialName("ON")
@@ -245,6 +285,21 @@ data class UpdatePoolParams(
     }
 }
 
+/**
+ * Describes a new pool to be created.
+ *
+ * @property name The name of the pool. You can validate this name before trying to create by
+ * invoking [PoolV2Api.validatePoolName].
+ * @property encryption Whether the root dataset of the new pool should be encrypted.
+ * @property deduplication The mode for file deduplication on the root dataset of the new pool, or
+ * null if deduplication should not be enabled. See [DeduplicationMode] for options.
+ * @property checksum TODO
+ * @property encryptionOptions The encryption options if you are enabling encryption. See
+ * [EncryptionOptions].
+ * @property topology Describes the topology of the new pool. See [NewPoolTopology].
+ * @property allowDuplicateSerials Whether disks with identical serial numbers are allowed in the
+ * pool.
+ */
 @Serializable
 data class CreatePoolParams(
     @SerialName("name")
@@ -262,16 +317,35 @@ data class CreatePoolParams(
     @SerialName("allow_duplicate_serials")
     val allowDuplicateSerials: Boolean = false
 ) {
+
+    /**
+     * Encapsulates all possible file deduplication modes for a pool.
+     */
     @Serializable
     enum class DeduplicationMode {
+        /**
+         * Ensures that no block of data is duplicated in the pool.
+         */
         @SerialName("ON")
         On,
+
+        /**
+         * Similar to [On], but byte-level comparison is performed. This is expensive, and should
+         * only be used in special circumstances.
+         */
         @SerialName("VERIFY")
         Verify,
+
+        /**
+         * No deduplication is performed.
+         */
         @SerialName("OFF")
         Off
     }
 
+    /**
+     * TODO What is this?
+     */
     @Serializable
     enum class Checksum {
         @SerialName("ON")
@@ -294,6 +368,18 @@ data class CreatePoolParams(
         Blake3
     }
 
+    /**
+     * Describes configuration for encryption of root dataset for the new pool. [passphrase] must be
+     * specified if encryption for root dataset is desired with a passphrase as a key. Otherwise a
+     * hex encoded key can be specified by providing [key]. [generateKey] when enabled
+     * automatically generates the key to be used for dataset encryption.
+     *
+     * @property generateKey Whether the encryption key should be automatically generated.
+     * @property pbkdf2iters TODO
+     * @property algorithm The encryption algorithm to use.
+     * @property passphrase The passphrase used for the encryption, if encrypting with a passphrase.
+     * @property key The hexadecimal key used for encryption, in encrypting with a key.
+     */
     @Serializable
     data class EncryptionOptions(
         @SerialName("generate_key")
@@ -308,6 +394,9 @@ data class CreatePoolParams(
         val key: String? = null
     ) {
 
+        /**
+         * Encapsulates all possible encryption algorithms for the root dataset of the new pool.
+         */
         @Serializable
         enum class Algorithm {
             @SerialName("AES-128-CCM")
@@ -326,21 +415,45 @@ data class CreatePoolParams(
     }
 }
 
+/**
+ * Describes the topology of a new or updated pool.
+ *
+ * @property data A list of [DataVDev]s to be added to the pool. Data vdevs are used for primary
+ * storage operations. You must have at least one for any pool.
+ * @property special An optional list of [SpecialVDev]s to be added to the pool. These vdevs are
+ * used to speed up metadata and small block IO.
+ * @property dedup An optional list of [DedupVDev]s to be added to the pool. Dedup vdevs are used to
+ * store deduplication tables. These vdevs must be sized x GiB for each X TiB of [data].
+ * @property cache An optional list of [CacheVDev]s to be added to the pool. Cache vdevs hold the
+ * ZFS L2ARC read-cache to be used with fast devices for accelerated read times.
+ * @property log An optional list of [LogVDev]s to be added to the pool. Log vdevs hold a ZFS LOG
+ * that can improve the speed of synchronous write operations.
+ * @property spares An optional list of drives that are reserved to replace drives in [data] when
+ * they fail.
+ */
 @Serializable
 data class NewPoolTopology(
     @SerialName("data")
     val data: List<DataVDev>,
     @SerialName("special")
-    val special: List<SpecialVDev>,
+    val special: List<SpecialVDev> = emptyList(),
     @SerialName("dedup")
-    val dedup: List<DedupVDev>,
+    val dedup: List<DedupVDev> = emptyList(),
     @SerialName("cache")
-    val cache: List<CacheVDev>,
+    val cache: List<CacheVDev> = emptyList(),
     @SerialName("log")
-    val log: List<LogVDev>,
+    val log: List<LogVDev> = emptyList(),
     @SerialName("spares")
     val spares: List<String> = listOf()
 ) {
+    /**
+     * Describes a single vdev used for primary storage operations.
+     *
+     * @property type The type, or layout, of the vdev. See [Type] for options.
+     * @property disks A list of disks in the vdev.
+     * @property draidDataDisks TODO
+     * @property draidSpareDisks TODO
+     */
     @Serializable
     data class DataVDev(
         @SerialName("type")
@@ -352,6 +465,9 @@ data class NewPoolTopology(
         @SerialName("draid_spare_disks")
         val draidSpareDisks: Int? = null
     ) {
+        /**
+         * Encapsulates all possible data vdev types, or layouts.
+         */
         @Serializable
         enum class Type {
             @SerialName("DRAID1")
@@ -373,6 +489,12 @@ data class NewPoolTopology(
         }
     }
 
+    /**
+     * Describes a single vdev used for metadata and small block IO.
+     *
+     * @property type The type, or layout, of the vdev. See [Type] for options.
+     * @property disks A list of disks in the vdev.
+     */
     @Serializable
     data class SpecialVDev(
         @SerialName("type")
@@ -380,6 +502,9 @@ data class NewPoolTopology(
         @SerialName("disks")
         val disks: List<String>
     ) {
+        /**
+         * Encapsulates all possible special vdev types, or layouts.
+         */
         @Serializable
         enum class Type {
             @SerialName("MIRROR")
@@ -389,6 +514,12 @@ data class NewPoolTopology(
         }
     }
 
+    /**
+     * Describes a single vdev used for deduplication tables.
+     *
+     * @property type The type, or layout, of the vdev. See [Type] for options.
+     * @property disks A list of disks in the vdev.
+     */
     @Serializable
     data class DedupVDev(
         @SerialName("type")
@@ -396,6 +527,9 @@ data class NewPoolTopology(
         @SerialName("disks")
         val disks: List<String>
     ) {
+        /**
+         * Encapsulates all possible dedup vdev types, or layouts.
+         */
         @Serializable
         enum class Type {
             @SerialName("MIRROR")
@@ -405,6 +539,12 @@ data class NewPoolTopology(
         }
     }
 
+    /**
+     * Describes a single vdev used for ZFS L2ARC cache.
+     *
+     * @property type The type, or layout, of the vdev. See [Type] for options.
+     * @property disks A list of disks in the vdev.
+     */
     @Serializable
     data class CacheVDev(
         @SerialName("type")
@@ -412,6 +552,9 @@ data class NewPoolTopology(
         @SerialName("disks")
         val disks: List<String>
     ) {
+        /**
+         * Encapsulates all possible cache vdev types, or layouts.
+         */
         @Serializable
         enum class Type {
             @SerialName("STRIPE")
@@ -419,6 +562,12 @@ data class NewPoolTopology(
         }
     }
 
+    /**
+     * Describes a single vdev used for ZFS LOG.
+     *
+     * @property type The type, or layout, of the vdev. See [Type] for options.
+     * @property disks A list of disks in the vdev.
+     */
     @Serializable
     data class LogVDev(
         @SerialName("type")
@@ -426,6 +575,9 @@ data class NewPoolTopology(
         @SerialName("disks")
         val disks: List<String>
     ) {
+        /**
+         * Encapsulates all possible log vdev types, or layouts.
+         */
         @Serializable
         enum class Type {
             @SerialName("MIRROR")
@@ -439,27 +591,28 @@ data class NewPoolTopology(
 /**
  * Describes a pool of disks on the system.
  *
- * @property allocated The number of bytes in this pool that have data allocated.
- * @property allocatedStr [allocated] but a string.
- * @property autotrim [Autotrim].
- * @property fragmentation TODO
- * @property free The number of bytes in this pool that do not have data allocated.
- * @property freeStr [free] but a string.
- * @property freeing TODO
- * @property freeingStr [freeingStr] but a string.
- * @property guid A globally unique identifier for this pool.
- * @property healthy Whether the pool is "healthy".
  * @property id The ID of the pool. This is unique to this system.
  * @property name The name of the pool.
+ * @property guid A globally unique identifier for this pool.
+ * @property status The pool status. For example, 'ONLINE'.
  * @property path The path of the pool on the filesystem.
  * @property scan The most recent [Scan] that occurred.
- * @property size The total size of the pool in bytes.
- * @property sizeStr [size] but a string.
- * @property status The pool status. For example, 'ONLINE'.
+ * @property isUpgraded Whether the pool is on the latest version with all feature flags enabled.
+ * @property healthy Whether the pool is "healthy".
+ * @property warning Whether this pool has an active warning.
  * @property statusCode The code for the current pool status, if issues are present.
  * @property statusDetail Reasoning for the current status.
+ * @property size The total size of the pool in bytes.
+ * @property allocated The number of bytes in this pool that have data allocated.
+ * @property free The number of bytes in this pool that do not have data allocated.
+ * @property freeing TODO
+ * @property fragmentation TODO
+ * @property sizeStr [size] but a string.
+ * @property allocatedStr [allocated] but a string.
+ * @property freeStr [free] but a string.
+ * @property freeingStr [freeingStr] but a string.
+ * @property autotrim [Autotrim].
  * @property topology [Topology].
- * @property warning Whether this pool has an active warning.
  */
 @Serializable
 data class Pool(
