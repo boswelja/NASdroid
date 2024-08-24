@@ -8,7 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.nasdroid.storage.ui.pools.StoragePoolsScreen
+import com.nasdroid.storage.ui.pools.StorageOverviewScreen
 
 /**
  * Registers a nested navigation graph for the Storage feature.
@@ -21,7 +21,7 @@ fun NavGraphBuilder.storageGraph(
 ) {
     navigation(startDestination = "pools", route = route) {
         composable("pools") { _ ->
-            StoragePoolsScreen(
+            StorageOverviewScreen(
                 onNavigate = { navController.navigate(it) },
                 windowSizeClass = windowSizeClass,
                 modifier = modifier,

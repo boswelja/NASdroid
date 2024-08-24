@@ -21,14 +21,14 @@ import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.design.plus
 import com.nasdroid.navigation.NavigationSuiteScaffold
 import com.nasdroid.storage.ui.R
-import com.nasdroid.storage.ui.pools.overview.StorageOverviewScreen
+import com.nasdroid.storage.ui.pools.overview.PoolsScreen
 
 /**
  * A screen that will take control of displaying pool details on large-screen devices to provide a
- * split view. See [StorageOverviewScreen] for the overview screen.
+ * split view. See [PoolsScreen] for the overview screen.
  */
 @Composable
-fun StoragePoolsScreen(
+fun StorageOverviewScreen(
     onNavigate: (route: String) -> Unit,
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
@@ -44,7 +44,7 @@ fun StoragePoolsScreen(
                 mutableIntStateOf(-1)
             }
             Row {
-                StorageOverviewScreen(
+                PoolsScreen(
                     onShowDetails = { currentDetailsId = it },
                     modifier = Modifier.weight(1f),
                     contentPadding = it + PaddingValues(
@@ -69,7 +69,7 @@ fun StoragePoolsScreen(
                 }
             }
         } else {
-            StorageOverviewScreen(
+            PoolsScreen(
                 onShowDetails = {
                     onNavigate("poolDetails/$it")
                 },
