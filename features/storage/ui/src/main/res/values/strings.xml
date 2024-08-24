@@ -24,4 +24,7 @@
 
     <string name="button_show_more">Expand</string>
     <string name="button_show_less">Collapse</string>
+
+    <string name="capacity_used_label">%s Used</string>
+    <string name="capacity_available_label">%s Available</string>
 </resources>
