@@ -711,7 +711,7 @@ data class Pool(
     @SerialName("scan")
     val scan: Scan,
     @SerialName("is_upgraded")
-    val isUpgraded: Boolean,
+    val isUpgraded: Boolean?,
     @SerialName("healthy")
     val healthy: Boolean,
     @SerialName("warning")
@@ -721,23 +721,23 @@ data class Pool(
     @SerialName("status_detail")
     val statusDetail: String?,
     @SerialName("size")
-    val size: Long,
+    val size: Long?,
     @SerialName("allocated")
-    val allocated: Long,
+    val allocated: Long?,
     @SerialName("free")
-    val free: Long,
+    val free: Long?,
     @SerialName("freeing")
-    val freeing: Long,
+    val freeing: Long?,
     @SerialName("fragmentation")
-    val fragmentation: String,
+    val fragmentation: String?,
     @SerialName("size_str")
-    val sizeStr: String,
+    val sizeStr: String?,
     @SerialName("allocated_str")
-    val allocatedStr: String,
+    val allocatedStr: String?,
     @SerialName("free_str")
-    val freeStr: String,
+    val freeStr: String?,
     @SerialName("freeing_str")
-    val freeingStr: String,
+    val freeingStr: String?,
     @SerialName("autotrim")
     val autotrim: Autotrim,
     @SerialName("topology")
