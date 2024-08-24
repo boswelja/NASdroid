@@ -1,6 +1,5 @@
 package com.nasdroid.storage.ui
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -19,19 +18,17 @@ fun NavGraphBuilder.storageGraph(
     windowSizeClass: WindowSizeClass,
     route: String,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
 ) {
-    navigation(startDestination = "poolsOverview", route = route) {
-        composable("poolsOverview") { _ ->
+    navigation(startDestination = "pools", route = route) {
+        composable("pools") { _ ->
             StoragePoolsScreen(
                 onNavigate = { navController.navigate(it) },
                 windowSizeClass = windowSizeClass,
                 modifier = modifier,
-                contentPadding = contentPadding,
             )
         }
         composable(
-            route = "poolDetails/{id}",
+            route = "pool/{id}",
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.IntType

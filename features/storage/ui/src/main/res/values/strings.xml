@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="storage_dashboard_title">Storage</string>
+
     <string name="topology_title">Topology</string>
     <string name="topology_section_data">Data</string>
     <string name="topology_section_cache">Cache</string>

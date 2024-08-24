@@ -35,7 +35,6 @@ fun MainNavHost(
             navController = navController,
             windowSizeClass = windowSizeClass,
             route = "storage",
-            contentPadding = contentPadding
         )
         appsGraph(
             navController = navController,

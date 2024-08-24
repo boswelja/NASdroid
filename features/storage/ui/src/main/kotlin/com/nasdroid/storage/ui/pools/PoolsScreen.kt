@@ -16,6 +16,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.design.plus
+import com.nasdroid.navigation.NavigationSuiteScaffold
+import com.nasdroid.storage.ui.R
 import com.nasdroid.storage.ui.pools.overview.StorageOverviewScreen
 
 /**
@@ -29,35 +34,51 @@ fun StoragePoolsScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    if (windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium) {
-        var currentDetailsId by rememberSaveable {
-            mutableIntStateOf(-1)
-        }
-        Row(modifier) {
-            StorageOverviewScreen(
-                onShowDetails = { currentDetailsId = it },
-                modifier = Modifier.weight(1f),
-                contentPadding = contentPadding
-            )
-            VerticalDivider()
-            if (currentDetailsId >= 0) {
-                // TODO Details screen
-            } else {
-                EmptyDetailsScreen(
-                    Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .padding(contentPadding))
+    NavigationSuiteScaffold(
+        title = { Text(stringResource(R.string.storage_dashboard_title)) },
+        onNavigate = onNavigate,
+        modifier = modifier.padding(contentPadding)
+    ) {
+        if (windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium) {
+            var currentDetailsId by rememberSaveable {
+                mutableIntStateOf(-1)
             }
+            Row {
+                StorageOverviewScreen(
+                    onShowDetails = { currentDetailsId = it },
+                    modifier = Modifier.weight(1f),
+                    contentPadding = it + PaddingValues(
+                        horizontal = MaterialThemeExt.paddings.large,
+                        vertical = MaterialThemeExt.paddings.medium
+                    )
+                )
+                VerticalDivider()
+                if (currentDetailsId >= 0) {
+                    // TODO Details screen
+                } else {
+                    EmptyDetailsScreen(
+                        Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(it)
+                            .padding(
+                                horizontal = MaterialThemeExt.paddings.large,
+                                vertical = MaterialThemeExt.paddings.medium
+                            )
+                    )
+                }
+            }
+        } else {
+            StorageOverviewScreen(
+                onShowDetails = {
+                    onNavigate("poolDetails/$it")
+                },
+                contentPadding = it + PaddingValues(
+                    horizontal = MaterialThemeExt.paddings.large,
+                    vertical = MaterialThemeExt.paddings.medium
+                )
+            )
         }
-    } else {
-        StorageOverviewScreen(
-            onShowDetails = {
-                onNavigate("poolDetails/$it")
-            },
-            modifier = modifier,
-            contentPadding = contentPadding
-        )
     }
 }
 
