@@ -24,9 +24,9 @@ class GetPoolDetails(
                 id = dto.id,
                 name = dto.name,
                 usage = PoolDetails.Usage(
-                    usableCapacity = dto.size.bytes,
-                    usedCapacity = dto.allocated.bytes,
-                    availableCapacity = dto.free.bytes
+                    usableCapacity = dto.size!!.bytes,
+                    usedCapacity = dto.allocated!!.bytes,
+                    availableCapacity = dto.free!!.bytes
                 ),
                 topology = PoolDetails.Topology(
                     dataTopology = dto.topology.data.toTopologyDescriptor(),

@@ -23,8 +23,8 @@ class GetPoolOverviews(
                 PoolOverview(
                     id = pool.id,
                     poolName = pool.name,
-                    totalCapacity = pool.size.bytes,
-                    usedCapacity = pool.allocated.bytes,
+                    totalCapacity = pool.size!!.bytes,
+                    usedCapacity = pool.allocated!!.bytes,
                     topologyHealth = PoolOverview.HealthStatus(pool.topology.isHealthy(), null), // TODO Reason
                     usageHealth = PoolOverview.HealthStatus(pool.healthy, null),
                     zfsHealth = PoolOverview.HealthStatus(pool.scan.errors <= 0, null),
