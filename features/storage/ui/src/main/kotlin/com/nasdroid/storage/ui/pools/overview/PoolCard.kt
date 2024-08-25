@@ -24,6 +24,7 @@ import com.boswelja.capacity.Capacity.Companion.gigabytes
 import com.boswelja.capacity.Capacity.Companion.terabytes
 import com.boswelja.capacity.CapacityUnit
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.design.NasDroidTheme
 import com.nasdroid.storage.logic.pool.PoolOverview
 import com.nasdroid.storage.ui.R
 
@@ -128,17 +129,19 @@ fun PoolHealthItem(
 @PreviewFontScale
 @Composable
 fun PoolCardPreview() {
-    PoolCard(
-        pool = PoolOverview(
-            id = 1,
-            poolName = "MyPool",
-            totalCapacity = 1.terabytes,
-            usedCapacity = 400.gigabytes,
-            topologyHealth = PoolOverview.HealthStatus(false, "Disk 1 offline"),
-            usageHealth = PoolOverview.HealthStatus(true, null),
-            zfsHealth = PoolOverview.HealthStatus(true, null),
-            disksHealth = PoolOverview.HealthStatus(true, null)
-        ),
-        onShowDetails = {}
-    )
+    NasDroidTheme {
+        PoolCard(
+            pool = PoolOverview(
+                id = 1,
+                poolName = "MyPool",
+                totalCapacity = 1.terabytes,
+                usedCapacity = 400.gigabytes,
+                topologyHealth = PoolOverview.HealthStatus(false, "Disk 1 offline"),
+                usageHealth = PoolOverview.HealthStatus(true, null),
+                zfsHealth = PoolOverview.HealthStatus(true, null),
+                disksHealth = PoolOverview.HealthStatus(true, null)
+            ),
+            onShowDetails = {}
+        )
+    }
 }
