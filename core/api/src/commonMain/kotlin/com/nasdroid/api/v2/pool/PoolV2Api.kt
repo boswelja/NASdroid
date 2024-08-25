@@ -670,13 +670,14 @@ data class NewPoolTopology(
     }
 
 }
+
 /**
  * Describes a pool of disks on the system.
  *
  * @property id The ID of the pool. This is unique to this system.
  * @property name The name of the pool.
  * @property guid A globally unique identifier for this pool.
- * @property status The pool status. For example, 'ONLINE'.
+ * @property status The overall status of the pool. See [PoolStatus] for possible modes.
  * @property path The path of the pool on the filesystem.
  * @property scan The most recent [Scan] that occurred.
  * @property isUpgraded Whether the pool is on the latest version with all feature flags enabled.
@@ -705,7 +706,7 @@ data class Pool(
     @SerialName("guid")
     val guid: String,
     @SerialName("status")
-    val status: String,
+    val status: PoolStatus,
     @SerialName("path")
     val path: String,
     @SerialName("scan")
@@ -772,7 +773,7 @@ data class Pool(
      * @property endTime The time this scan finished.
      * @property errors The number of errors found in the scan.
      * @property function The scan function. For example, 'SCRUB'.
-     * @property pause TODO
+     * @property pause The time this scan was paused, if it is currently paused.
      * @property percentage How much of the scan has been completed.
      * @property startTime The time this scan started.
      * @property state The state of the scan. For example, 'FINISHED'.
@@ -793,18 +794,33 @@ data class Pool(
         val errors: Int,
         @SerialName("function")
         val function: String,
+        @Serializable(with = UnwrappingDateSerializer::class)
         @SerialName("pause")
-        val pause: String?,
+        val pause: Long?,
         @SerialName("percentage")
         val percentage: Double,
         @Serializable(with = UnwrappingDateSerializer::class)
         @SerialName("start_time")
         val startTime: Long,
         @SerialName("state")
-        val state: String,
+        val state: ScanState,
         @SerialName("total_secs_left")
         val totalSecsLeft: Long?
-    )
+    ) {
+
+        /**
+         * Encapsulates all possible states for a scan on a pool.
+         */
+        @Serializable
+        enum class ScanState {
+            @SerialName("FINISHES")
+            Finished,
+            @SerialName("SCANNING")
+            Scanning,
+            @SerialName("CANCELED")
+            Cancelled,
+        }
+    }
 
     /**
      * Describes a pool topology.
@@ -863,21 +879,36 @@ data class Pool(
         @SerialName("stats")
         val stats: Stats,
         @SerialName("status")
-        val status: Status,
+        val status: PoolStatus,
         @SerialName("type")
-        val type: String,
+        val type: Type,
         @SerialName("unavail_disk")
         val unavailDisk: String?
     ) {
+
         /**
-         * Encapsulates all possible statuses of a vdev.
+         * Encapsulates all possible vdev types, or layouts.
          */
         @Serializable
-        enum class Status {
-            @SerialName("ONLINE")
-            Online,
-            @SerialName("DEGRADED")
-            Degraded
+        enum class Type {
+            @SerialName("DRAID1")
+            DRaid1,
+            @SerialName("DRAID2")
+            DRaid2,
+            @SerialName("DRAID3")
+            DRaid3,
+            @SerialName("RAIDZ1")
+            RaidZ1,
+            @SerialName("RAIDZ2")
+            RaidZ2,
+            @SerialName("RAIDZ3")
+            RaidZ3,
+            @SerialName("MIRROR")
+            Mirror,
+            @SerialName("STRIPE")
+            Stripe,
+            @SerialName("DISK")
+            Disk,
         }
     }
 
@@ -927,4 +958,17 @@ data class Pool(
         @SerialName("write_errors")
         val writeErrors: Int
     )
+}
+
+/**
+ * Encapsulates all possible statuses of a vdev.
+ */
+@Serializable
+enum class PoolStatus {
+    @SerialName("ONLINE")
+    Online,
+    @SerialName("DEGRADED")
+    Degraded,
+    @SerialName("OFFLINE")
+    Offline
 }
