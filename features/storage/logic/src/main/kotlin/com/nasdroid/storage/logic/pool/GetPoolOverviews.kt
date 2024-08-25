@@ -4,6 +4,7 @@ import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.Capacity.Companion.bytes
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.pool.Pool
+import com.nasdroid.api.v2.pool.PoolStatus
 import com.nasdroid.api.v2.pool.PoolV2Api
 
 /**
@@ -38,17 +39,12 @@ class GetPoolOverviews(
     }
 
     private fun Pool.Topology.isHealthy(): Boolean {
-        // TODO This should ideally be a separate use case
-        return data.all { it.status == STATUS_ONLINE } &&
-                special.all { it.status == STATUS_ONLINE } &&
-                cache.all { it.status == STATUS_ONLINE } &&
-                log.all { it.status == STATUS_ONLINE } &&
-                spare.all { it.status == STATUS_ONLINE } &&
-                dedup.all { it.status == STATUS_ONLINE }
-    }
-
-    companion object {
-        private const val STATUS_ONLINE = "ONLINE"
+        return data.all { it.status == PoolStatus.Online } &&
+                special.all { it.status == PoolStatus.Online } &&
+                cache.all { it.status == PoolStatus.Online } &&
+                log.all { it.status == PoolStatus.Online } &&
+                spare.all { it.status == PoolStatus.Online } &&
+                dedup.all { it.status == PoolStatus.Online }
     }
 }
 
