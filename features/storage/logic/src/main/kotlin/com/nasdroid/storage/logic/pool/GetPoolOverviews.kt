@@ -4,6 +4,7 @@ import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.Capacity.Companion.bytes
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.pool.Pool
+import com.nasdroid.api.v2.pool.PoolStatus
 import com.nasdroid.api.v2.pool.PoolV2Api
 
 /**
@@ -38,12 +39,12 @@ class GetPoolOverviews(
     }
 
     private fun Pool.Topology.isHealthy(): Boolean {
-        return data.all { it.status == Pool.VDev.Status.Online } &&
-                special.all { it.status == Pool.VDev.Status.Online } &&
-                cache.all { it.status == Pool.VDev.Status.Online } &&
-                log.all { it.status == Pool.VDev.Status.Online } &&
-                spare.all { it.status == Pool.VDev.Status.Online } &&
-                dedup.all { it.status == Pool.VDev.Status.Online }
+        return data.all { it.status == PoolStatus.Online } &&
+                special.all { it.status == PoolStatus.Online } &&
+                cache.all { it.status == PoolStatus.Online } &&
+                log.all { it.status == PoolStatus.Online } &&
+                spare.all { it.status == PoolStatus.Online } &&
+                dedup.all { it.status == PoolStatus.Online }
     }
 }
 
