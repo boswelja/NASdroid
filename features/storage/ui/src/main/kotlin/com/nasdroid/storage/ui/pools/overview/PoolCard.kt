@@ -11,20 +11,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.boswelja.capacity.Capacity.Companion.gigabytes
 import com.boswelja.capacity.Capacity.Companion.terabytes
 import com.boswelja.capacity.CapacityUnit
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.storage.logic.pool.PoolOverview
+import com.nasdroid.storage.ui.R
 
 /**
  * Displays information about a given [PoolOverview].
@@ -39,10 +40,16 @@ fun PoolCard(
     onShowDetails: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ElevatedCard(modifier) {
+    ElevatedCard(
+        modifier = modifier,
+        onClick = onShowDetails
+    ) {
         Column(
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            modifier = Modifier.padding(
+                horizontal = MaterialThemeExt.paddings.large,
+                vertical = MaterialThemeExt.paddings.medium
+            ),
+            verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium)
         ) {
             Text(
                 text = pool.poolName,
@@ -53,28 +60,18 @@ fun PoolCard(
                 totalBytes = pool.totalCapacity.toLong(CapacityUnit.BYTE),
                 modifier = Modifier.fillMaxWidth()
             )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                PoolHealthItem(
-                    label = { Text("Topology") },
-                    healthStatus = pool.topologyHealth
-                )
-                PoolHealthItem(
-                    label = { Text("ZFS") },
-                    healthStatus = pool.zfsHealth
-                )
-                PoolHealthItem(
-                    label = { Text("Disks") },
-                    healthStatus = pool.disksHealth
-                )
-            }
-            FilledTonalButton(
-                onClick = onShowDetails,
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text("See Details")
-            }
+            PoolHealthItem(
+                label = { Text(stringResource(R.string.topology_health_title)) },
+                healthStatus = pool.topologyHealth
+            )
+            PoolHealthItem(
+                label = { Text(stringResource(R.string.zfs_health_title)) },
+                healthStatus = pool.zfsHealth
+            )
+            PoolHealthItem(
+                label = { Text(stringResource(R.string.disks_health_title)) },
+                healthStatus = pool.disksHealth
+            )
         }
     }
 }
@@ -105,7 +102,7 @@ fun PoolHealthItem(
                 tint = MaterialThemeExt.colorScheme.error
             )
         }
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(MaterialThemeExt.paddings.large))
         Column {
             ProvideTextStyle(MaterialThemeExt.typography.bodyLarge) {
                 label()
@@ -113,12 +110,12 @@ fun PoolHealthItem(
             ProvideTextStyle(MaterialThemeExt.typography.bodyMedium) {
                 if (healthStatus.isHealthy) {
                     Text(
-                        text = "Healthy",
+                        text = stringResource(R.string.health_status_healthy),
                         color = MaterialThemeExt.colorScheme.onSurfaceVariant
                     )
                 } else {
                     Text(
-                        text = healthStatus.unhealthyReason ?: "There's a problem",
+                        text = healthStatus.unhealthyReason ?: stringResource(R.string.health_status_unknown),
                         color = MaterialThemeExt.colorScheme.onSurfaceVariant
                     )
                 }
@@ -127,7 +124,8 @@ fun PoolHealthItem(
     }
 }
 
-@Preview
+@PreviewLightDark
+@PreviewFontScale
 @Composable
 fun PoolCardPreview() {
     PoolCard(

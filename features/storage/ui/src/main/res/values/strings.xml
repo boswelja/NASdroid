@@ -27,4 +27,10 @@
 
     <string name="capacity_used_label">%s Used</string>
     <string name="capacity_available_label">%s Available</string>
+
+    <string name="topology_health_title">@string/topology_title</string>
+    <string name="zfs_health_title">ZFS</string>
+    <string name="disks_health_title">Disks</string>
+    <string name="health_status_healthy">Healthy</string>
+    <string name="health_status_unknown">Unhealthy</string>
 </resources>
