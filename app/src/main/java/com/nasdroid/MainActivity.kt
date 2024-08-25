@@ -63,7 +63,6 @@ fun AppContent(windowSizeClass: WindowSizeClass) {
                         }
                     }
                 },
-                windowSizeClass = windowSizeClass
             )
         }
     }

@@ -1,6 +1,5 @@
 package com.nasdroid.storage.ui
 
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -15,7 +14,6 @@ import com.nasdroid.storage.ui.pools.StorageOverviewScreen
  */
 fun NavGraphBuilder.storageGraph(
     navController: NavController,
-    windowSizeClass: WindowSizeClass,
     route: String,
     modifier: Modifier = Modifier,
 ) {
@@ -23,7 +21,6 @@ fun NavGraphBuilder.storageGraph(
         composable("pools") { _ ->
             StorageOverviewScreen(
                 onNavigate = { navController.navigate(it) },
-                windowSizeClass = windowSizeClass,
                 modifier = modifier,
             )
         }
