@@ -7,18 +7,26 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.boswelja.capacity.Capacity.Companion.gigabytes
+import com.boswelja.capacity.Capacity.Companion.terabytes
+import com.boswelja.capacity.CapacityUnit
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.design.NasDroidTheme
+import com.nasdroid.storage.ui.R
 
 /**
  * Displays a labelled progress bar communicating an overview of storage capacity.
@@ -33,11 +41,6 @@ fun StorageUseSummary(
     totalBytes: Long,
     modifier: Modifier = Modifier,
 ) {
-    val progress by remember {
-        derivedStateOf {
-            usedBytes / totalBytes.toFloat()
-        }
-    }
     Column(modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -45,17 +48,17 @@ fun StorageUseSummary(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "${fileSizeString(bytes = usedBytes)} Used",
+                text = stringResource(R.string.capacity_used_label, fileSizeString(usedBytes)),
                 style = MaterialThemeExt.typography.labelLarge
             )
             Text(
-                text = "${fileSizeString(bytes = totalBytes)} Total",
+                text = stringResource(R.string.capacity_available_label, fileSizeString(totalBytes - usedBytes)),
                 style = MaterialThemeExt.typography.labelLarge
             )
         }
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(MaterialThemeExt.paddings.small))
         LinearProgressIndicator(
-            progress = { progress },
+            progress = { usedBytes / totalBytes.toFloat() },
             modifier = Modifier
                 .height(24.dp)
                 .fillMaxWidth(),
@@ -72,5 +75,20 @@ fun fileSizeString(bytes: Long): String {
     val context = LocalContext.current
     return remember {
         formatFileSize(context, bytes)
+    }
+}
+
+@PreviewLightDark
+@PreviewFontScale
+@Composable
+fun StorageUseSummaryPreview() {
+    NasDroidTheme {
+        Surface {
+            StorageUseSummary(
+                usedBytes = 350.gigabytes.toLong(CapacityUnit.BYTE),
+                totalBytes = 1.terabytes.toLong(CapacityUnit.BYTE),
+                modifier = Modifier.padding(16.dp)
+            )
+        }
     }
 }

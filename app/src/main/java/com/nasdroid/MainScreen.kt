@@ -19,9 +19,7 @@ import androidx.compose.material.icons.filled.SettingsPower
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
@@ -176,11 +174,9 @@ internal val BottomNavigationItems = listOf(
  * The main content of the app. This Composable displays navigation-related elements, and contains a
  * NavHost for features to display their own screens.
  */
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun MainScreen(
     onLogOut: () -> Unit,
-    windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier
 ) {
 
@@ -224,7 +220,6 @@ fun MainScreen(
                     modifier = Modifier
                         .fillMaxSize(),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                    windowSizeClass = windowSizeClass,
                 )
             }
         }

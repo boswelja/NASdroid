@@ -17,11 +17,11 @@ import org.koin.androidx.compose.koinViewModel
  * Displays an overview of all storage pools on the server.
  */
 @Composable
-fun StorageOverviewScreen(
+fun PoolsScreen(
     onShowDetails: (poolId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    viewModel: StorageOverviewViewModel = koinViewModel(),
+    viewModel: PoolsViewModel = koinViewModel(),
 ) {
     // TODO handle loading
     val isLoading by viewModel.isLoading.collectAsState()

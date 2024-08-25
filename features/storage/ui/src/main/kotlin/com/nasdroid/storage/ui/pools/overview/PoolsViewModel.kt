@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 /**
  * Fetches and exposes data used for displaying a list of storage pools.
  */
-class StorageOverviewViewModel(
+class PoolsViewModel(
     private val getPoolOverviews: GetPoolOverviews
 ) : ViewModel() {
 
