@@ -863,12 +863,23 @@ data class Pool(
         @SerialName("stats")
         val stats: Stats,
         @SerialName("status")
-        val status: String,
+        val status: Status,
         @SerialName("type")
         val type: String,
         @SerialName("unavail_disk")
         val unavailDisk: String?
-    )
+    ) {
+        /**
+         * Encapsulates all possible statuses of a vdev.
+         */
+        @Serializable
+        enum class Status {
+            @SerialName("ONLINE")
+            Online,
+            @SerialName("DEGRADED")
+            Degraded
+        }
+    }
 
     /**
      * Contains various statistics for a VDev.
