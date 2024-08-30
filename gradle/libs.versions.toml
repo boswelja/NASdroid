@@ -2,7 +2,7 @@
 android-gradle-plugin = "8.5.2"
 detekt = "1.23.6"
 kotlin = "2.0.20"
-ksp = "2.0.10-1.0.24"
+ksp = "2.0.20-1.0.24"
 
 androidx-core = "1.13.1"
 androidx-lifecycle = "2.8.4"
