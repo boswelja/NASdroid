@@ -2,6 +2,7 @@ package com.nasdroid.storage.logic.pool
 
 import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.Capacity.Companion.bytes
+import com.boswelja.capacity.Capacity.Companion.gigabytes
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.pool.Pool
 import com.nasdroid.api.v2.pool.PoolStatus
@@ -26,10 +27,10 @@ class GetPoolOverviews(
                     poolName = pool.name,
                     totalCapacity = pool.size!!.bytes,
                     usedCapacity = pool.allocated!!.bytes,
-                    topologyHealth = PoolOverview.HealthStatus(pool.topology.isHealthy(), null), // TODO Reason
-                    usageHealth = PoolOverview.HealthStatus(pool.healthy, null),
-                    zfsHealth = PoolOverview.HealthStatus(pool.scan.errors <= 0, null),
-                    disksHealth = PoolOverview.HealthStatus(true, null), // TODO
+                    topologyHealth = pool.calculateTopologyHealth(),
+                    usageHealth = pool.calculateUsageHealth(),
+                    zfsHealth = PoolOverview.ZfsHealth.Healthy, // TODO
+                    disksHealth = PoolOverview.DisksHealth.Healthy // TODO
                 )
             }
             Result.success(result)
@@ -38,13 +39,35 @@ class GetPoolOverviews(
         }
     }
 
-    private fun Pool.Topology.isHealthy(): Boolean {
-        return data.all { it.status == PoolStatus.Online } &&
-                special.all { it.status == PoolStatus.Online } &&
-                cache.all { it.status == PoolStatus.Online } &&
-                log.all { it.status == PoolStatus.Online } &&
-                spare.all { it.status == PoolStatus.Online } &&
-                dedup.all { it.status == PoolStatus.Online }
+    private fun Pool.calculateTopologyHealth(): PoolOverview.TopologyHealth {
+        var degradedVdevs = 0
+        var offlineVdevs = 0
+        topology.data.forEach {
+            when (it.status) {
+                PoolStatus.Online -> { /* no-op */ }
+                PoolStatus.Degraded -> degradedVdevs++
+                PoolStatus.Offline -> offlineVdevs++
+            }
+        }
+        return if (offlineVdevs > 0) {
+            PoolOverview.TopologyHealth.Offline
+        } else if (degradedVdevs > 0) {
+            PoolOverview.TopologyHealth.Degraded(degradedVdevs)
+        } else {
+            PoolOverview.TopologyHealth.Healthy
+        }
+    }
+
+    private fun Pool.calculateUsageHealth(): PoolOverview.UsageHealth {
+        val freeCapacity = free?.bytes ?: 0.bytes
+        val warningBuffer = 10.gigabytes // TODO Where should this come from?
+        return if (freeCapacity <= 0.bytes) {
+            PoolOverview.UsageHealth.Full
+        } else if (freeCapacity < warningBuffer) {
+            PoolOverview.UsageHealth.LowFreeSpace
+        } else {
+            PoolOverview.UsageHealth.Healthy
+        }
     }
 }
 
@@ -65,20 +88,31 @@ data class PoolOverview(
     val poolName: String,
     val totalCapacity: Capacity,
     val usedCapacity: Capacity,
-    val topologyHealth: HealthStatus,
-    val usageHealth: HealthStatus,
-    val zfsHealth: HealthStatus,
-    val disksHealth: HealthStatus,
+    val topologyHealth: TopologyHealth,
+    val usageHealth: UsageHealth,
+    val zfsHealth: ZfsHealth,
+    val disksHealth: DisksHealth,
 ) {
 
-    /**
-     * Describes the health of an item in the pool.
-     *
-     * @property isHealthy Whether the item is healthy.
-     * @property unhealthyReason Why the pool is unhealthy, if available.
-     */
-    data class HealthStatus(
-        val isHealthy: Boolean,
-        val unhealthyReason: String?
-    )
+    sealed interface TopologyHealth {
+        data object Healthy : TopologyHealth
+        data class Degraded(val degradedVdevs: Int): TopologyHealth
+        data object Offline : TopologyHealth
+    }
+
+    enum class UsageHealth {
+        Healthy,
+        LowFreeSpace,
+        Full
+    }
+
+    enum class ZfsHealth {
+        Healthy
+        // TODO
+    }
+
+    enum class DisksHealth {
+        Healthy
+        // TODO
+    }
 }
