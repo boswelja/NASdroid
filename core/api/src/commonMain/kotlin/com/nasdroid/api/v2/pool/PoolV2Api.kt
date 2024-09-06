@@ -813,7 +813,7 @@ data class Pool(
          */
         @Serializable
         enum class ScanState {
-            @SerialName("FINISHES")
+            @SerialName("FINISHED")
             Finished,
             @SerialName("SCANNING")
             Scanning,
