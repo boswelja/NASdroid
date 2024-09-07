@@ -112,9 +112,12 @@ interface PoolV2Api {
     /**
      * Import a pool found with [findPoolsToImport].
      *
+     * @return An ID for running a job. The result of the job will be `Boolean`. See
+     * [com.nasdroid.api.v2.core.CoreV2Api.getJob].
+     *
      * @throws HttpNotOkException
      */
-    suspend fun importPool(params: ImportPoolParams): Boolean
+    suspend fun importPool(params: ImportPoolParams): Int
 
     /**
      * Returns whether or not the pool is on the latest version and with all feature flags enabled.

@@ -3,6 +3,7 @@ package com.nasdroid.storage.logic
 import com.nasdroid.storage.logic.pool.GetPoolDetails
 import com.nasdroid.storage.logic.pool.GetPoolOverviews
 import com.nasdroid.storage.logic.pool.import.GetImportablePools
+import com.nasdroid.storage.logic.pool.import.ImportPool
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -11,6 +12,7 @@ import org.koin.dsl.module
  */
 val StorageLogicModule = module {
     factoryOf(::GetImportablePools)
+    factoryOf(::ImportPool)
 
     factoryOf(::GetPoolDetails)
     factoryOf(::GetPoolOverviews)
