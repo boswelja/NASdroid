@@ -38,11 +38,11 @@ class ImportPool(
                 enableAttachments = enableAttachments
             )
         )
-        var job = coreV2Api.getJobList(jobId, ImportablePool::class)
+        var job = coreV2Api.getJobList(jobId, Nothing::class)
         withTimeout(Timeout) {
             while (job.state != Job.State.Success) {
                 delay(1.seconds)
-                job = coreV2Api.getJobList(jobId, ImportablePool::class)
+                job = coreV2Api.getJobList(jobId, Nothing::class)
             }
         }
         return when (job.state) {
