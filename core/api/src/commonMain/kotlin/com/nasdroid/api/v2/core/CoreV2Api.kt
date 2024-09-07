@@ -83,6 +83,8 @@ interface CoreV2Api {
      */
     suspend fun <T : Any> getJob(id: Int, type: KClass<T>): Job<T>
 
+    suspend fun <T : Any> getJobList(id: Int, type: KClass<T>): Job<List<T>>
+
     // TODO get_websocket_messages
 
     /**
