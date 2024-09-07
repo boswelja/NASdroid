@@ -37,6 +37,7 @@ detekt {
 
 dependencies {
     api(projects.core.api)
+    api(projects.core.strongResult)
     api(libs.datatypes.capacity)
 
     implementation(libs.androidx.navigation)

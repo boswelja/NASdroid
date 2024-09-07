@@ -77,11 +77,20 @@ interface CoreV2Api {
     suspend fun getAllJobs(): List<Job<Any>>
 
     /**
-     * Gets information about the job with the given ID.
+     * Gets information about the job with the given ID, where the result is of type [T].
      *
      * @throws HttpNotOkException
+     * @throws JobNotFoundException
      */
     suspend fun <T : Any> getJob(id: Int, type: KClass<T>): Job<T>
+
+    /**
+     * Gets information about the job with the given ID, where the result is a list of type [T].
+     *
+     * @throws HttpNotOkException
+     * @throws JobNotFoundException
+     */
+    suspend fun <T : Any> getJobList(id: Int, type: KClass<T>): Job<List<T>>
 
     // TODO get_websocket_messages
 
