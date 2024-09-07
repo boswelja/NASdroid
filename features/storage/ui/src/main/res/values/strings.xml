@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="storage_dashboard_title">Storage</string>
+
     <string name="topology_title">Topology</string>
     <string name="topology_section_data">Data</string>
     <string name="topology_section_cache">Cache</string>
@@ -22,4 +24,13 @@
 
     <string name="button_show_more">Expand</string>
     <string name="button_show_less">Collapse</string>
+
+    <string name="capacity_used_label">%s Used</string>
+    <string name="capacity_available_label">%s Available</string>
+
+    <string name="topology_health_title">@string/topology_title</string>
+    <string name="zfs_health_title">ZFS</string>
+    <string name="disks_health_title">Disks</string>
+    <string name="health_status_healthy">Healthy</string>
+    <string name="health_status_unknown">Unhealthy</string>
 </resources>

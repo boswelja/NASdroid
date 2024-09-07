@@ -4,8 +4,9 @@ NASdroid is an unofficial Android client for [TrueNAS](https://www.truenas.com/)
 
 ## Releases
 
-You can get nightly builds from [our CI runs](https://github.com/boswelja/NASdroid/actions/workflows/build-nightly.yml).
-Stay tuned for alpha, beta and stable releases!
+Check out [our releases page](https://github.com/boswelja/NASdroid/releases) for the latest builds!
+
+You can also get nightly builds from [our CI runs](https://github.com/boswelja/NASdroid/actions/workflows/build-nightly.yml).
 
 ## Screenshots
 

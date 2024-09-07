@@ -4,6 +4,7 @@ import com.nasdroid.api.TimestampUnwrapper
 import com.nasdroid.api.exception.HttpNotOkException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 
 /**
  * Describes the TrueNAS API V2 "Catalog" group. The Catalogs API is responsible for managing
@@ -132,6 +133,7 @@ value class CatalogItems(
  * @property screenshotUrls A list of URLs for available screenshots of the app this item runs.
  * @property sourceUrls A list of URLs for available source code this catalog item uses.
  * @property iconUrl The URL of the catalog item icon.
+ * @property versions Contains all metadata for available versions.
  */
 @Serializable
 data class CatalogItem(
@@ -174,6 +176,8 @@ data class CatalogItem(
     val sourceUrls: List<String>,
     @SerialName("icon_url")
     val iconUrl: String?,
+    @SerialName("versions")
+    val versions: JsonObject
 ) {
 
     /**

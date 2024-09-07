@@ -10,7 +10,8 @@ import kotlinx.datetime.Instant
  * [invoke] for details.
  */
 class GetAvailableAppDetails(
-    private val catalogV2Api: CatalogV2Api
+    private val catalogV2Api: CatalogV2Api,
+    private val stripHtmlTags: StripHtmlTags
 ) {
 
     /**
@@ -35,11 +36,12 @@ class GetAvailableAppDetails(
         }
         val details = AvailableAppDetails(
             id = catalogDetails.name,
+            iconUrl = catalogDetails.iconUrl.orEmpty(),
             name = catalogDetails.title,
             version = catalogDetails.latestAppVersion,
             tags = catalogDetails.tags,
             homepage = catalogDetails.homeUrl,
-            description = catalogDetails.description.orEmpty(),
+            description = stripHtmlTags(catalogDetails.appReadme),
             screenshots = catalogDetails.screenshotUrls,
             sources = catalogDetails.sourceUrls,
             lastUpdatedAt = Instant.fromEpochMilliseconds(catalogDetails.lastUpdate),
@@ -66,6 +68,7 @@ class GetAvailableAppDetails(
  *
  * @property id A unique identifier for this app within its catalog and train. This is usually
  * similar to the app name.
+ * @property iconUrl The URL for the app icon.
  * @property name The name of the app.
  * @property version The version of the app that these details are for. This is usually also the
  * latest version of the app.
@@ -80,6 +83,7 @@ class GetAvailableAppDetails(
  */
 data class AvailableAppDetails(
     val id: String,
+    val iconUrl: String,
     val name: String,
     val version: String,
     val tags: List<String>,

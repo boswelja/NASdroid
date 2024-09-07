@@ -1,6 +1,12 @@
 package com.nasdroid.design
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -38,3 +44,19 @@ fun defaultPaddings(): Paddings = Paddings(
  * value of this CompositionLocal, use [MaterialThemeExt.paddings].
  */
 val LocalPaddings = staticCompositionLocalOf { defaultPaddings() }
+
+/**
+ * Adds [this] PaddingValues to [other] PaddingValues.
+ */
+@Composable
+operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
+    val layoutDirection = LocalLayoutDirection.current
+    return remember(this, other) {
+        PaddingValues(
+            start = this.calculateStartPadding(layoutDirection) + other.calculateStartPadding(layoutDirection),
+            top = this.calculateTopPadding() + other.calculateTopPadding(),
+            end = this.calculateEndPadding(layoutDirection) + other.calculateEndPadding(layoutDirection),
+            bottom = this.calculateBottomPadding() + other.calculateBottomPadding()
+        )
+    }
+}

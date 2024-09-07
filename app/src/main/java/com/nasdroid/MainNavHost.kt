@@ -1,7 +1,6 @@
 package com.nasdroid
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -17,7 +16,6 @@ import com.nasdroid.storage.ui.storageGraph
 @Composable
 fun MainNavHost(
     navController: NavHostController,
-    windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
@@ -33,9 +31,7 @@ fun MainNavHost(
         )
         storageGraph(
             navController = navController,
-            windowSizeClass = windowSizeClass,
             route = "storage",
-            contentPadding = contentPadding
         )
         appsGraph(
             navController = navController,
