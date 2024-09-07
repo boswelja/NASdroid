@@ -32,5 +32,8 @@
     <string name="zfs_health_title">ZFS</string>
     <string name="disks_health_title">Disks</string>
     <string name="health_status_healthy">Healthy</string>
-    <string name="health_status_unknown">Unhealthy</string>
+    <string name="zfs_health_status_offline">Offline</string>
+    <string name="zfs_health_status_degraded_disks">%s degraded disks</string>
+    <string name="usage_health_status_low_space">Low free space</string>
+    <string name="usage_health_status_no_space">No free space</string>
 </resources>
