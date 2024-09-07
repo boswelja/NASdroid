@@ -94,23 +94,46 @@ data class PoolOverview(
     val disksHealth: DisksHealth,
 ) {
 
+    /**
+     * Encapsulates all topology health descriptors.
+     */
     sealed interface TopologyHealth {
+        /**
+         * All VDEVs are healthy.
+         */
         data object Healthy : TopologyHealth
+
+        /**
+         * Some VDEVs are degraded, but the pool is still operational. See [degradedVdevs] for a count.
+         */
         data class Degraded(val degradedVdevs: Int): TopologyHealth
+
+        /**
+         * Some VDEVs are degraded, causing the pool to be inaccessible.
+         */
         data object Offline : TopologyHealth
     }
 
+    /**
+     * Encapsulates all pool usage health descriptors.
+     */
     enum class UsageHealth {
         Healthy,
         LowFreeSpace,
         Full
     }
 
+    /**
+     * Encapsulates all ZFS health descriptors.
+     */
     enum class ZfsHealth {
         Healthy
         // TODO
     }
 
+    /**
+     * Encapsulates the overall health of all disks in a pool.
+     */
     enum class DisksHealth {
         Healthy
         // TODO
