@@ -1,6 +1,6 @@
 [versions]
 android-gradle-plugin = "8.6.0"
-detekt = "1.23.6"
+detekt = "1.23.7"
 kotlin = "2.0.20"
 ksp = "2.0.20-1.0.25"
 
