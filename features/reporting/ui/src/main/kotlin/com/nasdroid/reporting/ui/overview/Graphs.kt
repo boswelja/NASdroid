@@ -21,26 +21,24 @@ import com.nasdroid.reporting.logic.graph.Graph
 import com.nasdroid.reporting.logic.graph.PercentageGraph
 import com.nasdroid.reporting.logic.graph.TemperatureGraph
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
-import com.patrykandpatrick.vico.compose.cartesian.fullWidth
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
-import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.component.shapeComponent
 import com.patrykandpatrick.vico.compose.common.data.rememberExtraLambda
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.compose.common.vicoTheme
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
-import com.patrykandpatrick.vico.core.cartesian.HorizontalLayout
 import com.patrykandpatrick.vico.core.cartesian.Scroll
 import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.AxisValueOverrider
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.common.LegendItem
@@ -250,21 +248,21 @@ internal fun <T> VicoGraph(
                 modelProducer = modelProducer,
                 chart = rememberCartesianChart(
                     rememberLineCartesianLayer(
-                        axisValueOverrider = remember(constraintAtZero) {
+                        rangeProvider = remember(constraintAtZero) {
                             if (constraintAtZero) {
-                                AxisValueOverrider.auto()
+                                CartesianLayerRangeProvider.auto()
                             } else {
                                 autoNoConstraints()
                             }
-                        }
+                        },
                     ),
-                    startAxis = rememberStartAxis(
+                    startAxis = VerticalAxis.rememberStart(
                         title = verticalLabel,
                         titleComponent = rememberTextComponent(),
                         valueFormatter = verticalAxisValueFormatter,
                     ),
-                    bottomAxis = rememberBottomAxis(
-                        valueFormatter = { value, _, _ ->
+                    bottomAxis = HorizontalAxis.rememberBottom(
+                        valueFormatter = { _, value, _ ->
                             graph.dataSlices.getOrNull(value.toInt())?.timestamp
                                 ?.toLocalDateTime(TimeZone.currentSystemDefault())
                                 ?.let {
@@ -272,7 +270,7 @@ internal fun <T> VicoGraph(
                                 }
                                 .orEmpty()
                         },
-                        itemPlacer = remember { HorizontalAxis.ItemPlacer.default(spacing = 2) }
+                        itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(spacing = 2) }
                     ),
                     legend = rememberHorizontalLegend(
                         items = rememberExtraLambda {
@@ -302,8 +300,8 @@ internal fun <T> VicoGraph(
     }
 }
 
-internal fun autoNoConstraints(): AxisValueOverrider =
-    object : AxisValueOverrider {
+internal fun autoNoConstraints(): CartesianLayerRangeProvider =
+    object : CartesianLayerRangeProvider {
         override fun getMinY(minY: Double, maxY: Double, extraStore: ExtraStore): Double = when {
             minY == 0.0 && maxY == 0.0 -> 0.0
             else -> minY.round(maxY)

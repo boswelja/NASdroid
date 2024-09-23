@@ -32,13 +32,15 @@ import com.nasdroid.dashboard.ui.overview.common.OverviewItemListItem
 import com.nasdroid.design.MaterialThemeExt
 import com.nasdroid.skeleton.skeleton
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModel
 import com.patrykandpatrick.vico.core.cartesian.data.ColumnCartesianLayerModel
 import org.koin.androidx.compose.koinViewModel
@@ -165,12 +167,12 @@ internal fun AdapterInfo(
                 CartesianChartHost(
                     chart = rememberCartesianChart(
                         rememberColumnCartesianLayer(),
-                        startAxis = rememberStartAxis(
+                        startAxis = VerticalAxis.rememberStart(
                             title = stringResource(R.string.network_data_rate_unit),
                             titleComponent = rememberTextComponent(color = LocalContentColor.current)
                         ),
-                        bottomAxis = rememberBottomAxis(
-                            valueFormatter = { value, _, _ ->
+                        bottomAxis = HorizontalAxis.rememberBottom(
+                            valueFormatter = { _, value, _ ->
                                 if (value == 0.0) {
                                     context.getString(R.string.network_outgoing_label)
                                 } else {

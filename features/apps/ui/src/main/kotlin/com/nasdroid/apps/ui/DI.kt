@@ -6,7 +6,7 @@ import com.nasdroid.apps.ui.discover.details.AvailableAppDetailsViewModel
 import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsViewModel
 import com.nasdroid.apps.ui.installed.overview.InstalledAppsOverviewViewModel
 import com.nasdroid.apps.ui.installed.overview.logs.LogsViewModel
-import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 /**
