@@ -2,7 +2,7 @@ package com.nasdroid.storage.ui
 
 import com.nasdroid.storage.logic.StorageLogicModule
 import com.nasdroid.storage.ui.pools.overview.PoolsViewModel
-import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 /**
