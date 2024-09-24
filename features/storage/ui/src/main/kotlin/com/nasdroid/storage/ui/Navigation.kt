@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.nasdroid.storage.ui.pools.StorageOverviewScreen
+import com.nasdroid.storage.ui.pools.details.PoolDetailsScreen
 
 /**
  * Registers a nested navigation graph for the Storage feature.
@@ -33,7 +34,10 @@ fun NavGraphBuilder.storageGraph(
                 }
             )
         ) {
-            // TODO Details screen
+            PoolDetailsScreen(
+                onNavigateBack = navController::popBackStack,
+                modifier = modifier
+            )
         }
     }
 }

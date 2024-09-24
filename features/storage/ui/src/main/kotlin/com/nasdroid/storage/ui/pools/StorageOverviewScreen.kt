@@ -27,7 +27,7 @@ fun StorageOverviewScreen(
     ) { contentPadding ->
         PoolsScreen(
             onShowDetails = {
-                onNavigate("poolDetails/$it")
+                onNavigate("pool/$it")
             },
             contentPadding = contentPadding + PaddingValues(
                 horizontal = MaterialThemeExt.paddings.large,
