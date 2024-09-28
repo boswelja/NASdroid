@@ -73,7 +73,7 @@ fun StorageUseSummary(
 @Composable
 fun fileSizeString(bytes: Long): String {
     val context = LocalContext.current
-    return remember {
+    return remember(context, bytes) {
         formatFileSize(context, bytes)
     }
 }
