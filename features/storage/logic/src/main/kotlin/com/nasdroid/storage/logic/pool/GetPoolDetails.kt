@@ -6,6 +6,8 @@ import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.v2.pool.Pool
 import com.nasdroid.api.v2.pool.PoolV2Api
 import kotlinx.datetime.Instant
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Retrieves information about a single storage pool. See [invoke] for details.
@@ -41,12 +43,34 @@ class GetPoolDetails(
                     totalErrors = dto.scan.errors,
                     scheduledScrub = null, // TODO
                     isAutotrimEnabled = dto.autotrim.rawValue == "on",
-                    lastScan = dto.scan.endTime?.let { scanEndTime ->
-                        PoolDetails.ZfsHealth.LastScan(
-                            function = dto.scan.function,
-                            finishedAt = Instant.fromEpochMilliseconds(scanEndTime),
-                            totalErrors = dto.scan.errors
-                        )
+                    scan = when (dto.scan.state) {
+                        Pool.Scan.ScanState.Finished -> {
+                            val end = Instant.fromEpochMilliseconds(dto.scan.endTime!!)
+                            PoolDetails.ZfsHealth.Scan.Finished(
+                                functionName = dto.scan.function,
+                                errors = dto.scan.errors,
+                                finishedAt = end,
+                                duration = end - Instant.fromEpochMilliseconds(dto.scan.startTime)
+                            )
+                        }
+                        Pool.Scan.ScanState.Scanning -> {
+                            PoolDetails.ZfsHealth.Scan.InProgress(
+                                functionName = dto.scan.function,
+                                errors = dto.scan.errors,
+                                startedAt =  Instant.fromEpochMilliseconds(dto.scan.startTime),
+                                remaining = dto.scan.totalSecsLeft!!.seconds,
+                                pausedAt = dto.scan.pause?.let { Instant.fromEpochMilliseconds(it) }
+                            )
+                        }
+                        Pool.Scan.ScanState.Cancelled -> {
+                            val end = Instant.fromEpochMilliseconds(dto.scan.endTime!!)
+                            PoolDetails.ZfsHealth.Scan.Cancelled(
+                                functionName = dto.scan.function,
+                                errors = dto.scan.errors,
+                                finishedAt = end,
+                                duration = end - Instant.fromEpochMilliseconds(dto.scan.startTime)
+                            )
+                        }
                     }
                 ),
                 diskHealth = PoolDetails.DiskHealth( // TODO
@@ -154,14 +178,14 @@ data class PoolDetails(
      * @property totalErrors The total number of filesystem errors detected.
      * @property scheduledScrub TODO
      * @property isAutotrimEnabled Whether TRIM happens automatically.
-     * @property lastScan The last scan that happened on the pool.
+     * @property scan A scan on this pool that is either underway, or finished.
      */
     data class ZfsHealth(
         val poolStatus: PoolStatus,
         val totalErrors: Int,
         val scheduledScrub: Any?, // TODO
         val isAutotrimEnabled: Boolean,
-        val lastScan: LastScan?,
+        val scan: Scan?,
     ) {
 
         /**
@@ -171,18 +195,33 @@ data class PoolDetails(
             ONLINE,
         }
 
-        /**
-         * Describes the last completed scan on a pool.
-         *
-         * @property function The type of scan that was run.
-         * @property finishedAt The instant the scan finished.
-         * @property totalErrors The total number of errors identified by the scan.
-         */
-        data class LastScan(
-            val function: String,
-            val finishedAt: Instant,
-            val totalErrors: Int,
-        )
+        sealed interface Scan {
+
+            val functionName: String
+            val errors: Int
+
+            data class InProgress(
+                override val functionName: String,
+                override val errors: Int,
+                val startedAt: Instant,
+                val remaining: Duration,
+                val pausedAt: Instant?
+            ) : Scan
+
+            data class Finished(
+                override val functionName: String,
+                override val errors: Int,
+                val finishedAt: Instant,
+                val duration: Duration
+            ) : Scan
+
+            data class Cancelled(
+                override val functionName: String,
+                override val errors: Int,
+                val finishedAt: Instant,
+                val duration: Duration
+            ) : Scan
+        }
     }
 
     /**
