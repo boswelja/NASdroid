@@ -63,34 +63,68 @@ fun PoolCard(
             )
             PoolHealthItem(
                 label = { Text(stringResource(R.string.topology_health_title)) },
-                healthStatus = pool.topologyHealth
-            )
-            PoolHealthItem(
-                label = { Text(stringResource(R.string.zfs_health_title)) },
-                healthStatus = pool.zfsHealth
+                status = {
+                    when (val health = pool.topologyHealth) {
+                        is PoolOverview.TopologyHealth.Degraded -> {
+                            Text(stringResource(R.string.zfs_health_status_degraded_disks, health.degradedVdevs))
+                        }
+                        PoolOverview.TopologyHealth.Healthy -> {
+                            Text(stringResource(R.string.health_status_healthy))
+                        }
+                        PoolOverview.TopologyHealth.Offline -> {
+                            Text(stringResource(R.string.zfs_health_status_offline))
+                        }
+                    }
+                },
+                healthy = pool.topologyHealth == PoolOverview.TopologyHealth.Healthy,
             )
             PoolHealthItem(
                 label = { Text(stringResource(R.string.disks_health_title)) },
-                healthStatus = pool.disksHealth
+                status = {
+                    when (pool.disksHealth) {
+                        PoolOverview.DisksHealth.Healthy -> {
+                            Text(stringResource(R.string.health_status_healthy))
+                        }
+                    }
+                },
+                healthy = pool.disksHealth == PoolOverview.DisksHealth.Healthy,
+            )
+            PoolHealthItem(
+                label = { Text(stringResource(R.string.disks_health_title)) },
+                status = {
+                    when (pool.usageHealth) {
+                        PoolOverview.UsageHealth.Healthy -> {
+                            Text(stringResource(R.string.health_status_healthy))
+                        }
+                        PoolOverview.UsageHealth.LowFreeSpace -> {
+                            Text(stringResource(R.string.usage_health_status_low_space))
+                        }
+                        PoolOverview.UsageHealth.Full -> {
+                            Text(stringResource(R.string.usage_health_status_no_space))
+                        }
+                    }
+                },
+                healthy = pool.usageHealth == PoolOverview.UsageHealth.Healthy,
             )
         }
     }
 }
 
 /**
- * Displays information about the given [healthStatus] to the user.
+ * Displays information about the health of a pool-related item.
  */
 @Composable
 fun PoolHealthItem(
+    healthy: Boolean,
     label: @Composable () -> Unit,
-    healthStatus: PoolOverview.HealthStatus,
+    status: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (healthStatus.isHealthy) {
+        if (healthy) {
             Icon(
                 Icons.Default.CheckCircle,
                 contentDescription = null,
@@ -109,17 +143,7 @@ fun PoolHealthItem(
                 label()
             }
             ProvideTextStyle(MaterialThemeExt.typography.bodyMedium) {
-                if (healthStatus.isHealthy) {
-                    Text(
-                        text = stringResource(R.string.health_status_healthy),
-                        color = MaterialThemeExt.colorScheme.onSurfaceVariant
-                    )
-                } else {
-                    Text(
-                        text = healthStatus.unhealthyReason ?: stringResource(R.string.health_status_unknown),
-                        color = MaterialThemeExt.colorScheme.onSurfaceVariant
-                    )
-                }
+                status()
             }
         }
     }
@@ -136,10 +160,10 @@ fun PoolCardPreview() {
                 poolName = "MyPool",
                 totalCapacity = 1.terabytes,
                 usedCapacity = 400.gigabytes,
-                topologyHealth = PoolOverview.HealthStatus(false, "Disk 1 offline"),
-                usageHealth = PoolOverview.HealthStatus(true, null),
-                zfsHealth = PoolOverview.HealthStatus(true, null),
-                disksHealth = PoolOverview.HealthStatus(true, null)
+                topologyHealth = PoolOverview.TopologyHealth.Degraded(1),
+                usageHealth = PoolOverview.UsageHealth.Healthy,
+                zfsHealth = PoolOverview.ZfsHealth.Healthy,
+                disksHealth = PoolOverview.DisksHealth.Healthy
             ),
             onShowDetails = {}
         )

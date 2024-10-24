@@ -49,7 +49,7 @@ data class Job<T>(
     @SerialName("logs_excerpt")
     val logsExcerpt: String?,
     @SerialName("progress")
-    val progress: JobProgress,
+    val progress: Progress,
     @SerialName("result")
     val result: T?,
     @SerialName("error")
@@ -59,32 +59,44 @@ data class Job<T>(
     @SerialName("exc_info")
     val excInfo: JobExcInfo?,
     @SerialName("state")
-    val state: String,
+    val state: State,
     @Serializable(with = UnwrappingDateSerializer::class)
     @SerialName("time_started")
     val timeStarted: Long,
     @Serializable(with = UnwrappingDateSerializer::class)
     @SerialName("time_finished")
     val timeFinished: Long?
-)
+) {
 
-/**
- * Describes the current progress of a running job.
- *
- * @property percent The percentage of work completed. Between 0 and 100.
- * @property description A description for the job progress.
- * @property extra TODO
- */
-@Serializable
-data class JobProgress(
-    @SerialName("percent")
-    val percent: Int,
-    @SerialName("description")
-    val description: String,
-    @Contextual
-    @SerialName("extra")
-    val extra: Any?
-)
+    /**
+     * Describes the current progress of a running job.
+     *
+     * @property percent The percentage of work completed. Between 0 and 100.
+     * @property description A description for the job progress.
+     * @property extra TODO
+     */
+    @Serializable
+    data class Progress(
+        @SerialName("percent")
+        val percent: Int,
+        @SerialName("description")
+        val description: String,
+        @Contextual
+        @SerialName("extra")
+        val extra: Any?
+    )
+
+    /**
+     * Encapsulates all possible states for a [Job].
+     */
+    @Serializable
+    enum class State {
+        @SerialName("SUCCESS")
+        Success,
+        @SerialName("FAILED")
+        Failed
+    }
+}
 
 /**
  * TODO What is this?

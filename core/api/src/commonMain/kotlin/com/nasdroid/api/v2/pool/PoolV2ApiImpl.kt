@@ -89,7 +89,7 @@ internal class PoolV2ApiImpl(
         return response.body()
     }
 
-    override suspend fun importPool(params: ImportPoolParams): Boolean {
+    override suspend fun importPool(params: ImportPoolParams): Int {
         val response = httpClient.post("pool/import_pool") {
             contentType(ContentType.Application.Json)
             setBody(params)

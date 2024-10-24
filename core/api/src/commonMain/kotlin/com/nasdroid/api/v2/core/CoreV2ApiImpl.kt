@@ -12,6 +12,7 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.serializer
 import kotlin.reflect.KClass
@@ -77,6 +78,35 @@ internal class CoreV2ApiImpl(
                 logsExcerpt = job.logsExcerpt,
                 progress = job.progress,
                 result = job.result?.let { Json.decodeFromJsonElement(type.serializer(), it) },
+                error = job.error,
+                exception = job.exception,
+                excInfo = job.excInfo,
+                state = job.state,
+                timeStarted = job.timeStarted,
+                timeFinished = job.timeFinished,
+            )
+        } ?: throw JobNotFoundException("Could not find a Job with ID $id")
+    }
+
+    @OptIn(InternalSerializationApi::class)
+    override suspend fun <T : Any> getJobList(id: Int, type: KClass<T>): Job<List<T>> {
+        val response = client.get("core/get_jobs") {
+            parameter("id", id)
+        }
+        val result: String = response.bodyAsText()
+        val items: List<Job<JsonArray>> = Json.decodeFromString(result)
+        return items.firstOrNull { it.id == id }?.let { job ->
+            Job(
+                id = job.id,
+                method = job.method,
+                arguments = job.arguments,
+                transient = job.transient,
+                description = job.description,
+                abortable = job.abortable,
+                logsPath = job.logsPath,
+                logsExcerpt = job.logsExcerpt,
+                progress = job.progress,
+                result = job.result?.let { it.map { Json.decodeFromJsonElement(type.serializer(), it) } },
                 error = job.error,
                 exception = job.exception,
                 excInfo = job.excInfo,
