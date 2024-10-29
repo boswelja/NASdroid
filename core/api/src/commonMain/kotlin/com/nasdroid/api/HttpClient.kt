@@ -21,14 +21,12 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.JsonConvertException
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 
 /**
  * Builds a Ktor [HttpClient] for use with the TrueNAS API.
  */
-@OptIn(ExperimentalSerializationApi::class)
 fun getHttpClient(
     apiStateProvider: ApiStateProvider,
 ): HttpClient {
