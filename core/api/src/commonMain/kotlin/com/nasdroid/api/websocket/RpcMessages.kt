@@ -3,30 +3,47 @@ package com.nasdroid.api.websocket
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+import kotlinx.serialization.json.JsonElement
 
-@OptIn(ExperimentalUuidApi::class)
+/*
+ * This file contains concrete definitions for
+ * [DDP RPC messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#remote-procedure-calls).
+ * These messages are used to make method calls and receive results.
+ */
+
+/**
+ * Sent by the client to make a remote procedure call.
+ *
+ * @property id An arbitrary client-determined identifier for this method call.
+ * @property method The name of the method to call.
+ * @property params Optional parameters for the method.
+ */
 @Serializable
 data class MethodMessage(
     @Contextual
     @SerialName("id")
-    val id: Uuid,
+    val id: String,
     @SerialName("method")
     val method: String,
     @SerialName("params")
-    val params: List<String>?
+    val params: List<JsonElement>?
 ) {
     @SerialName("msg")
     val msg: String = "method"
 }
 
-@OptIn(ExperimentalUuidApi::class)
+/**
+ * Received from the server as a response to [MethodMessage].
+ *
+ * @property id The [MethodMessage.id].
+ * @property error An error thrown by the method (or method-not-found).
+ * @property result The return value of the method, if any.
+ */
 @Serializable
 data class ResultMessage<T>(
     @Contextual
     @SerialName("id")
-    val id: Uuid,
+    val id: String,
     @SerialName("error")
     val error: Error? = null,
     @SerialName("result")
@@ -34,20 +51,15 @@ data class ResultMessage<T>(
 ) {
     @SerialName("msg")
     val msg: String = "result"
-
-    @Serializable
-    data class Error(
-        @SerialName("error")
-        val error: String,
-        @SerialName("errorType")
-        val errorType: String,
-        @SerialName("reason")
-        val reason: String? = null,
-        @SerialName("message")
-        val message: String? = null,
-    )
 }
 
+/**
+ * Received from the server as a response to [MethodMessage], indicating that the method
+ * calls have updated data on the server.
+ *
+ * @property methods A list of [MethodMessage.id]s, all of whose writes have been reflected in data
+ * messages.
+ */
 @Serializable
 data class UpdatedMessage(
     @SerialName("methods")
@@ -55,15 +67,4 @@ data class UpdatedMessage(
 ) {
     @SerialName("msg")
     val msg: String = "updated"
-}
-
-@Serializable
-data class ErrorMessage(
-    @SerialName("reason")
-    val reason: String,
-    @SerialName("offendingMessage")
-    val requestMessage: MethodMessage? = null
-) {
-    @SerialName("msg")
-    val msg: String = "error"
 }

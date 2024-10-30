@@ -2,7 +2,21 @@ package com.nasdroid.api.websocket
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
+/*
+ * This file contains concrete definitions for
+ * [DDP data management messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#managing-data).
+ * These messages are used to ensure the connection is kept alive.
+ */
+
+/**
+ * Sent by the client to subscribe to a set of information.
+ *
+ * @property id An arbitrary client-determined identifier for this subscription.
+ * @property name The name of the subscription.
+ * @property params Optional parameters to the subscription.
+ */
 @Serializable
 data class SubMessage(
     @SerialName("id")
@@ -10,12 +24,17 @@ data class SubMessage(
     @SerialName("name")
     val name: String,
     @SerialName("params")
-    val params: List<String>? = null,
+    val params: List<JsonElement>? = null,
 ) {
     @SerialName("msg")
     val message: String = "sub"
 }
 
+/**
+ * Sent by the client to unsubscribe from a set of information.
+ *
+ * @property id The [SubMessage.id].
+ */
 @Serializable
 data class UnsubMessage(
     @SerialName("id")
@@ -25,17 +44,30 @@ data class UnsubMessage(
     val message: String = "unsub"
 }
 
+/**
+ * Received from the server to indicate that the client has successfully unsubscribed from a set of information.
+ *
+ * @property id The [SubMessage.id].
+ * @property error An optional error raised by the subscription as it concludes, or sub-not-found
+ */
 @Serializable
 data class NosubMessage(
     @SerialName("id")
     val id: String,
     @SerialName("error")
-    val error: String? = null
+    val error: Error? = null
 ) {
     @SerialName("msg")
     val message: String = "nosub"
 }
 
+/**
+ * Received from the server to indicate that a new piece of information has been added.
+ *
+ * @property id The ID of the document that was added.
+ * @property collection Collection name.
+ * @property fields The optional fields of the document that were added.
+ */
 @Serializable
 data class AddedMessage<T>(
     @SerialName("id")
@@ -49,6 +81,14 @@ data class AddedMessage<T>(
     val message: String = "added"
 }
 
+/**
+ * Received from the server to indicate that a piece of information has been changed.
+ *
+ * @property id The ID of the document that was updated.
+ * @property collection Collection name.
+ * @property fields The optional fields of the document that were updated.
+ * @property cleared Optional list of field names that were removed.
+ */
 @Serializable
 data class ChangedMessage<T>(
     @SerialName("id")
@@ -64,6 +104,12 @@ data class ChangedMessage<T>(
     val message: String = "changed"
 }
 
+/**
+ * Received from the server to indicate that a piece of information has been removed.
+ *
+ * @property id The ID of the document that was removed.
+ * @property collection Collection name.
+ */
 @Serializable
 data class RemovedMessage(
     @SerialName("id")
@@ -75,6 +121,12 @@ data class RemovedMessage(
     val message: String = "removed"
 }
 
+/**
+ * Received from the server when one or more subscriptions have finished sending their initial batch
+ * of data.
+ *
+ * @property subs IA list of [SubMessage.id]s which have sent their initial batch of data
+ */
 @Serializable
 data class ReadyMessage(
     @SerialName("subs")
@@ -84,6 +136,14 @@ data class ReadyMessage(
     val message: String = "ready"
 }
 
+/**
+ * Received from the server to indicate that a new ordered piece of information was added.
+ *
+ * @property id The ID of the document that was added.
+ * @property collection Collection name.
+ * @property fields The optional fields of the document that were added.
+ * @property before The document ID to add the document before, or null to add at the end
+ */
 @Serializable
 data class AddedBeforeMessage<T>(
     @SerialName("id")
@@ -99,6 +159,13 @@ data class AddedBeforeMessage<T>(
     val message: String = "addedBefore"
 }
 
+/**
+ * Received from the server to indicate that a document was moved to a new position in the list.
+ *
+ * @property id The ID of the document that was moved.
+ * @property collection The name of the collection where the document was moved.
+ * @property before The ID of the document that the moved document is now before, or null if it's at the end.
+ */
 @Serializable
 data class MovedBeforeMessage(
     @SerialName("id")
