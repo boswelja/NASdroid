@@ -1,13 +1,14 @@
-package com.nasdroid.api.websocket
+package com.nasdroid.api.websocket.message
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/*
- * This file contains concrete definitions for
+/**
+ * Seals concrete definitions for
  * [DDP connection messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#establishing-a-ddp-connection).
  * These messages are used exclusively to negotiate a session with the websocket server.
  */
+sealed interface DdpConnectionMessage : DdpMessage
 
 /**
  * Sent by the client to request a new connection to the websocket server, or reconnects to an
@@ -26,9 +27,9 @@ data class ConnectMessage(
     val support: List<String>,
     @SerialName("session")
     val session: String? = null,
-) {
+) : DdpConnectionMessage, DdpClientMessage {
     @SerialName("msg")
-    val msg: String = "connect"
+    override val msg: String = "connect"
 }
 
 /**
@@ -41,9 +42,9 @@ data class ConnectMessage(
 data class ConnectedMessage(
     @SerialName("session")
     val session: String,
-) {
+) : DdpConnectionMessage, DdpServerMessage {
     @SerialName("msg")
-    val msg: String = "connected"
+    override val msg: String = "connected"
 }
 
 /**
@@ -55,7 +56,7 @@ data class ConnectedMessage(
 data class FailedMessage(
     @SerialName("version")
     val version: String,
-) {
+) : DdpConnectionMessage, DdpServerMessage {
     @SerialName("msg")
-    val msg: String = "failed"
+    override val msg: String = "failed"
 }

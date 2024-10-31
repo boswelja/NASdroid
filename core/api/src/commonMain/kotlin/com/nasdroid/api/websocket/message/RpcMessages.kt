@@ -1,15 +1,16 @@
-package com.nasdroid.api.websocket
+package com.nasdroid.api.websocket.message
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
-/*
- * This file contains concrete definitions for
+/**
+ * Seals concrete definitions for
  * [DDP RPC messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#remote-procedure-calls).
  * These messages are used to make method calls and receive results.
  */
+sealed interface DdpRpcMessage : DdpMessage
 
 /**
  * Sent by the client to make a remote procedure call.
@@ -27,9 +28,9 @@ data class MethodMessage(
     val method: String,
     @SerialName("params")
     val params: List<JsonElement>?
-) {
+) : DdpRpcMessage, DdpClientMessage {
     @SerialName("msg")
-    val msg: String = "method"
+    override val msg: String = "method"
 }
 
 /**
@@ -48,9 +49,9 @@ data class ResultMessage<T>(
     val error: Error? = null,
     @SerialName("result")
     val result: T? = null,
-) {
+) : DdpRpcMessage, DdpServerMessage {
     @SerialName("msg")
-    val msg: String = "result"
+    override val msg: String = "result"
 }
 
 /**
@@ -64,7 +65,7 @@ data class ResultMessage<T>(
 data class UpdatedMessage(
     @SerialName("methods")
     val methods: List<String>
-) {
+) : DdpRpcMessage, DdpServerMessage {
     @SerialName("msg")
-    val msg: String = "updated"
+    override val msg: String = "updated"
 }

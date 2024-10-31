@@ -1,14 +1,15 @@
-package com.nasdroid.api.websocket
+package com.nasdroid.api.websocket.message
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
-/*
- * This file contains concrete definitions for
+/**
+ * Seals concrete definitions for
  * [DDP data management messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#managing-data).
  * These messages are used to ensure the connection is kept alive.
  */
+sealed interface DdpDataManagementMessage : DdpMessage
 
 /**
  * Sent by the client to subscribe to a set of information.
@@ -25,9 +26,9 @@ data class SubMessage(
     val name: String,
     @SerialName("params")
     val params: List<JsonElement>? = null,
-) {
+) : DdpDataManagementMessage, DdpClientMessage {
     @SerialName("msg")
-    val message: String = "sub"
+    override val msg: String = "sub"
 }
 
 /**
@@ -39,9 +40,9 @@ data class SubMessage(
 data class UnsubMessage(
     @SerialName("id")
     val id: String
-) {
+) : DdpDataManagementMessage, DdpClientMessage {
     @SerialName("msg")
-    val message: String = "unsub"
+    override val msg: String = "unsub"
 }
 
 /**
@@ -56,9 +57,9 @@ data class NosubMessage(
     val id: String,
     @SerialName("error")
     val error: Error? = null
-) {
+) : DdpDataManagementMessage, DdpServerMessage {
     @SerialName("msg")
-    val message: String = "nosub"
+    override val msg: String = "nosub"
 }
 
 /**
@@ -76,9 +77,9 @@ data class AddedMessage<T>(
     val collection: String,
     @SerialName("fields")
     val fields: T? = null
-) {
+) : DdpDataManagementMessage, DdpServerMessage {
     @SerialName("msg")
-    val message: String = "added"
+    override val msg: String = "added"
 }
 
 /**
@@ -99,9 +100,9 @@ data class ChangedMessage<T>(
     val fields: T? = null,
     @SerialName("cleared")
     val cleared: List<String>? = null
-) {
+) : DdpDataManagementMessage, DdpServerMessage {
     @SerialName("msg")
-    val message: String = "changed"
+    override val msg: String = "changed"
 }
 
 /**
@@ -116,9 +117,9 @@ data class RemovedMessage(
     val id: String,
     @SerialName("collection")
     val collection: String
-) {
+) : DdpDataManagementMessage, DdpServerMessage {
     @SerialName("msg")
-    val message: String = "removed"
+    override val msg: String = "removed"
 }
 
 /**
@@ -131,9 +132,9 @@ data class RemovedMessage(
 data class ReadyMessage(
     @SerialName("subs")
     val subs: List<String>
-) {
+) : DdpDataManagementMessage, DdpServerMessage {
     @SerialName("msg")
-    val message: String = "ready"
+    override val msg: String = "ready"
 }
 
 /**
@@ -154,9 +155,9 @@ data class AddedBeforeMessage<T>(
     val fields: T? = null,
     @SerialName("before")
     val before: String? = null
-) {
+) : DdpDataManagementMessage, DdpServerMessage {
     @SerialName("msg")
-    val message: String = "addedBefore"
+    override val msg: String = "addedBefore"
 }
 
 /**
@@ -174,7 +175,7 @@ data class MovedBeforeMessage(
     val collection: String,
     @SerialName("before")
     val before: String? = null
-) {
+) : DdpDataManagementMessage, DdpServerMessage {
     @SerialName("msg")
-    val message: String = "movedBefore"
+    override val msg: String = "movedBefore"
 }

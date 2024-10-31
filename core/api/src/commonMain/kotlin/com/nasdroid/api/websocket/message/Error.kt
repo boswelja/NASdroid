@@ -1,4 +1,4 @@
-package com.nasdroid.api.websocket
+package com.nasdroid.api.websocket.message
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -26,9 +26,9 @@ data class ErrorMessage(
     val reason: String,
     @SerialName("offendingMessage")
     val requestMessage: JsonElement? = null
-) {
+) : DdpMessage, DdpServerMessage {
     @SerialName("msg")
-    val msg: String = "error"
+    override val msg: String = "error"
 }
 
 @Serializable

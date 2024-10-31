@@ -46,6 +46,7 @@ kotlin {
                 implementation(libs.ktor.contentnegotiation)
                 implementation(libs.ktor.serialization.json)
                 implementation(libs.ktor.client.websockets)
+                implementation(libs.ktor.client.websockets.serialization)
 
                 implementation(libs.kotlinx.serialization.json)
 

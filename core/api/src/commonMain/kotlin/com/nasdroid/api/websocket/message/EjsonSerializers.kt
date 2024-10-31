@@ -1,12 +1,10 @@
-package com.nasdroid.api.websocket
+package com.nasdroid.api.websocket.message
 
 import kotlinx.datetime.Instant
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonTransformingSerializer
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 class EDateMillisSerializer : JsonTransformingSerializer<Long>(Long.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
