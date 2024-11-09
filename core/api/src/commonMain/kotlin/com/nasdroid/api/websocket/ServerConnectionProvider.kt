@@ -1,6 +1,5 @@
 package com.nasdroid.api.websocket
 
-import android.util.Log
 import com.nasdroid.api.websocket.message.ConnectMessage
 import com.nasdroid.api.websocket.message.ConnectedMessage
 import com.nasdroid.api.websocket.message.DdpConnectionMessage
@@ -16,6 +15,7 @@ import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.receiveDeserialized
 import io.ktor.client.plugins.websocket.sendSerialized
 import io.ktor.client.plugins.websocket.webSocketSession
+import io.ktor.client.request.setBody
 import io.ktor.http.HttpMethod
 import io.ktor.serialization.WebsocketDeserializeException
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
@@ -30,6 +30,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
@@ -49,7 +51,7 @@ class ServerConnectionProvider(
             level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) {
-                    Log.i("Ktor", message)
+                    println(message)
                 }
             }
         }
@@ -65,32 +67,42 @@ class ServerConnectionProvider(
         .filterNotNull()
 
     init {
-        _connection.subscriptionCount
-            .map { it > 0 } // map count into active/inactive flag
-            .distinctUntilChanged() // only react to true<->false changes
-            .onEach { isActive ->
-                if (isActive) {
-                    _connection.value = openConnection()
-                } else {
-                    _connection.value?.close()
-                }
-            }
-            .onCompletion {
-                _connection.value?.close()
-            }
-            .launchIn(managementScope)
+        managementScope.launch {
+            _connection.value = openConnection()
+        }
+//        _connection.subscriptionCount
+//            .map { it > 0 } // map count into active/inactive flag
+//            .distinctUntilChanged() // only react to true<->false changes
+//            .onEach { isActive ->
+//                if (isActive) {
+//                    _connection.value = openConnection()
+//                } else {
+//                    _connection.value?.close()
+//                }
+//            }
+//            .onCompletion {
+//                _connection.value?.close()
+//            }
+//            .launchIn(managementScope)
     }
 
     @OptIn(ExperimentalUuidApi::class)
     private suspend fun openConnection(): DefaultClientWebSocketSession {
-        val session = client.webSocketSession(
-            method = HttpMethod.Get,
-            host = host,
-            port = port,
-            path = "/websocket"
-        )
+        val session = withTimeout(5.seconds) {
+            client.webSocketSession(
+                method = HttpMethod.Get,
+                host = host,
+                port = port,
+                path = "/websocket"
+            )
+        }
+        session.coroutineContext.job.invokeOnCompletion { cause ->
+            println(session.isActive)
+        }
 
-        session.sendSerialized(ConnectMessage(version = "1", support = listOf("1")))
+        withTimeout(5.seconds) {
+            session.sendSerialized(ConnectMessage(version = "1", support = listOf("1")))
+        }
         // Try to negotiate a session
         withTimeout(5.seconds) {
             while (managementScope.isActive) {
@@ -102,7 +114,7 @@ class ServerConnectionProvider(
                         }
                         is FailedMessage -> error("Failed to connect to the server: $response")
                     }
-                } catch (_: WebsocketDeserializeException) {
+                } catch (e: WebsocketDeserializeException) {
                     continue
                 }
             }
@@ -115,7 +127,9 @@ class ServerConnectionProvider(
             method = "auth.login",
             params = listOf(JsonPrimitive(username), JsonPrimitive(password))
         )
-        session.sendSerialized(authRequest)
+        withTimeout(5.seconds) {
+            session.sendSerialized(authRequest)
+        }
         withTimeout(5.seconds) {
             while (managementScope.isActive) {
                 try {
@@ -127,7 +141,7 @@ class ServerConnectionProvider(
                             error("Failed to authenticate: ${response.error}")
                         }
                     }
-                } catch (_: WebsocketDeserializeException) {
+                } catch (e: WebsocketDeserializeException) {
                     continue
                 }
             }

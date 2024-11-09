@@ -53,7 +53,13 @@ kotlin {
                 implementation(libs.koin.core)
             }
         }
-        val androidMain by getting {
+        commonTest {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+        androidMain {
             dependencies {
                 implementation(libs.ktor.client.okhttp)
             }

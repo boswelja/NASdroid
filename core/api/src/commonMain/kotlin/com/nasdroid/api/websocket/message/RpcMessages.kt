@@ -1,6 +1,8 @@
 package com.nasdroid.api.websocket.message
 
 import kotlinx.serialization.Contextual
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -29,7 +31,9 @@ data class MethodMessage(
     @SerialName("params")
     val params: List<JsonElement>?
 ) : DdpRpcMessage, DdpClientMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "method"
 }
 
@@ -50,7 +54,9 @@ data class ResultMessage<T>(
     @SerialName("result")
     val result: T? = null,
 ) : DdpRpcMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "result"
 }
 
@@ -66,6 +72,8 @@ data class UpdatedMessage(
     @SerialName("methods")
     val methods: List<String>
 ) : DdpRpcMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "updated"
 }

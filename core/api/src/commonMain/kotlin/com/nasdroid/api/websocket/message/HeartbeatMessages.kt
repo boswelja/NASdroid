@@ -1,5 +1,7 @@
 package com.nasdroid.api.websocket.message
 
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -20,7 +22,9 @@ data class PingMessage(
     @SerialName("id")
     val id: String? = null
 ) : DdpHeartbeatMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "ping"
 }
 
@@ -34,6 +38,8 @@ data class PongMessage(
     @SerialName("id")
     val id: String? = null
 ) : DdpHeartbeatMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "pong"
 }

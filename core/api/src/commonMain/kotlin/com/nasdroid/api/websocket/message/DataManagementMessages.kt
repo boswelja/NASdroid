@@ -1,5 +1,7 @@
 package com.nasdroid.api.websocket.message
 
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -27,7 +29,9 @@ data class SubMessage(
     @SerialName("params")
     val params: List<JsonElement>? = null,
 ) : DdpDataManagementMessage, DdpClientMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "sub"
 }
 
@@ -41,7 +45,9 @@ data class UnsubMessage(
     @SerialName("id")
     val id: String
 ) : DdpDataManagementMessage, DdpClientMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "unsub"
 }
 
@@ -58,7 +64,9 @@ data class NosubMessage(
     @SerialName("error")
     val error: Error? = null
 ) : DdpDataManagementMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "nosub"
 }
 
@@ -78,7 +86,9 @@ data class AddedMessage<T>(
     @SerialName("fields")
     val fields: T? = null
 ) : DdpDataManagementMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "added"
 }
 
@@ -101,7 +111,9 @@ data class ChangedMessage<T>(
     @SerialName("cleared")
     val cleared: List<String>? = null
 ) : DdpDataManagementMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "changed"
 }
 
@@ -118,7 +130,9 @@ data class RemovedMessage(
     @SerialName("collection")
     val collection: String
 ) : DdpDataManagementMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "removed"
 }
 
@@ -133,7 +147,9 @@ data class ReadyMessage(
     @SerialName("subs")
     val subs: List<String>
 ) : DdpDataManagementMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "ready"
 }
 
@@ -156,7 +172,9 @@ data class AddedBeforeMessage<T>(
     @SerialName("before")
     val before: String? = null
 ) : DdpDataManagementMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "addedBefore"
 }
 
@@ -176,6 +194,8 @@ data class MovedBeforeMessage(
     @SerialName("before")
     val before: String? = null
 ) : DdpDataManagementMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "movedBefore"
 }

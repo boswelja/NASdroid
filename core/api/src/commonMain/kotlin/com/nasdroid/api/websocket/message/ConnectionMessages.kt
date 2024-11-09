@@ -1,5 +1,7 @@
 package com.nasdroid.api.websocket.message
 
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -28,7 +30,9 @@ data class ConnectMessage(
     @SerialName("session")
     val session: String? = null,
 ) : DdpConnectionMessage, DdpClientMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "connect"
 }
 
@@ -43,7 +47,9 @@ data class ConnectedMessage(
     @SerialName("session")
     val session: String,
 ) : DdpConnectionMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "connected"
 }
 
@@ -57,6 +63,8 @@ data class FailedMessage(
     @SerialName("version")
     val version: String,
 ) : DdpConnectionMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "failed"
 }

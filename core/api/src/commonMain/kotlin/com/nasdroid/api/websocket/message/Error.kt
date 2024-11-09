@@ -1,5 +1,7 @@
 package com.nasdroid.api.websocket.message
 
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -27,7 +29,9 @@ data class ErrorMessage(
     @SerialName("offendingMessage")
     val requestMessage: JsonElement? = null
 ) : DdpMessage, DdpServerMessage {
+    @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
+    @EncodeDefault
     override val msg: String = "error"
 }
 
