@@ -1,4 +1,4 @@
-package com.nasdroid.api.websocket.message
+package com.nasdroid.api.websocket.ddp
 
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -10,7 +10,8 @@ import kotlinx.serialization.Serializable
  * [DDP heartbeat messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#heartbeats).
  * These messages are used to ensure the connection is kept alive.
  */
-sealed interface DdpHeartbeatMessage : DdpServerMessage, DdpClientMessage
+@Serializable
+sealed interface DdpHeartbeatMessage : ClientMessage, ServerMessage
 
 /**
  * A ping message used to keep the connection alive. Expect a [PongMessage] back from the server.
@@ -25,7 +26,7 @@ data class PingMessage(
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "ping"
+    val msg: String = "ping"
 }
 
 /**
@@ -41,5 +42,5 @@ data class PongMessage(
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "pong"
+    val msg: String = "pong"
 }

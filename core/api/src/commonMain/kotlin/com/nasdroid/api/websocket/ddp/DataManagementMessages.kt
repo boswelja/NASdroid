@@ -1,4 +1,4 @@
-package com.nasdroid.api.websocket.message
+package com.nasdroid.api.websocket.ddp
 
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -9,9 +9,18 @@ import kotlinx.serialization.json.JsonElement
 /**
  * Seals concrete definitions for
  * [DDP data management messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#managing-data).
- * These messages are used to ensure the connection is kept alive.
+ * These messages are sent to the server to negotiate data observation.
  */
-sealed interface DdpDataManagementMessage : DdpMessage
+@Serializable
+sealed interface DataManagementClientMessage : ClientMessage
+
+/**
+ * Seals concrete definitions for
+ * [DDP data management messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#managing-data).
+ * These messages are received from the server to negotiate data observation.
+ */
+@Serializable
+sealed interface DataManagementServerMessage : ServerMessage
 
 /**
  * Sent by the client to subscribe to a set of information.
@@ -28,11 +37,11 @@ data class SubMessage(
     val name: String,
     @SerialName("params")
     val params: List<JsonElement>? = null,
-) : DdpDataManagementMessage, DdpClientMessage {
+) : DataManagementClientMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "sub"
+    val msg: String = "sub"
 }
 
 /**
@@ -44,11 +53,11 @@ data class SubMessage(
 data class UnsubMessage(
     @SerialName("id")
     val id: String
-) : DdpDataManagementMessage, DdpClientMessage {
+) : DataManagementClientMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "unsub"
+    val msg: String = "unsub"
 }
 
 /**
@@ -63,11 +72,11 @@ data class NosubMessage(
     val id: String,
     @SerialName("error")
     val error: Error? = null
-) : DdpDataManagementMessage, DdpServerMessage {
+) : DataManagementServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "nosub"
+    val msg: String = "nosub"
 }
 
 /**
@@ -85,11 +94,11 @@ data class AddedMessage<T>(
     val collection: String,
     @SerialName("fields")
     val fields: T? = null
-) : DdpDataManagementMessage, DdpServerMessage {
+) : DataManagementServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "added"
+    val msg: String = "added"
 }
 
 /**
@@ -110,11 +119,11 @@ data class ChangedMessage<T>(
     val fields: T? = null,
     @SerialName("cleared")
     val cleared: List<String>? = null
-) : DdpDataManagementMessage, DdpServerMessage {
+) : DataManagementServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "changed"
+    val msg: String = "changed"
 }
 
 /**
@@ -129,11 +138,11 @@ data class RemovedMessage(
     val id: String,
     @SerialName("collection")
     val collection: String
-) : DdpDataManagementMessage, DdpServerMessage {
+) : DataManagementServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "removed"
+    val msg: String = "removed"
 }
 
 /**
@@ -146,11 +155,11 @@ data class RemovedMessage(
 data class ReadyMessage(
     @SerialName("subs")
     val subs: List<String>
-) : DdpDataManagementMessage, DdpServerMessage {
+) : DataManagementServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "ready"
+    val msg: String = "ready"
 }
 
 /**
@@ -171,11 +180,11 @@ data class AddedBeforeMessage<T>(
     val fields: T? = null,
     @SerialName("before")
     val before: String? = null
-) : DdpDataManagementMessage, DdpServerMessage {
+) : DataManagementServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "addedBefore"
+    val msg: String = "addedBefore"
 }
 
 /**
@@ -193,9 +202,9 @@ data class MovedBeforeMessage(
     val collection: String,
     @SerialName("before")
     val before: String? = null
-) : DdpDataManagementMessage, DdpServerMessage {
+) : DataManagementServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "movedBefore"
+    val msg: String = "movedBefore"
 }

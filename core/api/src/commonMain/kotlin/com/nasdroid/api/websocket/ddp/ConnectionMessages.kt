@@ -1,16 +1,31 @@
-package com.nasdroid.api.websocket.message
+package com.nasdroid.api.websocket.ddp
 
+import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonContentPolymorphicSerializer
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonTransformingSerializer
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 /**
  * Seals concrete definitions for
  * [DDP connection messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#establishing-a-ddp-connection).
- * These messages are used exclusively to negotiate a session with the websocket server.
+ * These messages are sent by the client exclusively to negotiate a session with the websocket server.
  */
-sealed interface DdpConnectionMessage : DdpMessage
+@Serializable
+sealed interface ConnectClientMessage : ClientMessage
+
+/**
+ * Seals concrete definitions for
+ * [DDP connection responses](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#establishing-a-ddp-connection).
+ * These messages are received from the server exclusively to negotiate a session with the websocket server.
+ */
+@Serializable
+sealed interface ConnectServerMessage : ServerMessage
 
 /**
  * Sent by the client to request a new connection to the websocket server, or reconnects to an
@@ -29,11 +44,11 @@ data class ConnectMessage(
     val support: List<String>,
     @SerialName("session")
     val session: String? = null,
-) : DdpConnectionMessage, DdpClientMessage {
+) : ConnectClientMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "connect"
+    val msg: String = "connect"
 }
 
 /**
@@ -46,11 +61,11 @@ data class ConnectMessage(
 data class ConnectedMessage(
     @SerialName("session")
     val session: String,
-) : DdpConnectionMessage, DdpServerMessage {
+) : ConnectServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "connected"
+    val msg: String = "connected"
 }
 
 /**
@@ -62,9 +77,19 @@ data class ConnectedMessage(
 data class FailedMessage(
     @SerialName("version")
     val version: String,
-) : DdpConnectionMessage, DdpServerMessage {
+) : ConnectServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "failed"
+    val msg: String = "failed"
+}
+
+object ConnectServerMessageSerializer : JsonContentPolymorphicSerializer<ConnectServerMessage>(ConnectServerMessage::class) {
+    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ConnectServerMessage> {
+        return when (element.jsonObject["msg"]?.jsonPrimitive?.content) {
+            "connected" -> ConnectedMessage.serializer()
+            "failed" -> FailedMessage.serializer()
+            else -> error("Unknown message type for ConnectServerMessage: $element")
+        }
+    }
 }

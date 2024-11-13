@@ -1,4 +1,4 @@
-package com.nasdroid.api.websocket.message
+package com.nasdroid.api.websocket.ddp
 
 import kotlinx.datetime.Instant
 import kotlinx.serialization.builtins.serializer

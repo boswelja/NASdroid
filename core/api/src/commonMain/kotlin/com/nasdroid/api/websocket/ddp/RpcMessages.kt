@@ -1,18 +1,26 @@
-package com.nasdroid.api.websocket.message
+package com.nasdroid.api.websocket.ddp
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /**
  * Seals concrete definitions for
  * [DDP RPC messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#remote-procedure-calls).
- * These messages are used to make method calls and receive results.
+ * These messages are sent from the client to make method calls.
  */
-sealed interface DdpRpcMessage : DdpMessage
+@Serializable
+sealed interface RpcClientMessage : ClientMessage
+
+/**
+ * Seals concrete definitions for
+ * [DDP RPC messages](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#remote-procedure-calls).
+ * These messages are received from the server for method call results.
+ */
+@Serializable
+sealed interface RpcServerMessage : ServerMessage
 
 /**
  * Sent by the client to make a remote procedure call.
@@ -29,12 +37,12 @@ data class MethodMessage(
     @SerialName("method")
     val method: String,
     @SerialName("params")
-    val params: List<JsonElement>?
-) : DdpRpcMessage, DdpClientMessage {
+    val params: List<@Contextual Any>?
+) : RpcClientMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "method"
+    val msg: String = "method"
 }
 
 /**
@@ -53,11 +61,11 @@ data class ResultMessage<T>(
     val error: Error? = null,
     @SerialName("result")
     val result: T? = null,
-) : DdpRpcMessage, DdpServerMessage {
+) : RpcServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "result"
+    val msg: String = "result"
 }
 
 /**
@@ -71,9 +79,9 @@ data class ResultMessage<T>(
 data class UpdatedMessage(
     @SerialName("methods")
     val methods: List<String>
-) : DdpRpcMessage, DdpServerMessage {
+) : RpcServerMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
     @EncodeDefault
-    override val msg: String = "updated"
+    val msg: String = "updated"
 }
