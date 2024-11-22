@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
  * These messages are sent from the client to make method calls.
  */
 @Serializable
-sealed interface RpcClientMessage : ClientMessage
+internal sealed interface RpcClientMessage : ClientMessage
 
 /**
  * Seals concrete definitions for
@@ -20,7 +20,7 @@ sealed interface RpcClientMessage : ClientMessage
  * These messages are received from the server for method call results.
  */
 @Serializable
-sealed interface RpcServerMessage : ServerMessage
+internal sealed interface RpcServerMessage : ServerMessage
 
 /**
  * Sent by the client to make a remote procedure call.
@@ -30,7 +30,7 @@ sealed interface RpcServerMessage : ServerMessage
  * @property params Optional parameters for the method.
  */
 @Serializable
-data class MethodMessage(
+internal data class MethodMessage(
     @Contextual
     @SerialName("id")
     val id: String,
@@ -53,7 +53,7 @@ data class MethodMessage(
  * @property result The return value of the method, if any.
  */
 @Serializable
-data class ResultMessage<T>(
+internal data class ResultMessage<T>(
     @Contextual
     @SerialName("id")
     val id: String,
@@ -76,7 +76,7 @@ data class ResultMessage<T>(
  * messages.
  */
 @Serializable
-data class UpdatedMessage(
+internal data class UpdatedMessage(
     @SerialName("methods")
     val methods: List<String>
 ) : RpcServerMessage {

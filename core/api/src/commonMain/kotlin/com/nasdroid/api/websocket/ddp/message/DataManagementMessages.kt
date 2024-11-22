@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
  * These messages are sent to the server to negotiate data observation.
  */
 @Serializable
-sealed interface DataManagementClientMessage : ClientMessage
+internal sealed interface DataManagementClientMessage : ClientMessage
 
 /**
  * Seals concrete definitions for
@@ -20,7 +20,7 @@ sealed interface DataManagementClientMessage : ClientMessage
  * These messages are received from the server to negotiate data observation.
  */
 @Serializable
-sealed interface DataManagementServerMessage : ServerMessage
+internal sealed interface DataManagementServerMessage : ServerMessage
 
 /**
  * Sent by the client to subscribe to a set of information.
@@ -30,7 +30,7 @@ sealed interface DataManagementServerMessage : ServerMessage
  * @property params Optional parameters to the subscription.
  */
 @Serializable
-data class SubMessage(
+internal data class SubMessage(
     @SerialName("id")
     val id: String,
     @SerialName("name")
@@ -50,7 +50,7 @@ data class SubMessage(
  * @property id The [SubMessage.id].
  */
 @Serializable
-data class UnsubMessage(
+internal data class UnsubMessage(
     @SerialName("id")
     val id: String
 ) : DataManagementClientMessage {
@@ -67,7 +67,7 @@ data class UnsubMessage(
  * @property error An optional error raised by the subscription as it concludes, or sub-not-found
  */
 @Serializable
-data class NosubMessage(
+internal data class NosubMessage(
     @SerialName("id")
     val id: String,
     @SerialName("error")
@@ -87,7 +87,7 @@ data class NosubMessage(
  * @property fields The optional fields of the document that were added.
  */
 @Serializable
-data class AddedMessage<T>(
+internal data class AddedMessage<T>(
     @SerialName("id")
     val id: String,
     @SerialName("collection")
@@ -110,13 +110,13 @@ data class AddedMessage<T>(
  * @property cleared Optional list of field names that were removed.
  */
 @Serializable
-data class ChangedMessage<T>(
+internal data class ChangedMessage(
     @SerialName("id")
     val id: String,
     @SerialName("collection")
     val collection: String,
     @SerialName("fields")
-    val fields: T? = null,
+    val fields: Map<String, String>? = null,
     @SerialName("cleared")
     val cleared: List<String>? = null
 ) : DataManagementServerMessage {
@@ -133,7 +133,7 @@ data class ChangedMessage<T>(
  * @property collection Collection name.
  */
 @Serializable
-data class RemovedMessage(
+internal data class RemovedMessage(
     @SerialName("id")
     val id: String,
     @SerialName("collection")
@@ -152,7 +152,7 @@ data class RemovedMessage(
  * @property subs IA list of [SubMessage.id]s which have sent their initial batch of data
  */
 @Serializable
-data class ReadyMessage(
+internal data class ReadyMessage(
     @SerialName("subs")
     val subs: List<String>
 ) : DataManagementServerMessage {
@@ -171,7 +171,7 @@ data class ReadyMessage(
  * @property before The document ID to add the document before, or null to add at the end
  */
 @Serializable
-data class AddedBeforeMessage<T>(
+internal data class AddedBeforeMessage<T>(
     @SerialName("id")
     val id: String,
     @SerialName("collection")
@@ -195,7 +195,7 @@ data class AddedBeforeMessage<T>(
  * @property before The ID of the document that the moved document is now before, or null if it's at the end.
  */
 @Serializable
-data class MovedBeforeMessage(
+internal data class MovedBeforeMessage(
     @SerialName("id")
     val id: String,
     @SerialName("collection")

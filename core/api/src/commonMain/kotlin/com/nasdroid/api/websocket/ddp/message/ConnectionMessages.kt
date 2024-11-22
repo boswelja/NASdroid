@@ -16,7 +16,7 @@ import kotlinx.serialization.json.jsonPrimitive
  * These messages are sent by the client exclusively to negotiate a session with the websocket server.
  */
 @Serializable
-sealed interface ConnectClientMessage : ClientMessage
+internal sealed interface ConnectClientMessage : ClientMessage
 
 /**
  * Seals concrete definitions for
@@ -24,7 +24,7 @@ sealed interface ConnectClientMessage : ClientMessage
  * These messages are received from the server exclusively to negotiate a session with the websocket server.
  */
 @Serializable
-sealed interface ConnectServerMessage : ServerMessage
+internal sealed interface ConnectServerMessage : ServerMessage
 
 /**
  * Sent by the client to request a new connection to the websocket server, or reconnects to an
@@ -36,7 +36,7 @@ sealed interface ConnectServerMessage : ServerMessage
  * to an existing session.
  */
 @Serializable
-data class ConnectMessage(
+internal data class ConnectMessage(
     @SerialName("version")
     val version: String,
     @SerialName("support")
@@ -57,7 +57,7 @@ data class ConnectMessage(
  * @property session An identifier for the DDP session.
  */
 @Serializable
-data class ConnectedMessage(
+internal data class ConnectedMessage(
     @SerialName("session")
     val session: String,
 ) : ConnectServerMessage {
@@ -73,7 +73,7 @@ data class ConnectedMessage(
  * @property version A suggested protocol version to connect with
  */
 @Serializable
-data class FailedMessage(
+internal data class FailedMessage(
     @SerialName("version")
     val version: String,
 ) : ConnectServerMessage {
@@ -83,7 +83,7 @@ data class FailedMessage(
     val msg: String = "failed"
 }
 
-object ConnectServerMessageSerializer : JsonContentPolymorphicSerializer<ConnectServerMessage>(ConnectServerMessage::class) {
+internal object ConnectServerMessageSerializer : JsonContentPolymorphicSerializer<ConnectServerMessage>(ConnectServerMessage::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ConnectServerMessage> {
         return when (element.jsonObject["msg"]?.jsonPrimitive?.content) {
             "connected" -> ConnectedMessage.serializer()

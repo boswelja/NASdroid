@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  * These messages are used to ensure the connection is kept alive.
  */
 @Serializable
-sealed interface DdpHeartbeatMessage : ClientMessage, ServerMessage
+internal sealed interface DdpHeartbeatMessage : ClientMessage, ServerMessage
 
 /**
  * A ping message used to keep the connection alive. Expect a [PongMessage] back from the server.
@@ -19,7 +19,7 @@ sealed interface DdpHeartbeatMessage : ClientMessage, ServerMessage
  * @property id Identifier used to correlate with response.
  */
 @Serializable
-data class PingMessage(
+internal data class PingMessage(
     @SerialName("id")
     val id: String? = null
 ) : DdpHeartbeatMessage {
@@ -35,7 +35,7 @@ data class PingMessage(
  * @property id Identifier used to correlate with response.
  */
 @Serializable
-data class PongMessage(
+internal data class PongMessage(
     @SerialName("id")
     val id: String? = null
 ) : DdpHeartbeatMessage {

@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
  * @property requestMessage If the original message is parsed properly, it is represented here.
  */
 @Serializable
-data class ErrorMessage(
+internal data class ErrorMessage(
     @SerialName("reason")
     val reason: String,
     @SerialName("offendingMessage")
@@ -35,7 +35,7 @@ data class ErrorMessage(
 }
 
 @Serializable
-data class Error(
+internal data class Error(
     @SerialName("error")
     val error: String,
     @SerialName("errorType")

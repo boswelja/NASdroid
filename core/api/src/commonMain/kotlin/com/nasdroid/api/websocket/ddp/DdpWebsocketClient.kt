@@ -1,12 +1,18 @@
 package com.nasdroid.api.websocket.ddp
 
+import com.nasdroid.api.websocket.ddp.message.AddedBeforeMessage
+import com.nasdroid.api.websocket.ddp.message.AddedMessage
+import com.nasdroid.api.websocket.ddp.message.ChangedMessage
 import com.nasdroid.api.websocket.ddp.message.ConnectMessage
 import com.nasdroid.api.websocket.ddp.message.ConnectServerMessage
 import com.nasdroid.api.websocket.ddp.message.ConnectedMessage
 import com.nasdroid.api.websocket.ddp.message.DataManagementServerMessage
 import com.nasdroid.api.websocket.ddp.message.FailedMessage
 import com.nasdroid.api.websocket.ddp.message.MethodMessage
+import com.nasdroid.api.websocket.ddp.message.MovedBeforeMessage
 import com.nasdroid.api.websocket.ddp.message.NosubMessage
+import com.nasdroid.api.websocket.ddp.message.ReadyMessage
+import com.nasdroid.api.websocket.ddp.message.RemovedMessage
 import com.nasdroid.api.websocket.ddp.message.ResultMessage
 import com.nasdroid.api.websocket.ddp.message.ServerMessage
 import com.nasdroid.api.websocket.ddp.message.ServerMessageSerializer
@@ -27,6 +33,7 @@ import io.ktor.serialization.deserialize
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.websocket.close
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -36,6 +43,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -83,7 +91,7 @@ class DdpWebsocketClient(
     suspend fun <T> callMethod(
         method: String,
         params: List<Any>
-    ): T {
+    ): MethodCallResult<T> {
         val currentState = state
         check(currentState is State.Connected) { "Client must be connected before making any method calls!" }
 
@@ -91,17 +99,61 @@ class DdpWebsocketClient(
         val message = MethodMessage(id, method, params)
         currentState.webSocketSession.sendSerialized(message)
         val result: ResultMessage<T> = currentState.webSocketSession.receiveDeserialized()
-        return result.result!! // TODO error handling
+        return if (result.result != null) {
+            MethodCallResult.Success(result.result)
+        } else {
+            checkNotNull(result.error) { "The result of the method call was neither success or error!" }
+            MethodCallResult.Error(
+                error = result.error.error,
+                errorType = result.error.errorType,
+                reason = result.error.reason,
+                message = result.error.message
+            )
+        }
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun subscribe(name: String, params: List<Any>): Flow<DataManagementServerMessage> {
+    fun <T> subscribe(name: String, params: List<Any>): Flow<SubscriptionEvent<T>> {
         val currentState = state
         check(currentState is State.Connected) { "Client must be connected before making any method calls!" }
 
         val id = Uuid.random().toString()
         return currentState.webSocketSession.incoming.receiveAsFlow()
-            .map { value -> currentState.webSocketSession.converter!!.deserialize<DataManagementServerMessage>(value) }
+            .map { value ->
+                val message = currentState.webSocketSession.converter!!.deserialize<DataManagementServerMessage>(value)
+                when (message) {
+                    is AddedBeforeMessage<*> -> SubscriptionEvent.DocumentAdded(
+                        collection = message.collection,
+                        id = message.id,
+                        document = message.fields as T,
+                        beforeId = message.before
+                    )
+                    is AddedMessage<*> -> SubscriptionEvent.DocumentAdded(
+                        collection = message.collection,
+                        id = message.id,
+                        document = message.fields as T,
+                        beforeId = null
+                    )
+                    is ChangedMessage -> SubscriptionEvent.DocumentChanged(
+                        collection = message.collection,
+                        id = message.id,
+                        updatedFields = message.fields.orEmpty(),
+                        clearedFields = message.cleared.orEmpty()
+                    )
+                    is MovedBeforeMessage -> SubscriptionEvent.DocumentMoved(
+                        collection = message.collection,
+                        id = message.id,
+                        movedBefore = message.before
+                    )
+                    is NosubMessage -> throw CancellationException("Server cancelled the subscription")
+                    is ReadyMessage -> null // We currently ignore this
+                    is RemovedMessage -> SubscriptionEvent.DocumentRemoved(
+                        collection = message.collection,
+                        id = message.id
+                    )
+                }
+            }
+            .filterNotNull()
             .onStart {
                 val sub = SubMessage(id, name, params)
                 currentState.webSocketSession.sendSerialized(sub)
