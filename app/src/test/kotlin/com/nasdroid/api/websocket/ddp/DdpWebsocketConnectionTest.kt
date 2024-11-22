@@ -6,7 +6,7 @@ import kotlin.test.Test
 class DdpWebsocketConnectionTest {
     @Test
     fun connectWorks() = runTest {
-        val connection = DdpWebsocketConnection(url = "ws://truenas.local/websocket")
+        val connection = DdpWebsocketClient(url = "ws://truenas.local/websocket")
         connection.connect()
         println(connection.state)
         connection.disconnect()

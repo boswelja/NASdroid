@@ -1,18 +1,12 @@
 package com.nasdroid.api.websocket.ddp
 
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
-import io.ktor.client.plugins.websocket.WebSockets
-import io.ktor.client.plugins.websocket.pingInterval
-import io.ktor.client.plugins.websocket.receiveDeserialized
-import io.ktor.client.plugins.websocket.sendSerialized
-import io.ktor.client.plugins.websocket.webSocketSession
-import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
-import io.ktor.websocket.close
-import kotlinx.coroutines.channels.Channel
+import io.ktor.client.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.websocket.*
+import io.ktor.serialization.*
+import io.ktor.serialization.kotlinx.*
+import io.ktor.websocket.*
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
@@ -22,11 +16,10 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class DdpWebsocketConnection(
+class DdpWebsocketClient(
     val url: String
 ) {
     private val bootstrapLock = Mutex()
-    private val openChannels = mutableMapOf<String, Channel<ServerMessage>>()
 
     var state: State = State.Disconnected
         private set
@@ -72,10 +65,28 @@ class DdpWebsocketConnection(
 
         val id = Uuid.random().toString()
         val message = MethodMessage(id, method, params)
-        val channel = Channel<ConnectServerMessage>()
         currentState.webSocketSession.sendSerialized(message)
         val result: ResultMessage<T> = currentState.webSocketSession.receiveDeserialized()
         return result.result!! // TODO error handling
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun subscribe(name: String, params: List<Any>): Flow<DataManagementServerMessage> {
+        val currentState = state
+        check(currentState is State.Connected) { "Client must be connected before making any method calls!" }
+
+        val id = Uuid.random().toString()
+        return currentState.webSocketSession.incoming.receiveAsFlow()
+            .map { value -> currentState.webSocketSession.converter!!.deserialize<DataManagementServerMessage>(value) }
+            .onStart {
+                val sub = SubMessage(id, name, params)
+                currentState.webSocketSession.sendSerialized(sub)
+            }
+            .onCompletion { cause ->
+                val unsub = UnsubMessage(id)
+                currentState.webSocketSession.sendSerialized(unsub)
+                currentState.webSocketSession.receiveDeserialized<NosubMessage>()
+            }
     }
 
     sealed interface State {

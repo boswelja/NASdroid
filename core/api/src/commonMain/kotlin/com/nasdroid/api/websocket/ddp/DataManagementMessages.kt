@@ -1,5 +1,6 @@
 package com.nasdroid.api.websocket.ddp
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -36,7 +37,7 @@ data class SubMessage(
     @SerialName("name")
     val name: String,
     @SerialName("params")
-    val params: List<JsonElement>? = null,
+    val params: List<@Contextual Any>? = null,
 ) : DataManagementClientMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")
