@@ -1,4 +1,4 @@
-package com.nasdroid.api.websocket.ddp
+package com.nasdroid.api.websocket.ddp.message
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.EncodeDefault

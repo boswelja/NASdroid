@@ -1,10 +1,9 @@
-package com.nasdroid.api.websocket.ddp
+package com.nasdroid.api.websocket.ddp.message
 
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /*
  * This file contains concrete definitions for

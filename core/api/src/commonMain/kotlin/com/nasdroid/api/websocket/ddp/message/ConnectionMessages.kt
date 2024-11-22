@@ -1,4 +1,4 @@
-package com.nasdroid.api.websocket.ddp
+package com.nasdroid.api.websocket.ddp.message
 
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.EncodeDefault
@@ -7,7 +7,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonTransformingSerializer
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
