@@ -12,13 +12,25 @@ import com.nasdroid.api.websocket.ddp.message.ServerMessage
 import com.nasdroid.api.websocket.ddp.message.ServerMessageSerializer
 import com.nasdroid.api.websocket.ddp.message.SubMessage
 import com.nasdroid.api.websocket.ddp.message.UnsubMessage
-import io.ktor.client.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.plugins.websocket.*
-import io.ktor.serialization.*
-import io.ktor.serialization.kotlinx.*
-import io.ktor.websocket.*
-import kotlinx.coroutines.flow.*
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
+import io.ktor.client.plugins.websocket.WebSockets
+import io.ktor.client.plugins.websocket.converter
+import io.ktor.client.plugins.websocket.pingInterval
+import io.ktor.client.plugins.websocket.receiveDeserialized
+import io.ktor.client.plugins.websocket.sendSerialized
+import io.ktor.client.plugins.websocket.webSocketSession
+import io.ktor.serialization.deserialize
+import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
+import io.ktor.websocket.close
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
@@ -94,7 +106,7 @@ class DdpWebsocketClient(
                 val sub = SubMessage(id, name, params)
                 currentState.webSocketSession.sendSerialized(sub)
             }
-            .onCompletion { cause ->
+            .onCompletion {
                 val unsub = UnsubMessage(id)
                 currentState.webSocketSession.sendSerialized(unsub)
                 currentState.webSocketSession.receiveDeserialized<NosubMessage>()
