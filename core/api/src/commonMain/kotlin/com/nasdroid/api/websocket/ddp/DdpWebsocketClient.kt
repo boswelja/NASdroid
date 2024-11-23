@@ -90,7 +90,7 @@ class DdpWebsocketClient(
     @OptIn(ExperimentalUuidApi::class)
     suspend fun <T> callMethod(
         method: String,
-        params: List<Any>
+        params: List<Any?>
     ): MethodCallResult<T> {
         val currentState = state
         check(currentState is State.Connected) { "Client must be connected before making any method calls!" }

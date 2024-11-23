@@ -37,7 +37,7 @@ internal data class MethodMessage(
     @SerialName("method")
     val method: String,
     @SerialName("params")
-    val params: List<@Contextual Any>?
+    val params: List<@Contextual Any?>?
 ) : RpcClientMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")

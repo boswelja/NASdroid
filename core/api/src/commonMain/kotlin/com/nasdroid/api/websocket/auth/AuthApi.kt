@@ -1,4 +1,4 @@
-package com.nasdroid.api.websocket
+package com.nasdroid.api.websocket.auth
 
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Contextual
@@ -25,9 +25,17 @@ interface AuthApi {
 
     /**
      * Generate a token to be used for authentication.
+     *
+     * @param timeToLive The token will be invalidated if the connection has been inactive for a time
+     * greater than this.
+     * @param attrs A general purpose object/dictionary to hold information about the token.
+     * @param matchOrigin Whether the token will only allow using this token from the same IP
+     * address or with the same user UID.
      */
     suspend fun generateToken(
-        timeToLive: Duration = 600.seconds
+        timeToLive: Duration = 600.seconds,
+        attrs: Map<String, Any> = emptyMap(),
+        matchOrigin: Boolean = false
     ): String
 
     /**
@@ -90,25 +98,25 @@ interface AuthApi {
 @Serializable
 data class AuthenticatedUser(
     @SerialName("pw_name")
-    val name: String?,
+    val name: String,
     @SerialName("pw_gecos")
-    val gecos: String?,
+    val gecos: String,
     @SerialName("pw_dir")
-    val dir: String?,
+    val dir: String,
     @SerialName("pw_shell")
-    val shell: String?,
+    val shell: String,
     @SerialName("pw_uid")
-    val uid: String?,
+    val uid: String,
     @SerialName("pw_gid")
-    val gid: String?,
+    val gid: String,
     @SerialName("grouplist")
-    val groupList: List<String>?,
+    val groupList: List<String>,
     @SerialName("sid")
-    val sid: String?,
+    val sid: String,
     @SerialName("source")
     val source: Source,
     @SerialName("local")
-    val local: Boolean?,
+    val local: Boolean,
     @SerialName("attributes")
     val attributes: Map<String, @Contextual Any>,
     @SerialName("two_factor_config")
