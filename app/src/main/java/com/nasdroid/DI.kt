@@ -1,6 +1,6 @@
 package com.nasdroid
 
-import com.nasdroid.api.v2.ApiV2Module
+import com.nasdroid.api.ApiV2Module
 import com.nasdroid.apps.ui.AppsModule
 import com.nasdroid.auth.ui.AuthModule
 import com.nasdroid.dashboard.ui.DashboardModule
