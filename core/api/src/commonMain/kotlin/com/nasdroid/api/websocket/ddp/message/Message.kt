@@ -22,7 +22,7 @@ internal object ServerMessageSerializer : JsonContentPolymorphicSerializer<Serve
             // Data management messages
             "nosub" -> NosubMessage.serializer()
             "added" -> AddedMessage.serializer(ContextualSerializer(Any::class))
-            "changed" -> ChangedMessage.serializer(ContextualSerializer(Any::class))
+            "changed" -> ChangedMessage.serializer()
             "removed" -> RemovedMessage.serializer()
             "ready" -> ReadyMessage.serializer()
             "addedBefore" -> AddedBeforeMessage.serializer(ContextualSerializer(Any::class))
