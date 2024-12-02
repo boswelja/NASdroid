@@ -27,7 +27,7 @@ import kotlinx.serialization.json.JsonObject
 /**
  * Builds a Ktor [HttpClient] for use with the TrueNAS API.
  */
-fun getHttpClient(
+fun getRestApiClient(
     apiStateProvider: ApiStateProvider,
 ): HttpClient {
     return HttpClient {
