@@ -11,9 +11,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.setMain
-import org.koin.core.context.startKoin
-import org.koin.test.check.checkModules
+import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.mock.MockProvider
+import org.koin.test.verify.definition
+import org.koin.test.verify.verify
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -33,15 +34,15 @@ class DITest {
         MockProvider.register { clazz -> mockkClass(clazz, relaxed = true) }
     }
 
+    @OptIn(KoinExperimentalAPI::class)
     @Test
     fun verifyDependencyInjectionGraph() {
-        startKoin {
-            modules(NasDroidModule)
-            checkModules {
-                withInstance<Context>()
-                withInstance<Application>()
-                withInstance(mockSavedStateHandle)
-            }
-        }
+        NasDroidModule.verify(
+            injections = listOf(
+                definition<Context>(),
+                definition<Application>(),
+                definition<SavedStateHandle>(),
+            )
+        )
     }
 }
