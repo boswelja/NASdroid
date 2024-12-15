@@ -3,13 +3,16 @@ package com.nasdroid.api.websocket.ddp.message
 import kotlinx.serialization.ContextualSerializer
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
+@Serializable
 internal sealed interface ClientMessage
 
+@Serializable
 internal sealed interface ServerMessage
 
 internal object ServerMessageSerializer : JsonContentPolymorphicSerializer<ServerMessage>(ServerMessage::class) {

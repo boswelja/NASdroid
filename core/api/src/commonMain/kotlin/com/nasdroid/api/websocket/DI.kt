@@ -1,12 +1,14 @@
 package com.nasdroid.api.websocket
 
+import com.nasdroid.api.websocket.auth.AuthApi
 import com.nasdroid.api.websocket.auth.DdpAuthApi
 import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
-import org.koin.core.module.dsl.scopedOf
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val WebsocketApiModule = module {
-    scope<DdpWebsocketClient> {
-        scopedOf(::DdpAuthApi)
-    }
+    singleOf(::DdpWebsocketClient)
+    factoryOf(::DdpAuthApi) bind AuthApi::class
 }

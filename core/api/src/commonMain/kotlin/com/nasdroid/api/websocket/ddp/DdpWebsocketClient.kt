@@ -48,15 +48,13 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class DdpWebsocketClient(
-    val url: String
-) {
+class DdpWebsocketClient {
     private val bootstrapLock = Mutex()
 
     var state: State = State.Disconnected
         private set
 
-    suspend fun connect(session: String? = null) {
+    suspend fun connect(url: String, session: String? = null) {
         bootstrapLock.withLock {
             check(state is State.Disconnected) { "Cannot connect when already connected or connecting." }
             val webSocket = WebsocketKtorClient.webSocketSession(urlString = url)
@@ -176,7 +174,9 @@ class DdpWebsocketClient(
 
 private val MessageSerializer = Json {
     serializersModule = SerializersModule {
-        polymorphic(ServerMessage::class, baseSerializer = ServerMessageSerializer)
+        polymorphic(ServerMessage::class, baseSerializer = ServerMessageSerializer) {
+
+        }
     }
 }
 
