@@ -174,8 +174,8 @@ class DdpWebsocketClient {
 
 private val MessageSerializer = Json {
     serializersModule = SerializersModule {
-        polymorphic(ServerMessage::class, baseSerializer = ServerMessageSerializer) {
-
+        polymorphic(ServerMessage::class) {
+            defaultDeserializer { ServerMessageSerializer }
         }
     }
 }
