@@ -43,12 +43,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.serializer
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.ExperimentalUuidApi
@@ -214,4 +217,16 @@ private val WebsocketKtorClient = HttpClient {
         contentConverter = KotlinxWebsocketSerializationConverter(MessageSerializer)
         pingInterval = 1.minutes
     }
+}
+
+@OptIn(InternalSerializationApi::class)
+inline suspend fun <reified T: Any> DdpWebsocketClient.callMethod(method: String): MethodCallResult<T> {
+    return callMethod(method, T::class.serializer())
+}
+
+inline suspend fun <reified T, reified P> DdpWebsocketClient.callMethod(
+    method: String,
+    params: List<P>
+): MethodCallResult<T> {
+    return callMethod(method, serializer(), params, serializer())
 }
