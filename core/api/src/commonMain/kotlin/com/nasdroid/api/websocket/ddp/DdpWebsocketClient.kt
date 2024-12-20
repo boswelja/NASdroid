@@ -43,9 +43,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -75,7 +73,7 @@ class DdpWebsocketClient {
                 }
                 is FailedMessage -> {
                     state = State.Disconnected
-                    throw IllegalStateException("Failed to connect to DDP server: $connectResponse")
+                    error("Failed to connect to DDP server: $connectResponse")
                 }
             }
         }
@@ -131,7 +129,12 @@ class DdpWebsocketClient {
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun <T> subscribe(name: String, params: List<Any>): Flow<SubscriptionEvent<T>> {
+    fun <T, P> subscribe(
+        name: String,
+        serializer: KSerializer<T>,
+        params: List<P>,
+        paramSerializer: KSerializer<P>
+    ): Flow<SubscriptionEvent<T>> {
         val currentState = state
         check(currentState is State.Connected) { "Client must be connected before making any method calls!" }
 
@@ -174,7 +177,8 @@ class DdpWebsocketClient {
             .filterNotNull()
             .onStart {
                 val sub = SubMessage(id, name, params)
-                currentState.webSocketSession.sendSerialized(sub)
+                val serializedString = Json.encodeToString(SubMessage.serializer(paramSerializer), sub)
+                currentState.webSocketSession.send(Frame.Text(serializedString))
             }
             .onCompletion {
                 val unsub = UnsubMessage(id)
@@ -186,7 +190,10 @@ class DdpWebsocketClient {
     sealed interface State {
         data class Connecting(internal val webSocketSession: DefaultClientWebSocketSession) : State
 
-        data class Connected(internal val webSocketSession: DefaultClientWebSocketSession, internal val sessionId: String) : State
+        data class Connected(
+            internal val webSocketSession: DefaultClientWebSocketSession,
+            internal val sessionId: String
+        ) : State
 
         data object Disconnected : State
     }
@@ -219,14 +226,19 @@ private val WebsocketKtorClient = HttpClient {
     }
 }
 
-@OptIn(InternalSerializationApi::class)
-inline suspend fun <reified T: Any> DdpWebsocketClient.callMethod(method: String): MethodCallResult<T> {
-    return callMethod(method, T::class.serializer())
+suspend inline fun <reified T: Any> DdpWebsocketClient.callMethod(method: String): MethodCallResult<T> {
+    return callMethod(method, serializer())
 }
 
-inline suspend fun <reified T, reified P> DdpWebsocketClient.callMethod(
+suspend inline fun <reified T, reified P> DdpWebsocketClient.callMethod(
     method: String,
     params: List<P>
 ): MethodCallResult<T> {
     return callMethod(method, serializer(), params, serializer())
+}
+
+inline fun <reified T, reified P> DdpWebsocketClient.subscribe(
+    name: String, params: List<P>
+): Flow<SubscriptionEvent<T>> {
+    return subscribe(name, serializer(), params, serializer())
 }
