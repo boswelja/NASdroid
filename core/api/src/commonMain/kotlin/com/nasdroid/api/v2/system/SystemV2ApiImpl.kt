@@ -1,5 +1,8 @@
 package com.nasdroid.api.v2.system
 
+import com.nasdroid.api.websocket.system.Environment
+import com.nasdroid.api.websocket.system.State
+import com.nasdroid.api.websocket.system.SystemInfo
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

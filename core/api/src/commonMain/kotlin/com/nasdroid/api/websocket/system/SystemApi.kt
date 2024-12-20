@@ -1,126 +1,115 @@
-package com.nasdroid.api.v2.system
+package com.nasdroid.api.websocket.system
 
 import com.nasdroid.api.TimestampUnwrapper
 import com.nasdroid.api.exception.HttpNotOkException
-import com.nasdroid.api.websocket.system.Environment
-import com.nasdroid.api.websocket.system.State
-import com.nasdroid.api.websocket.system.SystemInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Duration
 
 /**
  * Describes the TrueNAS API V2 "System" group. Note these mappings may not be 1:1, as we will
  * rearrange data to be more accessible in Kotlin.
  */
 @Suppress("TooManyFunctions")
-interface SystemV2Api {
+interface SystemApi {
 
     /**
      * Get a unique identifier that will be reset on each system reboot.
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun getBootId(): String
+    suspend fun bootId(): String
 
     /**
-     * Get the environment in which product is running.
-     *
-     * @throws HttpNotOkException
+     * Retrieve build time of the system.
      */
-    suspend fun getEnvironment(): Environment
+    suspend fun buildTime(): String
+
+    /**
+     * Download a debug file. Returns a job ID.
+     */
+    suspend fun debug(): Int
 
     /**
      * Get whether the given feature is enabled.
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun isFeatureEnabled(featureName: String): Boolean
+    suspend fun featureEnabled(feature: Feature): Boolean
 
     /**
      * Get a hex string that is generated based on the contents of the /etc/hostid file. This is a
      * permanent value that persists across reboots/upgrades and can be used as a unique identifier
      * for the machine.
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun getHostId(): String
+    suspend fun hostId(): String
 
     /**
      * Get basic system information.
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun getSystemInfo(): SystemInfo
+    suspend fun info(): SystemInfo
 
     /**
      * Get whether the system is currently running a stable build.
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun isStable(): Boolean
+    suspend fun isStable(): String
 
     /**
      * Update license file.
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun updateLicense(license: String)
-
-    /**
-     * Get the name of the product the system is using. FOr example, "TrueNAS".
-     *
-     * @throws HttpNotOkException
-     */
-    suspend fun getProductName(): String
+    suspend fun licenseUpdate(license: String)
 
     /**
      * Get the type of product the system is using. For example, "SCALE".
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun getProductType(): String
+    suspend fun productType(): String
 
     /**
      * Get whether the system is booted and ready to use.
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun isReady(): Boolean
+    suspend fun ready(): Boolean
 
     /**
      * Reboot the system.
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun reboot()
+    suspend fun reboot(delay: Duration): Int
+
+    /**
+     * Returns the release notes URL for a version of SCALE.
+     * If version is not provided, then the release notes URL will return a link for the currently
+     * installed version of SCALE.
+     *
+     * @param version represents a version to check against
+     */
+    suspend fun releaseNotesUrl(version: String? = null): String?
 
     /**
      * Shutdown the system.
      *
      * @throws HttpNotOkException
      */
-    suspend fun shutdown()
+    suspend fun shutdown(delay: Duration): Int
 
     /**
      * Get the current system state.
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun getState(): State
+    suspend fun state(): State
 
     /**
      * Get the version of the product this system is using. For example, "TrueNAS-SCALE-22.12.2".
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun getVersion(): String
+    suspend fun version(): String
 
     /**
      * Get a shortened version of the product this system is using. For example, "22.12.2".
-     *
-     * @throws HttpNotOkException
      */
-    suspend fun getShortVersion(): String
+    suspend fun versionShort(): String
+}
+
+@Serializable
+enum class Feature {
+    @SerialName("DEDUP")
+    Dedup,
+    @SerialName("FIBRECHANNEL")
+    FibreChannel,
+    @SerialName("VM")
+    VM
 }
 
 /**

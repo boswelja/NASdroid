@@ -45,13 +45,21 @@ kotlin {
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.contentnegotiation)
                 implementation(libs.ktor.serialization.json)
+                implementation(libs.ktor.client.websockets)
+                implementation(libs.ktor.client.websockets.serialization)
 
                 implementation(libs.kotlinx.serialization.json)
 
                 implementation(libs.koin.core)
             }
         }
-        val androidMain by getting {
+        commonTest {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+        androidMain {
             dependencies {
                 implementation(libs.ktor.client.okhttp)
             }
