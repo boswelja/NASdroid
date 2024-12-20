@@ -32,6 +32,7 @@ import io.ktor.client.plugins.websocket.sendSerialized
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.serialization.deserialize
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
+import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -41,7 +42,11 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlin.coroutines.cancellation.CancellationException
@@ -86,18 +91,22 @@ class DdpWebsocketClient {
         }
     }
 
-    @OptIn(ExperimentalUuidApi::class)
+    @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
     suspend fun <T, P> callMethod(
         method: String,
-        params: List<P>
+        serializer: KSerializer<T>,
+        params: List<P>,
+        paramSerializer: KSerializer<P>
     ): MethodCallResult<T> {
         val currentState = state
         check(currentState is State.Connected) { "Client must be connected before making any method calls!" }
 
         val id = Uuid.random().toString()
         val message = MethodMessage(id, method, params)
-        currentState.webSocketSession.sendSerialized(message)
-        val result: ResultMessage<T> = currentState.webSocketSession.receiveDeserialized()
+        val serializedString = Json.encodeToString(MethodMessage.serializer(paramSerializer), message)
+        currentState.webSocketSession.send(Frame.Text(serializedString))
+        val resultFrame = currentState.webSocketSession.incoming.receive()
+        val result = Json.decodeFromStream(ResultMessage.serializer(serializer), resultFrame.data.inputStream())
         return if (result.result != null) {
             MethodCallResult.Success(result.result)
         } else {
@@ -112,9 +121,10 @@ class DdpWebsocketClient {
     }
 
     suspend fun <T> callMethod(
-        method: String
+        method: String,
+        serializer: KSerializer<T>,
     ): MethodCallResult<T> {
-        return callMethod<T, String>(method, emptyList())
+        return callMethod(method, serializer, emptyList(), String.serializer())
     }
 
     @OptIn(ExperimentalUuidApi::class)
