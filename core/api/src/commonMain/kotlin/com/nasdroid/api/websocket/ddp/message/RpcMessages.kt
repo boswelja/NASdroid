@@ -30,14 +30,14 @@ internal sealed interface RpcServerMessage : ServerMessage
  * @property params Optional parameters for the method.
  */
 @Serializable
-internal data class MethodMessage(
+internal data class MethodMessage<P>(
     @Contextual
     @SerialName("id")
     val id: String,
     @SerialName("method")
     val method: String,
     @SerialName("params")
-    val params: List<@Contextual Any?>?
+    val params: List<P>?
 ) : RpcClientMessage {
     @OptIn(ExperimentalSerializationApi::class)
     @SerialName("msg")

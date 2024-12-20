@@ -75,7 +75,7 @@ interface AuthApi {
     /**
      * Set current users `attributes` dictionary [key] to [value].
      */
-    suspend fun setAttribute(key: String, value: Any)
+    suspend fun setAttribute(key: String, value: String)
 
     /**
      * Terminates all other sessions (except the current one).

@@ -5,6 +5,7 @@ import com.nasdroid.api.websocket.ddp.message.AddedMessage
 import com.nasdroid.api.websocket.ddp.message.ChangedMessage
 import com.nasdroid.api.websocket.ddp.message.ConnectMessage
 import com.nasdroid.api.websocket.ddp.message.ConnectServerMessage
+import com.nasdroid.api.websocket.ddp.message.ConnectServerMessageSerializer
 import com.nasdroid.api.websocket.ddp.message.ConnectedMessage
 import com.nasdroid.api.websocket.ddp.message.DataManagementServerMessage
 import com.nasdroid.api.websocket.ddp.message.FailedMessage
@@ -57,7 +58,7 @@ class DdpWebsocketClient {
     suspend fun connect(url: String, session: String? = null) {
         bootstrapLock.withLock {
             check(state is State.Disconnected) { "Cannot connect when already connected or connecting." }
-            val webSocket = WebsocketKtorClient.webSocketSession(urlString = url)
+            val webSocket = WebsocketKtorClient.webSocketSession(urlString = "ws://truenas.local/websocket")
             state = State.Connecting(webSocket)
             webSocket.sendSerialized(ConnectMessage(version = "1", support = listOf("1"), session))
             when (val connectResponse = webSocket.receiveDeserialized<ConnectServerMessage>()) {
@@ -86,9 +87,9 @@ class DdpWebsocketClient {
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    suspend fun <T> callMethod(
+    suspend fun <T, P> callMethod(
         method: String,
-        params: List<Any?>
+        params: List<P>
     ): MethodCallResult<T> {
         val currentState = state
         check(currentState is State.Connected) { "Client must be connected before making any method calls!" }
@@ -108,6 +109,12 @@ class DdpWebsocketClient {
                 message = result.error.message
             )
         }
+    }
+
+    suspend fun <T> callMethod(
+        method: String
+    ): MethodCallResult<T> {
+        return callMethod<T, String>(method, emptyList())
     }
 
     @OptIn(ExperimentalUuidApi::class)
@@ -176,6 +183,9 @@ private val MessageSerializer = Json {
     serializersModule = SerializersModule {
         polymorphic(ServerMessage::class) {
             defaultDeserializer { ServerMessageSerializer }
+        }
+        polymorphic(ConnectServerMessage::class) {
+            defaultDeserializer { ConnectServerMessageSerializer }
         }
     }
 }
