@@ -98,7 +98,7 @@ class DdpWebsocketClient {
         serializer: KSerializer<T>,
         params: List<P>,
         paramSerializer: KSerializer<P>
-    ): MethodCallResult<T> {
+    ): T {
         val currentState = state
         check(currentState is State.Connected) { "Client must be connected before making any method calls!" }
 
@@ -109,10 +109,10 @@ class DdpWebsocketClient {
         val resultFrame = currentState.webSocketSession.incoming.receive()
         val result = Json.decodeFromStream(ResultMessage.serializer(serializer), resultFrame.data.inputStream())
         return if (result.result != null) {
-            MethodCallResult.Success(result.result)
+            result.result
         } else {
             checkNotNull(result.error) { "The result of the method call was neither success or error!" }
-            MethodCallResult.Error(
+            throw MethodCallError(
                 error = result.error.error,
                 errorType = result.error.errorType,
                 reason = result.error.reason,
@@ -124,7 +124,7 @@ class DdpWebsocketClient {
     suspend fun <T> callMethod(
         method: String,
         serializer: KSerializer<T>,
-    ): MethodCallResult<T> {
+    ): T {
         return callMethod(method, serializer, emptyList(), String.serializer())
     }
 
@@ -226,14 +226,14 @@ private val WebsocketKtorClient = HttpClient {
     }
 }
 
-suspend inline fun <reified T: Any> DdpWebsocketClient.callMethod(method: String): MethodCallResult<T> {
+suspend inline fun <reified T> DdpWebsocketClient.callMethod(method: String): T {
     return callMethod(method, serializer())
 }
 
 suspend inline fun <reified T, reified P> DdpWebsocketClient.callMethod(
     method: String,
     params: List<P>
-): MethodCallResult<T> {
+): T {
     return callMethod(method, serializer(), params, serializer())
 }
 

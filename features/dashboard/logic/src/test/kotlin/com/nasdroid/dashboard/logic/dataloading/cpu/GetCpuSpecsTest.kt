@@ -3,7 +3,7 @@ package com.nasdroid.dashboard.logic.dataloading.cpu
 import com.boswelja.capacity.Capacity.Companion.gigabytes
 import com.boswelja.capacity.CapacityUnit
 import com.nasdroid.api.exception.HttpNotOkException
-import com.nasdroid.api.v2.system.SystemInfo
+import com.nasdroid.api.websocket.system.SystemInfo
 import com.nasdroid.api.v2.system.SystemV2Api
 import io.mockk.coEvery
 import io.mockk.mockk
