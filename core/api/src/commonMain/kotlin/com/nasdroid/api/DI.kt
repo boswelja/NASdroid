@@ -1,8 +1,5 @@
-package com.nasdroid.api.v2
+package com.nasdroid.api
 
-import com.nasdroid.api.ApiStateProvider
-import com.nasdroid.api.InMemoryApiStateProvider
-import com.nasdroid.api.getHttpClient
 import com.nasdroid.api.v2.apikey.ApiKeyV2Api
 import com.nasdroid.api.v2.apikey.ApiKeyV2ApiImpl
 import com.nasdroid.api.v2.app.AppV2Api
@@ -21,6 +18,7 @@ import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.ReportingV2ApiImpl
 import com.nasdroid.api.v2.system.SystemV2Api
 import com.nasdroid.api.v2.system.SystemV2ApiImpl
+import io.ktor.client.HttpClient
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -33,7 +31,7 @@ val ApiV2Module = module {
     singleOf(::InMemoryApiStateProvider) bind ApiStateProvider::class
 
     // Ktor client
-    singleOf(::getHttpClient)
+    singleOf(::getRestApiClient) bind HttpClient::class
 
     singleOf(::ApiKeyV2ApiImpl) bind ApiKeyV2Api::class
     singleOf(::AppV2ApiImpl) bind AppV2Api::class
