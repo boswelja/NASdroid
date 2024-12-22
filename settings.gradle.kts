@@ -30,7 +30,7 @@ dependencyResolutionManagement {
 
 plugins {
     id("com.gradle.enterprise") version("3.16")
-    id("com.android.settings") version("8.5.1")
+    id("com.android.settings") version("8.7.3")
 }
 
 enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
