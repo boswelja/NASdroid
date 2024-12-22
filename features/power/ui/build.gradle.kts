@@ -41,6 +41,7 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.bundles.compose)
+    implementation(libs.compose.material.icons.extended)
     debugImplementation(libs.bundles.compose.tooling)
 
     implementation(libs.koin.android)

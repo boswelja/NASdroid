@@ -3,7 +3,6 @@ package com.nasdroid.dashboard.ui.overview.common
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +24,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults.rememberPlainTooltipPositionProvider
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -44,7 +43,6 @@ import com.nasdroid.design.MaterialThemeExt
 /**
  * A generic Card used to display content in the Dashboard overview.
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DashboardCard(
     title: @Composable () -> Unit,
@@ -97,7 +95,7 @@ internal fun DashboardCardOrderControls(
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.End) {
         TooltipBox(
-            positionProvider = rememberPlainTooltipPositionProvider(),
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
             tooltip = {
                 PlainTooltip { Text("Move up") }
             },
@@ -111,7 +109,7 @@ internal fun DashboardCardOrderControls(
             }
         }
         TooltipBox(
-            positionProvider = rememberPlainTooltipPositionProvider(),
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
             tooltip = {
                 PlainTooltip { Text("Move down") }
             },

@@ -92,10 +92,12 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime)
 
     implementation(libs.koin.android)
+    implementation(libs.koin.android.startup)
 
     // Compose
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
+    implementation(libs.compose.material.icons.extended)
     implementation(libs.compose.menuprovider)
     implementation(libs.compose.material3.adaptive)
     debugImplementation(libs.bundles.compose.tooling)

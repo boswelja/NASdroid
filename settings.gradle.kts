@@ -29,8 +29,8 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version("3.16")
-    id("com.android.settings") version("8.5.1")
+    id("com.gradle.develocity") version "3.17"
+    id("com.android.settings") version("8.7.3")
 }
 
 enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
@@ -77,12 +77,12 @@ include(
     ":app"
 )
 
-gradleEnterprise {
+develocity {
     buildScan {
-        termsOfServiceUrl = "https://gradle.com/terms-of-service"
+        termsOfUseUrl = "https://gradle.com/terms-of-service"
         if (System.getenv("CI") == "true") {
-            termsOfServiceAgree = "yes"
-            isUploadInBackground = false
+            termsOfUseAgree = "yes"
+            uploadInBackground = false
         }
     }
 }
