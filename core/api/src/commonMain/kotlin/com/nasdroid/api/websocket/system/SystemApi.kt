@@ -2,6 +2,8 @@ package com.nasdroid.api.websocket.system
 
 import com.nasdroid.api.TimestampUnwrapper
 import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.websocket.ddp.EDateInstantSerializer
+import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration
@@ -182,9 +184,9 @@ enum class State {
 data class SystemInfo(
     @SerialName("version")
     val version: String,
-    @Serializable(TimestampUnwrapper::class)
+    @Serializable(EDateInstantSerializer::class)
     @SerialName("buildtime")
-    val buildTime: Long,
+    val buildTime: Instant,
     @SerialName("hostname")
     val hostName: String,
     @SerialName("physmem")
@@ -209,12 +211,12 @@ data class SystemInfo(
     val systemProductVersion: String,
     @SerialName("license")
     val license: String?, // TODO Should be an object?
-    @Serializable(TimestampUnwrapper::class)
+    @Serializable(EDateInstantSerializer::class)
     @SerialName("boottime")
-    val bootTime: Long,
-    @Serializable(TimestampUnwrapper::class)
+    val bootTime: Instant,
+    @Serializable(EDateInstantSerializer::class)
     @SerialName("datetime")
-    val dateTime: Long,
+    val dateTime: Instant,
     @SerialName("timezone")
     val timeZone: String,
     @SerialName("system_manufacturer")
