@@ -34,7 +34,7 @@ kotlinx-coroutines = "1.9.0"
 kotlinx-datetime = "0.6.1"
 kotlinx-serialization-formats = "1.7.3"
 
-koin = "4.0.0"
+koin = "4.0.1-RC1"
 
 vico = "2.0.0-beta.1"
 
@@ -95,10 +95,11 @@ kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-formats" }
 
-koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
-koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
-koin-android-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-android-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-android-startup = { module = "io.insert-koin:koin-androidx-startup", version.ref = "koin" }
 
 vico = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 
