@@ -20,6 +20,7 @@ import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,6 +31,7 @@ import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsScreen
 import com.nasdroid.apps.ui.installed.details.InstalledAppDetailsViewModel
 import com.nasdroid.apps.ui.installed.overview.InstalledAppsOverviewScreen
 import com.nasdroid.design.MaterialThemeExt
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -43,9 +45,12 @@ fun InstalledAppsScreen(
     modifier: Modifier = Modifier,
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<String>()
+    val coroutineScope = rememberCoroutineScope()
 
     BackHandler(navigator.canNavigateBack()) {
-        navigator.navigateBack()
+        coroutineScope.launch {
+            navigator.navigateBack()
+        }
     }
 
     ListDetailPaneScaffold(
@@ -56,7 +61,11 @@ fun InstalledAppsScreen(
                 modifier = Modifier.preferredWidth(460.dp)
             ) {
                 InstalledAppsOverviewScreen(
-                    onAppClick = { navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, it) },
+                    onAppClick = {
+                        coroutineScope.launch {
+                            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, it)
+                        }
+                    },
                     onNavigate = onNavigate,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -64,7 +73,7 @@ fun InstalledAppsScreen(
         },
         detailPane = {
             AnimatedPane {
-                navigator.currentDestination?.content?.let { appName ->
+                navigator.currentDestination?.contentKey?.let { appName ->
                     // TODO Nope
                     val detailsViewModel: InstalledAppDetailsViewModel = koinViewModel()
                     LaunchedEffect(detailsViewModel, appName) {
@@ -72,7 +81,11 @@ fun InstalledAppsScreen(
                     }
                     if (navigator.scaffoldValue[ListDetailPaneScaffoldRole.List] == PaneAdaptedValue.Hidden) {
                         InstalledAppDetailsScreen(
-                            navigateUp = navigator::navigateBack,
+                            navigateUp = {
+                                coroutineScope.launch {
+                                    navigator.navigateBack()
+                                }
+                            },
                             modifier = Modifier.fillMaxSize(),
                             viewModel = detailsViewModel
                         )
