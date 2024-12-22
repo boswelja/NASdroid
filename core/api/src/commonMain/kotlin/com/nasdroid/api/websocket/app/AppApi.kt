@@ -53,19 +53,93 @@ interface AppApi {
      */
     suspend fun convertToCustom(appName: String): Int
 
+    // TODO create
+
+    /**
+     * Delete [appName] app.
+     *
+     * [forceRemoveIxVolumes] should be set when the ix-volumes were created by the system for apps
+     * which were migrated from k8s to docker and the user wants to remove them. This is to prevent
+     * accidental deletion of the original ix-volumes which were created in dragonfish and before
+     * for kubernetes based apps. When this is set, it will result in the deletion of ix-volumes
+     * from both docker based apps and k8s based apps and should be carefully set.
+     */
+    suspend fun delete(
+        appName: String,
+        removeImages: Boolean = true,
+        removeIxVolumes: Boolean = false,
+        forceRemoveIxVolumes: Boolean = false
+    ): Int
+
+    // TODO get instance
+
+    /**
+     * Returns GPU choices which can be used by applications.
+     */
+    suspend fun gpuChoices(): List<String>
+
+    /**
+     * Returns IP choices which can be used by applications.
+     */
+    suspend fun ipChoices(): List<String>
+
     /**
      * Retrieve a list of available apps that have been recently updated.
      */
-    suspend fun getLatest(): List<AvailableApp>
+    suspend fun latest(): List<AvailableApp>
+
+    /**
+     * Returns a list of outdated docker images for the specified [appName].
+     */
+    suspend fun outdatedDockerImages(appName: String): List<String>
+
+    /**
+     * Pulls docker images for the specified [appName].
+     */
+    suspend fun pullImages(appName: String, redeploy: Boolean = true): Int
+
+    // TODO query
+
+    /**
+     * Redeploy [appName] app.
+     */
+    suspend fun redeploy(appName: String): Int
+
+    // TODO rollback
+
+    /**
+     * Retrieve versions available for rollback for [appName] app.
+     */
+    suspend fun rollbackVersions(appName: String): List<String>
 
     /**
      * Retrieve a list of apps that are similar to the specified app.
      *
      * @param appName The name of the app whose related apps should be retrieved.
-     * @param catalog The catalog which the app belongs to.
      * @param train The catalog train which the app belongs to.
      */
-    suspend fun getSimilarTo(appName: String, catalog: String, train: String): List<AvailableApp>
+    suspend fun similar(appName: String, train: String): List<AvailableApp>
+
+    /**
+     * Start [appName] app.
+     */
+    suspend fun start(appName: String): Int
+
+    /**
+     * Stop [appName] app.
+     */
+    suspend fun stop(appName: String): Int
+
+    // TODO update
+
+    // TODO upgrade
+
+    // TODO upgrade summary
+
+    /**
+     * Returns ports in use by applications.
+     */
+    suspend fun usedPorts(): List<Int>
 }
 
 @Serializable
