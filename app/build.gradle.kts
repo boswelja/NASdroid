@@ -97,6 +97,7 @@ dependencies {
     // Compose
     implementation(libs.androidx.navigation)
     implementation(libs.bundles.compose)
+    implementation(libs.compose.material.icons.extended)
     implementation(libs.compose.menuprovider)
     implementation(libs.compose.material3.adaptive)
     debugImplementation(libs.bundles.compose.tooling)

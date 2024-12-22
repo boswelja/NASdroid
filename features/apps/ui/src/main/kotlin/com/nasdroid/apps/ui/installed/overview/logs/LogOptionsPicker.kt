@@ -8,10 +8,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -126,7 +126,7 @@ internal fun PodPicker(
             },
             label = { Text(stringResource(R.string.log_options_pod)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
+            modifier = modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
         )
         ExposedDropdownMenu(
             expanded = isPodPickerExpanded,
@@ -171,7 +171,7 @@ internal fun ContainerPicker(
             },
             label = { Text(stringResource(R.string.log_options_container)) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
+            modifier = modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
         )
         ExposedDropdownMenu(
             expanded = isContainerPickerExpanded,

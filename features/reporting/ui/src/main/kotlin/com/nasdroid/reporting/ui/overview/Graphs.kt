@@ -31,6 +31,7 @@ import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.component.shapeComponent
 import com.patrykandpatrick.vico.compose.common.data.rememberExtraLambda
+import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.compose.common.vicoTheme
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
@@ -41,6 +42,7 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.common.Dimensions
 import com.patrykandpatrick.vico.core.common.LegendItem
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import kotlinx.datetime.LocalDateTime
@@ -278,8 +280,11 @@ internal fun <T> VicoGraph(
                                 add(
                                     LegendItem(
                                         icon = shapeComponent(
-                                            color = theme
-                                                .lineCartesianLayerColors[index % theme.lineCartesianLayerColors.size]
+                                            fill = fill(
+                                                theme.lineCartesianLayerColors[
+                                                    index % theme.lineCartesianLayerColors.size
+                                                ]
+                                            )
                                         ),
                                         labelComponent = legendTextComponent,
                                         label = legend
@@ -288,8 +293,9 @@ internal fun <T> VicoGraph(
                             }
                         },
                         iconSize = 8.dp,
-                        iconPadding = MaterialThemeExt.paddings.tiny,
-                        spacing = MaterialThemeExt.paddings.medium
+                        padding = Dimensions(MaterialThemeExt.paddings.tiny.value),
+                        columnSpacing = MaterialThemeExt.paddings.medium,
+                        rowSpacing = MaterialThemeExt.paddings.medium
                     )
                 ),
                 scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
