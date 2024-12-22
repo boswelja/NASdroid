@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime)
 
     implementation(libs.koin.android)
+    implementation(libs.koin.android.startup)
 
     // Compose
     implementation(libs.androidx.navigation)
