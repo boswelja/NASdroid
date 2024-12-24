@@ -77,10 +77,10 @@ include(
     ":app"
 )
 
-develocity {
-    buildScan {
-        termsOfUseUrl = "https://gradle.com/terms-of-service"
-        if (System.getenv("CI") == "true") {
+if (System.getenv("CI") == "true") {
+    develocity {
+        buildScan {
+            termsOfUseUrl = "https://gradle.com/terms-of-service"
             termsOfUseAgree = "yes"
             uploadInBackground = false
         }
