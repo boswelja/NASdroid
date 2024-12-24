@@ -78,10 +78,10 @@ include(
     ":apitester"
 )
 
-if (System.getenv("CI") == "true") {
-    develocity {
-        buildScan {
-            termsOfUseUrl = "https://gradle.com/terms-of-service"
+develocity {
+    buildScan {
+        termsOfUseUrl = "https://gradle.com/terms-of-service"
+        if (System.getenv("CI") == "true") {
             termsOfUseAgree = "yes"
             uploadInBackground = false
         }
