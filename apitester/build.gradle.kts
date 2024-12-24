@@ -72,6 +72,7 @@ kotlin {
     jvmToolchain(21)
 
     androidTarget()
+    jvm()
 
     sourceSets {
         commonMain {
@@ -86,6 +87,11 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.activity.compose)
+            }
+        }
+        jvmMain {
+            dependencies {
+                implementation(compose.desktop.currentOs)
             }
         }
     }
@@ -104,4 +110,10 @@ fun calculateVersionName(): String {
     val formatter = DateTimeFormatter.ofPattern("YYYY.w")
     val nowDate = LocalDate.now()
     return nowDate.format(formatter)
+}
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+    }
 }

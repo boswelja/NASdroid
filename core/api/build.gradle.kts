@@ -35,6 +35,7 @@ kotlin {
     jvmToolchain(21)
 
     androidTarget()
+    jvm()
 
     sourceSets {
         commonMain {

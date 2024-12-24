@@ -1,6 +1,5 @@
 package com.nasdroid.api
 
-import android.util.Log
 import com.nasdroid.api.exception.ClientUnauthorizedException
 import com.nasdroid.api.exception.HttpNotOkException
 import io.ktor.client.HttpClient
@@ -35,7 +34,7 @@ fun getRestApiClient(
             level = io.ktor.client.plugins.logging.LogLevel.ALL
             logger = object : io.ktor.client.plugins.logging.Logger {
                 override fun log(message: String) {
-                    Log.i("Ktor", message)
+                    println("Ktor: $message")
                 }
             }
         }
