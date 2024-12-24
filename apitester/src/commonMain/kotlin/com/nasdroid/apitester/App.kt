@@ -17,7 +17,7 @@ fun App(
                 TODO("Tester")
             }
             is DdpWebsocketClient.State.Connecting -> {
-                TODO("Loading")
+                ConnectingScreen()
             }
             DdpWebsocketClient.State.Disconnected -> {
                 ConnectScreen(
