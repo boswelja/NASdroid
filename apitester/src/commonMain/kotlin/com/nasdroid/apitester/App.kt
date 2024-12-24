@@ -1,17 +1,27 @@
 package com.nasdroid.apitester
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
 
 @Composable
-fun App() {
+fun App(
+    client: DdpWebsocketClient
+) {
     MaterialTheme {
         Scaffold {
-            Text("Hello, world!", Modifier.padding(it))
+            when (client.state) {
+                is DdpWebsocketClient.State.Connected -> {
+                    TODO("Tester")
+                }
+                is DdpWebsocketClient.State.Connecting -> {
+                    TODO("Loading")
+                }
+                DdpWebsocketClient.State.Disconnected -> {
+                    TODO("Login")
+                }
+            }
         }
     }
 }
