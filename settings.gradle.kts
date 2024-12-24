@@ -74,7 +74,8 @@ include(
     ":features:systemsettings:ui",
     ":features:virtualization:logic",
     ":features:virtualization:ui",
-    ":app"
+    ":app",
+    ":apitester"
 )
 
 if (System.getenv("CI") == "true") {
