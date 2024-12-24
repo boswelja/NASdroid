@@ -3,7 +3,7 @@ package com.nasdroid.api.websocket.alert
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-interface AlertInterface {
+interface AlertApi {
     /**
      * Dismiss [uuid] alert.
      */
@@ -15,6 +15,10 @@ interface AlertInterface {
     suspend fun list(): List<Alert>
 
     /**
+     * List all types of alerts which the system can issue.
+     */
+    suspend fun listCategories(): List<AlertCategory>
+    /**
      * List all alert policies which indicate the frequency of the alerts.
      */
     suspend fun listPolicies(): List<AlertPolicy>
@@ -23,6 +27,28 @@ interface AlertInterface {
      * Restore [uuid] alert which had been dismissed.
      */
     suspend fun restore(uuid: String)
+}
+
+@Serializable
+data class AlertCategory(
+    @SerialName("id")
+    val id: String,
+    @SerialName("title")
+    val title: String,
+    @SerialName("classes")
+    val classes: List<Class>,
+) {
+    @Serializable
+    data class Class(
+        @SerialName("id")
+        val id: String,
+        @SerialName("title")
+        val title: String,
+        @SerialName("level")
+        val level: String,
+        @SerialName("proactive_support")
+        val proactiveSupport: Boolean
+    )
 }
 
 @Serializable
