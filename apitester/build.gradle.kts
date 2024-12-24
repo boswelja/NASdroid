@@ -83,6 +83,11 @@ kotlin {
                 implementation(libs.compose.menuprovider)
             }
         }
+        androidMain {
+            dependencies {
+                implementation(libs.activity.compose)
+            }
+        }
     }
 }
 
