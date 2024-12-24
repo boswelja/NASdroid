@@ -1,7 +1,8 @@
 package com.nasdroid.api.websocket.core
 
 import com.nasdroid.api.v2.core.CoreV2Api
-import com.nasdroid.api.v2.core.UnwrappingDateSerializer
+import com.nasdroid.api.websocket.ddp.EDateInstantSerializer
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -207,12 +208,12 @@ data class Job<T>(
     val excInfo: JobExcInfo?,
     @SerialName("state")
     val state: State,
-    @Serializable(with = UnwrappingDateSerializer::class)
+    @Serializable(with = EDateInstantSerializer::class)
     @SerialName("time_started")
-    val timeStarted: Long,
-    @Serializable(with = UnwrappingDateSerializer::class)
+    val timeStarted: Instant,
+    @Serializable(with = EDateInstantSerializer::class)
     @SerialName("time_finished")
-    val timeFinished: Long?
+    val timeFinished: Instant?
 ) {
 
     /**
