@@ -11,6 +11,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev/")
     }
 }
 dependencyResolutionManagement {
@@ -24,7 +25,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-        maven(url = "https://androidx.dev/storage/compose-compiler/repository/")
+        maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev/")
     }
 }
 
@@ -74,7 +75,8 @@ include(
     ":features:systemsettings:ui",
     ":features:virtualization:logic",
     ":features:virtualization:ui",
-    ":app"
+    ":app",
+    ":apitester"
 )
 
 develocity {
@@ -83,6 +85,9 @@ develocity {
         if (System.getenv("CI") == "true") {
             termsOfUseAgree = "yes"
             uploadInBackground = false
+        } else {
+            // Change this to "yes" if you want build scans locally
+            termsOfUseAgree = "no"
         }
     }
 }

@@ -16,6 +16,7 @@ compose-icons = "1.7.6"
 compose-material3 = "1.4.0-alpha05"
 compose-material3-adaptive = "1.1.0-alpha08"
 compose-ui = "1.8.0-alpha07"
+compose-multiplatform = "1.8.0+dev1989"
 accompanist = "0.37.0"
 menuprovider = "1.4.0"
 markdown = "1.1.0"
@@ -87,6 +88,9 @@ room-runtime = { group = "androidx.room", name = "room-ktx", version.ref = "room
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
+ktor-client-websockets-serialization = { module = "io.ktor:ktor-websocket-serialization", version.ref = "ktor" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 ktor-contentnegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
@@ -123,6 +127,7 @@ kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 
 [bundles]
 compose = [

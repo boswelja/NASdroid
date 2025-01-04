@@ -1,9 +1,9 @@
 package com.nasdroid.api.v2.pool
 
 import com.nasdroid.api.exception.HttpNotOkException
-import com.nasdroid.api.v2.core.UnwrappingDateSerializer
 import com.nasdroid.api.v2.pool.NewPoolTopology.SpecialVDev.Type
 import com.nasdroid.api.v2.pool.Pool.Autotrim
+import com.nasdroid.api.websocket.ddp.EDateMillisSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -790,19 +790,19 @@ data class Pool(
         val bytesProcessed: Long,
         @SerialName("bytes_to_process")
         val bytesToProcess: Long,
-        @Serializable(with = UnwrappingDateSerializer::class)
+        @Serializable(with = EDateMillisSerializer::class)
         @SerialName("end_time")
         val endTime: Long?,
         @SerialName("errors")
         val errors: Int,
         @SerialName("function")
         val function: String,
-        @Serializable(with = UnwrappingDateSerializer::class)
+        @Serializable(with = EDateMillisSerializer::class)
         @SerialName("pause")
         val pause: Long?,
         @SerialName("percentage")
         val percentage: Double,
-        @Serializable(with = UnwrappingDateSerializer::class)
+        @Serializable(with = EDateMillisSerializer::class)
         @SerialName("start_time")
         val startTime: Long,
         @SerialName("state")
