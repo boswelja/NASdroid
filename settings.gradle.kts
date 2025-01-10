@@ -83,6 +83,9 @@ develocity {
         if (System.getenv("CI") == "true") {
             termsOfUseAgree = "yes"
             uploadInBackground = false
+        } else {
+            // Change this to "yes" if you want build scans locally
+            termsOfUseAgree = "no"
         }
     }
 }
