@@ -2,6 +2,8 @@ package com.nasdroid.apitester
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
 import kotlinx.coroutines.launch
@@ -11,10 +13,11 @@ fun App(
     client: DdpWebsocketClient
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val state by client.state.collectAsState()
     MaterialTheme {
-        when (client.state) {
+        when (state) {
             is DdpWebsocketClient.State.Connected -> {
-                TODO("Tester")
+                TesterScreen(client)
             }
             is DdpWebsocketClient.State.Connecting -> {
                 ConnectingScreen()

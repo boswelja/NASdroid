@@ -35,6 +35,8 @@ import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
@@ -58,21 +60,21 @@ import kotlin.uuid.Uuid
 class DdpWebsocketClient {
     private val bootstrapLock = Mutex()
 
-    var state: State = State.Disconnected
-        private set
+    private val _state = MutableStateFlow<State>(State.Disconnected)
+    val state: StateFlow<State> = _state
 
     suspend fun connect(url: String, session: String? = null) {
         bootstrapLock.withLock {
-            check(state is State.Disconnected) { "Cannot connect when already connected or connecting." }
+            check(state.value is State.Disconnected) { "Cannot connect when already connected or connecting." }
             val webSocket = WebsocketKtorClient.webSocketSession(urlString = url)
-            state = State.Connecting(webSocket)
+            _state.value = State.Connecting(webSocket)
             webSocket.sendSerialized(ConnectMessage(version = "1", support = listOf("1"), session))
             when (val connectResponse = webSocket.receiveDeserialized<ConnectServerMessage>()) {
                 is ConnectedMessage -> {
-                    state = State.Connected(webSocket, connectResponse.session)
+                    _state.value = State.Connected(webSocket, connectResponse.session)
                 }
                 is FailedMessage -> {
-                    state = State.Disconnected
+                    _state.value = State.Disconnected
                     error("Failed to connect to DDP server: $connectResponse")
                 }
             }
@@ -81,10 +83,10 @@ class DdpWebsocketClient {
 
     suspend fun disconnect() {
         bootstrapLock.withLock {
-            when (val currentState = state) {
+            when (val currentState = state.value) {
                 is State.Connected -> {
                     currentState.webSocketSession.close()
-                    state = State.Disconnected
+                    _state.value = State.Disconnected
                 }
                 is State.Connecting -> error("Attempted to disconnect while connecting. This should be impossible!")
                 State.Disconnected -> { /* Already disconnected, no-op */ }
@@ -99,7 +101,7 @@ class DdpWebsocketClient {
         params: List<P>,
         paramSerializer: KSerializer<P>
     ): T {
-        val currentState = state
+        val currentState = state.value
         check(currentState is State.Connected) { "Client must be connected before making any method calls!" }
 
         val id = Uuid.random().toString()
@@ -135,7 +137,7 @@ class DdpWebsocketClient {
         params: List<P>,
         paramSerializer: KSerializer<P>
     ): Flow<SubscriptionEvent<T>> {
-        val currentState = state
+        val currentState = state.value
         check(currentState is State.Connected) { "Client must be connected before making any method calls!" }
 
         val id = Uuid.random().toString()

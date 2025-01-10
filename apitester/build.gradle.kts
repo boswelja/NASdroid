@@ -75,13 +75,14 @@ kotlin {
     jvm()
 
     sourceSets {
-        commonMain {
-            dependencies {
-                implementation(projects.core.api)
-                implementation(compose.material3)
-                implementation(libs.compose.menuprovider)
-                implementation(libs.kotlinx.serialization.json)
-            }
+        commonMain.dependencies {
+            implementation(projects.core.api)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.material3AdaptiveNavigationSuite)
+            implementation(libs.compose.menuprovider)
+            implementation(libs.kotlinx.serialization.json)
+            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
         }
         androidMain {
             dependencies {
