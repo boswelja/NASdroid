@@ -19,7 +19,7 @@ fun App(
             is DdpWebsocketClient.State.Connected -> {
                 TesterScreen(client)
             }
-            is DdpWebsocketClient.State.Connecting -> {
+            DdpWebsocketClient.State.Connecting -> {
                 ConnectingScreen()
             }
             DdpWebsocketClient.State.Disconnected -> {

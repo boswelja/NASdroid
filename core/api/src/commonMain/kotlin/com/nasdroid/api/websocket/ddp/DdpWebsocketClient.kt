@@ -66,8 +66,8 @@ class DdpWebsocketClient {
     suspend fun connect(url: String, session: String? = null) {
         bootstrapLock.withLock {
             check(state.value is State.Disconnected) { "Cannot connect when already connected or connecting." }
+            _state.value = State.Connecting
             val webSocket = WebsocketKtorClient.webSocketSession(urlString = url)
-            _state.value = State.Connecting(webSocket)
             webSocket.sendSerialized(ConnectMessage(version = "1", support = listOf("1"), session))
             when (val connectResponse = webSocket.receiveDeserialized<ConnectServerMessage>()) {
                 is ConnectedMessage -> {
@@ -190,7 +190,7 @@ class DdpWebsocketClient {
     }
 
     sealed interface State {
-        data class Connecting(internal val webSocketSession: DefaultClientWebSocketSession) : State
+        data object Connecting : State
 
         data class Connected(
             internal val webSocketSession: DefaultClientWebSocketSession,
