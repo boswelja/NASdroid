@@ -78,10 +78,9 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.core.api)
-
-                // Compose
                 implementation(compose.material3)
                 implementation(libs.compose.menuprovider)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
         androidMain {

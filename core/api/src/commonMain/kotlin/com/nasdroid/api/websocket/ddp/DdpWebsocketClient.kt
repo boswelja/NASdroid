@@ -64,7 +64,7 @@ class DdpWebsocketClient {
     suspend fun connect(url: String, session: String? = null) {
         bootstrapLock.withLock {
             check(state is State.Disconnected) { "Cannot connect when already connected or connecting." }
-            val webSocket = WebsocketKtorClient.webSocketSession(urlString = "ws://truenas.local/websocket")
+            val webSocket = WebsocketKtorClient.webSocketSession(urlString = url)
             state = State.Connecting(webSocket)
             webSocket.sendSerialized(ConnectMessage(version = "1", support = listOf("1"), session))
             when (val connectResponse = webSocket.receiveDeserialized<ConnectServerMessage>()) {
