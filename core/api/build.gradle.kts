@@ -35,26 +35,30 @@ kotlin {
     jvmToolchain(21)
 
     androidTarget()
+    jvm()
 
     sourceSets {
-        commonMain {
-            dependencies {
-                api(libs.kotlinx.datetime)
+        commonMain.dependencies {
+            api(libs.kotlinx.datetime)
 
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.logging)
-                implementation(libs.ktor.contentnegotiation)
-                implementation(libs.ktor.serialization.json)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.logging)
+            implementation(libs.ktor.contentnegotiation)
+            implementation(libs.ktor.serialization.json)
 
-                implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.json)
 
-                implementation(libs.koin.core)
-            }
+            implementation(libs.koin.core)
         }
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.okhttp)
-            }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.engine.android)
+        }
+        jvmMain.dependencies {
+            implementation(libs.ktor.engine.java)
         }
     }
 }
