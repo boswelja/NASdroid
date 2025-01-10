@@ -33,11 +33,11 @@ ktor = "3.0.3"
 
 kotlinx-coroutines = "1.10.1"
 kotlinx-datetime = "0.6.1"
-kotlinx-serialization-formats = "1.8.0-RC"
+kotlinx-serialization-formats = "1.8.0"
 
-koin = "4.0.1-RC1"
+koin = "4.1.0-Beta3"
 
-vico = "2.0.0-beta.3"
+vico = "2.0.0-beta.7"
 
 turbine = "1.2.0"
 
