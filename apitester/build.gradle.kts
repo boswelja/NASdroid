@@ -84,15 +84,11 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
         }
-        androidMain {
-            dependencies {
-                implementation(libs.activity.compose)
-            }
+        androidMain.dependencies {
+            implementation(libs.activity.compose)
         }
-        jvmMain {
-            dependencies {
-                implementation(compose.desktop.currentOs)
-            }
+        jvmMain.dependencies {
+            implementation(compose.desktop.currentOs)
         }
     }
 }
