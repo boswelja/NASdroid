@@ -30,7 +30,7 @@ dependencyResolutionManagement {
 
 plugins {
     id("com.gradle.develocity") version "3.19"
-    id("com.android.settings") version("8.7.3")
+    id("com.android.settings") version("8.8.0")
 }
 
 enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
@@ -93,5 +93,6 @@ develocity {
 android {
     buildToolsVersion = "35.0.0"
     compileSdk = 35
+    targetSdk = 35
     minSdk = 28
 }
