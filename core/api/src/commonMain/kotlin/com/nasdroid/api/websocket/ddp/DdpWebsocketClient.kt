@@ -157,8 +157,8 @@ class DdpWebsocketClient {
         } else {
             checkNotNull(result.error) { "The result of the method call was neither success or error!" }
             throw MethodCallError(
-                error = result.error.error,
-                errorType = result.error.errorType,
+                error = result.error.error.toString(),
+                errorType = result.error.errorType.orEmpty(),
                 reason = result.error.reason,
                 message = result.error.message
             )

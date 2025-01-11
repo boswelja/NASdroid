@@ -2,6 +2,9 @@ package com.nasdroid.api.v2.system
 
 import com.nasdroid.api.TimestampUnwrapper
 import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.websocket.system.Environment
+import com.nasdroid.api.websocket.system.State
+import com.nasdroid.api.websocket.system.SystemInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -216,16 +219,13 @@ data class SystemInfo(
     @SerialName("system_product_version")
     val systemProductVersion: String,
     @SerialName("license")
-    val license: String?,
+    val license: String?, // TODO Should be an object?
     @Serializable(TimestampUnwrapper::class)
     @SerialName("boottime")
     val bootTime: Long,
     @Serializable(TimestampUnwrapper::class)
     @SerialName("datetime")
     val dateTime: Long,
-    @Serializable(TimestampUnwrapper::class)
-    @SerialName("birthday")
-    val birthday: Long?,
     @SerialName("timezone")
     val timeZone: String,
     @SerialName("system_manufacturer")
