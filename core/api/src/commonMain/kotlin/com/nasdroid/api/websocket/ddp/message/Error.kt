@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  */
 
 /**
- * Received from the server indicating a contract issue, including but not limited to:
+ * Received from the server indicating a contract issue. Some examples include:
  *
  * - Sending messages which are not valid JSON objects
  * - Unknown msg type

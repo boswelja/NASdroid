@@ -6,6 +6,11 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonTransformingSerializer
 
+/**
+ * A convenience serializer for mapping
+ * [EJSON Dates](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#appendix-ejson) to
+ * milliseconds since epoch.
+ */
 class EDateMillisSerializer : JsonTransformingSerializer<Long>(Long.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
         if (element is JsonObject && element.contains("\$date")) {
@@ -21,6 +26,11 @@ class EDateMillisSerializer : JsonTransformingSerializer<Long>(Long.serializer()
     }
 }
 
+/**
+ * A convenience serializer for mapping
+ * [EJSON Dates](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#appendix-ejson) to
+ * an [Instant].
+ */
 class EDateInstantSerializer : JsonTransformingSerializer<Instant>(Instant.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
         if (element is JsonObject && element.contains("\$date")) {
@@ -36,6 +46,11 @@ class EDateInstantSerializer : JsonTransformingSerializer<Instant>(Instant.seria
     }
 }
 
+/**
+ * A convenience serializer for mapping
+ * [EJSON Binary](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md#appendix-ejson) to
+ * a base64-encoded String.
+ */
 class EBinarySerializer : JsonTransformingSerializer<String>(String.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
         if (element is JsonObject && element.contains("\$binary")) {

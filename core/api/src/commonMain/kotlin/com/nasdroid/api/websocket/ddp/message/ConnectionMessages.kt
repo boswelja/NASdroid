@@ -83,7 +83,9 @@ internal data class FailedMessage(
     val msg: String = "failed"
 }
 
-internal object ConnectServerMessageSerializer : JsonContentPolymorphicSerializer<ConnectServerMessage>(ConnectServerMessage::class) {
+internal object ConnectServerMessageSerializer : JsonContentPolymorphicSerializer<ConnectServerMessage>(
+    ConnectServerMessage::class
+) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ConnectServerMessage> {
         return when (element.jsonObject["msg"]?.jsonPrimitive?.content) {
             "connected" -> ConnectedMessage.serializer()
