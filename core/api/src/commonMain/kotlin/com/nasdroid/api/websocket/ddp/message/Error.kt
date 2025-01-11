@@ -37,11 +37,15 @@ internal data class ErrorMessage(
 @Serializable
 internal data class Error(
     @SerialName("error")
-    val error: String,
-    @SerialName("errorType")
-    val errorType: String,
+    val error: Int,
+    @SerialName("errname")
+    val errorName: String,
+    @SerialName("type")
+    val errorType: String?,
     @SerialName("reason")
     val reason: String? = null,
-    @SerialName("message")
+    @SerialName("trace")
     val message: String? = null,
+    @SerialName("extra")
+    val extra: String? = null
 )

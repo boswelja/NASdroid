@@ -13,24 +13,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.nasdroid.apitester.InteractionListItem
-import kotlinx.serialization.json.JsonElement
 
 @Composable
 fun MethodCallInteractionContent(
-    interactions: List<Interaction>,
+    interactions: List<MethodInteraction>,
     modifier: Modifier = Modifier.Companion,
     contentPadding: PaddingValues = PaddingValues()
 ) {
     SelectionContainer {
         LazyColumn(
-            reverseLayout = true,
             modifier = modifier,
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.Bottom
         ) {
             items(interactions) {
                 when (it) {
-                    is Interaction.CallMethod -> {
+                    is MethodInteraction.CallMethod -> {
                         InteractionListItem(
                             leadingContent = {
                                 Icon(Icons.AutoMirrored.Default.ArrowForward, null)
@@ -40,7 +38,7 @@ fun MethodCallInteractionContent(
                         }
                     }
 
-                    is Interaction.MethodCallResult -> {
+                    is MethodInteraction.MethodCallResult -> {
                         InteractionListItem(
                             leadingContent = {
                                 Icon(Icons.AutoMirrored.Default.ArrowBack, null)
@@ -53,9 +51,4 @@ fun MethodCallInteractionContent(
             }
         }
     }
-}
-
-sealed interface Interaction {
-    data class CallMethod(val method: String, val params: List<JsonElement>): Interaction
-    data class MethodCallResult(val result: JsonElement): Interaction
 }

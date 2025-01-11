@@ -27,7 +27,7 @@ import kotlinx.serialization.json.Json
 
 @Composable
 fun MethodCallInputContent(
-    onCallMethod: (Interaction.CallMethod) -> Unit,
+    onCallMethod: (MethodInteraction.CallMethod) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val (method, setMethod) = remember { mutableStateOf("") }
@@ -37,7 +37,7 @@ fun MethodCallInputContent(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    onCallMethod(Interaction.CallMethod(method, params.map { Json.decodeFromString(it) }))
+                    onCallMethod(MethodInteraction.CallMethod(method, params.map { Json.decodeFromString(it) }))
                 }
             ) {
                 Text("Call method")
