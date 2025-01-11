@@ -57,12 +57,31 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+/**
+ * A websocket client following [DDP](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md).
+ *
+ * Before executing any calls, you'll need to [connect] successfully.
+ */
 class DdpWebsocketClient {
     private val bootstrapLock = Mutex()
 
     private val _state = MutableStateFlow<State>(State.Disconnected)
+
+    /**
+     * The current state of the client. See [State] for all states.
+     */
     val state: StateFlow<State> = _state
 
+    /**
+     * Attempts to open a connection to a DDP server at [url]. If you have an existing session to
+     * recover, specify the session ID with [session].
+     *
+     * When the connection succeeds, [state] is updated to [State.Connected], and this function
+     * returns. However, if the connection fails, an [IllegalStateException] is thrown and the state
+     * is reset.
+     *
+     * @throws IllegalStateException when connecting to the server fails.
+     */
     suspend fun connect(url: String, session: String? = null) {
         bootstrapLock.withLock {
             check(state.value is State.Disconnected) { "Cannot connect when already connected or connecting." }
@@ -81,6 +100,12 @@ class DdpWebsocketClient {
         }
     }
 
+    /**
+     * Disconnects from the connected session, or does nothing if not already connected.
+     *
+     * In case the client is connecting when this is called, this will suspend until connection
+     * completes.
+     */
     suspend fun disconnect() {
         bootstrapLock.withLock {
             when (val currentState = state.value) {
@@ -88,12 +113,29 @@ class DdpWebsocketClient {
                     currentState.webSocketSession.close()
                     _state.value = State.Disconnected
                 }
-                is State.Connecting -> error("Attempted to disconnect while connecting. This should be impossible!")
+                is State.Connecting -> {
+                    error("Attempted to disconnect while connecting. This should be impossible!")
+                }
                 State.Disconnected -> { /* Already disconnected, no-op */ }
             }
         }
     }
 
+    /**
+     * Performs an RPC call on the connected session.
+     *
+     * @param T The type of data to be returned from the method call.
+     * @param P The type of parameters to be sent alongside the method call.
+     *
+     * @param method The method to call. Check your server documentation for available methods.
+     * @param serializer The [KSerializer] used to deserialize the result.
+     * @param params A list of optional parameters to send along with the method call.
+     * @param paramSerializer The serializer for parameter items.
+     *
+     * @throws IllegalStateException if the client wasn't connected with [connect] before making the
+     * call.
+     * @throws MethodCallError if the server returned an error in response to the method call.
+     */
     @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
     suspend fun <T, P> callMethod(
         method: String,
@@ -123,6 +165,18 @@ class DdpWebsocketClient {
         }
     }
 
+    /**
+     * Performs an RPC call on the connected session.
+     *
+     * @param T The type of data to be returned from the method call.
+     *
+     * @param method The method to call. Check your server documentation for available methods.
+     * @param serializer The [KSerializer] used to deserialize the result.
+     *
+     * @throws IllegalStateException if the client wasn't connected with [connect] before making the
+     * call.
+     * @throws MethodCallError if the server returned an error in response to the method call.
+     */
     suspend fun <T> callMethod(
         method: String,
         serializer: KSerializer<T>,
@@ -130,6 +184,26 @@ class DdpWebsocketClient {
         return callMethod(method, serializer, emptyList(), String.serializer())
     }
 
+    /**
+     * Subscribes to a set of information on the server.
+     *
+     * @param T The type of data to be received from the subscription.
+     * @param P The type of parameters to be sent alongside subscribe.
+     *
+     * @param name The name of the collection to subscribe to. Check your server documentation for
+     * possible values.
+     * @param serializer The serializer for the returned data. This is only used when data has been
+     * added, since that's the only case the full dataset is sent.
+     * @param params A list of optional parameters to send along with subscribe.
+     * @param paramSerializer The serializer for parameter items.
+     *
+     * @throws IllegalStateException if the client wasn't connected with [connect] before making the
+     * call.
+     * @throws CancellationException if the server cancels the connection.
+     *
+     * @return A Flow of [SubscriptionEvent]s. If you cancel the Flow, there will be a short delay
+     * while the server is notified of the unsubscribe.
+     */
     @OptIn(ExperimentalUuidApi::class)
     fun <T, P> subscribe(
         name: String,
@@ -189,14 +263,32 @@ class DdpWebsocketClient {
             }
     }
 
+    /**
+     * Encapsulates possible states that [DdpWebsocketClient] might be in.
+     */
     sealed interface State {
+
+        /**
+         * The client is trying to connect to a server.
+         */
         data object Connecting : State
 
+        /**
+         * The client successfully connected to the server.
+         *
+         * @property webSocketSession The internal websocket session powering the client.
+         * @property sessionId The ID of the session for this connection. Can be specified in
+         * [connect] later to recover a session.
+         */
         data class Connected(
             internal val webSocketSession: DefaultClientWebSocketSession,
-            internal val sessionId: String
+            val sessionId: String
         ) : State
 
+        /**
+         * The client is not connected to any session. This is the default state. Call [connect] to
+         * get set up.
+         */
         data object Disconnected : State
     }
 }
@@ -228,10 +320,34 @@ private val WebsocketKtorClient = HttpClient {
     }
 }
 
+/**
+ * Performs an RPC call on the connected session.
+ *
+ * @param T The type of data to be returned from the method call.
+ *
+ * @param method The method to call. Check your server documentation for available methods.
+ *
+ * @throws IllegalStateException if the client wasn't connected with
+ * [com.nasdroid.api.websocket.ddp.DdpWebsocketClient.connect] before making the call.
+ * @throws MethodCallError if the server returned an error in response to the method call.
+ */
 suspend inline fun <reified T> DdpWebsocketClient.callMethod(method: String): T {
     return callMethod(method, serializer())
 }
 
+/**
+ * Performs an RPC call on the connected session.
+ *
+ * @param T The type of data to be returned from the method call.
+ * @param P The type of parameters to be sent alongside the method call.
+ *
+ * @param method The method to call. Check your server documentation for available methods.
+ * @param params A list of optional parameters to send along with the method call.
+ *
+ * @throws IllegalStateException if the client wasn't connected with
+ * [com.nasdroid.api.websocket.ddp.DdpWebsocketClient.connect] before making the call.
+ * @throws MethodCallError if the server returned an error in response to the method call.
+ */
 suspend inline fun <reified T, reified P> DdpWebsocketClient.callMethod(
     method: String,
     params: List<P>
@@ -239,6 +355,23 @@ suspend inline fun <reified T, reified P> DdpWebsocketClient.callMethod(
     return callMethod(method, serializer(), params, serializer())
 }
 
+/**
+ * Subscribes to a set of information on the server.
+ *
+ * @param T The type of data to be received from the subscription.
+ * @param P The type of parameters to be sent alongside subscribe.
+ *
+ * @param name The name of the collection to subscribe to. Check your server documentation for
+ * possible values.
+ * @param params A list of optional parameters to send along with subscribe.
+ *
+ * @throws IllegalStateException if the client wasn't connected with
+ * [com.nasdroid.api.websocket.ddp.DdpWebsocketClient.connect] before making the call.
+ * @throws CancellationException if the server cancels the connection.
+ *
+ * @return A Flow of [SubscriptionEvent]s. If you cancel the Flow, there will be a short delay
+ * while the server is notified of the unsubscribe.
+ */
 inline fun <reified T, reified P> DdpWebsocketClient.subscribe(
     name: String, params: List<P>
 ): Flow<SubscriptionEvent<T>> {
