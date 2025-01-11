@@ -66,6 +66,7 @@ jobs:
           - features/systemsettings
           - features/virtualization
           - app
+          - apitester
     steps:
       - name: Checkout
         uses: actions/checkout@v4
