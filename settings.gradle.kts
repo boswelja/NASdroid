@@ -11,6 +11,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev/")
     }
 }
 dependencyResolutionManagement {
@@ -24,13 +25,13 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-        maven(url = "https://androidx.dev/storage/compose-compiler/repository/")
+        maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev/")
     }
 }
 
 plugins {
-    id("com.gradle.develocity") version "3.17"
-    id("com.android.settings") version("8.7.3")
+    id("com.gradle.develocity") version "3.19"
+    id("com.android.settings") version("8.8.0")
 }
 
 enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
@@ -74,7 +75,8 @@ include(
     ":features:systemsettings:ui",
     ":features:virtualization:logic",
     ":features:virtualization:ui",
-    ":app"
+    ":app",
+    ":apitester"
 )
 
 develocity {
@@ -83,6 +85,9 @@ develocity {
         if (System.getenv("CI") == "true") {
             termsOfUseAgree = "yes"
             uploadInBackground = false
+        } else {
+            // Change this to "yes" if you want build scans locally
+            termsOfUseAgree = "no"
         }
     }
 }
@@ -90,5 +95,6 @@ develocity {
 android {
     buildToolsVersion = "35.0.0"
     compileSdk = 35
+    targetSdk = 35
     minSdk = 28
 }

@@ -30,7 +30,6 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.component.shapeComponent
-import com.patrykandpatrick.vico.compose.common.data.rememberExtraLambda
 import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.compose.common.vicoTheme
@@ -42,7 +41,7 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.common.Dimensions
+import com.patrykandpatrick.vico.core.common.Insets
 import com.patrykandpatrick.vico.core.common.LegendItem
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import kotlinx.datetime.LocalDateTime
@@ -272,10 +271,10 @@ internal fun <T> VicoGraph(
                                 }
                                 .orEmpty()
                         },
-                        itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(spacing = 2) }
+                        itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(spacing = { 2 }) }
                     ),
                     legend = rememberHorizontalLegend(
-                        items = rememberExtraLambda {
+                        items = {
                             graph.legend.mapIndexed { index, legend ->
                                 add(
                                     LegendItem(
@@ -293,13 +292,13 @@ internal fun <T> VicoGraph(
                             }
                         },
                         iconSize = 8.dp,
-                        padding = Dimensions(MaterialThemeExt.paddings.tiny.value),
+                        padding = Insets(MaterialThemeExt.paddings.tiny.value),
                         columnSpacing = MaterialThemeExt.paddings.medium,
                         rowSpacing = MaterialThemeExt.paddings.medium
                     )
                 ),
                 scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
-                runInitialAnimation = false,
+                animateIn = false,
                 zoomState = rememberVicoZoomState(false)
             )
         }
