@@ -55,3 +55,6 @@ feature:systemsettings:
   - features/systemsettings/**
 features:virtualization:
   - features/virtualization/**
+
+apitester:
+  - apitester/**
