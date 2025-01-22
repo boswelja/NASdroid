@@ -82,8 +82,8 @@ kotlin {
             implementation(compose.material3AdaptiveNavigationSuite)
             implementation(libs.compose.menuprovider)
             implementation(libs.kotlinx.serialization.json)
-            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
-            implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.0.1")
+            implementation(libs.compose.multiplatform.viewmodel)
+            implementation(libs.compose.multiplatform.material3.adaptive)
         }
         androidMain.dependencies {
             implementation(libs.activity.compose)
