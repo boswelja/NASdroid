@@ -1,9 +1,9 @@
 package com.nasdroid.storage.logic.pool.import
 
 import com.nasdroid.api.v2.core.CoreV2Api
-import com.nasdroid.api.v2.core.Job
 import com.nasdroid.api.v2.pool.ImportablePool
 import com.nasdroid.api.v2.pool.PoolV2Api
+import com.nasdroid.api.websocket.core.Job
 import com.nasdroid.core.strongresult.StrongResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
