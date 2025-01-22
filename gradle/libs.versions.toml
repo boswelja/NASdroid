@@ -35,14 +35,14 @@ kotlinx-coroutines = "1.10.1"
 kotlinx-datetime = "0.6.1"
 kotlinx-serialization-formats = "1.8.0"
 
-koin = "4.1.0-Beta3"
+koin = "4.1.0-Beta4"
 
 vico = "2.0.0-beta.7"
 
 turbine = "1.2.0"
 
 androidx-test-ext-junit = "1.2.1"
-mockk = "1.13.14"
+mockk = "1.13.16"
 
 [libraries]
 androidx-core = { module = "androidx.core:core", version.ref = "androidx-core" }
