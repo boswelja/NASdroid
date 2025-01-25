@@ -11,9 +11,9 @@ import kotlinx.serialization.json.JsonElement
 interface CoreApi {
 
     /**
-     * -
+     * https://en.wikipedia.org/wiki/Address_Resolution_Protocol.
      */
-    suspend fun arp(ip: String? = null, `interface`: String? = null)
+    suspend fun arp(ip: String? = null, networkInterface: String? = null): Map<String, String>
 
     /**
      * Will sequentially call method with arguments from the params list. For example, running
@@ -83,9 +83,9 @@ interface CoreApi {
     suspend fun getJobs(): List<Job<Any>>
 
     /**
-     * -
+     * Aborts the job with the given ID.
      */
-    suspend fun jobAbort(job: Int)
+    suspend fun jobAbort(jobId: Int)
 
     /**
      * Download logs of the job id.
@@ -96,7 +96,7 @@ interface CoreApi {
     suspend fun jobDownloadLogs(jobId: Int, fileName: String?, buffered: Boolean = false)
 
     /**
-     * -
+     * Starts a new Job that waits for the specified job to complete.
      */
     suspend fun jobWait(jobId: Int): Int
 
@@ -117,7 +117,7 @@ interface CoreApi {
         count: Int? = null,
         networkInterface: String? = null,
         interval: Int? = null
-    )
+    ): Boolean
 
     /**
      * Resize terminal session (/websocket/shell) to cols x rows.
@@ -145,6 +145,8 @@ data class Session(
     val address: String,
     @SerialName("authenticated")
     val authenticated: Boolean,
+    @SerialName("call_count")
+    val callCount: Int
 )
 
 @Serializable
@@ -171,12 +173,14 @@ enum class PingType {
  * @property logsExcerpt TODO
  * @property progress Information about the jobs current progress.
  * @property result The result of the job, or null if there is no result.
+ * @property resultEncodingError TODO
  * @property error A human-readable error message, if any.
  * @property exception The exception that occurred when the job failed.
  * @property excInfo TODO
  * @property state The state of the job.
  * @property timeStarted The timestamp of when this job was started.
  * @property timeFinished The timestamp of when this job finished, if any.
+ * @property credentials The credentials of the user that initiated the job.
  */
 @Serializable
 data class Job<T>(
@@ -200,6 +204,8 @@ data class Job<T>(
     val progress: Progress,
     @SerialName("result")
     val result: T?,
+    @SerialName("result_encoding_error")
+    val resultEncodingError: String?,
     @SerialName("error")
     val error: String?,
     @SerialName("exception")
@@ -213,9 +219,18 @@ data class Job<T>(
     val timeStarted: Instant,
     @Serializable(with = EDateInstantSerializer::class)
     @SerialName("time_finished")
-    val timeFinished: Instant?
+    val timeFinished: Instant?,
+    @SerialName("credentials")
+    val credentials: Credentials?
 ) {
 
+    @Serializable
+    data class Credentials(
+        @SerialName("type")
+        val type: String,
+        @SerialName("data")
+        val data: Map<String, String>
+    )
     /**
      * Describes the current progress of a running job.
      *
@@ -242,7 +257,15 @@ data class Job<T>(
         @SerialName("SUCCESS")
         Success,
         @SerialName("FAILED")
-        Failed
+        Failed,
+        @SerialName("starting")
+        Starting,
+        @SerialName("running")
+        Running,
+        @SerialName("exited")
+        Exited,
+        @SerialName("DEPLOYING")
+        Deploying,
     }
 }
 
