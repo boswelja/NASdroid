@@ -62,7 +62,7 @@ interface SystemApi {
     /**
      * Get the type of product the system is using. For example, "SCALE".
      */
-    suspend fun productType(): String
+    suspend fun productType(): ProductType
 
     /**
      * Get whether the system is booted and ready to use.
@@ -156,6 +156,24 @@ enum class State {
      */
     @SerialName("SHUTTING_DOWN")
     SHUTTING_DOWN
+}
+
+/**
+ * All possible product types. See [SystemApi.productType] to get the value from the server.
+ */
+@Serializable
+enum class ProductType {
+    /**
+     * TrueNAS SCALE, community version.
+     */
+    @SerialName("SCALE")
+    Scale,
+
+    /**
+     * TrueNAS SCALE Enterprise, appliance version.
+     */
+    @SerialName("SCALE_ENTERPRISE")
+    ScaleEnterprise
 }
 
 /**

@@ -38,10 +38,10 @@ class DdpSystemApi(
     }
 
     override suspend fun licenseUpdate(license: String) {
-        return client.callMethod("system.license_update", listOf(license))
+        return client.callMethod("system.license_update", listOf("\"$license\""))
     }
 
-    override suspend fun productType(): String {
+    override suspend fun productType(): ProductType {
         return client.callMethod("system.product_type")
     }
 
