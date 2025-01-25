@@ -1,10 +1,8 @@
 package com.nasdroid.api.websocket.system
 
-import com.nasdroid.api.TimestampUnwrapper
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.websocket.ddp.EDateInstantSerializer
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -106,6 +104,9 @@ interface SystemApi {
     suspend fun versionShort(): String
 }
 
+/**
+ * All features that can be queried via [SystemApi.featureEnabled].
+ */
 @Serializable
 enum class Feature {
     @SerialName("DEDUP")
