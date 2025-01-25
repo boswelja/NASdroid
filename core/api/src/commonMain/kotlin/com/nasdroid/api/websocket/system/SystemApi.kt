@@ -4,6 +4,8 @@ import com.nasdroid.api.TimestampUnwrapper
 import com.nasdroid.api.exception.HttpNotOkException
 import com.nasdroid.api.websocket.ddp.EDateInstantSerializer
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration
@@ -23,7 +25,7 @@ interface SystemApi {
     /**
      * Retrieve build time of the system.
      */
-    suspend fun buildTime(): String
+    suspend fun buildTime(): Instant
 
     /**
      * Download a debug file. Returns a job ID.
@@ -169,13 +171,12 @@ enum class State {
  * @property loadAvg TODO
  * @property uptime The amount of time the system has been running for.
  * @property uptimeSeconds The number of seconds the system has been up for.
- * @property systemSerial TODO
- * @property systemProduct TODO
+ * @property systemSerial The serial number of the system, as specified by the OEM.
+ * @property systemProduct The system product name, as specified by the OEM.
  * @property systemProductVersion TODO
  * @property license The systems license file, or null if not present.
  * @property bootTime The time this system was last booted.
- * @property dateTime TODO
- * @property birthday The systems birthday.
+ * @property dateTime The current time, according to the system.
  * @property timeZone The time zone the system is configured to use.
  * @property systemManufacturer The company that produced the system.
  * @property eccMemory Whether the server has ECC memory.
@@ -218,7 +219,7 @@ data class SystemInfo(
     @SerialName("datetime")
     val dateTime: Instant,
     @SerialName("timezone")
-    val timeZone: String,
+    val timeZone: TimeZone,
     @SerialName("system_manufacturer")
     val systemManufacturer: String,
     @SerialName("ecc_memory")

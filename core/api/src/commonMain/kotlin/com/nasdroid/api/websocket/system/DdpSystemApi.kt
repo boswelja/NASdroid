@@ -1,7 +1,9 @@
 package com.nasdroid.api.websocket.system
 
 import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.websocket.ddp.EDateInstantSerializer
 import com.nasdroid.api.websocket.ddp.callMethod
+import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
 class DdpSystemApi(
@@ -11,8 +13,8 @@ class DdpSystemApi(
         return client.callMethod("system.boot_id")
     }
 
-    override suspend fun buildTime(): String {
-        return client.callMethod("system.build_time")
+    override suspend fun buildTime(): Instant {
+        return client.callMethod("system.build_time", EDateInstantSerializer())
     }
 
     override suspend fun debug(): Int {
