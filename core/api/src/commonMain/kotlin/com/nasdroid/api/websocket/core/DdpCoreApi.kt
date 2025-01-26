@@ -25,29 +25,12 @@ class DdpCoreApi(private val client: DdpWebsocketClient) : CoreApi {
         return client.callMethod("core.debug_mode_enabled")
     }
 
-    override suspend fun download(
-        method: String,
-        args: List<String>,
-        fileName: String,
-        buffered: Boolean
-    ) {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun getJobs(): List<Job<Any>> {
         return client.callMethod("core.get_jobs")
     }
 
     override suspend fun jobAbort(jobId: Int) {
         return client.callMethod("core.job_abort", listOf(jobId))
-    }
-
-    override suspend fun jobDownloadLogs(
-        jobId: Int,
-        fileName: String?,
-        buffered: Boolean
-    ) {
-        TODO("Not yet implemented")
     }
 
     override suspend fun jobWait(jobId: Int): Int {

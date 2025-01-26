@@ -61,16 +61,17 @@ interface CoreApi {
      */
     suspend fun debugModeEnabled(): Boolean
 
-    /**
-     * Core helper to call a job marked for download.
-     *
-     * Non-buffered downloads will allow job to write to pipe as soon as download URL is requested,
-     * job will stay blocked meanwhile. buffered downloads must wait for job to complete before
-     * requesting download URL, job's pipe output will be buffered to ramfs.
-     *
-     * Returns the job id and the URL for download.
-     */
-    suspend fun download(method: String, args: List<String>, fileName: String, buffered: Boolean = false)
+    // TODO We don't know how download actually works
+//    /**
+//     * Core helper to call a job marked for download.
+//     *
+//     * Non-buffered downloads will allow job to write to pipe as soon as download URL is requested,
+//     * job will stay blocked meanwhile. buffered downloads must wait for job to complete before
+//     * requesting download URL, job's pipe output will be buffered to ramfs.
+//     *
+//     * Returns the job id and the URL for download.
+//     */
+//    suspend fun download(method: String, args: List<String>, fileName: String, buffered: Boolean = false)
 
     /**
      * Get information about long-running jobs. If authenticated session does not have the
@@ -83,13 +84,14 @@ interface CoreApi {
      */
     suspend fun jobAbort(jobId: Int)
 
-    /**
-     * Download logs of the job id.
-     *
-     * Please see [download] method documentation for explanation on filename and buffered
-     * arguments, and return value.
-     */
-    suspend fun jobDownloadLogs(jobId: Int, fileName: String?, buffered: Boolean = false)
+    // TODO We don't know how download actually works
+//    /**
+//     * Download logs of the job id.
+//     *
+//     * Please see [download] method documentation for explanation on filename and buffered
+//     * arguments, and return value.
+//     */
+//    suspend fun jobDownloadLogs(jobId: Int, fileName: String?, buffered: Boolean = false)
 
     /**
      * Starts a new Job that waits for the specified job to complete.
