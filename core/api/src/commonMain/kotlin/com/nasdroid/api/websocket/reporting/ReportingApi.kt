@@ -85,7 +85,7 @@ interface ReportingApi {
      * reporting history which in netdata terms specifies the number of days netdata should be
      * storing data in tier1 storage.
      */
-    suspend fun update(config: ReportingConfig): ReportingConfig
+    suspend fun update(tier1Days: Int): ReportingConfig
 
     /**
      * Retrieve currently running processes stats.
@@ -175,12 +175,21 @@ data class RealtimeProcesses(
 /**
  * A configuration for NetData reporting.
  *
+ * @property id A unique identifier for this configuration.
+ * @property tier0Days TODO
  * @property tier1Days The number of days that reporting data is kept for.
+ * @property tier1UpdateInterval TODO
  */
 @Serializable
 data class ReportingConfig(
+    @SerialName("id")
+    val id: Int,
+    @SerialName("tier0_days")
+    val tier0Days: Int,
     @SerialName("tier1_days")
-    val tier1Days: Int
+    val tier1Days: Int,
+    @SerialName("tier1_update_interval")
+    val tier1UpdateInterval: Int
 )
 
 @Serializable
@@ -312,7 +321,6 @@ data class GraphData(
  * @property identifiers A list of identifiers. If this is not empty, there will be multiple sets of
  * data for this graph. These should be displayed as separate graphs, and each identifier should be
  * inserted into the title.
- * @property items TODO
  */
 @Serializable
 data class Graph(
@@ -324,6 +332,4 @@ data class Graph(
     val verticalLabel: String,
     @SerialName("identifiers")
     val identifiers: List<String>?,
-    @SerialName("items")
-    val items: List<String>?
 )
