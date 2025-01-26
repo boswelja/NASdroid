@@ -55,7 +55,10 @@ class DdpCoreApi(private val client: DdpWebsocketClient) : CoreApi {
     }
 
     override suspend fun resizeShell(id: String?, cols: Int?, rows: Int?) {
-        return client.callMethod("core.resize_shell", listOf(id, cols, rows))
+        return client.callMethod(
+            method = "core.resize_shell",
+            params = listOf(ResizeShellArg.Id(id), ResizeShellArg.Span(cols), ResizeShellArg.Span(rows))
+        )
     }
 
     override suspend fun sessions(): List<Session> {
@@ -65,6 +68,17 @@ class DdpCoreApi(private val client: DdpWebsocketClient) : CoreApi {
     override suspend fun setDebugMode(debugMode: Boolean) {
         return client.callMethod("core.set_debug_mode", listOf(debugMode))
     }
+}
+
+@Serializable
+internal sealed interface ResizeShellArg {
+    @JvmInline
+    @Serializable
+    value class Id(val value: String?): ResizeShellArg
+
+    @JvmInline
+    @Serializable
+    value class Span(val value: Int?): ResizeShellArg
 }
 
 @Serializable
