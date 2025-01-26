@@ -1,5 +1,6 @@
 package com.nasdroid.api.websocket.reporting
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -85,7 +86,91 @@ interface ReportingApi {
      * storing data in tier1 storage.
      */
     suspend fun update(config: ReportingConfig): ReportingConfig
+
+    /**
+     * Retrieve currently running processes stats.
+     */
+    fun processes(): Flow<RealtimeProcesses>
+
+    /**
+     * Retrieve real time statistics for CPU, network, virtual memory and zfs arc.
+     */
+    fun realtime(interval: Int = 2): Flow<RealtimeUtilisation>
 }
+
+@Serializable
+data class RealtimeUtilisation(
+    @SerialName("cpu")
+    val cpu: CpuUsage,
+    @SerialName("disks")
+    val disks: DiskUsage,
+    @SerialName("interfaces")
+    val interfaces: InterfaceUsage,
+    @SerialName("memory")
+    val memory: MemoryUsage,
+    @SerialName("virtual_memory")
+    val virtualMemory: MemoryUsage,
+    @SerialName("zfs")
+    val zfs: ZfsUsage,
+) {
+    @Serializable
+    data object CpuUsage // TODO
+
+    @Serializable
+    data class DiskUsage(
+        @SerialName("busy")
+        val busy: Float,
+        @SerialName("read_bytes")
+        val readBytes: Double,
+        @SerialName("write_bytes")
+        val writeBytes: Double,
+        @SerialName("read_ops")
+        val readOps: Double,
+        @SerialName("write_ops")
+        val writeOps: Double
+    )
+
+    @Serializable
+    data object InterfaceUsage // TODO
+
+    @Serializable
+    data class MemoryUsage(
+        @SerialName("apps")
+        val apps: Long,
+        @SerialName("arc")
+        val arc: Long,
+        @SerialName("buffers")
+        val buffers: Long,
+        @SerialName("cache")
+        val cache: Long,
+        @SerialName("page_tables")
+        val pageTables: Long,
+        @SerialName("slab_cache")
+        val slabCache: Long,
+        @SerialName("unused")
+        val unused: Long
+    )
+
+    @Serializable
+    data class ZfsUsage(
+        @SerialName("arc_max_size")
+        val arcMaxSize: Long,
+        @SerialName("arc_size")
+        val arcSize: Long,
+        @SerialName("cache_hit_ratio")
+        val cacheHitRatio: Float
+    )
+}
+
+@Serializable
+data class RealtimeProcesses(
+    @SerialName("interval")
+    val interval: Int,
+    @SerialName("cpu_percent")
+    val cpuPercent: Float,
+    @SerialName("memory_percent")
+    val memoryPercent: Float
+)
 
 /**
  * A configuration for NetData reporting.
