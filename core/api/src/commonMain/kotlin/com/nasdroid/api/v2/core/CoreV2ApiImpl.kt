@@ -85,6 +85,8 @@ internal class CoreV2ApiImpl(
                 state = job.state,
                 timeStarted = job.timeStarted,
                 timeFinished = job.timeFinished,
+                resultEncodingError = null,
+                credentials = null,
             )
         } ?: throw JobNotFoundException("Could not find a Job with ID $id")
     }
@@ -114,6 +116,8 @@ internal class CoreV2ApiImpl(
                 state = job.state,
                 timeStarted = job.timeStarted,
                 timeFinished = job.timeFinished,
+                resultEncodingError = null,
+                credentials = null,
             )
         } ?: throw JobNotFoundException("Could not find a Job with ID $id")
     }
