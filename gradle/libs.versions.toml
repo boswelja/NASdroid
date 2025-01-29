@@ -1,7 +1,7 @@
 [versions]
 android-gradle-plugin = "8.8.0"
 detekt = "1.23.7"
-kotlin = "2.1.0"
+kotlin = "2.1.10"
 ksp = "2.1.0-1.0.29"
 
 androidx-core = "1.15.0"
