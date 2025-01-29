@@ -9,8 +9,10 @@ class DeriveUriFromInput {
         val uri = Uri.parseOrNull(input) ?: return StrongResult.failure(DeriveUriError.InvalidUri)
 
         val scheme = when (uri.scheme) {
-            "ws" -> "ws"
-            "wss" -> "wss"
+            "ws",
+            "http" -> "ws"
+            "wss",
+            "https" -> "wss"
             null -> "ws"
             else -> return StrongResult.failure(DeriveUriError.InvalidScheme)
         }
