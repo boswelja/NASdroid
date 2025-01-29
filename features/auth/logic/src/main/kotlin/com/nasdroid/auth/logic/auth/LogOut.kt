@@ -1,6 +1,6 @@
 package com.nasdroid.auth.logic.auth
 
-import com.nasdroid.api.ApiStateProvider
+import com.nasdroid.api.v2.ApiStateProvider
 import com.nasdroid.auth.data.currentserver.CurrentServerSource
 
 /**

@@ -1,6 +1,6 @@
 package com.nasdroid.apps.logic.discover
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.catalog.CatalogV2Api
 
 /**

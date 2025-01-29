@@ -1,4 +1,4 @@
-package com.nasdroid.api.exception
+package com.nasdroid.api.v2.exception
 
 import java.io.IOException
 

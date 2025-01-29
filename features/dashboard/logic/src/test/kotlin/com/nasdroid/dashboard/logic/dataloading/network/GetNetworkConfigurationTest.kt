@@ -1,6 +1,6 @@
 package com.nasdroid.dashboard.logic.dataloading.network
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.reporting.ReportingGraph
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import io.mockk.coEvery

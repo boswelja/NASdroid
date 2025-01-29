@@ -1,7 +1,7 @@
 package com.nasdroid.power.logic
 
-import com.nasdroid.api.exception.ClientUnauthorizedException
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.ClientUnauthorizedException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.system.SystemV2Api
 import com.nasdroid.core.strongresult.StrongResult
 

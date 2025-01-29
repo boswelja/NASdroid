@@ -1,7 +1,7 @@
 package com.nasdroid.dashboard.logic.dataloading.memory
 
 import com.boswelja.capacity.Capacity.Companion.bytes
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.reporting.ReportingGraphData
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import io.mockk.coEvery

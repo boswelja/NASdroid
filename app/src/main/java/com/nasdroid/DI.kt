@@ -1,6 +1,7 @@
 package com.nasdroid
 
 import com.nasdroid.api.v2.ApiV2Module
+import com.nasdroid.api.websocket.ApiWebsocketModule
 import com.nasdroid.apps.ui.AppsModule
 import com.nasdroid.auth.ui.AuthModule
 import com.nasdroid.dashboard.ui.DashboardModule
@@ -14,6 +15,7 @@ import org.koin.dsl.module
  */
 val NasDroidModule = module {
     includes(ApiV2Module)
+    includes(ApiWebsocketModule)
 
     includes(
         AppsModule,
