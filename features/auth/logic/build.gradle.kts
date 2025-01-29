@@ -39,6 +39,7 @@ dependencies {
     implementation(projects.core.api)
     implementation(projects.features.auth.data)
 
+    implementation("com.eygraber:uri-kmp:0.0.19")
     implementation(libs.koin.android)
 
     testImplementation(libs.kotlin.test)
