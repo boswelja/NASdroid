@@ -2,7 +2,7 @@ package com.nasdroid.api.v2
 
 import com.nasdroid.api.ApiStateProvider
 import com.nasdroid.api.InMemoryApiStateProvider
-import com.nasdroid.api.getHttpClient
+import com.nasdroid.api.getRestApiClient
 import com.nasdroid.api.v2.apikey.ApiKeyV2Api
 import com.nasdroid.api.v2.apikey.ApiKeyV2ApiImpl
 import com.nasdroid.api.v2.app.AppV2Api
@@ -33,7 +33,7 @@ val ApiV2Module = module {
     singleOf(::InMemoryApiStateProvider) bind ApiStateProvider::class
 
     // Ktor client
-    singleOf(::getHttpClient)
+    singleOf(::getRestApiClient)
 
     singleOf(::ApiKeyV2ApiImpl) bind ApiKeyV2Api::class
     singleOf(::AppV2ApiImpl) bind AppV2Api::class

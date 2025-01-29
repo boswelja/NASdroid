@@ -45,7 +45,13 @@ internal data class Error(
     @SerialName("reason")
     val reason: String? = null,
     @SerialName("trace")
-    val message: String? = null,
+    val trace: Trace? = null,
     @SerialName("extra")
     val extra: String? = null
-)
+) {
+    @Serializable
+    internal class Trace(
+        @SerialName("class")
+        val errorClass: String
+    )
+}

@@ -1,6 +1,5 @@
 package com.nasdroid.api
 
-import android.util.Log
 import com.nasdroid.api.exception.ClientUnauthorizedException
 import com.nasdroid.api.exception.HttpNotOkException
 import io.ktor.client.HttpClient
@@ -21,15 +20,13 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.JsonConvertException
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 
 /**
  * Builds a Ktor [HttpClient] for use with the TrueNAS API.
  */
-@OptIn(ExperimentalSerializationApi::class)
-fun getHttpClient(
+fun getRestApiClient(
     apiStateProvider: ApiStateProvider,
 ): HttpClient {
     return HttpClient {
@@ -37,7 +34,7 @@ fun getHttpClient(
             level = io.ktor.client.plugins.logging.LogLevel.ALL
             logger = object : io.ktor.client.plugins.logging.Logger {
                 override fun log(message: String) {
-                    Log.i("Ktor", message)
+                    println("Ktor: $message")
                 }
             }
         }
