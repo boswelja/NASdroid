@@ -5,6 +5,9 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Describes the TrueNAS API "Reporting" group.
+ */
 interface ReportingApi {
 
     /**
@@ -68,6 +71,9 @@ interface ReportingApi {
         aggregate: Boolean = true
     ): GraphData
 
+    /**
+     * Get a list of all graphs that can be queried from the system.
+     */
     suspend fun graphs(
         limit: Int = 0,
         offset: Int = 0,
