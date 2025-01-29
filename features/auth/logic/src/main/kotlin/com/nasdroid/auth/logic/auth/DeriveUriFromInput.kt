@@ -32,7 +32,12 @@ class DeriveUriFromInput {
             else -> return StrongResult.failure(DeriveUriError.InvalidScheme)
         }
 
+        var builder = uri.buildUpon()
+            .scheme(scheme)
+
         if (uri.authority == null) {
+            // This is a bit of an odd state where a url like `truenas.local` has no authority, but does have a path.
+            // Let's rectify that.
             val authority = uri.pathSegments.firstOrNull() ?: return StrongResult.failure(DeriveUriError.InvalidUri)
             if (authority.contains(" ")) return StrongResult.failure(DeriveUriError.InvalidUri)
             val pathSegments = uri.pathSegments.drop(1).joinToString("/")
@@ -41,29 +46,24 @@ class DeriveUriFromInput {
                 else -> pathSegments
             }
 
-            return StrongResult.success(
-                uri.buildUpon()
-                    .scheme(scheme)
-                    .authority(authority)
-                    .path(path)
-                    .build()
-                    .toString()
-            )
+            builder = builder
+                .authority(authority)
+                .path(path)
         } else {
             val path = when (uri.path) {
                 null,
                 "" -> "/websocket"
                 else -> uri.path
             }
-
-            return StrongResult.success(
-                uri.buildUpon()
-                    .scheme(scheme)
-                    .path(path)
-                    .build()
-                    .toString()
-            )
+            builder = builder
+                .path(path)
         }
+
+        return StrongResult.success(
+            builder
+                .build()
+                .toString()
+        )
     }
 }
 
