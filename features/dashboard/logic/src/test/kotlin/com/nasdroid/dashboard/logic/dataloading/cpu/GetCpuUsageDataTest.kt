@@ -1,6 +1,6 @@
 package com.nasdroid.dashboard.logic.dataloading.cpu
 
-import com.nasdroid.api.exception.ServerResponseException
+import com.nasdroid.api.v2.exception.ServerResponseException
 import com.nasdroid.api.v2.reporting.ReportingGraphData
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import io.mockk.coEvery

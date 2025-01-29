@@ -1,6 +1,6 @@
 package com.nasdroid.api.v2.auth
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import kotlin.time.Duration
 
 /**

@@ -1,7 +1,7 @@
-package com.nasdroid.api
+package com.nasdroid.api.v2
 
-import com.nasdroid.api.exception.ClientUnauthorizedException
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.ClientUnauthorizedException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
@@ -13,6 +13,9 @@ import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.bearerAuth
 import io.ktor.http.ContentType
@@ -30,9 +33,9 @@ fun getRestApiClient(
     apiStateProvider: ApiStateProvider,
 ): HttpClient {
     return HttpClient {
-        install(io.ktor.client.plugins.logging.Logging) {
-            level = io.ktor.client.plugins.logging.LogLevel.ALL
-            logger = object : io.ktor.client.plugins.logging.Logger {
+        install(Logging) {
+            level = LogLevel.ALL
+            logger = object : Logger {
                 override fun log(message: String) {
                     println("Ktor: $message")
                 }
@@ -88,7 +91,7 @@ private suspend fun ResponseException.toHttpNotOkException(): HttpNotOkException
     }
     return when (this) {
         is RedirectResponseException -> {
-            com.nasdroid.api.exception.RedirectResponseException(
+            com.nasdroid.api.v2.exception.RedirectResponseException(
                 code = response.status.value,
                 description = message,
                 cause = cause
@@ -98,7 +101,7 @@ private suspend fun ResponseException.toHttpNotOkException(): HttpNotOkException
             if (this.response.status == HttpStatusCode.Unauthorized) {
                 ClientUnauthorizedException(description = message, cause = cause)
             } else {
-                com.nasdroid.api.exception.ClientRequestException(
+                com.nasdroid.api.v2.exception.ClientRequestException(
                     code = response.status.value,
                     description = message,
                     cause = cause
@@ -106,7 +109,7 @@ private suspend fun ResponseException.toHttpNotOkException(): HttpNotOkException
             }
         }
         is ServerResponseException -> {
-            com.nasdroid.api.exception.ServerResponseException(
+            com.nasdroid.api.v2.exception.ServerResponseException(
                 code = response.status.value,
                 description = message,
                 cause = cause

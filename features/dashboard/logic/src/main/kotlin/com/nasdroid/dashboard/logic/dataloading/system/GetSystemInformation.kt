@@ -1,6 +1,6 @@
 package com.nasdroid.dashboard.logic.dataloading.system
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.system.SystemV2Api
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone

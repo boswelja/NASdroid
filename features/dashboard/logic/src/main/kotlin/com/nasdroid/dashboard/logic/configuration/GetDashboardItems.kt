@@ -1,6 +1,6 @@
 package com.nasdroid.dashboard.logic.configuration
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.system.SystemV2Api
 import com.nasdroid.data.configuration.DashboardConfiguration
 import com.nasdroid.data.configuration.DashboardEntry

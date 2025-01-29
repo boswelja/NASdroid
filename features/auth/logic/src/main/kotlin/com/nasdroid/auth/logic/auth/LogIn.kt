@@ -1,21 +1,25 @@
 package com.nasdroid.auth.logic.auth
 
-import com.nasdroid.api.websocket.auth.AuthApi
-import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.v2.ApiStateProvider
+import com.nasdroid.api.v2.Authorization
+import com.nasdroid.api.v2.exception.ClientRequestException
+import com.nasdroid.api.v2.exception.ServerResponseException
+import com.nasdroid.api.v2.core.CoreV2Api
 import com.nasdroid.auth.data.currentserver.CurrentServerSource
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 import com.nasdroid.auth.data.serverstore.Authentication
 import com.nasdroid.auth.logic.Server
 import com.nasdroid.core.strongresult.StrongResult
+import java.net.UnknownHostException
 
 /**
  * Attempts to authenticate with a server. See [invoke] for details.
  */
 class LogIn(
-    private val websocketClient: DdpWebsocketClient,
+    private val apiStateProvider: ApiStateProvider,
     private val authenticatedServersStore: AuthenticatedServersStore,
     private val currentServerSource: CurrentServerSource,
-    private val authApi: AuthApi,
+    private val coreV2Api: CoreV2Api,
 ) {
 
     /**
@@ -24,16 +28,16 @@ class LogIn(
      */
     suspend operator fun invoke(server: Server) : StrongResult<Unit, LoginError> {
         val authentication = authenticatedServersStore.getAuthentication(server.id)
+        return try {
+            apiStateProvider.serverAddress = server.url
+            apiStateProvider.authorization = when (authentication) {
+                is Authentication.ApiKey -> Authorization.ApiKey(authentication.key)
+                is Authentication.Basic -> Authorization.Basic(authentication.username, authentication.password)
+            }
 
-        websocketClient.connect(server.url)
+            // Try to ping the server to see if our credentials and connection are OK
+            coreV2Api.ping()
 
-        val success = when (authentication) {
-            is Authentication.ApiKey -> authApi.logInWithToken(authentication.key)
-            is Authentication.Basic -> authApi.logIn(authentication.username, authentication.password)
-        }
-
-        // TODO other errors
-        return if (success) {
             currentServerSource.setCurrentServer(
                 com.nasdroid.auth.data.Server(
                     uid = server.id,
@@ -42,8 +46,18 @@ class LogIn(
                 )
             )
             StrongResult.success(Unit)
-        } else {
+        } catch (_: ClientRequestException) {
+            apiStateProvider.serverAddress = null
+            apiStateProvider.authorization = null
             StrongResult.failure(LoginError.InvalidCredentials)
+        } catch (_: ServerResponseException) {
+            apiStateProvider.serverAddress = null
+            apiStateProvider.authorization = null
+            StrongResult.failure(LoginError.Unknown)
+        } catch (_: UnknownHostException) {
+            apiStateProvider.serverAddress = null
+            apiStateProvider.authorization = null
+            StrongResult.failure(LoginError.ServerUnreachable)
         }
     }
 }

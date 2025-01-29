@@ -2,7 +2,7 @@ package com.nasdroid.storage.logic.pool
 
 import com.boswelja.capacity.Capacity
 import com.boswelja.capacity.Capacity.Companion.bytes
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.pool.Pool
 import com.nasdroid.api.v2.pool.PoolV2Api
 import kotlinx.datetime.Instant

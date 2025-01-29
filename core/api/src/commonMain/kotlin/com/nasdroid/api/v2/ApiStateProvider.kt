@@ -1,4 +1,4 @@
-package com.nasdroid.api
+package com.nasdroid.api.v2
 
 /**
  * Provides various common states needed for the API to function.
