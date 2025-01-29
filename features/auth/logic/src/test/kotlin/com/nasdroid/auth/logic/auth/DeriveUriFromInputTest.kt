@@ -21,6 +21,7 @@ class DeriveUriFromInputTest {
             "wss://truenas.local/websocket",
             "ws://my.truenas.install/websocket",
             "ws://truenas.install/path/to/websocket/api",
+            "wss://192.168.1.1/websocket",
         )
 
         testCases.forEach {
@@ -37,7 +38,9 @@ class DeriveUriFromInputTest {
             "truenas.local" to "ws://truenas.local/websocket",
             "truenas.install" to "ws://truenas.install/websocket",
             "wss://truenas.local" to "wss://truenas.local/websocket",
-            "truenas.install/path/to/websocket/api" to "ws://truenas.install/path/to/websocket/api"
+            "truenas.install/path/to/websocket/api" to "ws://truenas.install/path/to/websocket/api",
+            "ws://192.168.1.1" to "ws://192.168.1.1/websocket",
+            "192.168.1.1" to "ws://192.168.1.1/websocket",
         )
 
         testCases.forEach { (input, expected) ->
@@ -53,6 +56,7 @@ class DeriveUriFromInputTest {
         val testCases = mapOf(
             "http://truenas.local/websocket" to "ws://truenas.local/websocket",
             "https://truenas.local/websocket" to "wss://truenas.local/websocket",
+            "https://192.168.1.1/websocket" to "wss://192.168.1.1/websocket",
         )
 
         testCases.forEach { (input, expected) ->
@@ -83,7 +87,7 @@ class DeriveUriFromInputTest {
         val testCases = listOf(
             "invalid uri",
             "another invalid uri",
-            "12345"
+            "    "
         )
 
         testCases.forEach {
