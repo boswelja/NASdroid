@@ -1,9 +1,7 @@
 package com.nasdroid.api.v2.pool
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.core.UnwrappingDateSerializer
-import com.nasdroid.api.v2.pool.NewPoolTopology.SpecialVDev.Type
-import com.nasdroid.api.v2.pool.Pool.Autotrim
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

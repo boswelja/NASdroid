@@ -1,6 +1,6 @@
 package com.nasdroid.reporting.logic
 
-import com.nasdroid.api.exception.ClientRequestException
+import com.nasdroid.api.v2.exception.ClientRequestException
 import com.nasdroid.api.v2.reporting.ReportingGraphData
 import com.nasdroid.api.v2.reporting.ReportingV2Api
 import com.nasdroid.api.v2.reporting.RequestedGraph

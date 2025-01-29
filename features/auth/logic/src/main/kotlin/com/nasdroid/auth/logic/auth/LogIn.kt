@@ -1,9 +1,9 @@
 package com.nasdroid.auth.logic.auth
 
-import com.nasdroid.api.ApiStateProvider
-import com.nasdroid.api.Authorization
-import com.nasdroid.api.exception.ClientRequestException
-import com.nasdroid.api.exception.ServerResponseException
+import com.nasdroid.api.v2.ApiStateProvider
+import com.nasdroid.api.v2.Authorization
+import com.nasdroid.api.v2.exception.ClientRequestException
+import com.nasdroid.api.v2.exception.ServerResponseException
 import com.nasdroid.api.v2.core.CoreV2Api
 import com.nasdroid.auth.data.currentserver.CurrentServerSource
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore

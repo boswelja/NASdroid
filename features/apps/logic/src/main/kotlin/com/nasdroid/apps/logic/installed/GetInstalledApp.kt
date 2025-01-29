@@ -1,6 +1,6 @@
 package com.nasdroid.apps.logic.installed
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.chart.release.ChartRelease
 import com.nasdroid.api.v2.chart.release.ChartReleaseV2Api
 import kotlinx.datetime.Instant

@@ -1,6 +1,6 @@
 package com.nasdroid.api.websocket.system
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.websocket.ddp.EDateInstantSerializer
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone

@@ -1,6 +1,6 @@
 package com.nasdroid.apps.logic.installed
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.chart.release.ChartReleaseV2Api
 import com.nasdroid.api.v2.chart.release.RollbackOptions
 import com.nasdroid.apps.data.installed.InstalledAppCache
