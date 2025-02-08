@@ -6,20 +6,26 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Icon
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
 import com.nasdroid.design.MaterialThemeExt
+import com.nasdroid.design.NasDroidTheme
 
 /**
  * Displays a column of fields that allow users to enter authentication data. See [AuthData] for
@@ -34,14 +40,34 @@ fun AuthFields(
     error: Boolean = false,
     enabled: Boolean = true,
 ) {
-    AnimatedContent(
-        targetState = authData is AuthData.ApiKey,
-        label = "Auth Mode",
-        transitionSpec = { fadeIn() togetherWith fadeOut() },
-        modifier = modifier
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.large)) {
-            if (it) {
+        SingleChoiceSegmentedButtonRow {
+            SegmentedButton(
+                selected = authData is AuthData.ApiKey,
+                onClick = { onAuthDataChange(AuthData.ApiKey("")) },
+                shape = SegmentedButtonDefaults.itemShape(0, 2)
+            ) {
+                Text(stringResource(R.string.api_key_toggle), maxLines = 1)
+            }
+            SegmentedButton(
+                selected = authData is AuthData.Basic,
+                onClick = { onAuthDataChange(AuthData.Basic("", "", true)) },
+                shape = SegmentedButtonDefaults.itemShape(1, 2)
+            ) {
+                Text(stringResource(R.string.password_toggle), maxLines = 1)
+            }
+        }
+        AnimatedContent(
+            targetState = authData is AuthData.ApiKey,
+            label = "Auth Mode",
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
+            modifier = modifier
+        ) { isApiKeyInput ->
+            if (isApiKeyInput) {
                 val apiKeyAuthData = authData as? AuthData.ApiKey ?: AuthData.ApiKey("")
                 ApiKeyField(
                     apiKey = apiKeyAuthData.key,
@@ -51,25 +77,19 @@ fun AuthFields(
                     enabled = enabled,
                     error = error
                 )
-                SwitchToBasicAuth(
-                    onClick = { onAuthDataChange(AuthData.Basic("", "")) },
-                    enabled = enabled
-                )
             } else {
-                val basicAuthData = authData as? AuthData.Basic ?: AuthData.Basic("", "")
+                val basicAuthData = authData as? AuthData.Basic ?: AuthData.Basic("", "", true)
                 BasicAuthFields(
                     username = basicAuthData.username,
                     onUsernameChange = { onAuthDataChange(basicAuthData.copy(username = it)) },
                     password = basicAuthData.password,
                     onPasswordChange = { onAuthDataChange(basicAuthData.copy(password = it)) },
+                    createApiKey = basicAuthData.createApiKey,
+                    onCreateApiKeyChange = { onAuthDataChange(basicAuthData.copy(createApiKey = it)) },
                     onDone = onDone,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = enabled,
                     error = error
-                )
-                SwitchToApiKey(
-                    onClick = { onAuthDataChange(AuthData.ApiKey("")) },
-                    enabled = enabled
                 )
             }
         }
@@ -94,64 +114,43 @@ sealed interface AuthData {
      *
      * @property username The username that the user has entered.
      * @property password The password that the user has entered.
+     * @property createApiKey Whether an API key should be created using these credentials.
      */
-    data class Basic(val username: String, val password: String): AuthData
+    data class Basic(
+        val username: String,
+        val password: String,
+        val createApiKey: Boolean
+    ): AuthData
 }
 
+@PreviewLightDark
 @Composable
-internal fun SwitchToBasicAuth(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
-    Row(modifier) {
-        Icon(
-            imageVector = Icons.Default.Info,
-            contentDescription = null,
-            tint = MaterialThemeExt.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 2.dp)
-        )
-        Column {
-            Text(
-                text = stringResource(R.string.no_like_api_key),
-                color = MaterialThemeExt.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(start = 8.dp)
+fun AuthFieldsApiKeyPreview() {
+    var authData by remember { mutableStateOf<AuthData>(AuthData.ApiKey("1234567890")) }
+    NasDroidTheme {
+        Surface {
+            AuthFields(
+                authData = authData,
+                onAuthDataChange = { authData = it },
+                onDone = {},
+                modifier = Modifier.padding(8.dp)
             )
-            TextButton(
-                onClick = onClick,
-                enabled = enabled
-            ) {
-                Text(stringResource(R.string.switch_basic_auth))
-            }
         }
     }
 }
 
+@PreviewLightDark
 @Composable
-internal fun SwitchToApiKey(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
-    Row(modifier) {
-        Icon(
-            imageVector = Icons.Default.Info,
-            contentDescription = null,
-            tint = MaterialThemeExt.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 2.dp)
-        )
-        Column {
-            Text(
-                text = stringResource(R.string.basic_auth_warning),
-                color = MaterialThemeExt.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(start = 8.dp)
+fun AuthFieldsBasicPreview() {
+    var authData by remember { mutableStateOf<AuthData>(AuthData.Basic("john.doe", "password", true)) }
+    NasDroidTheme {
+        Surface {
+            AuthFields(
+                authData = authData,
+                onAuthDataChange = { authData = it },
+                onDone = {},
+                modifier = Modifier.padding(8.dp)
             )
-            TextButton(
-                onClick = onClick,
-                enabled = enabled
-            ) {
-                Text(stringResource(R.string.switch_api_key))
-            }
         }
     }
 }
