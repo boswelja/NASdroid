@@ -9,6 +9,7 @@
     <string name="invalid_server_address">Unable to reach the server</string>
 
     <string name="add_server_button">Add Server</string>
+    <string name="add_server_title">Add Server</string>
 
     <string name="server_label">Server address</string>
     <string name="username_label">Username</string>
