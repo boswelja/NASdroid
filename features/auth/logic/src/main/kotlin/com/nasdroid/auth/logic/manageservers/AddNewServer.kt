@@ -7,13 +7,17 @@ import com.nasdroid.api.v2.system.SystemV2Api
 import com.nasdroid.auth.data.Server
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 import com.nasdroid.auth.data.serverstore.Authentication
+import com.nasdroid.auth.logic.auth.DeriveUriError
+import com.nasdroid.auth.logic.auth.DeriveUriFromInput
 import com.nasdroid.core.strongresult.StrongResult
+import com.nasdroid.core.strongresult.fold
 import java.net.UnknownHostException
 
 /**
  * Creates a token for and stores a new server. See [invoke] for details.
  */
 class AddNewServer(
+    private val deriveUriFromInput: DeriveUriFromInput,
     private val systemV2Api: SystemV2Api,
     private val authenticatedServersStore: AuthenticatedServersStore,
     private val apiStateProvider: ApiStateProvider,
@@ -28,12 +32,18 @@ class AddNewServer(
         username: String,
         password: String
     ): StrongResult<Unit, AddServerError> {
+        val targetAddress = deriveUriFromInput(serverAddress).fold(
+            onSuccess = { it },
+            onFailure = {
+                return StrongResult.failure(AddServerError.InvalidAddress(it))
+            }
+        )
         return try {
-            apiStateProvider.serverAddress = serverAddress
+            apiStateProvider.serverAddress = targetAddress
             apiStateProvider.authorization = Authorization.Basic(username, password)
             storeNewServer(
                 serverName = serverName,
-                serverAddress = serverAddress,
+                serverAddress = targetAddress,
                 authentication = Authentication.Basic(username, password)
             )
         } finally {
@@ -50,12 +60,18 @@ class AddNewServer(
         serverAddress: String,
         token: String
     ): StrongResult<Unit, AddServerError> {
+        val targetAddress = deriveUriFromInput(serverAddress).fold(
+            onSuccess = { it },
+            onFailure = {
+                return StrongResult.failure(AddServerError.InvalidAddress(it))
+            }
+        )
         return try {
-            apiStateProvider.serverAddress = serverAddress
+            apiStateProvider.serverAddress = targetAddress
             apiStateProvider.authorization = Authorization.ApiKey(token)
             storeNewServer(
                 serverName = serverName,
-                serverAddress = serverAddress,
+                serverAddress = targetAddress,
                 authentication = Authentication.ApiKey(token)
             )
         } finally {
@@ -109,4 +125,10 @@ sealed interface AddServerError {
      * Indicates that there is already a server that is registered with the same data.
      */
     data object DuplicateEntry : AddServerError
+
+    /**
+     * Indicates that the server address provided by the user was not valid. See [cause] for the
+     * specific reason.
+     */
+    data class InvalidAddress(val cause: DeriveUriError) : AddServerError
 }
