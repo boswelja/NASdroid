@@ -81,21 +81,29 @@ class DdpWebsocketClient {
      * returns. However, if the connection fails, an [IllegalStateException] is thrown and the state
      * is reset.
      *
-     * @throws IllegalStateException when connecting to the server fails.
+     * @throws IllegalStateException when the server rejects the connection.
+     * @throws java.net.UnknownHostException when the server at [url] was not reachable.
      */
     suspend fun connect(url: String, session: String? = null) {
         bootstrapLock.withLock {
             check(state.value is State.Disconnected) { "Cannot connect when already connected or connecting." }
             _state.value = State.Connecting
-            val webSocket = WebsocketKtorClient.webSocketSession(urlString = url)
-            webSocket.sendSerialized(ConnectMessage(version = "1", support = listOf("1"), session))
-            when (val connectResponse = webSocket.receiveDeserialized<ConnectServerMessage>()) {
-                is ConnectedMessage -> {
-                    _state.value = State.Connected(webSocket, connectResponse.session)
+            try {
+                val webSocket = WebsocketKtorClient.webSocketSession(urlString = url)
+                webSocket.sendSerialized(ConnectMessage(version = "1", support = listOf("1"), session))
+                when (val connectResponse = webSocket.receiveDeserialized<ConnectServerMessage>()) {
+                    is ConnectedMessage -> {
+                        _state.value = State.Connected(webSocket, connectResponse.session)
+                    }
+                    is FailedMessage -> {
+                        _state.value = State.Disconnected
+                        error("Failed to connect to DDP server: $connectResponse")
+                    }
                 }
-                is FailedMessage -> {
+            } finally {
+                // Ensure state is never connecting when we finish
+                if (_state.value is State.Connecting) {
                     _state.value = State.Disconnected
-                    error("Failed to connect to DDP server: $connectResponse")
                 }
             }
         }
