@@ -4,6 +4,7 @@ import com.nasdroid.api.websocket.apiKey.AllowedMethod
 import com.nasdroid.api.websocket.apiKey.ApiKeyApi
 import com.nasdroid.api.websocket.apiKey.NewApiKey
 import com.nasdroid.api.websocket.auth.AuthApi
+import com.nasdroid.api.websocket.ddp.MethodCallError
 import com.nasdroid.core.strongresult.StrongResult
 
 /**
@@ -30,6 +31,10 @@ class CreateApiKey(
             }
             val key = apiKeyApi.create(NewApiKey(name, listOf(AllowedMethod(AllowedMethod.Method.All, "*"))))
             StrongResult.success(key.key)
+        } catch (_: MethodCallError) {
+            // Not really sure what all possible causes of this are, but I do know it'll happen with
+            // duplicate names.
+            StrongResult.failure(CreateApiKeyError.KeyAlreadyExists)
         } finally {
             authApi.logOut()
         }
@@ -44,4 +49,9 @@ sealed interface CreateApiKeyError {
      * The credentials that were provided to create the key with were not valid.
      */
     data object InvalidCredentials : CreateApiKeyError
+
+    /**
+     * An API key with the same name already exists.
+     */
+    data object KeyAlreadyExists : CreateApiKeyError
 }

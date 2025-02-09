@@ -66,6 +66,7 @@ class RegisterServerViewModel(
                         AddServerError.InvalidCredentials -> RegisterState.AuthError.InvalidCredentials
                         AddServerError.ServerNotFound -> RegisterState.AddressError.ServerNotFound
                         is AddServerError.InvalidAddress -> TODO()
+                        AddServerError.FailedToCreateApiKey -> TODO()
                     }
                 }
             )
@@ -102,6 +103,7 @@ class RegisterServerViewModel(
                         AddServerError.InvalidCredentials -> RegisterState.AuthError.InvalidCredentials
                         AddServerError.ServerNotFound -> RegisterState.AddressError.ServerNotFound
                         is AddServerError.InvalidAddress -> TODO()
+                        AddServerError.FailedToCreateApiKey -> TODO()
                     }
                 }
             )

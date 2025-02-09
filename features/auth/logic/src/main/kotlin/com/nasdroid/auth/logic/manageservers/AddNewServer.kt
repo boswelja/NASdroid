@@ -56,6 +56,7 @@ class AddNewServer(
                     onFailure = {
                         val error = when (it) {
                             CreateApiKeyError.InvalidCredentials -> AddServerError.InvalidCredentials
+                            CreateApiKeyError.KeyAlreadyExists -> AddServerError.FailedToCreateApiKey
                         }
                         return StrongResult.failure(error)
                     }
@@ -160,6 +161,11 @@ sealed interface AddServerError {
      * Indicates that there is already a server that is registered with the same data.
      */
     data object DuplicateEntry : AddServerError
+
+    /**
+     * Indicates that the API key creation failed, likely because a key for NASdroid already exists.
+     */
+    data object FailedToCreateApiKey : AddServerError
 
     /**
      * Indicates that the server address provided by the user was not valid. See [cause] for the
