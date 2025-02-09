@@ -43,6 +43,8 @@ vico = "2.0.1"
 
 turbine = "1.2.0"
 
+uri-kmp = "0.0.19"
+
 androidx-test-ext-junit = "1.2.1"
 mockk = "1.13.16"
 
@@ -113,6 +115,8 @@ koin-android-compose = { module = "io.insert-koin:koin-androidx-compose", versio
 koin-android-startup = { module = "io.insert-koin:koin-androidx-startup", version.ref = "koin" }
 
 vico = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+
+eyegraber-uriKmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
