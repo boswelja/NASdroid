@@ -60,7 +60,7 @@ fun SelectServerScreen(
         }
     }
 
-    Scaffold {
+    Scaffold { padding ->
         SelectServerContent(
             isLoading = loginState == LoginState.Loading || loginState == LoginState.LoginSuccess,
             servers = authenticatedServers,
@@ -68,7 +68,7 @@ fun SelectServerScreen(
             onAddServerClick = onAddServer,
             windowSizeClass = windowSizeClass,
             modifier = modifier,
-            contentPadding = it,
+            contentPadding = padding,
         )
     }
 
@@ -271,7 +271,7 @@ fun SelectServerScreenPreview() {
             dynamicLightColorScheme(context)
         }
     ) {
-        Scaffold {
+        Scaffold { padding ->
             SelectServerContent(
                 isLoading = false,
                 servers = listOf(
@@ -292,7 +292,7 @@ fun SelectServerScreenPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialThemeExt.colorScheme.background),
-                contentPadding = it
+                contentPadding = padding
             )
         }
     }

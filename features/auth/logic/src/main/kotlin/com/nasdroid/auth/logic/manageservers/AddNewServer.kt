@@ -53,8 +53,8 @@ class AddNewServer(
                     onSuccess = {
                         Authentication.ApiKey(it)
                     },
-                    onFailure = {
-                        val error = when (it) {
+                    onFailure = { createApiKeyError ->
+                        val error = when (createApiKeyError) {
                             CreateApiKeyError.InvalidCredentials -> AddServerError.InvalidCredentials
                             CreateApiKeyError.KeyAlreadyExists -> AddServerError.FailedToCreateApiKey
                         }
@@ -63,8 +63,7 @@ class AddNewServer(
                 )
             } else {
                 // If we're not making an API key, we need to manually check credentials.
-                val success = authApi.logIn(username, password)
-                if (!success) {
+                if (!authApi.logIn(username, password)) {
                     return StrongResult.failure(AddServerError.InvalidCredentials)
                 }
                 Authentication.Basic(username, password)
@@ -99,8 +98,7 @@ class AddNewServer(
         )
         return try {
             client.connect(targetAddress)
-            val success = authApi.logInWithApiKey(token)
-            if (success) {
+            if (authApi.logInWithApiKey(token)) {
                 storeNewServer(
                     serverName = serverName,
                     serverAddress = targetAddress,

@@ -84,8 +84,8 @@ fun AuthFields(
                     onUsernameChange = { onAuthDataChange(basicAuthData.copy(username = it)) },
                     password = basicAuthData.password,
                     onPasswordChange = { onAuthDataChange(basicAuthData.copy(password = it)) },
-                    createApiKey = basicAuthData.createApiKey,
-                    onCreateApiKeyChange = { onAuthDataChange(basicAuthData.copy(createApiKey = it)) },
+                    createApiKey = basicAuthData.isCreateApiKey,
+                    onCreateApiKeyChange = { onAuthDataChange(basicAuthData.copy(isCreateApiKey = it)) },
                     onDone = onDone,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = enabled,
@@ -114,12 +114,12 @@ sealed interface AuthData {
      *
      * @property username The username that the user has entered.
      * @property password The password that the user has entered.
-     * @property createApiKey Whether an API key should be created using these credentials.
+     * @property isCreateApiKey Whether an API key should be created using these credentials.
      */
     data class Basic(
         val username: String,
         val password: String,
-        val createApiKey: Boolean
+        val isCreateApiKey: Boolean
     ): AuthData
 }
 
