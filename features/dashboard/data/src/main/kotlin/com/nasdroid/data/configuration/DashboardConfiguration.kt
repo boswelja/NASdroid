@@ -40,23 +40,25 @@ interface DashboardConfiguration {
  * @property uid A unique identifier for this item.
  * @property type The type of dashboard entry.
  * @property serverId The unique ID of the server this entry belongs to.
- * @property isVisible Whether this entry is visible on the dashboard.
  * @property priority THe priority of this entry. A lower number is displayed higher in the list.
  */
 data class DashboardEntry(
     val uid: Long,
     val type: Type,
+    val sybtype: String?,
+    val extra: String?,
     val serverId: String,
-    val isVisible: Boolean,
     val priority: Int
 ) {
     /**
      * All supported types of dashboard elements.
      */
     enum class Type {
-        SYSTEM_INFORMATION,
-        CPU,
-        MEMORY,
-        NETWORK,
+        SystemInformation,
+        Cpu,
+        Memory,
+        Network,
+        Storage,
+        BackupTasks,
     }
 }

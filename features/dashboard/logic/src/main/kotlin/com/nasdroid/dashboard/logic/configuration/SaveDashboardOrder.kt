@@ -21,10 +21,10 @@ class SaveDashboardOrder(
             DashboardEntry(
                 uid = dashboardData.id,
                 type = when (dashboardData.type) {
-                    DashboardItem.Type.SystemInformation -> DashboardEntry.Type.SYSTEM_INFORMATION
-                    DashboardItem.Type.Cpu -> DashboardEntry.Type.CPU
-                    DashboardItem.Type.Memory -> DashboardEntry.Type.MEMORY
-                    DashboardItem.Type.Network -> DashboardEntry.Type.NETWORK
+                    DashboardItem.Type.SystemInformation -> DashboardEntry.Type.SystemInformation
+                    DashboardItem.Type.Cpu -> DashboardEntry.Type.Cpu
+                    DashboardItem.Type.Memory -> DashboardEntry.Type.Memory
+                    DashboardItem.Type.Network -> DashboardEntry.Type.Network
                 },
                 serverId = hostId,
                 isVisible = true,
