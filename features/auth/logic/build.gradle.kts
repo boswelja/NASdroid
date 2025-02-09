@@ -39,6 +39,7 @@ dependencies {
     implementation(projects.core.api)
     implementation(projects.features.auth.data)
 
+    implementation(libs.eyegraber.uriKmp)
     implementation(libs.koin.android)
 
     testImplementation(libs.kotlin.test)

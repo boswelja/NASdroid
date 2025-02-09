@@ -74,7 +74,7 @@ fun RegisterServerScreen(
     }
 
     BackNavigationScaffold(
-        title = { Text("Add Server") },
+        title = { Text(stringResource(R.string.add_server_title)) },
         onNavigateBack = onNavigateBack,
         modifier = modifier
     ) { contentPadding ->
@@ -224,7 +224,8 @@ fun RegisterServerVerticalContent(
             onClick = onRegisterClick,
             modifier = Modifier
                 .widthIn(480.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(bottom = MaterialThemeExt.paddings.xLarge),
             enabled = registerEnabled,
         ) {
             Text(stringResource(R.string.connect_server))

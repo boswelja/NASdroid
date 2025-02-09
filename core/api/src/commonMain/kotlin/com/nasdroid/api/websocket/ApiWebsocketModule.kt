@@ -2,6 +2,8 @@ package com.nasdroid.api.websocket
 
 import com.nasdroid.api.websocket.alert.AlertApi
 import com.nasdroid.api.websocket.alert.DdpAlertApi
+import com.nasdroid.api.websocket.apiKey.ApiKeyApi
+import com.nasdroid.api.websocket.apiKey.DdpApiKeyApi
 import com.nasdroid.api.websocket.auth.AuthApi
 import com.nasdroid.api.websocket.auth.DdpAuthApi
 import com.nasdroid.api.websocket.core.CoreApi
@@ -20,6 +22,7 @@ val ApiWebsocketModule = module {
 
     singleOf(::DdpAlertApi) bind AlertApi::class
     singleOf(::DdpAuthApi) bind AuthApi::class
+    singleOf(::DdpApiKeyApi) bind ApiKeyApi::class
     singleOf(::DdpCoreApi) bind CoreApi::class
     singleOf(::DdpReportingApi) bind ReportingApi::class
     singleOf(::DdpSystemApi) bind SystemApi::class

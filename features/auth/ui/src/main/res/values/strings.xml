@@ -9,6 +9,7 @@
     <string name="invalid_server_address">Unable to reach the server</string>
 
     <string name="add_server_button">Add Server</string>
+    <string name="add_server_title">Add Server</string>
 
     <string name="server_label">Server address</string>
     <string name="username_label">Username</string>
@@ -17,12 +18,11 @@
     <string name="log_in">Log In</string>
     <string name="connect_server">Connect</string>
 
-    <string name="no_like_api_key">Your credentials will be stored securely in-app. Don\'t want to use an API key?</string>
-    <string name="switch_basic_auth">Use a username and password</string>
-    
-    <string name="basic_auth_warning">Your credentials will be stored securely in-app. We recommend using an API key for added control.</string>
-    <string name="switch_api_key">Use an API key</string>
-
+    <string name="api_key_toggle">@string/api_key_label</string>
+    <string name="password_toggle">@string/password_label</string>
+    <string name="create_api_key_title">Create API Key</string>
+    <string name="create_api_key_yes_desc">NASdroid will use your credentials to create an API key, storing it instead of your username and password</string>
+    <string name="create_api_key_no_desc">NASdroid will store your username and password for authentication. Use an API key for enhanced security</string>
     <string name="error_invalid_credentials_title">Invalid Credentials</string>
     <string name="error_invalid_credentials_text">The credentials we have stored were rejected by the server</string>
     <string name="error_unknown_title">Unknown Error</string>

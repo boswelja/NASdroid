@@ -1,5 +1,6 @@
 package com.nasdroid.api.websocket.apiKey
 
+import com.nasdroid.api.websocket.ddp.EDateInstantSerializer
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -48,6 +49,7 @@ data class ApiKey(
     @SerialName("name")
     val name: String,
     @SerialName("created_at")
+    @Serializable(EDateInstantSerializer::class)
     val createdAt: Instant,
     @SerialName("allowlist")
     val allowList: List<AllowedMethod>,
