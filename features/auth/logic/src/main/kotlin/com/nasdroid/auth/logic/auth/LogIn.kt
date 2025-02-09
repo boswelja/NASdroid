@@ -1,7 +1,5 @@
 package com.nasdroid.auth.logic.auth
 
-import com.nasdroid.api.v2.ApiStateProvider
-import com.nasdroid.api.v2.Authorization
 import com.nasdroid.api.v2.exception.ClientRequestException
 import com.nasdroid.api.v2.exception.ServerResponseException
 import com.nasdroid.api.websocket.auth.AuthApi
@@ -17,7 +15,6 @@ import java.net.UnknownHostException
  * Attempts to authenticate with a server. See [invoke] for details.
  */
 class LogIn(
-    private val apiStateProvider: ApiStateProvider,
     private val authenticatedServersStore: AuthenticatedServersStore,
     private val currentServerSource: CurrentServerSource,
     private val client: DdpWebsocketClient,
@@ -38,12 +35,6 @@ class LogIn(
                 is Authentication.Basic -> authApi.logIn(authentication.username, authentication.password)
             }
             if (success) {
-                apiStateProvider.serverAddress = server.url
-                apiStateProvider.authorization = when (authentication) {
-                    is Authentication.ApiKey -> Authorization.ApiKey(authentication.key)
-                    is Authentication.Basic -> Authorization.Basic(authentication.username, authentication.password)
-                }
-
                 currentServerSource.setCurrentServer(
                     com.nasdroid.auth.data.Server(
                         uid = server.id,
@@ -54,26 +45,15 @@ class LogIn(
                 StrongResult.success(Unit)
             } else {
                 client.disconnect()
-                apiStateProvider.serverAddress = null
-                apiStateProvider.authorization = null
-
                 StrongResult.failure(LoginError.InvalidCredentials)
             }
         } catch (_: ClientRequestException) {
-            apiStateProvider.serverAddress = null
-            apiStateProvider.authorization = null
             StrongResult.failure(LoginError.InvalidCredentials)
         } catch (_: ServerResponseException) {
-            apiStateProvider.serverAddress = null
-            apiStateProvider.authorization = null
             StrongResult.failure(LoginError.Unknown)
         } catch (_: UnknownHostException) {
-            apiStateProvider.serverAddress = null
-            apiStateProvider.authorization = null
             StrongResult.failure(LoginError.ServerUnreachable)
         } catch (_: IllegalStateException) {
-            apiStateProvider.serverAddress = null
-            apiStateProvider.authorization = null
             StrongResult.failure(LoginError.ServerUnreachable)
         } finally {
             client.disconnect()
