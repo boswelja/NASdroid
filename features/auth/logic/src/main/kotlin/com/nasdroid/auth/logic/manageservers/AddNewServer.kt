@@ -1,12 +1,14 @@
 package com.nasdroid.auth.logic.manageservers
 
-import com.nasdroid.api.v2.ApiStateProvider
-import com.nasdroid.api.v2.Authorization
 import com.nasdroid.api.v2.exception.ClientUnauthorizedException
-import com.nasdroid.api.v2.system.SystemV2Api
+import com.nasdroid.api.websocket.auth.AuthApi
+import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.websocket.system.SystemApi
 import com.nasdroid.auth.data.Server
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 import com.nasdroid.auth.data.serverstore.Authentication
+import com.nasdroid.auth.logic.auth.CreateApiKey
+import com.nasdroid.auth.logic.auth.CreateApiKeyError
 import com.nasdroid.auth.logic.auth.DeriveUriError
 import com.nasdroid.auth.logic.auth.DeriveUriFromInput
 import com.nasdroid.core.strongresult.StrongResult
@@ -17,10 +19,12 @@ import java.net.UnknownHostException
  * Creates a token for and stores a new server. See [invoke] for details.
  */
 class AddNewServer(
+    private val createApiKey: CreateApiKey,
     private val deriveUriFromInput: DeriveUriFromInput,
-    private val systemV2Api: SystemV2Api,
     private val authenticatedServersStore: AuthenticatedServersStore,
-    private val apiStateProvider: ApiStateProvider,
+    private val client: DdpWebsocketClient,
+    private val authApi: AuthApi,
+    private val systemApi: SystemApi,
 ) {
 
     /**
@@ -30,7 +34,8 @@ class AddNewServer(
         serverName: String,
         serverAddress: String,
         username: String,
-        password: String
+        password: String,
+        createApiKey: Boolean,
     ): StrongResult<Unit, AddServerError> {
         val targetAddress = deriveUriFromInput(serverAddress).fold(
             onSuccess = { it },
@@ -39,16 +44,39 @@ class AddNewServer(
             }
         )
         return try {
-            apiStateProvider.serverAddress = targetAddress
-            apiStateProvider.authorization = Authorization.Basic(username, password)
+            // Attempt a connection
+            client.connect(targetAddress)
+
+            // Try to create an API key, if requested
+            val authorization = if (createApiKey) {
+                this.createApiKey("NASdroid", username, password).fold(
+                    onSuccess = {
+                        Authentication.ApiKey(it)
+                    },
+                    onFailure = {
+                        val error = when (it) {
+                            CreateApiKeyError.InvalidCredentials -> AddServerError.InvalidCredentials
+                        }
+                        return StrongResult.failure(error)
+                    }
+                )
+            } else {
+                // If we're not making an API key, we need to manually check credentials.
+                val success = authApi.logIn(username, password)
+                if (!success) {
+                    return StrongResult.failure(AddServerError.InvalidCredentials)
+                }
+                Authentication.Basic(username, password)
+            }
             storeNewServer(
                 serverName = serverName,
                 serverAddress = targetAddress,
-                authentication = Authentication.Basic(username, password)
+                authentication = authorization
             )
+        } catch (_: IllegalStateException) {
+            StrongResult.failure(AddServerError.ServerNotFound)
         } finally {
-            apiStateProvider.serverAddress = null
-            apiStateProvider.authorization = null
+            client.disconnect()
         }
     }
 
@@ -67,16 +95,21 @@ class AddNewServer(
             }
         )
         return try {
-            apiStateProvider.serverAddress = targetAddress
-            apiStateProvider.authorization = Authorization.ApiKey(token)
-            storeNewServer(
-                serverName = serverName,
-                serverAddress = targetAddress,
-                authentication = Authentication.ApiKey(token)
-            )
+            client.connect(targetAddress)
+            val success = authApi.logInWithApiKey(token)
+            if (success) {
+                storeNewServer(
+                    serverName = serverName,
+                    serverAddress = targetAddress,
+                    authentication = Authentication.ApiKey(token)
+                )
+            } else {
+                StrongResult.failure(AddServerError.InvalidCredentials)
+            }
+        } catch (_: IllegalStateException) {
+            StrongResult.failure(AddServerError.ServerNotFound)
         } finally {
-            apiStateProvider.serverAddress = null
-            apiStateProvider.authorization = null
+            client.disconnect()
         }
     }
 
@@ -87,10 +120,10 @@ class AddNewServer(
     ): StrongResult<Unit, AddServerError> {
         return try {
             val actualName = serverName.ifBlank {
-                val systemInfo = systemV2Api.getSystemInfo()
+                val systemInfo = systemApi.info()
                 systemInfo.hostName
             }
-            val uid = systemV2Api.getHostId()
+            val uid = systemApi.hostId()
             authenticatedServersStore.add(
                 Server(uid = uid, serverAddress = serverAddress, name = actualName),
                 authentication

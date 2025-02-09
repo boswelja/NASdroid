@@ -53,7 +53,8 @@ class RegisterServerViewModel(
                 serverName = "",
                 serverAddress = serverAddress,
                 username = username,
-                password = password
+                password = password,
+                createApiKey = true
             )
             _registerState.value = result.fold(
                 onSuccess = {
@@ -64,6 +65,7 @@ class RegisterServerViewModel(
                         AddServerError.DuplicateEntry -> RegisterState.GenericError.DuplicateEntry
                         AddServerError.InvalidCredentials -> RegisterState.AuthError.InvalidCredentials
                         AddServerError.ServerNotFound -> RegisterState.AddressError.ServerNotFound
+                        is AddServerError.InvalidAddress -> TODO()
                     }
                 }
             )
@@ -99,6 +101,7 @@ class RegisterServerViewModel(
                         AddServerError.DuplicateEntry -> RegisterState.GenericError.DuplicateEntry
                         AddServerError.InvalidCredentials -> RegisterState.AuthError.InvalidCredentials
                         AddServerError.ServerNotFound -> RegisterState.AddressError.ServerNotFound
+                        is AddServerError.InvalidAddress -> TODO()
                     }
                 }
             )
