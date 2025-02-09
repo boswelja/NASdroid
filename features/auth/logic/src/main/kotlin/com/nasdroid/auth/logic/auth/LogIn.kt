@@ -30,11 +30,11 @@ class LogIn(
         return try {
             // Connect websocket
             client.connect(server.url)
-            val success = when (authentication) {
+            val isSuccess = when (authentication) {
                 is Authentication.ApiKey -> authApi.logInWithApiKey(authentication.key)
                 is Authentication.Basic -> authApi.logIn(authentication.username, authentication.password)
             }
-            if (success) {
+            if (isSuccess) {
                 currentServerSource.setCurrentServer(
                     com.nasdroid.auth.data.Server(
                         uid = server.id,

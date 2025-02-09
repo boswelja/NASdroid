@@ -75,8 +75,6 @@ class AddNewServer(
             )
         } catch (_: UnknownHostException) {
             StrongResult.failure(AddServerError.ServerNotFound)
-        } catch (e: IllegalStateException) {
-            throw e // We don't expect this case ever at this point
         } finally {
             client.disconnect()
         }
