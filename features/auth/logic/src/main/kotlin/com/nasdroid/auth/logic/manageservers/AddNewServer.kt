@@ -1,22 +1,30 @@
 package com.nasdroid.auth.logic.manageservers
 
-import com.nasdroid.api.ApiStateProvider
-import com.nasdroid.api.Authorization
-import com.nasdroid.api.exception.ClientUnauthorizedException
-import com.nasdroid.api.v2.system.SystemV2Api
+import com.nasdroid.api.v2.exception.ClientUnauthorizedException
+import com.nasdroid.api.websocket.auth.AuthApi
+import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.websocket.system.SystemApi
 import com.nasdroid.auth.data.Server
 import com.nasdroid.auth.data.serverstore.AuthenticatedServersStore
 import com.nasdroid.auth.data.serverstore.Authentication
+import com.nasdroid.auth.logic.auth.CreateApiKey
+import com.nasdroid.auth.logic.auth.CreateApiKeyError
+import com.nasdroid.auth.logic.auth.DeriveUriError
+import com.nasdroid.auth.logic.auth.DeriveUriFromInput
 import com.nasdroid.core.strongresult.StrongResult
+import com.nasdroid.core.strongresult.fold
 import java.net.UnknownHostException
 
 /**
  * Creates a token for and stores a new server. See [invoke] for details.
  */
 class AddNewServer(
-    private val systemV2Api: SystemV2Api,
+    private val createApiKey: CreateApiKey,
+    private val deriveUriFromInput: DeriveUriFromInput,
     private val authenticatedServersStore: AuthenticatedServersStore,
-    private val apiStateProvider: ApiStateProvider,
+    private val client: DdpWebsocketClient,
+    private val authApi: AuthApi,
+    private val systemApi: SystemApi,
 ) {
 
     /**
@@ -26,19 +34,49 @@ class AddNewServer(
         serverName: String,
         serverAddress: String,
         username: String,
-        password: String
+        password: String,
+        createApiKey: Boolean,
     ): StrongResult<Unit, AddServerError> {
+        val targetAddress = deriveUriFromInput(serverAddress).fold(
+            onSuccess = { it },
+            onFailure = {
+                return StrongResult.failure(AddServerError.InvalidAddress(it))
+            }
+        )
         return try {
-            apiStateProvider.serverAddress = serverAddress
-            apiStateProvider.authorization = Authorization.Basic(username, password)
+            // Attempt a connection
+            client.connect(targetAddress)
+
+            // Try to create an API key, if requested
+            val authorization = if (createApiKey) {
+                this.createApiKey("NASdroid", username, password).fold(
+                    onSuccess = {
+                        Authentication.ApiKey(it)
+                    },
+                    onFailure = { createApiKeyError ->
+                        val error = when (createApiKeyError) {
+                            CreateApiKeyError.InvalidCredentials -> AddServerError.InvalidCredentials
+                            CreateApiKeyError.KeyAlreadyExists -> AddServerError.FailedToCreateApiKey
+                        }
+                        return StrongResult.failure(error)
+                    }
+                )
+            } else {
+                // If we're not making an API key, we need to manually check credentials.
+                if (!authApi.logIn(username, password)) {
+                    return StrongResult.failure(AddServerError.InvalidCredentials)
+                }
+                Authentication.Basic(username, password)
+            }
             storeNewServer(
                 serverName = serverName,
-                serverAddress = serverAddress,
-                authentication = Authentication.Basic(username, password)
+                serverAddress = targetAddress,
+                authentication = authorization
             )
+        } catch (_: UnknownHostException) {
+            StrongResult.failure(AddServerError.ServerNotFound)
         } finally {
-            apiStateProvider.serverAddress = null
-            apiStateProvider.authorization = null
+            client.disconnect()
         }
     }
 
@@ -50,17 +88,27 @@ class AddNewServer(
         serverAddress: String,
         token: String
     ): StrongResult<Unit, AddServerError> {
+        val targetAddress = deriveUriFromInput(serverAddress).fold(
+            onSuccess = { it },
+            onFailure = {
+                return StrongResult.failure(AddServerError.InvalidAddress(it))
+            }
+        )
         return try {
-            apiStateProvider.serverAddress = serverAddress
-            apiStateProvider.authorization = Authorization.ApiKey(token)
-            storeNewServer(
-                serverName = serverName,
-                serverAddress = serverAddress,
-                authentication = Authentication.ApiKey(token)
-            )
+            client.connect(targetAddress)
+            if (authApi.logInWithApiKey(token)) {
+                storeNewServer(
+                    serverName = serverName,
+                    serverAddress = targetAddress,
+                    authentication = Authentication.ApiKey(token)
+                )
+            } else {
+                StrongResult.failure(AddServerError.InvalidCredentials)
+            }
+        } catch (_: IllegalStateException) {
+            StrongResult.failure(AddServerError.ServerNotFound)
         } finally {
-            apiStateProvider.serverAddress = null
-            apiStateProvider.authorization = null
+            client.disconnect()
         }
     }
 
@@ -71,10 +119,10 @@ class AddNewServer(
     ): StrongResult<Unit, AddServerError> {
         return try {
             val actualName = serverName.ifBlank {
-                val systemInfo = systemV2Api.getSystemInfo()
+                val systemInfo = systemApi.info()
                 systemInfo.hostName
             }
-            val uid = systemV2Api.getHostId()
+            val uid = systemApi.hostId()
             authenticatedServersStore.add(
                 Server(uid = uid, serverAddress = serverAddress, name = actualName),
                 authentication
@@ -109,4 +157,15 @@ sealed interface AddServerError {
      * Indicates that there is already a server that is registered with the same data.
      */
     data object DuplicateEntry : AddServerError
+
+    /**
+     * Indicates that the API key creation failed, likely because a key for NASdroid already exists.
+     */
+    data object FailedToCreateApiKey : AddServerError
+
+    /**
+     * Indicates that the server address provided by the user was not valid. See [cause] for the
+     * specific reason.
+     */
+    data class InvalidAddress(val cause: DeriveUriError) : AddServerError
 }

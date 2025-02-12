@@ -1,6 +1,6 @@
 package com.nasdroid.apps.logic.discover
 
-import com.nasdroid.api.exception.ClientRequestException
+import com.nasdroid.api.v2.exception.ClientRequestException
 import com.nasdroid.api.v2.catalog.CatalogV2Api
 import com.nasdroid.core.strongresult.StrongResult
 import kotlinx.datetime.Instant

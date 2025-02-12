@@ -1,7 +1,7 @@
 package com.nasdroid.api.v2.system
 
-import com.nasdroid.api.TimestampUnwrapper
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.TimestampUnwrapper
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

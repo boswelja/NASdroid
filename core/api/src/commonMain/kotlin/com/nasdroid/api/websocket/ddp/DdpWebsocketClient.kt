@@ -46,6 +46,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -80,21 +81,29 @@ class DdpWebsocketClient {
      * returns. However, if the connection fails, an [IllegalStateException] is thrown and the state
      * is reset.
      *
-     * @throws IllegalStateException when connecting to the server fails.
+     * @throws IllegalStateException when the server rejects the connection.
+     * @throws java.net.UnknownHostException when the server at [url] was not reachable.
      */
     suspend fun connect(url: String, session: String? = null) {
         bootstrapLock.withLock {
             check(state.value is State.Disconnected) { "Cannot connect when already connected or connecting." }
             _state.value = State.Connecting
-            val webSocket = WebsocketKtorClient.webSocketSession(urlString = url)
-            webSocket.sendSerialized(ConnectMessage(version = "1", support = listOf("1"), session))
-            when (val connectResponse = webSocket.receiveDeserialized<ConnectServerMessage>()) {
-                is ConnectedMessage -> {
-                    _state.value = State.Connected(webSocket, connectResponse.session)
+            try {
+                val webSocket = WebsocketKtorClient.webSocketSession(urlString = url)
+                webSocket.sendSerialized(ConnectMessage(version = "1", support = listOf("1"), session))
+                when (val connectResponse = webSocket.receiveDeserialized<ConnectServerMessage>()) {
+                    is ConnectedMessage -> {
+                        _state.value = State.Connected(webSocket, connectResponse.session)
+                    }
+                    is FailedMessage -> {
+                        _state.value = State.Disconnected
+                        error("Failed to connect to DDP server: $connectResponse")
+                    }
                 }
-                is FailedMessage -> {
+            } finally {
+                // Ensure state is never connecting when we finish
+                if (_state.value is State.Connecting) {
                     _state.value = State.Disconnected
-                    error("Failed to connect to DDP server: $connectResponse")
                 }
             }
         }
@@ -135,6 +144,9 @@ class DdpWebsocketClient {
      * @throws IllegalStateException if the client wasn't connected with [connect] before making the
      * call.
      * @throws MethodCallError if the server returned an error in response to the method call.
+     * @throws SerializeError if the client failed to construct the method call. In this
+     * situation, nothing was sent to the server.
+     * @throws DeserializeError if the client failed to deserialize the method result.
      */
     @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
     suspend fun <T, P> callMethod(
@@ -148,19 +160,27 @@ class DdpWebsocketClient {
 
         val id = Uuid.random().toString()
         val message = MethodMessage(id, method, params)
-        val serializedString = Json.encodeToString(MethodMessage.serializer(paramSerializer), message)
+        val serializedString = try {
+            Json.encodeToString(MethodMessage.serializer(paramSerializer), message)
+        } catch (e: SerializationException) {
+            throw SerializeError(e)
+        }
         currentState.webSocketSession.send(Frame.Text(serializedString))
         val resultFrame = currentState.webSocketSession.incoming.receive()
-        val result = Json.decodeFromStream(ResultMessage.serializer(serializer), resultFrame.data.inputStream())
+        val result = try {
+            Json.decodeFromStream(ResultMessage.serializer(serializer), resultFrame.data.inputStream())
+        } catch (e: SerializationException) {
+            throw DeserializeError(e, resultFrame.data.decodeToString())
+        }
         return if (result.result != null) {
             result.result
         } else {
             checkNotNull(result.error) { "The result of the method call was neither success or error!" }
             throw MethodCallError(
-                error = result.error.error,
-                errorType = result.error.errorType,
+                error = result.error.error.toString(),
+                errorType = result.error.errorType.orEmpty(),
                 reason = result.error.reason,
-                message = result.error.message
+                message = result.error.trace.toString()
             )
         }
     }

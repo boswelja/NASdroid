@@ -1,6 +1,6 @@
 package com.nasdroid.dashboard.logic.dataloading.cpu
 
-import com.nasdroid.api.exception.HttpNotOkException
+import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.system.SystemV2Api
 
 /**

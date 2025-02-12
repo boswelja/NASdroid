@@ -4,6 +4,8 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 
 /*
  * This file contains concrete definitions for
@@ -37,11 +39,27 @@ internal data class ErrorMessage(
 @Serializable
 internal data class Error(
     @SerialName("error")
-    val error: String,
-    @SerialName("errorType")
-    val errorType: String,
+    val error: Int,
+    @SerialName("errname")
+    val errorName: String,
+    @SerialName("type")
+    val errorType: String?,
     @SerialName("reason")
     val reason: String? = null,
-    @SerialName("message")
-    val message: String? = null,
-)
+    @SerialName("trace")
+    val trace: Trace? = null,
+    @SerialName("extra")
+    val extra: List<JsonElement>? = null
+) {
+    @Serializable
+    internal class Trace(
+        @SerialName("class")
+        val errorClass: String,
+        @SerialName("frames")
+        val frames: List<JsonObject>? = null,
+        @SerialName("formatted")
+        val formatted: String? = null,
+        @SerialName("repr")
+        val repr: String? = null
+    )
+}
