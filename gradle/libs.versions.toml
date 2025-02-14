@@ -34,7 +34,7 @@ room = "2.6.1"
 ktor = "3.0.3"
 
 kotlinx-coroutines = "1.10.1"
-kotlinx-datetime = "0.6.1"
+kotlinx-datetime = "0.6.2"
 kotlinx-serialization-formats = "1.8.0"
 
 koin = "4.1.0-Beta5"
