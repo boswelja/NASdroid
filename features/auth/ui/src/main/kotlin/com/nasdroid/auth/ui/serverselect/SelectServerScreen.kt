@@ -60,7 +60,7 @@ fun SelectServerScreen(
         }
     }
 
-    Scaffold {
+    Scaffold { padding ->
         SelectServerContent(
             isLoading = loginState == LoginState.Loading || loginState == LoginState.LoginSuccess,
             servers = authenticatedServers,
@@ -68,7 +68,7 @@ fun SelectServerScreen(
             onAddServerClick = onAddServer,
             windowSizeClass = windowSizeClass,
             modifier = modifier,
-            contentPadding = it,
+            contentPadding = padding,
         )
     }
 
@@ -271,27 +271,29 @@ fun SelectServerScreenPreview() {
             dynamicLightColorScheme(context)
         }
     ) {
-        SelectServerContent(
-            isLoading = false,
-            servers = listOf(
-                Server(
-                    name = "Server 1",
-                    url = "http://my.server",
-                    id = "0"
+        Scaffold { padding ->
+            SelectServerContent(
+                isLoading = false,
+                servers = listOf(
+                    Server(
+                        name = "Server 1",
+                        url = "http://my.server",
+                        id = "0"
+                    ),
+                    Server(
+                        name = "Server 2",
+                        url = "http://my.other.server",
+                        id = "1"
+                    )
                 ),
-                Server(
-                    name = "Server 2",
-                    url = "http://my.other.server",
-                    id = "1"
-                )
-            ),
-            onServerClick = { },
-            onAddServerClick = { },
-            windowSizeClass = windowSizeClass,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialThemeExt.colorScheme.background),
-            contentPadding = PaddingValues(16.dp)
-        )
+                onServerClick = { },
+                onAddServerClick = { },
+                windowSizeClass = windowSizeClass,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialThemeExt.colorScheme.background),
+                contentPadding = padding
+            )
+        }
     }
 }

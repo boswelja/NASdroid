@@ -84,7 +84,7 @@ fun ServerAddressField(
 }
 
 internal val DEFAULT_SUGGESTIONS = listOf(
-    "http://truenas.local/"
+    "truenas.local"
 )
 
 @Composable

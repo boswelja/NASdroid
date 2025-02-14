@@ -1,6 +1,8 @@
 package com.nasdroid.auth.logic
 
 import com.nasdroid.auth.data.AuthDataModule
+import com.nasdroid.auth.logic.auth.CreateApiKey
+import com.nasdroid.auth.logic.auth.DeriveUriFromInput
 import com.nasdroid.auth.logic.auth.GetCurrentServer
 import com.nasdroid.auth.logic.auth.LogIn
 import com.nasdroid.auth.logic.auth.LogOut
@@ -15,6 +17,8 @@ import org.koin.dsl.module
 val AuthLogicModule = module {
     includes(AuthDataModule)
 
+    factoryOf(::CreateApiKey)
+    factoryOf(::DeriveUriFromInput)
     factoryOf(::GetCurrentServer)
     factoryOf(::LogIn)
     factoryOf(::LogOut)

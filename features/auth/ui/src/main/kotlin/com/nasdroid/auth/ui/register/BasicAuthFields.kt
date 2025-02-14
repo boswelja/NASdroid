@@ -1,9 +1,9 @@
 package com.nasdroid.auth.ui.register
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -27,8 +29,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
 import com.nasdroid.auth.ui.R
+import com.nasdroid.design.MaterialThemeExt
 
 /**
  * A set of text fields that allows the user to input a username and password for authentication.
@@ -39,12 +41,17 @@ fun BasicAuthFields(
     onUsernameChange: (String) -> Unit,
     password: String,
     onPasswordChange: (String) -> Unit,
+    createApiKey: Boolean,
+    onCreateApiKeyChange: (Boolean) -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     error: Boolean = false,
 ) {
-    Column(modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium)
+    ) {
         UsernameTextField(
             username = username,
             onUsernameChange = onUsernameChange,
@@ -52,13 +59,17 @@ fun BasicAuthFields(
             error = error,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(8.dp))
         PasswordTextField(
             password = password,
             onPasswordChange = onPasswordChange,
             onDone = onDone,
             enabled = enabled,
             error = error,
+            modifier = Modifier.fillMaxWidth()
+        )
+        CreateApiKeyToggle(
+            checked = createApiKey,
+            onCheckedChange = onCreateApiKeyChange,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -140,5 +151,32 @@ internal fun PasswordTextField(
             Text(stringResource(R.string.invalid_basic_auth))
         }} else { null },
         modifier = modifier
+    )
+}
+
+@Composable
+internal fun CreateApiKeyToggle(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ListItem(
+        headlineContent = { Text(stringResource(R.string.create_api_key_title)) },
+        supportingContent = {
+            if (checked) {
+                Text(stringResource(R.string.create_api_key_yes_desc))
+            } else {
+                Text(stringResource(R.string.create_api_key_no_desc))
+            }
+        },
+        trailingContent = {
+            Switch(
+                checked = checked,
+                onCheckedChange = null
+            )
+        },
+        modifier = Modifier
+            .clickable { onCheckedChange(!checked) }
+            .then(modifier)
     )
 }
