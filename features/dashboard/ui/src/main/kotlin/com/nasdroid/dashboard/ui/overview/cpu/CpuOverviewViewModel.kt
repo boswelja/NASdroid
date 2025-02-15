@@ -2,6 +2,8 @@ package com.nasdroid.dashboard.ui.overview.cpu
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nasdroid.core.strongresult.StrongResult
+import com.nasdroid.dashboard.logic.dataloading.GetRealtimeStatsError
 import com.nasdroid.dashboard.logic.dataloading.cpu.CpuSpecs
 import com.nasdroid.dashboard.logic.dataloading.cpu.CpuUsageData
 import com.nasdroid.dashboard.logic.dataloading.cpu.GetCpuSpecs
@@ -44,23 +46,10 @@ class CpuOverviewViewModel(
      * Flows the utilisation data for the CPU installed in the system. A null value indicates data
      * is still loading.
      */
-    val cpuUsageData: StateFlow<Result<CpuUsageData>?> = repeatingFlow(15.seconds) {
-        emit(getCpuUsageData())
-    }
+    val cpuUsageData: StateFlow<StrongResult<CpuUsageData, GetRealtimeStatsError>?> = getCpuUsageData()
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
             null
         )
-
-    private fun <T> repeatingFlow(interval: Duration, block: suspend FlowCollector<T>.() -> Unit): Flow<T> {
-        return flow {
-            while (coroutineContext.isActive) {
-                val executionTime = measureTime {
-                    block()
-                }
-                delay((interval - executionTime).coerceAtLeast(Duration.ZERO))
-            }
-        }
-    }
 }

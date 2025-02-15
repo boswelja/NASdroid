@@ -49,7 +49,7 @@ fun CpuOverview(
     val utilisation by viewModel.cpuUsageData.collectAsState()
 
     val error by remember(specs, utilisation) {
-        derivedStateOf { specs?.exceptionOrNull() ?: utilisation?.exceptionOrNull() }
+        derivedStateOf { specs?.exceptionOrNull() }
     }
 
     Box(

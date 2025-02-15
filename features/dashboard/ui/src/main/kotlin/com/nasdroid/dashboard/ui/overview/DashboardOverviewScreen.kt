@@ -152,34 +152,34 @@ fun OverviewCard(
             }
         }
         DashboardItem.Type.Memory -> {
-            DashboardCard(
-                title = { Text(stringResource(R.string.memory_card_title)) },
-                onClick = onClick,
-                onLongClick = onLongClick,
-                cardEditControls = cardEditControls,
-            ) {
-                MemoryOverview(modifier = modifier)
-            }
+//            DashboardCard(
+//                title = { Text(stringResource(R.string.memory_card_title)) },
+//                onClick = onClick,
+//                onLongClick = onLongClick,
+//                cardEditControls = cardEditControls,
+//            ) {
+//                MemoryOverview(modifier = modifier)
+//            }
         }
         DashboardItem.Type.Network -> {
-            DashboardCard(
-                title = { Text(stringResource(R.string.network_card_title)) },
-                onClick = onClick,
-                onLongClick = onLongClick,
-                cardEditControls = cardEditControls,
-            ) {
-                NetworkOverview(modifier = modifier)
-            }
+//            DashboardCard(
+//                title = { Text(stringResource(R.string.network_card_title)) },
+//                onClick = onClick,
+//                onLongClick = onLongClick,
+//                cardEditControls = cardEditControls,
+//            ) {
+//                NetworkOverview(modifier = modifier)
+//            }
         }
         DashboardItem.Type.SystemInformation -> {
-            DashboardCard(
-                title = { Text(stringResource(R.string.system_info_card_title)) },
-                onClick = onClick,
-                onLongClick = onLongClick,
-                cardEditControls = cardEditControls,
-            ) {
-                SystemInformationOverview(modifier = modifier)
-            }
+//            DashboardCard(
+//                title = { Text(stringResource(R.string.system_info_card_title)) },
+//                onClick = onClick,
+//                onLongClick = onLongClick,
+//                cardEditControls = cardEditControls,
+//            ) {
+//                SystemInformationOverview(modifier = modifier)
+//            }
         }
     }
 }
