@@ -38,11 +38,13 @@ class RegisterServerViewModel(
      * @param serverAddress The address of the server to connect to.
      * @param username The username to authenticate with.
      * @param password The password to authenticate with.
+     * @param createApiKey Whether an API key should be created.
      */
     fun tryRegisterServer(
         serverAddress: String,
         username: String,
-        password: String
+        password: String,
+        createApiKey: Boolean,
     ) {
         require(registerState.value != RegisterState.Loading) {
             "Tried to register a new server while registerState was loading!"
@@ -54,7 +56,7 @@ class RegisterServerViewModel(
                 serverAddress = serverAddress,
                 username = username,
                 password = password,
-                createApiKey = true
+                createApiKey = createApiKey
             )
             _registerState.value = result.fold(
                 onSuccess = {

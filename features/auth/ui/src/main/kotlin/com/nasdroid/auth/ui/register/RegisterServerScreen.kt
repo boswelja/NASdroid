@@ -99,7 +99,8 @@ fun RegisterServerScreen(
                         is AuthData.Basic -> viewModel.tryRegisterServer(
                             serverAddress = serverAddress,
                             username = auth.username,
-                            password = auth.password
+                            password = auth.password,
+                            createApiKey = auth.isCreateApiKey
                         )
                     }
                 }
