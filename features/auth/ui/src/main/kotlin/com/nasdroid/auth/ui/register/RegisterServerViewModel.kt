@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.auth.logic.manageservers.AddNewServer
 import com.nasdroid.auth.logic.manageservers.AddServerError
+import com.nasdroid.core.strongresult.StrongResult
 import com.nasdroid.core.strongresult.fold
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -65,20 +66,7 @@ class RegisterServerViewModel(
                 password = password,
                 createApiKey = createApiKey
             )
-            result.fold(
-                onSuccess = {
-                    _registerState.value = RegisterState.Success
-                },
-                onFailure = {
-                    _registerProblem.value = when (it) {
-                        AddServerError.DuplicateEntry -> GenericError.DuplicateEntry
-                        AddServerError.InvalidCredentials -> AuthError.InvalidCredentials
-                        AddServerError.ServerNotFound -> AddressError.ServerNotFound
-                        is AddServerError.InvalidAddress -> AddressError.AddressInvalid
-                        AddServerError.FailedToCreateApiKey -> AuthError.FailedToCreateApiKey
-                    }
-                }
-            )
+            handleAddResult(result)
         }
     }
 
@@ -102,21 +90,25 @@ class RegisterServerViewModel(
                 serverAddress = serverAddress,
                 token = apiKey
             )
-            result.fold(
-                onSuccess = {
-                    _registerState.value = RegisterState.Success
-                },
-                onFailure = {
-                    _registerProblem.value = when (it) {
-                        AddServerError.DuplicateEntry -> GenericError.DuplicateEntry
-                        AddServerError.InvalidCredentials -> AuthError.InvalidCredentials
-                        AddServerError.ServerNotFound -> AddressError.ServerNotFound
-                        is AddServerError.InvalidAddress -> AddressError.AddressInvalid
-                        AddServerError.FailedToCreateApiKey -> AuthError.FailedToCreateApiKey
-                    }
-                }
-            )
+            handleAddResult(result)
         }
+    }
+
+    private fun handleAddResult(result: StrongResult<Unit, AddServerError>) {
+        result.fold(
+            onSuccess = {
+                _registerState.value = RegisterState.Success
+            },
+            onFailure = {
+                _registerProblem.value = when (it) {
+                    AddServerError.DuplicateEntry -> GenericError.DuplicateEntry
+                    AddServerError.InvalidCredentials -> AuthError.InvalidCredentials
+                    AddServerError.ServerNotFound -> AddressError.ServerNotFound
+                    is AddServerError.InvalidAddress -> AddressError.AddressInvalid
+                    AddServerError.FailedToCreateApiKey -> AuthError.FailedToCreateApiKey
+                }
+            }
+        )
     }
 }
 
@@ -138,6 +130,10 @@ sealed interface RegisterState {
     data object Success : RegisterState
 }
 
+/**
+ * Encapsulates all possible user-recoverable problems that might occur when trying to add a new
+ * server.
+ */
 sealed interface RegisterProblem
 
 /**
