@@ -42,7 +42,7 @@ fun ServerAddressField(
     address: String,
     onAddressChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    error: Boolean = false,
+    error: AddressError? = null,
     enabled: Boolean = true,
 ) {
     Column(
@@ -54,7 +54,13 @@ fun ServerAddressField(
                 serverAddress = address,
                 onServerAddressChange = onAddressChange,
                 modifier = Modifier.fillMaxWidth(),
-                error = error,
+                error = when (error) {
+                    AddressError.AddressInvalid ->
+                        stringResource(R.string.error_invalid_server_address)
+                    AddressError.ServerNotFound ->
+                        stringResource(R.string.error_server_unreachable_text)
+                    null -> null
+                },
                 enabled = enabled
             )
             AnimatedVisibility(
@@ -93,7 +99,7 @@ internal fun ServerAddressTextField(
     onServerAddressChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    error: Boolean = false
+    error: String? = null,
 ) {
     TextField(
         value = serverAddress,
@@ -107,13 +113,9 @@ internal fun ServerAddressTextField(
         ),
         singleLine = true,
         enabled = enabled,
-        isError = error,
-        supportingText = if (error) {
-            {
-                Text(stringResource(R.string.invalid_server_address))
-            }
-        } else {
-            null
+        isError = error != null,
+        supportingText = {
+            Text(error.orEmpty())
         },
         modifier = modifier
     )

@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +38,7 @@ fun AuthFields(
     onAuthDataChange: (AuthData) -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
-    error: Boolean = false,
+    error: AuthError? = null,
     enabled: Boolean = true,
 ) {
     Column(
@@ -45,22 +46,10 @@ fun AuthFields(
         verticalArrangement = Arrangement.spacedBy(MaterialThemeExt.paddings.medium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SingleChoiceSegmentedButtonRow {
-            SegmentedButton(
-                selected = authData is AuthData.ApiKey,
-                onClick = { onAuthDataChange(AuthData.ApiKey("")) },
-                shape = SegmentedButtonDefaults.itemShape(0, 2)
-            ) {
-                Text(stringResource(R.string.api_key_toggle), maxLines = 1)
-            }
-            SegmentedButton(
-                selected = authData is AuthData.Basic,
-                onClick = { onAuthDataChange(AuthData.Basic("", "", true)) },
-                shape = SegmentedButtonDefaults.itemShape(1, 2)
-            ) {
-                Text(stringResource(R.string.password_toggle), maxLines = 1)
-            }
-        }
+        AuthTypeSelector(
+            authData = authData,
+            onAuthDataChange = onAuthDataChange
+        )
         AnimatedContent(
             targetState = authData is AuthData.ApiKey,
             label = "Auth Mode",
@@ -71,11 +60,15 @@ fun AuthFields(
                 val apiKeyAuthData = authData as? AuthData.ApiKey ?: AuthData.ApiKey("")
                 ApiKeyField(
                     apiKey = apiKeyAuthData.key,
-                    onApiKeyChange ={ onAuthDataChange(apiKeyAuthData.copy(key = it)) },
+                    onApiKeyChange = { onAuthDataChange(apiKeyAuthData.copy(key = it)) },
                     onDone = onDone,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = enabled,
-                    error = error
+                    error = when (error) {
+                        AuthError.FailedToCreateApiKey -> stringResource(R.string.error_failed_create_key)
+                        AuthError.InvalidCredentials -> stringResource(R.string.error_invalid_key_auth)
+                        null -> null
+                    }
                 )
             } else {
                 val basicAuthData = authData as? AuthData.Basic ?: AuthData.Basic("", "", true)
@@ -89,9 +82,37 @@ fun AuthFields(
                     onDone = onDone,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = enabled,
-                    error = error
+                    error = when (error) {
+                        AuthError.FailedToCreateApiKey -> stringResource(R.string.error_failed_create_key)
+                        AuthError.InvalidCredentials -> stringResource(R.string.error_invalid_basic_auth)
+                        null -> null
+                    }
                 )
             }
+        }
+    }
+}
+
+@Composable
+internal fun AuthTypeSelector(
+    authData: AuthData,
+    onAuthDataChange: (AuthData) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SingleChoiceSegmentedButtonRow(modifier) {
+        SegmentedButton(
+            selected = authData is AuthData.ApiKey,
+            onClick = { onAuthDataChange(AuthData.ApiKey("")) },
+            shape = SegmentedButtonDefaults.itemShape(0, 2)
+        ) {
+            Text(stringResource(R.string.api_key_toggle), maxLines = 1)
+        }
+        SegmentedButton(
+            selected = authData is AuthData.Basic,
+            onClick = { onAuthDataChange(AuthData.Basic("", "", true)) },
+            shape = SegmentedButtonDefaults.itemShape(1, 2)
+        ) {
+            Text(stringResource(R.string.password_toggle), maxLines = 1)
         }
     }
 }
@@ -121,6 +142,42 @@ sealed interface AuthData {
         val password: String,
         val isCreateApiKey: Boolean
     ): AuthData
+
+    companion object {
+        /**
+         * A simple state saver for [AuthData]. This should be used in tandem with
+         * [rememberSaveable] to avoid state loss on instance restore.
+         */
+        val Saver = run {
+            val keyKey = "Key"
+            val usernameKey = "Username"
+            val passwordKey = "Password"
+            val createKeyKey = "CreateApiKey"
+            mapSaver<AuthData>(
+                save = { authData ->
+                    when (authData) {
+                        is ApiKey -> mapOf(keyKey to authData.key)
+                        is Basic -> mapOf(
+                            usernameKey to authData.username,
+                            passwordKey to authData.password,
+                            createKeyKey to authData.isCreateApiKey
+                        )
+                    }
+                },
+                restore = { map ->
+                    when {
+                        map.contains(keyKey) -> ApiKey(map.getValue(keyKey).toString())
+                        map.contains(usernameKey) -> Basic(
+                            username = map.getValue(usernameKey).toString(),
+                            password = map.getValue(passwordKey).toString(),
+                            isCreateApiKey = map.getValue(createKeyKey) == true
+                        )
+                        else -> null
+                    }
+                }
+            )
+        }
+    }
 }
 
 @PreviewLightDark
