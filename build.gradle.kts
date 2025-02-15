@@ -9,3 +9,18 @@ plugins {
 
     alias(libs.plugins.detekt) apply false
 }
+
+val detektReport by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+    output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif")) // or "reports/detekt/merge.sarif"
+}
+
+// TODO this is not good, it increases configuration time
+subprojects {
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+        finalizedBy(detektReport)
+    }
+
+    detektReport {
+        input.from(tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().map { it.sarifReportFile })
+    }
+}

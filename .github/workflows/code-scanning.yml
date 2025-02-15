@@ -9,7 +9,7 @@ on:
     - cron: '33 19 * * *'
 
 jobs:
-  static-analysis:
+  detekt:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,56 +27,38 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Run Detekt & Lint
+      - name: Run Detekt
         continue-on-error: true
-        run: ./gradlew detektDebug lint --continue
+        run: ./gradlew detektReport --continue
 
-      - name: Upload SARIF binary
-        uses: actions/upload-artifact@v4
+      - name: Submit Lint report
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          name: sarif-reports
-          path: '**/*.sarif'
+          sarif_file: 'build/reports/detekt/merge.sarif'
 
-  upload-results:
-    needs: static-analysis
+  lint:
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    strategy:
-      matrix:
-        path:
-          - core/api
-          - core/compose-logviewer
-          - core/compose-segmentedprogressindicator
-          - core/design
-          - core/navigation
-          - core/skeleton
-          - core/strong-result
-          - features/apps
-          - features/auth
-          - features/credentials
-          - features/dashboard
-          - features/dataprotection
-          - features/datasets
-          - features/network
-          - features/power
-          - features/reporting
-          - features/shares
-          - features/storage
-          - features/systemsettings
-          - features/virtualization
-          - app
-          - apitester
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download scan results
-        uses: actions/download-artifact@v4
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
         with:
-          name: sarif-reports
+          java-version: 21
+          distribution: temurin
 
-      - uses: github/codeql-action/upload-sarif@v3
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Lint
+        continue-on-error: true
+        run: ./gradlew app:lint --continue
+
+      - name: Submit Lint report
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{ matrix.path }}/
-          category: ${{ matrix.path }}
+          sarif_file: 'app/build/reports/lint-results-debug.sarif'
