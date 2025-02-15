@@ -58,6 +58,7 @@ fun RegisterServerScreen(
     viewModel: RegisterServerViewModel = koinViewModel()
 ) {
     val registerState by viewModel.registerState.collectAsState()
+    val registerProblem by viewModel.registerProblem.collectAsState()
     var serverAddress by remember {
         mutableStateOf("")
     }
@@ -113,8 +114,7 @@ fun RegisterServerScreen(
                 .verticalScroll(rememberScrollState()),
             contentPadding = contentPadding,
             loading = isLoading,
-            serverAddressError = registerState is RegisterState.AddressError,
-            authDataError = registerState is RegisterState.AuthError
+            problem = registerProblem,
         )
     }
 }
@@ -132,8 +132,7 @@ fun RegisterServerContent(
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    serverAddressError: Boolean = false,
-    authDataError: Boolean = false,
+    problem: RegisterProblem? = null,
     loading: Boolean = false,
     registerEnabled: Boolean = true,
 ) {
@@ -148,8 +147,7 @@ fun RegisterServerContent(
                 onRegisterClick = onRegisterClick,
                 registerEnabled = registerEnabled,
                 modifier = modifier.padding(contentPadding),
-                serverAddressError = serverAddressError,
-                authDataError = authDataError,
+                problem = problem,
                 loading = loading
             )
         }
@@ -163,8 +161,7 @@ fun RegisterServerContent(
                 onRegisterClick = onRegisterClick,
                 registerEnabled = registerEnabled,
                 modifier = modifier.padding(contentPadding),
-                serverAddressError = serverAddressError,
-                authDataError = authDataError,
+                problem = problem,
                 loading = loading
             )
         }
@@ -177,8 +174,7 @@ fun RegisterServerContent(
                 onRegisterClick = onRegisterClick,
                 registerEnabled = registerEnabled,
                 modifier = modifier.padding(contentPadding),
-                serverAddressError = serverAddressError,
-                authDataError = authDataError,
+                problem = problem,
                 loading = loading
             )
         }
@@ -197,8 +193,7 @@ fun RegisterServerVerticalContent(
     onRegisterClick: () -> Unit,
     registerEnabled: Boolean,
     modifier: Modifier = Modifier,
-    serverAddressError: Boolean = false,
-    authDataError: Boolean = false,
+    problem: RegisterProblem? = null,
     loading: Boolean = false,
 ) {
     Column(
@@ -210,7 +205,7 @@ fun RegisterServerVerticalContent(
             address = serverAddress,
             onAddressChange = onServerAddressChange,
             modifier = Modifier.widthIn(max = 480.dp),
-            error = serverAddressError,
+            error = problem as? AddressError,
             enabled = !loading
         )
         AuthFields(
@@ -218,7 +213,7 @@ fun RegisterServerVerticalContent(
             onAuthDataChange = onAuthDataChange,
             onDone = { if (registerEnabled) onRegisterClick() },
             modifier = Modifier.widthIn(max = 480.dp),
-            error = authDataError,
+            error = problem as? AuthError,
             enabled = !loading
         )
         Button(
@@ -246,8 +241,7 @@ fun RegisterServerHorizontalContent(
     onRegisterClick: () -> Unit,
     registerEnabled: Boolean,
     modifier: Modifier = Modifier,
-    serverAddressError: Boolean = false,
-    authDataError: Boolean = false,
+    problem: RegisterProblem? = null,
     loading: Boolean = false,
 ) {
     Column(
@@ -263,7 +257,7 @@ fun RegisterServerHorizontalContent(
                 address = serverAddress,
                 onAddressChange = onServerAddressChange,
                 modifier = Modifier.weight(1f),
-                error = serverAddressError,
+                error = problem as? AddressError,
                 enabled = !loading
             )
             AuthFields(
@@ -271,7 +265,7 @@ fun RegisterServerHorizontalContent(
                 onAuthDataChange = onAuthDataChange,
                 onDone = { if (registerEnabled) onRegisterClick() },
                 modifier = Modifier.weight(1f),
-                error = authDataError,
+                error = problem as? AuthError,
                 enabled = !loading
             )
         }
@@ -300,8 +294,7 @@ fun RegisterServerCenteredContent(
     onRegisterClick: () -> Unit,
     registerEnabled: Boolean,
     modifier: Modifier = Modifier,
-    serverAddressError: Boolean = false,
-    authDataError: Boolean = false,
+    problem: RegisterProblem? = null,
     loading: Boolean = false,
 ) {
     Box(modifier, contentAlignment = Alignment.Center) {
@@ -315,14 +308,14 @@ fun RegisterServerCenteredContent(
                     address = serverAddress,
                     onAddressChange = onServerAddressChange,
                     modifier = Modifier.widthIn(max = 480.dp),
-                    error = serverAddressError,
+                    error = problem as? AddressError,
                     enabled = !loading
                 )
                 AuthFields(
                     authData = authData,
                     onAuthDataChange = onAuthDataChange,
                     modifier = Modifier.widthIn(max = 480.dp),
-                    error = authDataError,
+                    error = problem as? AuthError,
                     onDone = { if (registerEnabled) onRegisterClick() },
                     enabled = !loading
                 )

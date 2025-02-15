@@ -34,7 +34,7 @@ fun ApiKeyField(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    error: Boolean = false
+    error: String? = null
 ) {
     var isKeyHidden by rememberSaveable {
         mutableStateOf(true)
@@ -55,10 +55,10 @@ fun ApiKeyField(
         },
         singleLine = true,
         enabled = enabled,
-        isError = error,
-        supportingText = if (error) {{
-            Text(stringResource(R.string.invalid_key_auth))
-        }} else { null },
+        isError = error != null,
+        supportingText = {
+            Text(error.orEmpty())
+        },
         visualTransformation = if (isKeyHidden) {
             PasswordVisualTransformation()
         } else {
