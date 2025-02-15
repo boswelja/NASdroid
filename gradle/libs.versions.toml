@@ -21,7 +21,7 @@ compose-multiplatform-material3-adaptive = "1.0.1"
 compose-multiplatform-viewmodel = "2.8.2"
 accompanist = "0.37.0"
 menuprovider = "1.4.0"
-markdown = "1.1.0"
+markdown = "1.1.2"
 
 datatypes = "1.0.0"
 
@@ -31,10 +31,10 @@ coil = "2.7.0"
 
 room = "2.6.1"
 
-ktor = "3.0.3"
+ktor = "3.1.0"
 
 kotlinx-coroutines = "1.10.1"
-kotlinx-datetime = "0.6.1"
+kotlinx-datetime = "0.6.2"
 kotlinx-serialization-formats = "1.8.0"
 
 koin = "4.1.0-Beta5"

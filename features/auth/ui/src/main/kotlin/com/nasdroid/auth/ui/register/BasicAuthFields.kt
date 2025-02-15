@@ -46,7 +46,7 @@ fun BasicAuthFields(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    error: Boolean = false,
+    error: String? = null,
 ) {
     Column(
         modifier = modifier,
@@ -56,7 +56,7 @@ fun BasicAuthFields(
             username = username,
             onUsernameChange = onUsernameChange,
             enabled = enabled,
-            error = error,
+            error = error != null,
             modifier = Modifier.fillMaxWidth()
         )
         PasswordTextField(
@@ -110,7 +110,7 @@ internal fun PasswordTextField(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    error: Boolean = false,
+    error: String? = null,
 ) {
     var isPasswordHidden by rememberSaveable {
         mutableStateOf(true)
@@ -129,7 +129,7 @@ internal fun PasswordTextField(
         },
         singleLine = true,
         enabled = enabled,
-        isError = error,
+        isError = error != null,
         visualTransformation = if (isPasswordHidden) {
             PasswordVisualTransformation()
         } else {
@@ -147,9 +147,9 @@ internal fun PasswordTextField(
         leadingIcon = {
             Icon(Icons.Default.Password, null)
         },
-        supportingText = if (error) {{
-            Text(stringResource(R.string.invalid_basic_auth))
-        }} else { null },
+        supportingText = {
+            error?.let { Text(it) }
+        },
         modifier = modifier
     )
 }

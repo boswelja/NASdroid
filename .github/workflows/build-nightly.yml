@@ -13,8 +13,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Get new commits
+        run: echo "NEW_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_ENV
+
       - name: Setup Java JDK
         uses: actions/setup-java@v4
+        if: ${{ env.NEW_COMMIT_COUNT > 0 }}
         with:
           java-version: 21
           distribution: temurin
@@ -22,15 +26,18 @@ jobs:
       - name: Prepare signing keystore
         id: write-keystore
         uses: timheuer/base64-to-file@v1
+        if: ${{ env.NEW_COMMIT_COUNT > 0 }}
         with:
           encodedString: ${{ secrets.KEYSTORE_CONTENT }}
           filename: "keystore.jks"
 
       - name: Setup Gradle
+        if: ${{ env.NEW_COMMIT_COUNT > 0 }}
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build
         run: ./gradlew assembleRelease
+        if: ${{ env.NEW_COMMIT_COUNT > 0 }}
         env:
           ORG_GRADLE_PROJECT_storeFilePath: ${{ steps.write-keystore.outputs.filePath }}
           ORG_GRADLE_PROJECT_storePass: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -39,6 +46,7 @@ jobs:
 
       - name: Upload nightly
         uses: actions/upload-artifact@v4
+        if: ${{ env.NEW_COMMIT_COUNT > 0 }}
         with:
           name: nasdroid-nightly
           path: app/build/outputs/apk/release/app-release.apk
