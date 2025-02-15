@@ -36,6 +36,10 @@ detekt {
 
 dependencies {
     api(libs.datatypes.capacity)
+    api(libs.datatypes.bitrate)
+    api(libs.datatypes.temperature)
+    api(libs.datatypes.percentage)
+    api(projects.core.strongResult)
     api(libs.kotlinx.coroutines)
     api(libs.kotlinx.datetime)
 
