@@ -35,9 +35,9 @@ class RegisterServerViewModel(
      * Resets any possible pending state held by [registerState]. If an error state is currently
      * held, it will be reset to null.
      */
-    fun clearPendingState() {
+    fun clearPendingProblem() {
         require(registerState.value != RegisterState.Loading) { "Tried to reset registerState while it was loading!" }
-        _registerState.value = null
+        _registerProblem.value = null
     }
 
     /**

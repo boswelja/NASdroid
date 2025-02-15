@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.SaverScope
+import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -141,6 +143,38 @@ sealed interface AuthData {
         val password: String,
         val isCreateApiKey: Boolean
     ): AuthData
+
+    companion object {
+        val Saver = run {
+            val keyKey = "Key"
+            val usernameKey = "Username"
+            val passwordKey = "Password"
+            val createKeyKey = "CreateApiKey"
+            mapSaver<AuthData>(
+                save = {
+                    when (it) {
+                        is ApiKey -> mapOf(keyKey to it.key)
+                        is Basic -> mapOf(
+                            usernameKey to it.username,
+                            passwordKey to it.password,
+                            createKeyKey to it.isCreateApiKey
+                        )
+                    }
+                },
+                restore = {
+                    when {
+                        it.contains(keyKey) -> ApiKey(it.getValue(keyKey).toString())
+                        it.contains(usernameKey) -> Basic(
+                            username = it.getValue(usernameKey).toString(),
+                            password = it.getValue(passwordKey).toString(),
+                            isCreateApiKey = it.getValue(createKeyKey) == true
+                        )
+                        else -> null
+                    }
+                }
+            )
+        }
+    }
 }
 
 @PreviewLightDark
