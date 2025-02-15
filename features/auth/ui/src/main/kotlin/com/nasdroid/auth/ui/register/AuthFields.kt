@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -145,29 +144,33 @@ sealed interface AuthData {
     ): AuthData
 
     companion object {
+        /**
+         * A simple state saver for [AuthData]. This should be used in tandem with
+         * [rememberSaveable] to avoid state loss on instance restore.
+         */
         val Saver = run {
             val keyKey = "Key"
             val usernameKey = "Username"
             val passwordKey = "Password"
             val createKeyKey = "CreateApiKey"
             mapSaver<AuthData>(
-                save = {
-                    when (it) {
-                        is ApiKey -> mapOf(keyKey to it.key)
+                save = { authData ->
+                    when (authData) {
+                        is ApiKey -> mapOf(keyKey to authData.key)
                         is Basic -> mapOf(
-                            usernameKey to it.username,
-                            passwordKey to it.password,
-                            createKeyKey to it.isCreateApiKey
+                            usernameKey to authData.username,
+                            passwordKey to authData.password,
+                            createKeyKey to authData.isCreateApiKey
                         )
                     }
                 },
-                restore = {
+                restore = { map ->
                     when {
-                        it.contains(keyKey) -> ApiKey(it.getValue(keyKey).toString())
-                        it.contains(usernameKey) -> Basic(
-                            username = it.getValue(usernameKey).toString(),
-                            password = it.getValue(passwordKey).toString(),
-                            isCreateApiKey = it.getValue(createKeyKey) == true
+                        map.contains(keyKey) -> ApiKey(map.getValue(keyKey).toString())
+                        map.contains(usernameKey) -> Basic(
+                            username = map.getValue(usernameKey).toString(),
+                            password = map.getValue(passwordKey).toString(),
+                            isCreateApiKey = map.getValue(createKeyKey) == true
                         )
                         else -> null
                     }
