@@ -99,9 +99,9 @@ class RegisterServerViewModel(
             onSuccess = {
                 _registerState.value = RegisterState.Success
             },
-            onFailure = {
+            onFailure = { error ->
                 _registerState.value = null
-                _registerProblem.value = when (it) {
+                _registerProblem.value = when (error) {
                     AddServerError.DuplicateEntry -> GenericError.DuplicateEntry
                     AddServerError.InvalidCredentials -> AuthError.InvalidCredentials
                     AddServerError.ServerNotFound -> AddressError.ServerNotFound
