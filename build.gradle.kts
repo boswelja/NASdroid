@@ -16,8 +16,11 @@ val detektReport by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportM
 
 // TODO this is not good, it increases configuration time
 subprojects {
-    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-        finalizedBy(detektReport)
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().forEach {
+        detektReport {
+            dependsOn(it)
+            input.from(it.sarifReportFile)
+        }
     }
 
     detektReport {
