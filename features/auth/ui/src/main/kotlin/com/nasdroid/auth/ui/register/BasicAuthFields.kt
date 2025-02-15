@@ -148,7 +148,7 @@ internal fun PasswordTextField(
             Icon(Icons.Default.Password, null)
         },
         supportingText = {
-            Text(error.orEmpty())
+            error?.let { Text(it) }
         },
         modifier = modifier
     )

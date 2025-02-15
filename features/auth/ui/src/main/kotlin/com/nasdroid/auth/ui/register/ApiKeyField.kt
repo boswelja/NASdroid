@@ -57,7 +57,7 @@ fun ApiKeyField(
         enabled = enabled,
         isError = error != null,
         supportingText = {
-            Text(error.orEmpty())
+            error?.let { Text(it) }
         },
         visualTransformation = if (isKeyHidden) {
             PasswordVisualTransformation()

@@ -100,6 +100,7 @@ class RegisterServerViewModel(
                 _registerState.value = RegisterState.Success
             },
             onFailure = {
+                _registerState.value = null
                 _registerProblem.value = when (it) {
                     AddServerError.DuplicateEntry -> GenericError.DuplicateEntry
                     AddServerError.InvalidCredentials -> AuthError.InvalidCredentials
