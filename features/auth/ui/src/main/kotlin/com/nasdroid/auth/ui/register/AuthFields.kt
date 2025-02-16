@@ -48,7 +48,8 @@ fun AuthFields(
     ) {
         AuthTypeSelector(
             authData = authData,
-            onAuthDataChange = onAuthDataChange
+            onAuthDataChange = onAuthDataChange,
+            enabled = enabled
         )
         AnimatedContent(
             targetState = authData is AuthData.ApiKey,
@@ -98,19 +99,22 @@ internal fun AuthTypeSelector(
     authData: AuthData,
     onAuthDataChange: (AuthData) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     SingleChoiceSegmentedButtonRow(modifier) {
         SegmentedButton(
             selected = authData is AuthData.ApiKey,
             onClick = { onAuthDataChange(AuthData.ApiKey("")) },
-            shape = SegmentedButtonDefaults.itemShape(0, 2)
+            shape = SegmentedButtonDefaults.itemShape(0, 2),
+            enabled = enabled,
         ) {
             Text(stringResource(R.string.api_key_toggle), maxLines = 1)
         }
         SegmentedButton(
             selected = authData is AuthData.Basic,
             onClick = { onAuthDataChange(AuthData.Basic("", "", true)) },
-            shape = SegmentedButtonDefaults.itemShape(1, 2)
+            shape = SegmentedButtonDefaults.itemShape(1, 2),
+            enabled = enabled,
         ) {
             Text(stringResource(R.string.password_toggle), maxLines = 1)
         }
