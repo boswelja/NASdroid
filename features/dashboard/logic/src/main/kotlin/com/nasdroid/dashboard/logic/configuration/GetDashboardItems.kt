@@ -1,7 +1,7 @@
 package com.nasdroid.dashboard.logic.configuration
 
 import com.nasdroid.api.v2.exception.HttpNotOkException
-import com.nasdroid.api.v2.system.SystemV2Api
+import com.nasdroid.api.websocket.system.SystemApi
 import com.nasdroid.data.configuration.DashboardConfiguration
 import com.nasdroid.data.configuration.DashboardEntry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,13 +17,13 @@ import kotlinx.coroutines.flow.mapLatest
  */
 class GetDashboardItems(
     private val dashboardConfiguration: DashboardConfiguration,
-    private val systemV2Api: SystemV2Api,
+    private val systemApi: SystemApi,
 ) {
     /**
      * Flows a [Result] containing either a list of [DashboardItem]s to be displayed, or an error.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(): Flow<Result<List<DashboardItem>>> = flow { emit(systemV2Api.getHostId()) }
+    operator fun invoke(): Flow<Result<List<DashboardItem>>> = flow { emit(systemApi.hostId()) }
         .flatMapLatest { dashboardConfiguration.getVisibleEntries(it) }
         .mapLatest { dashboardEntries ->
             val newList = dashboardEntries.map { dashboardEntry ->

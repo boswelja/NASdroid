@@ -2,14 +2,14 @@ package com.nasdroid.dashboard.logic.configuration
 
 import com.nasdroid.data.configuration.DashboardConfiguration
 import com.nasdroid.data.configuration.DashboardEntry
-import com.nasdroid.api.v2.system.SystemV2Api
+import com.nasdroid.api.websocket.system.SystemApi
 
 /**
  * Initializes [DashboardConfiguration] for the current server. See [invoke] for details.
  */
 class InitializeDashboard(
     private val configuration: DashboardConfiguration,
-    private val systemV2Api: SystemV2Api
+    private val systemApi: SystemApi
 ) {
 
     /**
@@ -17,7 +17,7 @@ class InitializeDashboard(
      * configuration present, nothing will change.
      */
     suspend operator fun invoke() {
-        val serverId = systemV2Api.getHostId()
+        val serverId = systemApi.hostId()
         if (!configuration.hasAnyEntries(serverId)) {
             configuration.insertEntries(
                 DashboardEntry.Type.entries.mapIndexed { index, type ->

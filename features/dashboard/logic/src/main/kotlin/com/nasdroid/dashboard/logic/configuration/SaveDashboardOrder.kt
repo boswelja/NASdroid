@@ -2,21 +2,21 @@ package com.nasdroid.dashboard.logic.configuration
 
 import com.nasdroid.data.configuration.DashboardConfiguration
 import com.nasdroid.data.configuration.DashboardEntry
-import com.nasdroid.api.v2.system.SystemV2Api
+import com.nasdroid.api.websocket.system.SystemApi
 
 /**
  * Save the order of the given list of dashboard data. See [invoke] for details.
  */
 class SaveDashboardOrder(
     private val configuration: DashboardConfiguration,
-    private val systemV2Api: SystemV2Api
+    private val systemApi: SystemApi
 ) {
 
     /**
      * Saves the order of the list of [DashboardItem]s to the database configuration store.
      */
     suspend operator fun invoke(data: List<DashboardItem>) {
-        val hostId = systemV2Api.getHostId()
+        val hostId = systemApi.hostId()
         val entries = data.mapIndexed { index, dashboardData ->
             DashboardEntry(
                 uid = dashboardData.id,
