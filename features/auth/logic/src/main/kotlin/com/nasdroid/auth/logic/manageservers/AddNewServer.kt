@@ -51,11 +51,11 @@ class AddNewServer(
                 // Successful login
                 if (createApiKey) {
                     this.createApiKey("NASdroid").fold(
-                        onSuccess = {
+                        onSuccess = { key ->
                             storeNewServer(
                                 serverName = serverName,
                                 serverAddress = targetAddress,
-                                authentication = Authentication.ApiKey(it)
+                                authentication = Authentication.ApiKey(key)
                             )
                         },
                         onFailure = { createApiKeyError ->
