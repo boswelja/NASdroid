@@ -64,6 +64,7 @@ android {
     lint {
         sarifReport = true
         htmlReport = false
+        checkDependencies = true
     }
 }
 
