@@ -47,32 +47,35 @@ class AddNewServer(
             // Attempt a connection
             client.connect(targetAddress)
 
-            // Try to create an API key, if requested
-            val authorization = if (createApiKey) {
-                this.createApiKey("NASdroid", username, password).fold(
-                    onSuccess = {
-                        Authentication.ApiKey(it)
-                    },
-                    onFailure = { createApiKeyError ->
-                        val error = when (createApiKeyError) {
-                            CreateApiKeyError.InvalidCredentials -> AddServerError.InvalidCredentials
-                            CreateApiKeyError.KeyAlreadyExists -> AddServerError.FailedToCreateApiKey
+            if (authApi.logIn(username, password)) {
+                // Successful login
+                if (createApiKey) {
+                    this.createApiKey("NASdroid").fold(
+                        onSuccess = { key ->
+                            storeNewServer(
+                                serverName = serverName,
+                                serverAddress = targetAddress,
+                                authentication = Authentication.ApiKey(key)
+                            )
+                        },
+                        onFailure = { createApiKeyError ->
+                            val error = when (createApiKeyError) {
+                                CreateApiKeyError.InvalidCredentials -> AddServerError.InvalidCredentials
+                                CreateApiKeyError.KeyAlreadyExists -> AddServerError.FailedToCreateApiKey
+                            }
+                            StrongResult.failure(error)
                         }
-                        return StrongResult.failure(error)
-                    }
-                )
-            } else {
-                // If we're not making an API key, we need to manually check credentials.
-                if (!authApi.logIn(username, password)) {
-                    return StrongResult.failure(AddServerError.InvalidCredentials)
+                    )
+                } else {
+                    storeNewServer(
+                        serverName = serverName,
+                        serverAddress = targetAddress,
+                        authentication = Authentication.Basic(username, password)
+                    )
                 }
-                Authentication.Basic(username, password)
+            } else {
+                StrongResult.failure(AddServerError.InvalidCredentials)
             }
-            storeNewServer(
-                serverName = serverName,
-                serverAddress = targetAddress,
-                authentication = authorization
-            )
         } catch (_: UnknownHostException) {
             StrongResult.failure(AddServerError.ServerNotFound)
         } finally {
