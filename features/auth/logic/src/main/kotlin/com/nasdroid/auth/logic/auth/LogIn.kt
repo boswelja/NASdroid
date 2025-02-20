@@ -48,15 +48,17 @@ class LogIn(
                 StrongResult.failure(LoginError.InvalidCredentials)
             }
         } catch (_: ClientRequestException) {
+            client.disconnect()
             StrongResult.failure(LoginError.InvalidCredentials)
         } catch (_: ServerResponseException) {
+            client.disconnect()
             StrongResult.failure(LoginError.Unknown)
         } catch (_: UnknownHostException) {
+            client.disconnect()
             StrongResult.failure(LoginError.ServerUnreachable)
         } catch (_: IllegalStateException) {
-            StrongResult.failure(LoginError.ServerUnreachable)
-        } finally {
             client.disconnect()
+            StrongResult.failure(LoginError.ServerUnreachable)
         }
     }
 }
