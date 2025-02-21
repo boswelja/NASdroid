@@ -11,7 +11,6 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev/")
     }
 }
 dependencyResolutionManagement {
@@ -25,13 +24,12 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-        maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev/")
     }
 }
 
 plugins {
     id("com.gradle.develocity") version "3.19.2"
-    id("com.android.settings") version("8.8.0")
+    id("com.android.settings") version("8.8.1")
 }
 
 enableFeaturePreview(FeaturePreviews.Feature.TYPESAFE_PROJECT_ACCESSORS.name)
