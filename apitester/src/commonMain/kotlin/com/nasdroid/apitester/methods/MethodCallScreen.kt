@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -27,24 +28,24 @@ fun MethodCallScreen(
         Row(modifier) {
             MethodCallInputContent(
                 onCallMethod = viewModel::callMethod,
-                modifier = Modifier.fillMaxHeight().weight(1f)
+                modifier = Modifier.fillMaxHeight().fillMaxWidth(0.5f)
             )
             VerticalDivider()
             MethodCallInteractionContent(
                 interactions = interactions,
-                modifier = Modifier.fillMaxHeight().weight(1f)
+                modifier = Modifier.fillMaxHeight().fillMaxWidth()
             )
         }
     } else {
         Column(modifier) {
             MethodCallInputContent(
                 onCallMethod = viewModel::callMethod,
-                modifier = Modifier.fillMaxWidth().weight(1f)
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.5f)
             )
-            VerticalDivider()
+            HorizontalDivider()
             MethodCallInteractionContent(
                 interactions = interactions,
-                modifier = Modifier.fillMaxWidth().weight(1f)
+                modifier = Modifier.fillMaxWidth().fillMaxHeight()
             )
         }
     }
