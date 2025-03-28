@@ -13,11 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.websocket.jsonrpc.JsonRpcWebsocketClient
 
 @Composable
 fun MethodCallScreen(
-    client: DdpWebsocketClient,
+    client: JsonRpcWebsocketClient,
     modifier: Modifier = Modifier,
     viewModel: MethodCallViewModel = viewModel { MethodCallViewModel(client) },
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
