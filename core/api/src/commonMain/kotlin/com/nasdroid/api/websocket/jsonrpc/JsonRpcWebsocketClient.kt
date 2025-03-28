@@ -129,11 +129,14 @@ class JsonRpcWebsocketClient {
         currentState.webSocketSession.send(Frame.Text(serializedString))
         val resultFrame = currentState.webSocketSession.incoming.receive()
         val result = try {
-            Json.decodeFromStream(ResponseMessage.serializer(serializer), resultFrame.data.inputStream())
+            Json.decodeFromStream(RpcResponseSerializer(serializer), resultFrame.data.inputStream())
         } catch (e: SerializationException) {
             throw DeserializeError(e, resultFrame.data.decodeToString())
         }
-        return result.result
+        when (result) {
+            is ResponseError -> throw MethodCallError(result.error.code, result.error.message)
+            is ResponseMessage<*> -> return result.result as T
+        }
     }
 
     /**
