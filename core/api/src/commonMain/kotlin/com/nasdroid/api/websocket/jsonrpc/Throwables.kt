@@ -2,6 +2,8 @@ package com.nasdroid.api.websocket.jsonrpc
 
 /**
  * A DDP websocket server responded with an error after attempting to perform a method call.
+ *
+ * @property errorCode The code describing the error type.
  */
 data class MethodCallError(
     val errorCode: Int,
