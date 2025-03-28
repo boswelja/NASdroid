@@ -2,16 +2,16 @@ package com.nasdroid.apitester.methods
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
-import com.nasdroid.api.websocket.ddp.MethodCallError
-import com.nasdroid.api.websocket.ddp.callMethod
+import com.nasdroid.api.websocket.jsonrpc.JsonRpcWebsocketClient
+import com.nasdroid.api.websocket.jsonrpc.MethodCallError
+import com.nasdroid.api.websocket.jsonrpc.callMethod
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonElement
 
-class MethodCallViewModel(private val client: DdpWebsocketClient) : ViewModel() {
+class MethodCallViewModel(private val client: JsonRpcWebsocketClient) : ViewModel() {
     private val _interactions = MutableStateFlow(emptyList<MethodInteraction>())
     val interactions: StateFlow<List<MethodInteraction>> = _interactions
 

@@ -5,30 +5,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.websocket.jsonrpc.JsonRpcWebsocketClient
 import com.nasdroid.apitester.connect.ConnectScreen
 import com.nasdroid.apitester.connect.ConnectingScreen
 import kotlinx.coroutines.launch
 
 @Composable
 fun App(
-    client: DdpWebsocketClient
+    client: JsonRpcWebsocketClient
 ) {
     val coroutineScope = rememberCoroutineScope()
     val state by client.state.collectAsState()
     MaterialTheme {
         when (state) {
-            is DdpWebsocketClient.State.Connected -> {
+            is JsonRpcWebsocketClient.State.Connected -> {
                 TesterScreen(client)
             }
-            DdpWebsocketClient.State.Connecting -> {
+            JsonRpcWebsocketClient.State.Connecting -> {
                 ConnectingScreen()
             }
-            DdpWebsocketClient.State.Disconnected -> {
+            JsonRpcWebsocketClient.State.Disconnected -> {
                 ConnectScreen(
-                    onConnect = { url, session ->
+                    onConnect = { url ->
                         coroutineScope.launch {
-                            client.connect(url, session)
+                            client.connect(url)
                         }
                     }
                 )
