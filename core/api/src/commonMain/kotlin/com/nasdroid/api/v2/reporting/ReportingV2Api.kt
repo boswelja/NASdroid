@@ -121,6 +121,7 @@ data class ReportingConfig(
  * @property identifiers A list of identifiers. If this is not empty, there will be multiple sets of
  * data for this graph. These should be displayed as separate graphs, and each identifier should be
  * inserted into the title.
+ * @property items TODO
  */
 @Serializable
 data class ReportingGraph(
@@ -132,6 +133,8 @@ data class ReportingGraph(
     val verticalLabel: String,
     @SerialName("identifiers")
     val identifiers: List<String>?,
+    @SerialName("items")
+    val items: List<String>?
 )
 
 /**

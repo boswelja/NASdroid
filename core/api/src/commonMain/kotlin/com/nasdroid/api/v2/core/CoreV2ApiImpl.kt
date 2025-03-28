@@ -1,5 +1,6 @@
 package com.nasdroid.api.v2.core
 
+import com.nasdroid.api.websocket.core.Job
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -84,6 +85,8 @@ internal class CoreV2ApiImpl(
                 state = job.state,
                 timeStarted = job.timeStarted,
                 timeFinished = job.timeFinished,
+                resultEncodingError = null,
+                credentials = null,
             )
         } ?: throw JobNotFoundException("Could not find a Job with ID $id")
     }
@@ -113,6 +116,8 @@ internal class CoreV2ApiImpl(
                 state = job.state,
                 timeStarted = job.timeStarted,
                 timeFinished = job.timeFinished,
+                resultEncodingError = null,
+                credentials = null,
             )
         } ?: throw JobNotFoundException("Could not find a Job with ID $id")
     }

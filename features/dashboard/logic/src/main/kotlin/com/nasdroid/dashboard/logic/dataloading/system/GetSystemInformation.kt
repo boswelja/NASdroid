@@ -2,7 +2,6 @@ package com.nasdroid.dashboard.logic.dataloading.system
 
 import com.nasdroid.api.v2.exception.HttpNotOkException
 import com.nasdroid.api.v2.system.SystemV2Api
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -25,7 +24,7 @@ class GetSystemInformation(
                 SystemInformation(
                     version = systemInformation.version,
                     hostname = systemInformation.hostName,
-                    lastBootTime = Instant.fromEpochMilliseconds(systemInformation.bootTime)
+                    lastBootTime = systemInformation.bootTime
                         .toLocalDateTime(TimeZone.currentSystemDefault())
                 )
             )

@@ -57,7 +57,8 @@ fun MethodCallInputContent(
                         autoCorrectEnabled = false,
                         keyboardType = KeyboardType.Uri,
                         imeAction = if (params.isEmpty()) ImeAction.Done else ImeAction.Next
-                    )
+                    ),
+                    singleLine = true
                 )
             }
             itemsIndexed(params) { index, param ->

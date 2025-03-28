@@ -3,7 +3,9 @@ package com.nasdroid.apitester.methods
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.websocket.ddp.DeserializeError
 import com.nasdroid.api.websocket.ddp.MethodCallError
+import com.nasdroid.api.websocket.ddp.SerializeError
 import com.nasdroid.api.websocket.ddp.callMethod
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +30,10 @@ class MethodCallViewModel(private val client: DdpWebsocketClient) : ViewModel() 
                 }
             } catch (e: MethodCallError) {
                 e.toString()
+            } catch (e: DeserializeError) {
+                e.resultMessage
+            } catch (_: SerializeError) {
+                "Failed to serialize input"
             }
             _interactions.update {
                 it + MethodInteraction.MethodCallResult(result)
