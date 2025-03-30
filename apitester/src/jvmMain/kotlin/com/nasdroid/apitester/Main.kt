@@ -4,12 +4,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.websocket.jsonrpc.JsonRpcWebsocketClient
 import kotlinx.coroutines.runBlocking
 
 fun main() = application {
     val state = rememberWindowState()
-    val client = remember { DdpWebsocketClient() }
+    val client = remember { JsonRpcWebsocketClient() }
     Window(
         title = "TrueNAS API Tester",
         onCloseRequest = {

@@ -12,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -24,13 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.websocket.jsonrpc.JsonRpcWebsocketClient
 import com.nasdroid.apitester.methods.MethodCallScreen
-import kotlinx.serialization.json.JsonElement
 
 @Composable
 fun TesterScreen(
-    client: DdpWebsocketClient,
+    client: JsonRpcWebsocketClient,
     modifier: Modifier = Modifier
 ) {
     var destination by rememberSaveable { mutableStateOf(TesterDestination.MethodCall) }
@@ -46,16 +44,6 @@ fun TesterScreen(
                     Text("Method Call")
                 }
             )
-            item(
-                selected = destination == TesterDestination.Subscription,
-                onClick = { destination = TesterDestination.Subscription },
-                icon = {
-                    Icon(Icons.Default.Commit, null)
-                },
-                label = {
-                    Text("Subscription")
-                }
-            )
         },
         modifier = modifier
     ) {
@@ -67,9 +55,6 @@ fun TesterScreen(
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                TesterDestination.Subscription -> {
-
-                }
             }
         }
     }
@@ -77,7 +62,6 @@ fun TesterScreen(
 
 enum class TesterDestination {
     MethodCall,
-    Subscription
 }
 
 @Composable

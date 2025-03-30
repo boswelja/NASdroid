@@ -9,6 +9,7 @@ import com.nasdroid.api.websocket.auth.DdpAuthApi
 import com.nasdroid.api.websocket.core.CoreApi
 import com.nasdroid.api.websocket.core.DdpCoreApi
 import com.nasdroid.api.websocket.ddp.DdpWebsocketClient
+import com.nasdroid.api.websocket.jsonrpc.JsonRpcWebsocketClient
 import com.nasdroid.api.websocket.reporting.DdpReportingApi
 import com.nasdroid.api.websocket.reporting.ReportingApi
 import com.nasdroid.api.websocket.system.DdpSystemApi
@@ -19,6 +20,7 @@ import org.koin.dsl.module
 
 val ApiWebsocketModule = module {
     singleOf(::DdpWebsocketClient)
+    singleOf(::JsonRpcWebsocketClient)
 
     singleOf(::DdpAlertApi) bind AlertApi::class
     singleOf(::DdpAuthApi) bind AuthApi::class
