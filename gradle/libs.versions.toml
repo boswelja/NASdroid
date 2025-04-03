@@ -35,7 +35,7 @@ ktor = "3.1.2"
 
 kotlinx-coroutines = "1.10.1"
 kotlinx-datetime = "0.6.2"
-kotlinx-serialization-formats = "1.8.0"
+kotlinx-serialization-formats = "1.8.1"
 
 koin = "4.1.0-Beta6"
 
