@@ -39,7 +39,7 @@ kotlinx-serialization-formats = "1.8.1"
 
 koin = "4.1.0-Beta6"
 
-vico = "2.1.1"
+vico = "2.1.2"
 
 turbine = "1.2.0"
 
