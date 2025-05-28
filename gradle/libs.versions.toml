@@ -21,7 +21,7 @@ compose-multiplatform-material3-adaptive = "1.1.1"
 compose-multiplatform-viewmodel = "2.8.4"
 accompanist = "0.37.3"
 menuprovider = "1.4.0"
-markdown = "1.1.2"
+markdown = "1.1.5"
 
 datatypes = "1.0.0"
 
