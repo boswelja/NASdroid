@@ -43,7 +43,7 @@ vico = "2.1.3"
 
 turbine = "1.2.1"
 
-uri-kmp = "0.0.19"
+uri-kmp = "0.0.20"
 
 androidx-test-ext-junit = "1.2.1"
 mockk = "1.14.4"
