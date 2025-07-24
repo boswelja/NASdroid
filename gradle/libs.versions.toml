@@ -46,7 +46,7 @@ turbine = "1.2.1"
 uri-kmp = "0.0.20"
 
 androidx-test-ext-junit = "1.2.1"
-mockk = "1.14.4"
+mockk = "1.14.5"
 
 [libraries]
 androidx-core = { module = "androidx.core:core", version.ref = "androidx-core" }
