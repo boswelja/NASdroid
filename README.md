@@ -1,3 +1,7 @@
+# Archived
+
+This project is no longer maintained. For a brief explanation, see https://github.com/boswelja/NASdroid/issues/484#issuecomment-3121064704
+
 # NASdroid
 
 NASdroid is an unofficial Android client for [TrueNAS](https://www.truenas.com/) server management.
